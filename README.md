@@ -17,7 +17,7 @@ An iOS Swift application for shopping.
 - [ ] User can chat with each other, there are 2 types:
     - [ ] Directly (through user's profile page)
     - [ ] For each post
-- [ ] User can search by hashtag, any text inside the a post, price
+- [ ] User can search by hashtag, people, description, price, location
 - [ ] User can receive notifications for:
     - [ ] Message
     - [ ] Status/changed price or content of saved post
