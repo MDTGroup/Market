@@ -2,6 +2,7 @@
 An iOS Swift application for shopping.
 
 ### Features
+
 #### Required
 - [ ] User can login/logout/signup through Parse/Facebook
 - [ ] User can see a lists of posts from:
@@ -22,6 +23,7 @@ An iOS Swift application for shopping.
     - [ ] Status/changed price or content of saved post
     - [ ] A specific hashtag
     - [ ] App advertisement
+    
 #### Optional
 - [ ] User can create account for a branch
 - [ ] If posts they saw, we won't display again? <- Should we do this, anh Dave, chi Minh?
