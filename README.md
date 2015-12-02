@@ -9,12 +9,12 @@ An iOS Swift application for shopping.
     - [ ] Following sellers
     - [ ] Newest posts, User's choice and Editor's choice
 - [ ] User can view post detail
-- [ ] User can click see other user's profile and posts
+- [ ] User can see other user's profile and posts
 - [ ] User can follow each other
 - [ ] User can submit/edit/delete a post with images (from camera, taken photo), price, description, status, location...
 - [ ] User can save/remove a post to Saved list
-- [ ] User can vote for a post have a good price/deal
-- [ ] User can chat with each other, there are 2 types:
+- [ ] User can vote for posts have a good price/deal
+- [ ] User can chat with each other, there are 2 chat types:
     - [ ] Directly (through user's profile page)
     - [ ] For each post
 - [ ] User can search by hashtag, people, description, price, location...
