@@ -1,4 +1,4 @@
-#Market
+##Market
 An iOS Swift application for shopping.
 
 ### Features
@@ -33,8 +33,6 @@ An iOS Swift application for shopping.
 - [ ] User can create account for a branch
 - [ ] User can see posts they voted
 - [ ] Should we need a place for admin/moderator/staffs to add hashtag for posts or confirm for User's choice?
-
-#### Bonus
 - [ ] Shipping service
-    - The app will have support for paying by bank cards, the app will take responsibilities for that
-    Buyers -> Pay -> Seller will choose who they want to sell -> System will keep money/transaction -> Notify for delivery team -> Get item from seller -> Transfer item to User -> Accept item -> System transfer money to Seller -> Transaction successfully
+    - The app will support for paying by bank cards, will be a service to do this
+    Buyers -> Pay -> Seller will choose who they want to sell -> Get money from Buyes -> System will keep money/transaction -> Notify for delivery team -> Get item from seller -> Transfer item to User -> Accept item -> System transfer money to Seller -> Transaction successfully
