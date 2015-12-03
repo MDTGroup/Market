@@ -37,3 +37,6 @@ An iOS Swift application for shopping.
     - The app will support for paying by bank cards, will be a service to do this
     
 ![alt text](ShippingService.png "Shipping service")
+
+Our small survey:
+https://docs.google.com/forms/d/1wsMt7Bk3--dh_hLzaJecRANQeoRHm7UsOQV9N03SMOA/viewanalytics
