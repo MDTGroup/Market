@@ -1,5 +1,5 @@
 ##Market
-An iOS Swift application for shopping. People can use this app for sell/buy whatever they want.
+An iOS Swift application for shopping. People can use this app for selling/buying whatever they want.
 
 ### Features
 
