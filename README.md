@@ -1,4 +1,4 @@
-##Market
+#Market
 An iOS Swift application for shopping.
 
 ### Features
@@ -9,6 +9,7 @@ An iOS Swift application for shopping.
     - [ ] Following sellers
     - [ ] Newest posts, User's choice and Editor's choice
 - [ ] User can view post detail
+- [ ] Mark a post that read/unread
 - [ ] User can see other user's profile and posts
 - [ ] User can follow each other
 - [ ] User can submit/edit/delete a post with images (from camera, taken photo), price, description, status, location...
@@ -17,16 +18,23 @@ An iOS Swift application for shopping.
 - [ ] User can chat with each other, there are 2 chat types:
     - [ ] Directly (through user's profile page)
     - [ ] For each post
-- [ ] User can search by hashtag, people, description, price, location...
+- [ ] User can search by hashtag, people, description, price, location, date, status
 - [ ] User can receive notifications for:
     - [ ] Messages
     - [ ] Status/changed price or content of saved post
     - [ ] A specific hashtag.
             For example: I want to receive notifications for iPhone 6s so hashtag should be #iphone6s. User may have to input buy themself or from Editor team
     - [ ] Discounts/promotions
+- [ ] A Settings page to control Saved list, Notifications hashtag …
     
 #### Optional
+- [ ] Login with Gmail account
+- [ ] Receive mail notifications
 - [ ] User can create account for a branch
-- [ ] If posts they saw, we won't display again? <- Should we do this, anh Dave, chi Minh?
 - [ ] User can see posts they voted
 - [ ] Should we need a place for admin/moderator/staffs to add hashtag for posts or confirm for User's choice?
+
+#### Bonus
+- [ ] Shipping service
+    - The app will have support for paying by bank cards, the app will take responsibilities for that
+    Buyers -> Pay -> Seller will choose who they want to sell -> System will keep money/transaction -> Notify for delivery team -> Get item from seller -> Transfer item to User -> Accept item -> System transfer money to Seller -> Transaction successfully
