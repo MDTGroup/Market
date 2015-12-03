@@ -35,5 +35,4 @@ An iOS Swift application for shopping.
 - [ ] Should we need a place for admin/moderator/staffs to add hashtag for posts or confirm for User's choice?
 - [ ] Shipping service
     - The app will support for paying by bank cards, will be a service to do this
-    Buyers -> Pay -> Seller will choose who they want to sell -> Get money from Buyes -> System will keep money/transaction -> Notify for delivery team -> Get item from seller -> Transfer item to User -> Accept item -> System transfer money to Seller -> Transaction successfully 
-![alt text](shippingservice.png "Shipping service")
+![alt text](ShippingService.png "Shipping service")
