@@ -13,13 +13,12 @@ An iOS Swift application for shopping. People can use this app for selling/buyin
 - [ ] User can see other user's profile and posts
 - [ ] User can follow each other
 - [ ] User can submit/edit/delete a post with images (from camera, taken photo), video, price, description, status, location...
-- [ ] User can save/remove a post to Saved list
 - [ ] User can vote for posts have a good price/deal
-- [ ] User can chat with each other
+- [ ] User can message with each other
 - [ ] User can search by hashtag, title, description, people/branches, price, location
 - [ ] User can receive notifications for: 
     - [ ] Messages
-    - [ ] Status/changed price or content of saved post
+    - [ ] Saved post content changes
     - [ ] Specific keywords
 - [ ] A Settings page to control Saved list, profile, Following, Notifications hashtag …
     
@@ -27,7 +26,7 @@ An iOS Swift application for shopping. People can use this app for selling/buyin
 - [ ] User can create account for a branch
 - [ ] User can see posts they voted
 - [ ] Report posts
-- [ ] History post changed
+- [ ] Post revisions
 - [ ] Shipping service
     - The app will support for paying by bank cards, will be a service to do this
     
