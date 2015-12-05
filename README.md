@@ -39,5 +39,4 @@ https://docs.google.com/forms/d/1wsMt7Bk3--dh_hLzaJecRANQeoRHm7UsOQV9N03SMOA/vie
 ### Wireframe Walkthrough
 ![Video Walkthrough](market.gif)
 
-You can also try on browsers
-Link: https://invis.io/UQ5735UED
+You can also try on browsers: https://invis.io/UQ5735UED
