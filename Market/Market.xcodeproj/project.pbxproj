@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		181CBFAB1C19B22E00191DFA /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 181CBFAA1C19B22E00191DFA /* DetailViewController.swift */; };
 		18EA50721C16F4D60018BAAB /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EA50711C16F4D60018BAAB /* ItemCell.swift */; };
 		18EA50741C16F79E0018BAAB /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18EA50731C16F79E0018BAAB /* Item.swift */; };
 		44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F328561C0F815C00BF1CDF /* AppDelegate.swift */; };
@@ -18,6 +19,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		181CBFAA1C19B22E00191DFA /* DetailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		18EA50711C16F4D60018BAAB /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
 		18EA50731C16F79E0018BAAB /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		44F328531C0F815C00BF1CDF /* Market.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Market.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -47,6 +49,7 @@
 		18EA506C1C16F4260018BAAB /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				181CBFAA1C19B22E00191DFA /* DetailViewController.swift */,
 				44F328581C0F815C00BF1CDF /* HomeViewController.swift */,
 			);
 			name = ViewControllers;
@@ -242,6 +245,7 @@
 			files = (
 				18EA50741C16F79E0018BAAB /* Item.swift in Sources */,
 				44F328591C0F815C00BF1CDF /* HomeViewController.swift in Sources */,
+				181CBFAB1C19B22E00191DFA /* DetailViewController.swift in Sources */,
 				44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */,
 				18EA50721C16F4D60018BAAB /* ItemCell.swift in Sources */,
 			);

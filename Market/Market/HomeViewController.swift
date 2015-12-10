@@ -49,9 +49,10 @@ class HomeViewController: UIViewController {
     for index in 1...3 {
       dict["seller"] = sellers[index-1]
       dict["avatarURL"] = avatars[index-1]
-      dict["title"] = "Item for sell \(index)"
-      dict["description"] = desc
-      dict["itemImageURL"] = thumbnails[index-1]
+      dict["title"] = "Item for sell with very long name \(index)"
+      dict["description"] = desc + desc + desc
+      dict["thumbnailURL"] = thumbnails[index-1]
+      dict["itemImageURLs"] = imageUrls
       dict["isNew"] = true
       dict["price"] = "\(index * 3) tr"
       dict["postedAt"] = NSDate().dayBefore(index)
@@ -59,6 +60,15 @@ class HomeViewController: UIViewController {
       items.append(Item(dict: dict))
     }
   }
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    if (segue.identifier == "detailSegue") {
+      let detailVC: DetailViewController = segue.destinationViewController as! DetailViewController
+      let data = sender as! Item
+      detailVC.item = data
+    }
+  }
+  
 }
 
 extension NSDate {
@@ -78,5 +88,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     cell.item = items[indexPath.row]
     cell.delegate = self
     return cell
+  }
+  
+  func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    // Perform segue
+    let item = items[indexPath.row]
+    
+    performSegueWithIdentifier("detailSegue", sender: item)
   }
 }

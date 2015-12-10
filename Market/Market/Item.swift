@@ -13,7 +13,8 @@ class Item {
   var avatarURL: String = ""
   var title: String = ""
   var description: String = ""
-  var itemImageUrl: String = ""
+  var thumbnailUrl: String = ""
+  var itemImageUrls: [String]
   var isNew: Bool = true
   var priceString: String = "0"
   var postedAt: NSDate!
@@ -25,7 +26,8 @@ class Item {
     avatarURL = dict["avatarURL"] as! String
     title = dict["title"] as! String
     description = dict["description"] as! String
-    itemImageUrl = dict["itemImageURL"] as! String
+    thumbnailUrl = dict["thumbnailURL"] as! String
+    itemImageUrls = dict["itemImageURLs"] as! [String]
     isNew = dict["isNew"] as! Bool
     priceString = dict["price"] as! String
     postedAt = dict["postedAt"] as! NSDate

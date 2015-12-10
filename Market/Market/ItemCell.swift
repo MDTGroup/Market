@@ -43,7 +43,7 @@ class ItemCell: UITableViewCell {
       // Set Item
       itemImageView.alpha = 0.0
       UIView.animateWithDuration(0.3, animations: {
-        self.itemImageView.setImageWithURL(NSURL(string: self.item.itemImageUrl)!)
+        self.itemImageView.setImageWithURL(NSURL(string: self.item.thumbnailUrl)!)
         self.itemImageView.alpha = 1.0
         }, completion: nil)
       itemNameLabel.text = item.title
