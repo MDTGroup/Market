@@ -11,9 +11,14 @@
 		4483EF681C1B370B002C98DA /* Follow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF651C1B370B002C98DA /* Follow.swift */; };
 		4483EF691C1B370B002C98DA /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF661C1B370B002C98DA /* User.swift */; };
 		4483EF6B1C1B37B1002C98DA /* Config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4483EF6A1C1B37B1002C98DA /* Config.plist */; };
+		4483EF6D1C1B415B002C98DA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4483EF6C1C1B415B002C98DA /* Main.storyboard */; };
+		4483EF731C1B41DF002C98DA /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF6E1C1B41DF002C98DA /* LoginViewController.swift */; };
+		4483EF741C1B41DF002C98DA /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF6F1C1B41DF002C98DA /* SignUpViewController.swift */; };
+		4483EF751C1B41DF002C98DA /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF701C1B41DF002C98DA /* ResetPasswordViewController.swift */; };
+		4483EF761C1B41DF002C98DA /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF711C1B41DF002C98DA /* ProfileViewController.swift */; };
+		4483EF771C1B41DF002C98DA /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */; };
 		44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F328561C0F815C00BF1CDF /* AppDelegate.swift */; };
 		44F328591C0F815C00BF1CDF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F328581C0F815C00BF1CDF /* ViewController.swift */; };
-		44F3285C1C0F815C00BF1CDF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44F3285A1C0F815C00BF1CDF /* Main.storyboard */; };
 		44F3285E1C0F815C00BF1CDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44F3285D1C0F815C00BF1CDF /* Assets.xcassets */; };
 		44F328611C0F815C00BF1CDF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44F3285F1C0F815C00BF1CDF /* LaunchScreen.storyboard */; };
 		6084BABE268CE5FEEC54FF73 /* Pods_Market.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F9798A0C1DF9D526E69107 /* Pods_Market.framework */; };
@@ -25,10 +30,15 @@
 		4483EF651C1B370B002C98DA /* Follow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Follow.swift; sourceTree = "<group>"; };
 		4483EF661C1B370B002C98DA /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		4483EF6A1C1B37B1002C98DA /* Config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Config.plist; sourceTree = "<group>"; };
+		4483EF6C1C1B415B002C98DA /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		4483EF6E1C1B41DF002C98DA /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		4483EF6F1C1B41DF002C98DA /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
+		4483EF701C1B41DF002C98DA /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
+		4483EF711C1B41DF002C98DA /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
 		44F328531C0F815C00BF1CDF /* Market.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Market.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44F328561C0F815C00BF1CDF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44F328581C0F815C00BF1CDF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		44F3285B1C0F815C00BF1CDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		44F3285D1C0F815C00BF1CDF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		44F328601C0F815C00BF1CDF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		44F328621C0F815C00BF1CDF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -58,6 +68,19 @@
 			name = Models;
 			sourceTree = "<group>";
 		};
+		4483EF781C1B41E3002C98DA /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				44F328581C0F815C00BF1CDF /* ViewController.swift */,
+				4483EF6E1C1B41DF002C98DA /* LoginViewController.swift */,
+				4483EF6F1C1B41DF002C98DA /* SignUpViewController.swift */,
+				4483EF701C1B41DF002C98DA /* ResetPasswordViewController.swift */,
+				4483EF711C1B41DF002C98DA /* ProfileViewController.swift */,
+				4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */,
+			);
+			name = "View Controllers";
+			sourceTree = "<group>";
+		};
 		44F3284A1C0F815C00BF1CDF = {
 			isa = PBXGroup;
 			children = (
@@ -80,11 +103,11 @@
 			isa = PBXGroup;
 			children = (
 				4483EF631C1B36F4002C98DA /* Models */,
+				4483EF781C1B41E3002C98DA /* View Controllers */,
 				44F328561C0F815C00BF1CDF /* AppDelegate.swift */,
-				44F328581C0F815C00BF1CDF /* ViewController.swift */,
-				44F3285A1C0F815C00BF1CDF /* Main.storyboard */,
 				44F3285D1C0F815C00BF1CDF /* Assets.xcassets */,
 				44F3285F1C0F815C00BF1CDF /* LaunchScreen.storyboard */,
+				4483EF6C1C1B415B002C98DA /* Main.storyboard */,
 				4483EF6A1C1B37B1002C98DA /* Config.plist */,
 				44F328621C0F815C00BF1CDF /* Info.plist */,
 			);
@@ -172,7 +195,7 @@
 				4483EF6B1C1B37B1002C98DA /* Config.plist in Resources */,
 				44F328611C0F815C00BF1CDF /* LaunchScreen.storyboard in Resources */,
 				44F3285E1C0F815C00BF1CDF /* Assets.xcassets in Resources */,
-				44F3285C1C0F815C00BF1CDF /* Main.storyboard in Resources */,
+				4483EF6D1C1B415B002C98DA /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -231,9 +254,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4483EF731C1B41DF002C98DA /* LoginViewController.swift in Sources */,
+				4483EF741C1B41DF002C98DA /* SignUpViewController.swift in Sources */,
 				4483EF671C1B370B002C98DA /* Post.swift in Sources */,
+				4483EF751C1B41DF002C98DA /* ResetPasswordViewController.swift in Sources */,
 				44F328591C0F815C00BF1CDF /* ViewController.swift in Sources */,
 				4483EF681C1B370B002C98DA /* Follow.swift in Sources */,
+				4483EF771C1B41DF002C98DA /* SettingsTableViewController.swift in Sources */,
+				4483EF761C1B41DF002C98DA /* ProfileViewController.swift in Sources */,
 				4483EF691C1B370B002C98DA /* User.swift in Sources */,
 				44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */,
 			);
@@ -242,14 +270,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		44F3285A1C0F815C00BF1CDF /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				44F3285B1C0F815C00BF1CDF /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		44F3285F1C0F815C00BF1CDF /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

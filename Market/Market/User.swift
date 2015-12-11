@@ -14,6 +14,7 @@ class User: PFUser {
     @NSManaged var fullName: String
     @NSManaged var gender: Int
     @NSManaged var location: PFGeoPoint?
+    @NSManaged var phone: String?
     @NSManaged var role: PFRole
     @NSManaged var config: PFConfig
     @NSManaged var savedPosts: PFRelation
@@ -22,7 +23,6 @@ class User: PFUser {
     func getPosts(lastUpdated:NSDate?, callback: (posts: [Post]?, error: NSError?) -> Void) {
         if let query = Post.query() {
             query.limit = 20
-
             if let lastUpdated = lastUpdated {
                 query.whereKey("updatedAt", lessThan: lastUpdated)
             }
