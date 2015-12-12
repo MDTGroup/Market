@@ -7,15 +7,25 @@
 //
 
 import UIKit
+import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var storyboard = UIStoryboard(name: "Home", bundle: nil)
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        setupForParse(application, launchOptions: launchOptions)
+        
+        let newUser = PFUser.currentUser()
+       // let name = newUser?["fullname"]!
+        
+        if newUser != nil {
+            let vc = storyboard.instantiateViewControllerWithIdentifier("homeVC") //as! UIViewController
+            window?.rootViewController = vc
+        }
         return true
     }
 
@@ -44,3 +54,101 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 }
 
+//MARK: Set up PARSE
+extension AppDelegate {
+    func setupForParse(application: UIApplication, launchOptions: [NSObject: AnyObject]?) {
+        setupKey()
+        setupSubclass()
+        setupACL()
+//        setupPushNotifications(application, launchOptions: launchOptions)
+        
+        
+    }
+    
+    func setupACL() {
+        let defaultACL = PFACL();
+        defaultACL.publicReadAccess = true
+        PFACL.setDefaultACL(defaultACL, withAccessForCurrentUser:true)
+    }
+    
+    func setupKey() {
+        guard let config = NSDictionary(contentsOfFile: NSBundle.mainBundle().pathForResource("Config", ofType: "plist")!) else {
+            print("Please set up Parse keys in Config.plist file", terminator: "\n")
+            return
+        }
+        
+        let applicationId = config["parse_application_id"] as? String
+        let clientKey = config["parse_client_key"] as? String
+        Parse.setApplicationId(applicationId!, clientKey: clientKey!)
+    }
+    
+    func setupSubclass() {
+        User.registerSubclass()
+        Post.registerSubclass()
+        Follow.registerSubclass()
+    }
+    
+//    func setupPushNotifications(application: UIApplication, launchOptions: [NSObject: AnyObject]?) {
+//        if application.applicationState != UIApplicationState.Background {
+//            // Track an app open here if we launch with a push, unless
+//            // "content_available" was used to trigger a background push (introduced in iOS 7).
+//            // In that case, we skip tracking here to avoid double counting the app-open.
+//            
+//            let preBackgroundPush = !application.respondsToSelector("backgroundRefreshStatus")
+//            let oldPushHandlerOnly = !self.respondsToSelector("application:didReceiveRemoteNotification:fetchCompletionHandler:")
+//            var noPushPayload = false;
+//            if let options = launchOptions {
+//                noPushPayload = options[UIApplicationLaunchOptionsRemoteNotificationKey] != nil;
+//            }
+//            if (preBackgroundPush || oldPushHandlerOnly || noPushPayload) {
+//                PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
+//            }
+//        }
+//        
+//        if #available(iOS 8.0, *) {
+//            let types: UIUserNotificationType = [.Alert, .Badge, .Sound]
+//            let settings = UIUserNotificationSettings(forTypes: types, categories: nil)
+//            application.registerUserNotificationSettings(settings)
+//            application.registerForRemoteNotifications()
+//        } else {
+//            let types: UIRemoteNotificationType = [.Alert, .Badge, .Sound]
+//            application.registerForRemoteNotificationTypes(types)
+//        }
+//    }
+//    
+//    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+//        let installation = PFInstallation.currentInstallation()
+//        installation.setDeviceTokenFromData(deviceToken)
+//        installation.saveInBackground()
+//        installation.channels = ["global"]
+//        
+//        PFPush.subscribeToChannelInBackground("global") { (succeeded: Bool, error: NSError?) in
+//            if succeeded {
+//                print("ParseStarterProject successfully subscribed to push notifications on the broadcast channel.\n");
+//            } else {
+//                print("ParseStarterProject failed to subscribe to push notifications on the broadcast channel with error = %@.\n", error)
+//            }
+//        }
+//    }
+//    
+//    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+//        if error.code == 3010 {
+//            print("Push notifications are not supported in the iOS Simulator.\n")
+//        } else {
+//            print("application:didFailToRegisterForRemoteNotificationsWithError: %@\n", error)
+//        }
+//    }
+//    
+//    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+//        PFPush.handlePush(userInfo)
+//        if application.applicationState == UIApplicationState.Inactive {
+//            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
+//        }
+//    }
+//    
+//    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+//         if application.applicationState == UIApplicationState.Inactive {
+//             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
+//        }
+//    }
+}

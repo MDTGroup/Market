@@ -32,7 +32,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   @IBOutlet weak var scrollCircle2: UIImageView!
   @IBOutlet weak var scrollCircle3: UIImageView!
   
-  var item: Item!
+  var item: Post!
   var isReadingFullDescription: Bool!
   var tapGesture: UITapGestureRecognizer!
   var imagePanGesture: UIPanGestureRecognizer!
@@ -43,7 +43,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     
     // Do any additional setup after loading the view.
     itemNameLabel.text = item.title
-    descriptionText.text = item.description
+    descriptionText.text = item.descriptionText
     descriptionText.selectable = false
     
     // Create the "padding" for the text
@@ -60,8 +60,8 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     view.addGestureRecognizer(tapGesture)
     
     // Load the thumbnail first for user to see while waiting for loading the full image
-    imageView.setImageWithURL(NSURL(string: item.thumbnailUrl)!)
-    imageView.setImageWithURL(NSURL(string: item.itemImageUrls[0])!)
+//    imageView.setImageWithURL(NSURL(string: item.thumbnailUrl)!)
+//    imageView.setImageWithURL(NSURL(string: item.itemImageUrls[0])!)
     imagePanGesture = UIPanGestureRecognizer(target: self, action: "changeImage:")
     imageView.addGestureRecognizer(imagePanGesture)
     
@@ -136,7 +136,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
         if selectedImage == 3 {
           selectedImage = 0
         }
-        imageView.setImageWithURL(NSURL(string: item.itemImageUrls[selectedImage])!)
+//        imageView.setImageWithURL(NSURL(string: item.itemImageUrls[selectedImage])!)
         setImageScroll(selectedImage)
       }
     }

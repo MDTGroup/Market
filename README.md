@@ -4,7 +4,7 @@ An iOS Swift application for shopping. People can use this app for selling/buyin
 ### Features
 
 #### Required
-- [ ] User can login/logout/signup through Parse/Facebook
+- [ ] User can login/logout/signup
 - [ ] User can see a list of posts from:
     - [ ] Following sellers
     - [ ] User's choice
@@ -23,6 +23,7 @@ An iOS Swift application for shopping. People can use this app for selling/buyin
 - [ ] A Settings page to control Saved list, profile, Following, Notifications hashtag …
     
 #### Optional
+- [ ] Login Facebook/Twitter
 - [ ] User can create account for a branch
 - [ ] User can see posts they voted
 - [ ] Report posts
