@@ -91,17 +91,17 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     
     switch selected {
     case 0:
-      scrollCircle1.backgroundColor = UIColor.whiteColor()
+      scrollCircle1.backgroundColor = MyColors.bluesky
       scrollCircle2.backgroundColor = UIColor.lightGrayColor()
       scrollCircle3.backgroundColor = UIColor.lightGrayColor()
     case 1:
       scrollCircle1.backgroundColor = UIColor.lightGrayColor()
-      scrollCircle2.backgroundColor = UIColor.whiteColor()
+      scrollCircle2.backgroundColor = MyColors.bluesky
       scrollCircle3.backgroundColor = UIColor.lightGrayColor()
     case 2:
       scrollCircle1.backgroundColor = UIColor.lightGrayColor()
       scrollCircle2.backgroundColor = UIColor.lightGrayColor()
-      scrollCircle3.backgroundColor = UIColor.whiteColor()
+      scrollCircle3.backgroundColor = MyColors.bluesky
     default:
       return
     }
@@ -124,7 +124,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   
   func changeImage(sender: UIPanGestureRecognizer) {
     let velocity    = sender.velocityInView(view)
-    let translation = sender.translationInView(view)
+    //let translation = sender.translationInView(view)
     
     if sender.state == UIGestureRecognizerState.Began {
       
