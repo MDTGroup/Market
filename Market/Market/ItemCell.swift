@@ -81,9 +81,9 @@ class ItemCell: UITableViewCell {
   override func awakeFromNib() {
     super.awakeFromNib()
     // Initialization code
-    avatarImageView.layer.cornerRadius = 5
+    avatarImageView.layer.cornerRadius = 18
     avatarImageView.clipsToBounds = true
-    itemImageView.layer.cornerRadius = 10
+    itemImageView.layer.cornerRadius = 8
     itemImageView.clipsToBounds = true
     
     tapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
