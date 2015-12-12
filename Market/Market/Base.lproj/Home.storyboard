@@ -9,7 +9,7 @@
         <!--Market-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController storyboardIdentifier="homeVC" id="BYZ-38-t0r" customClass="HomeViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="HomeViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
                         <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
@@ -208,7 +208,7 @@
         <!--Tab Bar Controller-->
         <scene sceneID="PJs-Db-HG6">
             <objects>
-                <tabBarController id="y5O-xg-kZN" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="homeVC" id="y5O-xg-kZN" sceneMemberID="viewController">
                     <tabBar key="tabBar" contentMode="scaleToFill" id="Wff-xg-DX0">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="49"/>
                         <autoresizingMask key="autoresizingMask"/>

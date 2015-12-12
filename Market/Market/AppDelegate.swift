@@ -13,7 +13,7 @@ import Parse
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var storyboard = UIStoryboard(name: "Main", bundle: nil)
+    var storyboard = UIStoryboard(name: "Home", bundle: nil)
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -23,9 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
        // let name = newUser?["fullname"]!
         
         if newUser != nil {
-            //print("Current user detected: \(name)")
-            //let vc = storyboard.instantiateViewControllerWithIdentifier(“TweetsViewController”) as UIViewController
-            let vc = storyboard.instantiateViewControllerWithIdentifier("Home1") //as! UIViewController
+            let vc = storyboard.instantiateViewControllerWithIdentifier("homeVC") //as! UIViewController
             window?.rootViewController = vc
         }
         return true
