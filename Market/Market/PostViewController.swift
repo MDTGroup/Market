@@ -10,7 +10,7 @@ import UIKit
 import Parse
 
 class PostViewController: UIViewController {
-
+  
   @IBOutlet weak var imageView1: UIImageView!
   
   @IBOutlet weak var priceLabel: UITextField!
@@ -21,12 +21,12 @@ class PostViewController: UIViewController {
   
   var currentGeoPoint: PFGeoPoint?
   
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-      getCurrentLocation()
-    }
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    
+    // Do any additional setup after loading the view.
+    getCurrentLocation()
+  }
   
   // MARK: Get current location
   func getCurrentLocation() {
@@ -67,7 +67,7 @@ class PostViewController: UIViewController {
         print(percent)
     }
   }
-
+  
   func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
     
     let scale = newWidth / image.size.width
@@ -101,4 +101,18 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
     imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
     self.presentViewController(imagePicker, animated: true, completion: nil)
   }
+  
+  @IBAction func onTakePic(sender: UIButton) {
+    if UIImagePickerController.availableCaptureModesForCameraDevice(.Rear) != nil {
+      let imagePicker = UIImagePickerController()
+      imagePicker.delegate = self
+      imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+      self.presentViewController(imagePicker, animated: true, completion: nil)
+    }
+  }
+  
+  @IBAction func onDiscard(sender: UIButton) {
+    self.tabBarController!.selectedIndex = 0
+  }
+  
 }

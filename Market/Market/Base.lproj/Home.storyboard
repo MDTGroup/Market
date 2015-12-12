@@ -85,7 +85,7 @@
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yy4-Gj-6Dd">
+                                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="yy4-Gj-6Dd">
                                                     <rect key="frame" x="331" y="79" width="36" height="36"/>
                                                     <animations/>
                                                     <constraints>
@@ -317,8 +317,24 @@
                                     <action selector="onPostTapped:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="7cb-Jp-IPQ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2it-Cy-Gzl">
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWP-ln-uIp">
+                                <rect key="frame" x="20" y="28" width="74" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Discard"/>
+                                <connections>
+                                    <action selector="onDiscard:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="cVc-ge-agi"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c0r-rA-q7J">
                                 <rect key="frame" x="150" y="66" width="74" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Take Pic"/>
+                                <connections>
+                                    <action selector="onTakePic:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="9hJ-9Z-eNi"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2it-Cy-Gzl">
+                                <rect key="frame" x="150" y="28" width="74" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Save draft"/>
                             </button>
@@ -612,6 +628,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                    <connections>
+                        <outlet property="userLabel" destination="H5z-Cw-78q" id="8lN-gH-uZv"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="41Z-Ga-o0y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
