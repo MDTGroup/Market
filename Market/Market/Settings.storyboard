@@ -99,6 +99,9 @@
                                                 </switch>
                                             </subviews>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="6LD-NF-Ojj" kind="push" id="PA0-4w-SMc"/>
+                                        </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="k0A-JR-gYT">
                                         <rect key="frame" x="0.0" y="347" width="320" height="44"/>
@@ -149,9 +152,12 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CC7-pC-dGh">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CC7-pC-dGh">
                                                     <rect key="frame" x="119" y="5" width="83" height="30"/>
                                                     <animations/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="30" id="RTy-E0-M10"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
                                                     <state key="normal" title="Logout"/>
                                                     <connections>
@@ -193,7 +199,36 @@
                 <viewControllerPlaceholder storyboardName="Main" id="s6N-xD-Q60" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="unS-x1-xnr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="520" y="1408"/>
+            <point key="canvasLocation" x="148.5" y="1434"/>
+        </scene>
+        <!--Following-->
+        <scene sceneID="taK-7M-BTR">
+            <objects>
+                <tableViewController id="6LD-NF-Ojj" customClass="FollowingTableViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="JXc-GC-KAM">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="TPb-xs-8u2">
+                                <rect key="frame" x="0.0" y="92" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TPb-xs-8u2" id="un6-Si-aRw">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="6LD-NF-Ojj" id="zZi-aU-0G5"/>
+                            <outlet property="delegate" destination="6LD-NF-Ojj" id="CxQ-ng-FIR"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Following" id="Jin-xB-eho"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jql-ye-KlP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="513" y="1724"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="tHn-CC-iYt">
@@ -298,7 +333,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QRe-fV-eBf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="693" y="1049"/>
+            <point key="canvasLocation" x="760" y="1034"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="T02-gl-4tS">
@@ -317,7 +352,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tW0-kl-jRj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-106" y="1077"/>
+            <point key="canvasLocation" x="-169" y="1074"/>
         </scene>
     </scenes>
     <resources>

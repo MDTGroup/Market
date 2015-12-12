@@ -20,6 +20,9 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
 
         spinner = UIActivityIndicatorView(frame: CGRectMake(0, 0, 150, 150))
+        
+        //set focus to usernameField
+        self.usernameField.becomeFirstResponder()
     }
 
     override func didReceiveMemoryWarning() {

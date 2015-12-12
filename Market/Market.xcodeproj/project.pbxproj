@@ -32,6 +32,7 @@
 		44F5BEC11C1BD5A9006317E0 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F5BEBB1C1BD5A9006317E0 /* PostViewController.swift */; };
 		44F5BEC61C1C13FA006317E0 /* Vote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F5BEC51C1C13FA006317E0 /* Vote.swift */; };
 		6084BABE268CE5FEEC54FF73 /* Pods_Market.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F9798A0C1DF9D526E69107 /* Pods_Market.framework */; };
+		BAF3B6351C1C7CCC000E1CA1 /* FollowingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAF3B6341C1C7CCC000E1CA1 /* FollowingTableViewController.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -64,6 +65,7 @@
 		44F5BEC51C1C13FA006317E0 /* Vote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vote.swift; sourceTree = "<group>"; };
 		57F9BF2C807981DB30BD5F78 /* Pods-Market.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Market.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Market/Pods-Market.debug.xcconfig"; sourceTree = "<group>"; };
 		69654767A8CF7FE4F8CB4B5B /* Pods-Market.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Market.release.xcconfig"; path = "Pods/Target Support Files/Pods-Market/Pods-Market.release.xcconfig"; sourceTree = "<group>"; };
+		BAF3B6341C1C7CCC000E1CA1 /* FollowingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowingTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,6 +106,7 @@
 				4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */,
 				18E098A91C1C112700A1F217 /* ProfileViewController.swift */,
 				18E098AB1C1C11BF00A1F217 /* UserTimelineViewController.swift */,
+				BAF3B6341C1C7CCC000E1CA1 /* FollowingTableViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -313,6 +316,7 @@
 				4483EF691C1B370B002C98DA /* User.swift in Sources */,
 				44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */,
 				44F5BEBD1C1BD5A9006317E0 /* HomeViewController.swift in Sources */,
+				BAF3B6351C1C7CCC000E1CA1 /* FollowingTableViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
