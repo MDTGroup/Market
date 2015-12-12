@@ -13,10 +13,21 @@ import Parse
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var storyboard = UIStoryboard(name: "Main", bundle: nil)
 
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         setupForParse(application, launchOptions: launchOptions)
+        
+        let newUser = PFUser.currentUser()
+       // let name = newUser?["fullname"]!
+        
+        if newUser != nil {
+            //print("Current user detected: \(name)")
+            //let vc = storyboard.instantiateViewControllerWithIdentifier(“TweetsViewController”) as UIViewController
+            let vc = storyboard.instantiateViewControllerWithIdentifier("Home1") //as! UIViewController
+            window?.rootViewController = vc
+        }
         return true
     }
 
