@@ -6,5 +6,6 @@ use_frameworks!
 target 'Market' do
 pod 'Parse'
 pod 'AFNetworking'
+pod 'DateTools'
 end
 

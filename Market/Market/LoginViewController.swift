@@ -66,6 +66,7 @@ class LoginViewController: UIViewController {
 //                        let viewController:UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("Home") //as! UIViewController
 //                        self.presentViewController(viewController, animated: true, completion: nil)
                         print("login successfully")
+                      self.gotoHome()
                     })
                     
                 } else {
@@ -75,7 +76,10 @@ class LoginViewController: UIViewController {
             })
         }
     }
-   
+  
+  func gotoHome() {
+    performSegueWithIdentifier("homeSegue", sender: self)
+  }
     
     @IBAction func onClose(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)

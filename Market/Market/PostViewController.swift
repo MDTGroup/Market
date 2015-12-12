@@ -7,34 +7,75 @@
 //
 
 import UIKit
+import Parse
 
 class PostViewController: UIViewController {
 
   @IBOutlet weak var imageView1: UIImageView!
   
+  @IBOutlet weak var priceLabel: UITextField!
+  @IBOutlet weak var conditionSegment: UISegmentedControl!
+  
+  @IBOutlet weak var titleLabel: UITextField!
+  @IBOutlet weak var descriptionText: UITextView!
+  
+  var currentGeoPoint:PFGeoPoint?
+  
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+      getCurrentLocation()
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
   
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+  // MARK: Get current location
+  func getCurrentLocation() {
+    PFGeoPoint.geoPointForCurrentLocationInBackground({ (geoPoint, error) -> Void in
+      guard error == nil else {
+        print(error)
+        return
+      }
+      self.currentGeoPoint = geoPoint
+    })
+  }
+  
+  @IBAction func onPostTapped(sender: UIButton) {
+    savePost()
+  }
+  
+  func savePost() {
+    let image = imageView1.image
+    let thumbnails = resizeImage(image!, newWidth: 150)
+    let imageFile = PFFile(name: "img1.png", data: UIImagePNGRepresentation(image!)!)!
+    let thumbnailsFile = PFFile(name: "img1-thumbs.png", data: UIImagePNGRepresentation(thumbnails)!)!
+    
+    let post = Post()
+    post.medias = [thumbnailsFile, imageFile]
+    
+    post.title = titleLabel.text!
+    post.price = Double(priceLabel.text!)!
+    post.condition = conditionSegment.selectedSegmentIndex // 0 = new
+    post.sold = false
+    post.descriptionText = descriptionText.text
+    post.location = currentGeoPoint
+    post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
+      print(post)
+      }) { (post: Post, percent: Float) -> Void in
+        print(percent)
     }
-    */
+  }
 
+  func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
+    
+    let scale = newWidth / image.size.width
+    let newHeight = image.size.height * scale
+    UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight))
+    image.drawInRect(CGRectMake(0, 0, newWidth, newHeight))
+    let newImage = UIGraphicsGetImageFromCurrentImageContext()
+    UIGraphicsEndImageContext()
+    
+    return newImage
+  }
 }
 
 extension PostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {

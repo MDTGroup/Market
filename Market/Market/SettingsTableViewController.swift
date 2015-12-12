@@ -25,7 +25,7 @@ class SettingsTableViewController: UITableViewController {
         let newUser = PFUser.currentUser()
         
         
-        self.fullnameLabel.text = newUser?["fullname"]! as? String
+        //self.fullnameLabel.text = newUser?["fullname"]! as? String
         
     }
 

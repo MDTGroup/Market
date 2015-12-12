@@ -10,7 +10,7 @@ import Foundation
 import Parse
 
 class User: PFUser {
-    
+    @NSManaged var avatar: PFFile?
     @NSManaged var fullName: String
     @NSManaged var gender: Int
     @NSManaged var location: PFGeoPoint?

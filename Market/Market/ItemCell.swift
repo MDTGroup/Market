@@ -8,6 +8,7 @@
 
 import UIKit
 import AFNetworking
+import DateTools
 
 @objc protocol ItemCellDelegate {
   optional func itemCell(tweetCell: ItemCell, didChangeVote value: Bool)
@@ -30,26 +31,45 @@ class ItemCell: UITableViewCell {
   
   weak var delegate: ItemCellDelegate?
   
-  var item: Item! {
+  var item: Post! {
     didSet {
+      let post = item
       // Set seller
-      avatarImageView.alpha = 0.0
-      UIView.animateWithDuration(0.3, animations: {
-        self.avatarImageView.setImageWithURL(NSURL(string: self.item.avatarURL)!)
-        self.avatarImageView.alpha = 1.0
-        }, completion: nil)
-      sellerLabel.text = item.seller
+      
+//      post.user.fetchInBackgroundWithBlock { (pfObj, error) -> Void in
+//        guard error == nil else {
+//          print(error)
+//          return
+//        }
+//        if let user = pfObj as? User {
+//          if let avatar = user.avatar {
+//            self.avatarImageView.alpha = 0.0
+//            UIView.animateWithDuration(0.3, animations: {
+//              self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+//              self.avatarImageView.alpha = 1.0
+//              }, completion: nil)
+//          } else {
+//            // load no image
+//          }
+//    
+//          self.sellerLabel.text = user.fullName
+//        }
+//      }
       
       // Set Item
-      itemImageView.alpha = 0.0
-      UIView.animateWithDuration(0.3, animations: {
-        self.itemImageView.setImageWithURL(NSURL(string: self.item.thumbnailUrl)!)
-        self.itemImageView.alpha = 1.0
-        }, completion: nil)
-      itemNameLabel.text = item.title
-      descriptionLabel.text = item.description
-      timeAgoLabel.text = item.timeSincePosted
-      priceLabel.text = item.priceString
+      if post.medias.count > 0 {
+        itemImageView.alpha = 0.0
+        UIView.animateWithDuration(0.3, animations: {
+          self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
+          self.itemImageView.alpha = 1.0
+          }, completion: nil)
+      } else {
+        // Load no image
+      }
+            itemNameLabel.text = post.title
+      descriptionLabel.text = post.descriptionText
+      timeAgoLabel.text = post.updatedAt?.timeAgoSinceNow()
+      priceLabel.text = "\(post.price)"
     }
   }
   

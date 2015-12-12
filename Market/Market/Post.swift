@@ -24,7 +24,7 @@ class Post: PFObject, PFSubclassing {
     @NSManaged var descriptionText: String?
     @NSManaged var location: PFGeoPoint?
     @NSManaged var sold: Bool
-    @NSManaged var user: PFUser
+    @NSManaged var user: User
     @NSManaged var voteUsers: PFRelation
     @NSManaged var voteCounter:Int
     
