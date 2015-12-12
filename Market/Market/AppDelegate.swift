@@ -83,6 +83,7 @@ extension AppDelegate {
     }
     
     func setupSubclass() {
+        Vote.registerSubclass()
         User.registerSubclass()
         Post.registerSubclass()
         Follow.registerSubclass()

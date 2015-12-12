@@ -51,7 +51,6 @@ class HomeViewController: UIViewController {
     Post.getNewsfeed(NewsfeedType.Newest, params: params) { (posts, error) -> Void in
       if let posts = posts {
         self.posts = posts
-        //print(posts)
         self.tableView.reloadData()
         
         self.refreshControl.endRefreshing()
@@ -89,7 +88,6 @@ extension NSDate {
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCellDelegate {
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    print(posts.count)
     return posts.count
   }
   
