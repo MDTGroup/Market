@@ -19,7 +19,7 @@ class PostViewController: UIViewController {
   @IBOutlet weak var titleLabel: UITextField!
   @IBOutlet weak var descriptionText: UITextView!
   
-  var currentGeoPoint:PFGeoPoint?
+  var currentGeoPoint: PFGeoPoint?
   
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,6 +60,8 @@ class PostViewController: UIViewController {
     post.location = currentGeoPoint
     post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
       print(post)
+      self.tabBarController!.selectedIndex = 0
+      
       }) { (post: Post, percent: Float) -> Void in
         print(percent)
     }

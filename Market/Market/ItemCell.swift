@@ -35,26 +35,26 @@ class ItemCell: UITableViewCell {
     didSet {
       let post = item
       // Set seller
-      
-//      post.user.fetchInBackgroundWithBlock { (pfObj, error) -> Void in
-//        guard error == nil else {
-//          print(error)
-//          return
-//        }
-//        if let user = pfObj as? User {
-//          if let avatar = user.avatar {
-//            self.avatarImageView.alpha = 0.0
-//            UIView.animateWithDuration(0.3, animations: {
-//              self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
-//              self.avatarImageView.alpha = 1.0
-//              }, completion: nil)
-//          } else {
-//            // load no image
-//          }
-//    
-//          self.sellerLabel.text = user.fullName
-//        }
-//      }
+      self.sellerLabel.text = ""
+      post.user.fetchInBackgroundWithBlock { (pfObj, error) -> Void in
+        guard error == nil else {
+          print(error)
+          return
+        }
+        if let user = pfObj as? User {
+          if let avatar = user.avatar {
+            self.avatarImageView.alpha = 0.0
+            UIView.animateWithDuration(0.3, animations: {
+              self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+              self.avatarImageView.alpha = 1.0
+              }, completion: nil)
+          } else {
+            // load no image
+          }
+    
+          self.sellerLabel.text = user.fullName
+        }
+      }
       
       // Set Item
       if post.medias.count > 0 {

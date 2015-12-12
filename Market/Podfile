@@ -4,8 +4,9 @@ platform :ios, '8.0'
 use_frameworks!
 
 target 'Market' do
-pod 'Parse'
-pod 'AFNetworking'
-pod 'DateTools'
+  pod 'Parse'
+  pod 'AFNetworking'
+  pod 'DateTools'
+  pod 'MBProgressHUD', '~> 0.9.1'
 end
 

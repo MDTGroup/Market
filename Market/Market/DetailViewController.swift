@@ -60,8 +60,8 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     view.addGestureRecognizer(tapGesture)
     
     // Load the thumbnail first for user to see while waiting for loading the full image
-//    imageView.setImageWithURL(NSURL(string: item.thumbnailUrl)!)
-//    imageView.setImageWithURL(NSURL(string: item.itemImageUrls[0])!)
+    imageView.setImageWithURL(NSURL(string: item.medias[0].url!)!)
+    imageView.setImageWithURL(NSURL(string: item.medias[1].url!)!)
     imagePanGesture = UIPanGestureRecognizer(target: self, action: "changeImage:")
     imageView.addGestureRecognizer(imagePanGesture)
     
@@ -142,6 +142,9 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     }
   }
   
+  override func prefersStatusBarHidden() -> Bool {
+    return true
+  }
   
   // This can detect the tap, but the scroll will be recognized as tap as well :(
   //  override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
