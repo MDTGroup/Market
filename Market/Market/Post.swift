@@ -25,7 +25,7 @@ class Post: PFObject, PFSubclassing {
   @NSManaged var location: PFGeoPoint?
   @NSManaged var sold: Bool
   @NSManaged var user: User
-  @NSManaged var voteUsers: PFRelation
+  @NSManaged var vote: Vote?
   @NSManaged var voteCounter:Int
   @NSManaged var isDeleted: Bool
   
@@ -156,21 +156,29 @@ extension Post {
       return
     }
     let currentUser = User.currentUser()!
-    if enable {
-      voteCounter++
-      //voteUsers.addObject(currentUser)
-      currentUser.votedPosts.addObject(self)
-    } else {
-      voteCounter--
-      if voteCounter < 0 {
-        voteCounter = 0
-      }
-      //voteUsers.removeObject(currentUser)
-      currentUser.votedPosts.removeObject(self)
+    
+    if vote == nil {
+        vote = Vote()
     }
     
-    //saveInBackground()
-    currentUser.saveInBackgroundWithBlock(callback)
+    if let vote = vote {
+        if enable {
+          vote.voteCounter++
+          vote.voteUsers.addObject(currentUser)
+          currentUser.votedPosts.addObject(self)
+        } else {
+          vote.voteCounter--
+          if vote.voteCounter < 0 {
+            vote.voteCounter = 0
+          }
+          vote.voteUsers.removeObject(currentUser)
+          currentUser.votedPosts.removeObject(self)
+        }
+        
+        vote.saveInBackgroundWithBlock(callback)
+        currentUser.saveInBackgroundWithBlock(callback)
+        saveInBackgroundWithBlock(callback)
+    }
   }
 }
 

@@ -30,6 +30,7 @@
 		44F5BEBF1C1BD5A9006317E0 /* ItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F5BEB91C1BD5A9006317E0 /* ItemCell.swift */; };
 		44F5BEC01C1BD5A9006317E0 /* MyColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F5BEBA1C1BD5A9006317E0 /* MyColors.swift */; };
 		44F5BEC11C1BD5A9006317E0 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F5BEBB1C1BD5A9006317E0 /* PostViewController.swift */; };
+		44F5BEC61C1C13FA006317E0 /* Vote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F5BEC51C1C13FA006317E0 /* Vote.swift */; };
 		6084BABE268CE5FEEC54FF73 /* Pods_Market.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F9798A0C1DF9D526E69107 /* Pods_Market.framework */; };
 /* End PBXBuildFile section */
 
@@ -60,6 +61,7 @@
 		44F5BEB91C1BD5A9006317E0 /* ItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemCell.swift; sourceTree = "<group>"; };
 		44F5BEBA1C1BD5A9006317E0 /* MyColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyColors.swift; sourceTree = "<group>"; };
 		44F5BEBB1C1BD5A9006317E0 /* PostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
+		44F5BEC51C1C13FA006317E0 /* Vote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vote.swift; sourceTree = "<group>"; };
 		57F9BF2C807981DB30BD5F78 /* Pods-Market.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Market.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Market/Pods-Market.debug.xcconfig"; sourceTree = "<group>"; };
 		69654767A8CF7FE4F8CB4B5B /* Pods-Market.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Market.release.xcconfig"; path = "Pods/Target Support Files/Pods-Market/Pods-Market.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -84,6 +86,7 @@
 				4483EF641C1B370B002C98DA /* Post.swift */,
 				4483EF651C1B370B002C98DA /* Follow.swift */,
 				4483EF661C1B370B002C98DA /* User.swift */,
+				44F5BEC51C1C13FA006317E0 /* Vote.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -305,6 +308,7 @@
 				44F5BEC11C1BD5A9006317E0 /* PostViewController.swift in Sources */,
 				44F5BEBE1C1BD5A9006317E0 /* Item.swift in Sources */,
 				4483EF771C1B41DF002C98DA /* SettingsTableViewController.swift in Sources */,
+				44F5BEC61C1C13FA006317E0 /* Vote.swift in Sources */,
 				44F5BEC01C1BD5A9006317E0 /* MyColors.swift in Sources */,
 				4483EF691C1B370B002C98DA /* User.swift in Sources */,
 				44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */,
