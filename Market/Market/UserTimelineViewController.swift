@@ -14,11 +14,13 @@ class UserTimelineViewController: UIViewController {
   
   @IBOutlet weak var userLabel: UILabel!
   
+  @IBOutlet weak var avatarImageView: UIImageView!
   override func viewDidLoad() {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
     userLabel.text = user.fullName
+    avatarImageView.setImageWithURL(NSURL(string: user.avatar!.url!)!)
   }
   
   @IBAction func onBack(sender: UIButton) {
