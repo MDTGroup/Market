@@ -74,7 +74,7 @@ class HomeViewController: UIViewController {
     if (segue.identifier == "detailSegue") {
       let detailVC: DetailViewController = segue.destinationViewController as! DetailViewController
       let data = sender as! Post
-      detailVC.item = data
+      detailVC.post = data
     }
   }
   

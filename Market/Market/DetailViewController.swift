@@ -32,7 +32,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   @IBOutlet weak var scrollCircle2: UIImageView!
   @IBOutlet weak var scrollCircle3: UIImageView!
   
-  var item: Post!
+  var post: Post!
   var isReadingFullDescription: Bool!
   var tapGesture: UITapGestureRecognizer!
   var imagePanGesture: UIPanGestureRecognizer!
@@ -42,8 +42,8 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
-    itemNameLabel.text = item.title
-    descriptionText.text = item.descriptionText
+    itemNameLabel.text = post.title
+    descriptionText.text = post.descriptionText
     descriptionText.selectable = false
     
     // Create the "padding" for the text
@@ -60,8 +60,8 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     view.addGestureRecognizer(tapGesture)
     
     // Load the thumbnail first for user to see while waiting for loading the full image
-    imageView.setImageWithURL(NSURL(string: item.medias[0].url!)!)
-    imageView.setImageWithURL(NSURL(string: item.medias[1].url!)!)
+    imageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
+    imageView.setImageWithURL(NSURL(string: post.medias[1].url!)!)
     imagePanGesture = UIPanGestureRecognizer(target: self, action: "changeImage:")
     imageView.addGestureRecognizer(imagePanGesture)
     
@@ -178,14 +178,24 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     dismissViewControllerAnimated(true, completion: nil)
   }
   
-  // MARK: Network
-  //  func showNoNetwork(yPosition: CGFloat) {
-  //    UIView.animateWithDuration(0.5, animations: {
-  //      self.networkView.frame.origin.y = yPosition
-  //    })
-  //  }
-  //  
-  //  @IBAction func hideNetworkMessage(sender: AnyObject) {
-  //    showNoNetwork(invisiblePosition)
-  //  }
+  @IBAction func onSaveTapped(sender: UIButton) {
+    post.save(true) { (successful: Bool, error: NSError?) -> Void in
+      if successful {
+        print("saved")
+      } else {
+        print("failed to save")
+      }
+    }
+  }
+  
+  @IBAction func onVoteTapped(sender: UIButton) {
+    post.vote(true) { (successful: Bool, error: NSError?) -> Void in
+      if successful {
+        print("voted")
+      } else {
+        print("failed to vote")
+      }
+    }
+  }
+  
 }

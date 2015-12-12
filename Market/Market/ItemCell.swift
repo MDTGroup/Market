@@ -28,6 +28,7 @@ class ItemCell: UITableViewCell {
   @IBOutlet weak var voteButton: UIButton!
   @IBOutlet weak var saveButton: UIButton!
   @IBOutlet weak var chatButton: UIButton!
+  @IBOutlet weak var newTagImageView: UIImageView!
   
   weak var delegate: ItemCellDelegate?
   
@@ -36,7 +37,7 @@ class ItemCell: UITableViewCell {
       let post = item
       // Set seller
       self.sellerLabel.text = ""
-      post.user.fetchInBackgroundWithBlock { (pfObj, error) -> Void in
+      post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
         guard error == nil else {
           print(error)
           return
@@ -51,7 +52,7 @@ class ItemCell: UITableViewCell {
           } else {
             // load no image
           }
-    
+          
           self.sellerLabel.text = user.fullName
         }
       }
@@ -66,10 +67,11 @@ class ItemCell: UITableViewCell {
       } else {
         // Load no image
       }
-            itemNameLabel.text = post.title
+      itemNameLabel.text = post.title
       descriptionLabel.text = post.descriptionText
       timeAgoLabel.text = post.updatedAt?.timeAgoSinceNow()
       priceLabel.text = "\(post.price)"
+      newTagImageView.hidden = (post.condition > 0)
     }
   }
   
@@ -78,7 +80,7 @@ class ItemCell: UITableViewCell {
     // Initialization code
     avatarImageView.layer.cornerRadius = 5
     avatarImageView.clipsToBounds = true
-    itemImageView.layer.cornerRadius = 18
+    itemImageView.layer.cornerRadius = 10
     itemImageView.clipsToBounds = true
   }
   

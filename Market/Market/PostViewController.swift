@@ -58,6 +58,7 @@ class PostViewController: UIViewController {
     post.sold = false
     post.descriptionText = descriptionText.text
     post.location = currentGeoPoint
+    post.isDeleted = false
     post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
       print(post)
       self.tabBarController!.selectedIndex = 0
