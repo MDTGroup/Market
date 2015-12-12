@@ -13,6 +13,7 @@ import DateTools
 @objc protocol ItemCellDelegate {
   optional func itemCell(tweetCell: ItemCell, didChangeVote value: Bool)
   optional func itemCell(tweetCell: ItemCell, didChangeSave value: Bool)
+  optional func itemCell(itemCell: ItemCell, tapOnProfile value: Bool)
 }
 
 class ItemCell: UITableViewCell {
@@ -31,6 +32,8 @@ class ItemCell: UITableViewCell {
   @IBOutlet weak var newTagImageView: UIImageView!
   
   weak var delegate: ItemCellDelegate?
+  
+  var tapGesture: UITapGestureRecognizer!
   
   var item: Post! {
     didSet {
@@ -82,6 +85,9 @@ class ItemCell: UITableViewCell {
     avatarImageView.clipsToBounds = true
     itemImageView.layer.cornerRadius = 10
     itemImageView.clipsToBounds = true
+    
+    tapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
+    avatarImageView.addGestureRecognizer(tapGesture)
   }
   
   override func setSelected(selected: Bool, animated: Bool) {
@@ -116,4 +122,8 @@ class ItemCell: UITableViewCell {
     }
   }
   
+  func tapOnProfile(gesture: UITapGestureRecognizer) {
+    print("i tap on profile pic")
+    self.delegate?.itemCell?(self, tapOnProfile: true)
+  }
 }

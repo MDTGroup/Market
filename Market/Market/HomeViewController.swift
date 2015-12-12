@@ -47,7 +47,7 @@ class HomeViewController: UIViewController {
   func loadData() {
     var params = [String : AnyObject]()
     params["lastUpdatedAt"] = nil
-
+    
     Post.getNewsfeed(NewsfeedType.Newest, params: params) { (posts, error) -> Void in
       if let posts = posts {
         self.posts = posts
@@ -74,6 +74,10 @@ class HomeViewController: UIViewController {
       let detailVC: DetailViewController = segue.destinationViewController as! DetailViewController
       let data = sender as! Post
       detailVC.post = data
+    } else if (segue.identifier == "userTimelineSegue") {
+      let userTimelineVC: UserTimelineViewController = segue.destinationViewController as! UserTimelineViewController
+      let data = sender as! User
+      userTimelineVC.user = data
     }
   }
   
@@ -96,6 +100,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     cell.item = posts[indexPath.row]
     cell.delegate = self
     return cell
+  }
+  
+  func itemCell(itemCell: ItemCell, tapOnProfile value: Bool) {
+    print(itemCell.item.user.fullName)
+    performSegueWithIdentifier("userTimelineSegue", sender: itemCell.item.user)
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
