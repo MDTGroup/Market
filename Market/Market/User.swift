@@ -13,7 +13,7 @@ class User: PFUser {
     @NSManaged var avatar: PFFile?
     @NSManaged var fullName: String
     @NSManaged var gender: Int
-    @NSManaged var location: PFGeoPoint?
+    @NSManaged var address: String?
     @NSManaged var phone: String?
     @NSManaged var role: PFRole
     @NSManaged var config: PFConfig

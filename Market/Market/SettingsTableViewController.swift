@@ -12,6 +12,7 @@ import Parse
 class SettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var fullnameLabel: UILabel!
+    @IBOutlet weak var imagePickerView: UIImageView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,14 +23,24 @@ class SettingsTableViewController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
-        let newUser = PFUser.currentUser()
         
-        
-        //self.fullnameLabel.text = newUser?["fullname"]! as? String
+        if let currentUser = User.currentUser() {
+            //load fullname
+            self.fullnameLabel.text = currentUser.fullName
+            
+            //load avatar
+            if let imageFile = User.currentUser()!.objectForKey("avatar") as? PFFile {
+                imageFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
+                    self.imagePickerView.image = UIImage(data: data!)
+                }
+            } else {
+                print("User has not profile picture")
+            }
+        }
         
     }
-
-    override func didReceiveMemoryWarning() {
+    
+     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
@@ -50,11 +61,14 @@ class SettingsTableViewController: UITableViewController {
         PFUser.logOut()
         
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
-            let viewController:UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("Login") //as! UIViewController
+            //Return Home screen in storyboard = "Main"
+            let viewController:UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("Home") //as! UIViewController
             self.presentViewController(viewController, animated: true, completion: nil)
+            
         })
     }
     
+   
     /*
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
