@@ -46,11 +46,11 @@ class PostViewController: UIViewController {
   func savePost() {
     let image = imageView1.image
     let thumbnails = resizeImage(image!, newWidth: 150)
-    let imageFile = PFFile(name: "img1.png", data: UIImagePNGRepresentation(image!)!)!
-    let thumbnailsFile = PFFile(name: "img1-thumbs.png", data: UIImagePNGRepresentation(thumbnails)!)!
+    let imageFile = PFFile(name: "img1.jpg", data: UIImageJPEGRepresentation(image!, 0.5)!)
+    let thumbnailsFile = PFFile(name: "img1-thumbs.jpg", data: UIImageJPEGRepresentation(thumbnails, 0.5)!)
     
     let post = Post()
-    post.medias = [thumbnailsFile, imageFile]
+    post.medias = [thumbnailsFile!, imageFile!]
     
     post.title = titleLabel.text!
     post.price = Double(priceLabel.text!)!
