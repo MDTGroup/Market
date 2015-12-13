@@ -161,10 +161,12 @@ class PostViewController: UIViewController {
     let thumbnailsFile = PFFile(name: "thumb.jpg", data: UIImageJPEGRepresentation(thumbnails, 0.4)!)
     post.medias = [thumbnailsFile!, imageFile!]
     
-    for i in 1...images.count-1 {
-      image = resizeImage(images[i], newWidth: 1200)
-      imageFile = PFFile(name: "img\(i+1).jpg", data: UIImageJPEGRepresentation(image, 0.4)!)
-      post.medias.append(imageFile!)
+    if images.count > 1 {
+      for i in 1...images.count-1 {
+        image = resizeImage(images[i], newWidth: 1200)
+        imageFile = PFFile(name: "img\(i+1).jpg", data: UIImageJPEGRepresentation(image, 0.4)!)
+        post.medias.append(imageFile!)
+      }
     }
     
     post.title = titleLabel.text!

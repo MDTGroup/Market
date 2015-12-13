@@ -119,7 +119,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
       if tapLocation.y >= dimmingView.frame.origin.y {
         if !isReadingFullDescription {
           isReadingFullDescription = true
-          showDescription(55, bgAlpha: 0.8)
+          showDescription(55, bgAlpha: 0.9)
         } else {
           isReadingFullDescription = false
           showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.1)
@@ -173,16 +173,17 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   //  }
   
   func showDescription(y: CGFloat, bgAlpha: CGFloat) {
-    UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
-      self.dimmingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: bgAlpha)
-      let dimmingHeight = UIScreen.mainScreen().bounds.height - y - 40
-      self.dimmingViewHeight.constant = dimmingHeight
-      
-      // The size of the textView to fit its content
-      let newSize = self.descriptionText.sizeThatFits(CGSize(width: self.descriptionText.frame.width, height: CGFloat.max))
-      self.textHeight.constant = min(dimmingHeight - 8, newSize.height)
-      print("\(dimmingHeight)" + "   " + "\(self.textHeight.constant)")
-      }, completion: nil)
+    let dimmingHeight = UIScreen.mainScreen().bounds.height - y - 40
+    dimmingViewHeight.constant = dimmingHeight
+    // The size of the textView to fit its content
+    let newSize = self.descriptionText.sizeThatFits(CGSize(width: self.descriptionText.frame.width, height: CGFloat.max))
+    
+    dimmingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: bgAlpha)
+    textHeight.constant = min(dimmingHeight - 8, newSize.height)
+    
+    UIView.animateWithDuration(0.4) {
+      self.view.layoutIfNeeded()
+    }
   }
   
   @IBAction func onCancel(sender: UIButton) {
