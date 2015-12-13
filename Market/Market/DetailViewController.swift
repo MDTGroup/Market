@@ -36,7 +36,8 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   var isReadingFullDescription: Bool!
   var tapGesture: UITapGestureRecognizer!
   var imagePanGesture: UIPanGestureRecognizer!
-  var selectedImage = 0
+  var selectedImage = 1
+  var nImages: Int = 1
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -47,7 +48,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     descriptionText.selectable = false
     
     // Create the "padding" for the text
-    descriptionText.textContainerInset = UIEdgeInsetsMake(0, 10, 0, 10)
+    descriptionText.textContainerInset = UIEdgeInsetsMake(8, 10, 0, 10)
     isReadingFullDescription = false
     showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.1)
     
@@ -64,6 +65,11 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     imageView.setImageWithURL(NSURL(string: post.medias[1].url!)!)
     imagePanGesture = UIPanGestureRecognizer(target: self, action: "changeImage:")
     imageView.addGestureRecognizer(imagePanGesture)
+    
+    nImages = post.medias.count - 1
+    scrollCircle1.hidden = nImages < 2
+    scrollCircle2.hidden = nImages < 2
+    scrollCircle3.hidden = nImages < 3
     
     // Set the buttons width equally
     let w = UIScreen.mainScreen().bounds.width
@@ -90,15 +96,15 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     scrollCircle3.clipsToBounds = true
     
     switch selected {
-    case 0:
+    case 1:
       scrollCircle1.backgroundColor = MyColors.bluesky
       scrollCircle2.backgroundColor = UIColor.lightGrayColor()
       scrollCircle3.backgroundColor = UIColor.lightGrayColor()
-    case 1:
+    case 2:
       scrollCircle1.backgroundColor = UIColor.lightGrayColor()
       scrollCircle2.backgroundColor = MyColors.bluesky
       scrollCircle3.backgroundColor = UIColor.lightGrayColor()
-    case 2:
+    case 3:
       scrollCircle1.backgroundColor = UIColor.lightGrayColor()
       scrollCircle2.backgroundColor = UIColor.lightGrayColor()
       scrollCircle3.backgroundColor = MyColors.bluesky
@@ -113,7 +119,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
       if tapLocation.y >= dimmingView.frame.origin.y {
         if !isReadingFullDescription {
           isReadingFullDescription = true
-          showDescription(65, bgAlpha: 0.8)
+          showDescription(54, bgAlpha: 0.9)
         } else {
           isReadingFullDescription = false
           showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.1)
@@ -131,14 +137,19 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     } else if sender.state == UIGestureRecognizerState.Changed {
       
     } else if sender.state == UIGestureRecognizerState.Ended {
-      if velocity.x > 0 {
+      if velocity.x < 0 {
         selectedImage += 1
-        if selectedImage == 3 {
-          selectedImage = 0
+        if selectedImage > nImages {
+          selectedImage = 1
         }
-//        imageView.setImageWithURL(NSURL(string: item.itemImageUrls[selectedImage])!)
-        setImageScroll(selectedImage)
+      } else {
+        selectedImage -= 1
+        if selectedImage < 1 {
+          selectedImage = nImages
+        }
       }
+      imageView.setImageWithURL(NSURL(string: post.medias[selectedImage].url!)!)
+      setImageScroll(selectedImage)
     }
   }
   
@@ -162,16 +173,17 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   //  }
   
   func showDescription(y: CGFloat, bgAlpha: CGFloat) {
-    UIView.animateWithDuration(0.3, delay: 0.0, options: UIViewAnimationOptions.CurveEaseOut, animations: {
+    let dimmingHeight = UIScreen.mainScreen().bounds.height - y - 40
+    dimmingViewHeight.constant = dimmingHeight
+    // The size of the textView to fit its content
+    let newSize = self.descriptionText.sizeThatFits(CGSize(width: self.descriptionText.frame.width, height: CGFloat.max))
+    
+    textHeight.constant = min(dimmingHeight - 8, newSize.height)
+    
+    UIView.animateWithDuration(0.4) {
       self.dimmingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: bgAlpha)
-      let dimmingHeight = UIScreen.mainScreen().bounds.height - y - 40
-      self.dimmingViewHeight.constant = dimmingHeight
-      
-      // The size of the textView to fit its content
-      let newSize = self.descriptionText.sizeThatFits(CGSize(width: self.descriptionText.frame.width, height: CGFloat.max))
-      self.textHeight.constant = min(dimmingHeight - 8, newSize.height)
-      print("\(dimmingHeight)" + "   " + "\(self.textHeight.constant)")
-      }, completion: nil)
+      self.view.layoutIfNeeded()
+    }
   }
   
   @IBAction func onCancel(sender: UIButton) {

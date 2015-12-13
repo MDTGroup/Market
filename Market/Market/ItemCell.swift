@@ -72,7 +72,20 @@ class ItemCell: UITableViewCell {
       }
       itemNameLabel.text = post.title
       descriptionLabel.text = post.descriptionText
-      timeAgoLabel.text = post.updatedAt?.timeAgoSinceNow()
+      
+      let elapsedTime = NSDate().timeIntervalSinceDate(post.updatedAt!)
+      var timeSinceCreated = ""
+      if elapsedTime < 60 {
+        timeSinceCreated = String(Int(elapsedTime)) + "s"
+      } else if elapsedTime < 3600 {
+        timeSinceCreated = String(Int(elapsedTime / 60)) + "m"
+      } else if elapsedTime < 24*3600 {
+        timeSinceCreated = String(Int(elapsedTime / 60 / 60)) + "h"
+      } else {
+        timeSinceCreated = String(Int(elapsedTime / 60 / 60 / 24)) + "d"
+      }
+      timeAgoLabel.text = timeSinceCreated
+      
       priceLabel.text = "\(post.price)"
       newTagImageView.hidden = (post.condition > 0)
     }
