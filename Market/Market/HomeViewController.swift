@@ -18,6 +18,8 @@ class HomeViewController: UIViewController {
   var refreshControl = UIRefreshControl()
   var loadingView: UIActivityIndicatorView!
   var isLoadingNextPage = false
+  var isEndOfFeed = false
+  var noMoreResultLabel = UILabel()
   
   //var items = [Item]()
   var posts = [Post]()
@@ -29,8 +31,7 @@ class HomeViewController: UIViewController {
     tableView.delegate = self
     
     // Refresh control
-    //    refreshControl.tintColor = UIColor.whiteColor()
-    refreshControl.addTarget(self, action: Selector("loadData"), forControlEvents: UIControlEvents.ValueChanged)
+    refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
     tableView.addSubview(refreshControl)
     
     // Add the activity Indicator for table footer for infinity load
@@ -39,33 +40,50 @@ class HomeViewController: UIViewController {
     loadingView.center = tableFooterView.center
     loadingView.hidesWhenStopped = true
     tableFooterView.addSubview(loadingView)
+    // Initialize the noMoreResult
+    noMoreResultLabel.frame = tableFooterView.frame
+    noMoreResultLabel.text = "No more result"
+    noMoreResultLabel.textAlignment = NSTextAlignment.Center
+    noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
+    noMoreResultLabel.textColor = UIColor.grayColor()
+    noMoreResultLabel.hidden = true
+    tableFooterView.addSubview(noMoreResultLabel)
+    tableView.tableFooterView = tableFooterView
     
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-    loadData()
+    loadNewestData()
   }
   
-  func loadData() {
-    var params = [String : AnyObject]()
-    params["lastUpdatedAt"] = nil
-    
+  func loadNewestData() {
+    loadData(["lastUpdatedAt": NSDate()])
+  }
+  
+  func loadDataSince(lastUpdatedAt: NSDate) {
+    loadData(["lastUpdatedAt": lastUpdatedAt])
+  }
+  
+  func loadData(params: [String: NSDate]) {
     Post.getNewsfeed(NewsfeedType.Newest, params: params) { (posts, error) -> Void in
       if let posts = posts {
-        self.posts = posts
-        self.tableView.reloadData()
+        if posts.count == 0 {
+          self.isEndOfFeed = true
+        }
         
-        self.refreshControl.endRefreshing()
-        self.loadingView.stopAnimating()
-        self.isLoadingNextPage = false
-        MBProgressHUD.hideHUDForView(self.view, animated: true)
+        for p in posts {
+          self.posts.append(p)
+        }
+        self.tableView.reloadData()
         
       } else {
         print(error)
-        
-        self.refreshControl.endRefreshing()
-        self.loadingView.stopAnimating()
-        self.isLoadingNextPage = false
-        MBProgressHUD.hideHUDForView(self.view, animated: true)
+        self.isEndOfFeed = true
       }
+      
+      self.noMoreResultLabel.hidden = !self.isEndOfFeed
+      self.refreshControl.endRefreshing()
+      self.loadingView.stopAnimating()
+      self.isLoadingNextPage = false
+      MBProgressHUD.hideHUDForView(self.view, animated: true)
     }
   }
   
@@ -99,6 +117,16 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     let cell = tableView.dequeueReusableCellWithIdentifier("itemCell", forIndexPath: indexPath) as! ItemCell
     cell.item = posts[indexPath.row]
     cell.delegate = self
+    
+    // Infinite load if last cell
+    if !isLoadingNextPage && !isEndOfFeed {
+      if indexPath.row == posts.count - 1 {
+        loadingView.startAnimating()
+        isLoadingNextPage = true
+        loadDataSince(cell.item.updatedAt!)
+      }
+    }
+    
     return cell
   }
   
@@ -113,4 +141,5 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     
     performSegueWithIdentifier("detailSegue", sender: item)
   }
+  
 }

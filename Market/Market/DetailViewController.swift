@@ -113,7 +113,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
       if tapLocation.y >= dimmingView.frame.origin.y {
         if !isReadingFullDescription {
           isReadingFullDescription = true
-          showDescription(65, bgAlpha: 0.8)
+          showDescription(55, bgAlpha: 0.8)
         } else {
           isReadingFullDescription = false
           showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.1)
