@@ -19,6 +19,9 @@ class SignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         spinner = UIActivityIndicatorView(frame: CGRectMake(0, 0, 150, 150))
+        
+        //set focus to fullnameField
+        self.fullnameField.becomeFirstResponder()
     }
     
     @IBAction func signUpTap(sender: AnyObject) {
