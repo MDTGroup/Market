@@ -37,6 +37,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   var tapGesture: UITapGestureRecognizer!
   var imagePanGesture: UIPanGestureRecognizer!
   var selectedImage = 1
+  var nImages: Int = 1
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -64,6 +65,11 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     imageView.setImageWithURL(NSURL(string: post.medias[1].url!)!)
     imagePanGesture = UIPanGestureRecognizer(target: self, action: "changeImage:")
     imageView.addGestureRecognizer(imagePanGesture)
+    
+    nImages = post.medias.count - 1
+    scrollCircle1.hidden = nImages < 2
+    scrollCircle2.hidden = nImages < 2
+    scrollCircle3.hidden = nImages < 3
     
     // Set the buttons width equally
     let w = UIScreen.mainScreen().bounds.width
@@ -133,13 +139,13 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     } else if sender.state == UIGestureRecognizerState.Ended {
       if velocity.x < 0 {
         selectedImage += 1
-        if selectedImage > 3 {
+        if selectedImage > nImages {
           selectedImage = 1
         }
       } else {
         selectedImage -= 1
         if selectedImage < 1 {
-          selectedImage = 3
+          selectedImage = nImages
         }
       }
       imageView.setImageWithURL(NSURL(string: post.medias[selectedImage].url!)!)
