@@ -36,7 +36,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   var isReadingFullDescription: Bool!
   var tapGesture: UITapGestureRecognizer!
   var imagePanGesture: UIPanGestureRecognizer!
-  var selectedImage = 0
+  var selectedImage = 1
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -90,15 +90,15 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     scrollCircle3.clipsToBounds = true
     
     switch selected {
-    case 0:
+    case 1:
       scrollCircle1.backgroundColor = MyColors.bluesky
       scrollCircle2.backgroundColor = UIColor.lightGrayColor()
       scrollCircle3.backgroundColor = UIColor.lightGrayColor()
-    case 1:
+    case 2:
       scrollCircle1.backgroundColor = UIColor.lightGrayColor()
       scrollCircle2.backgroundColor = MyColors.bluesky
       scrollCircle3.backgroundColor = UIColor.lightGrayColor()
-    case 2:
+    case 3:
       scrollCircle1.backgroundColor = UIColor.lightGrayColor()
       scrollCircle2.backgroundColor = UIColor.lightGrayColor()
       scrollCircle3.backgroundColor = MyColors.bluesky
@@ -131,14 +131,19 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     } else if sender.state == UIGestureRecognizerState.Changed {
       
     } else if sender.state == UIGestureRecognizerState.Ended {
-      if velocity.x > 0 {
+      if velocity.x < 0 {
         selectedImage += 1
-        if selectedImage == 3 {
-          selectedImage = 0
+        if selectedImage > 3 {
+          selectedImage = 1
         }
-//        imageView.setImageWithURL(NSURL(string: item.itemImageUrls[selectedImage])!)
-        setImageScroll(selectedImage)
+      } else {
+        selectedImage -= 1
+        if selectedImage < 1 {
+          selectedImage = 3
+        }
       }
+      imageView.setImageWithURL(NSURL(string: post.medias[selectedImage].url!)!)
+      setImageScroll(selectedImage)
     }
   }
   

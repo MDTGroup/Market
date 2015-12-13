@@ -239,35 +239,49 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yf7-JR-60A">
-                                <rect key="frame" x="20" y="66" width="74" height="30"/>
+                            <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="VqO-L7-xDr">
+                                <rect key="frame" x="12" y="120" width="100" height="100"/>
                                 <animations/>
-                                <state key="normal" title="Add media"/>
+                                <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <gestureRecognizers/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="CmM-1a-0fy"/>
+                                    <constraint firstAttribute="width" constant="100" id="Eq6-gY-FnB"/>
+                                </constraints>
                                 <connections>
-                                    <action selector="onAddMedia:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="Mhp-8Q-0RO"/>
+                                    <outletCollection property="gestureRecognizers" destination="nDh-yd-pWB" appends="YES" id="oeb-zM-UON"/>
+                                    <outletCollection property="gestureRecognizers" destination="O2E-Zq-0Ec" appends="YES" id="EOb-oE-EvN"/>
                                 </connections>
-                            </button>
-                            <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="VqO-L7-xDr">
-                                <rect key="frame" x="14" y="127" width="100" height="100"/>
-                                <animations/>
                             </imageView>
-                            <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="2k0-O0-UtR">
-                                <rect key="frame" x="137" y="127" width="100" height="100"/>
+                            <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="2k0-O0-UtR">
+                                <rect key="frame" x="138" y="120" width="100" height="100"/>
                                 <animations/>
+                                <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="hJO-9s-yOd" appends="YES" id="F4v-er-NV9"/>
+                                    <outletCollection property="gestureRecognizers" destination="N58-mY-7aD" appends="YES" id="hYL-Hm-dxK"/>
+                                </connections>
                             </imageView>
-                            <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="QL4-ep-Xye">
-                                <rect key="frame" x="261" y="127" width="100" height="100"/>
+                            <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="QL4-ep-Xye">
+                                <rect key="frame" x="263" y="120" width="100" height="100"/>
                                 <animations/>
+                                <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="gYT-d9-oDp" appends="YES" id="VvX-mB-368"/>
+                                    <outletCollection property="gestureRecognizers" destination="GR0-8o-Zki" appends="YES" id="Qws-Yk-WOb"/>
+                                </connections>
                             </imageView>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="50000" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="K9b-La-vnz">
-                                <rect key="frame" x="14" y="235" width="97" height="30"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="500000000" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="K9b-La-vnz">
+                                <rect key="frame" x="14" y="235" width="100" height="30"/>
                                 <animations/>
                                 <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="EkA-e2-m5n">
-                                <rect key="frame" x="143" y="237" width="197" height="29"/>
+                                <rect key="frame" x="137" y="237" width="180" height="29"/>
                                 <animations/>
                                 <segments>
                                     <segment title="New"/>
@@ -287,49 +301,26 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6FM-EI-36r">
-                                <rect key="frame" x="99" y="115" width="25" height="25"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6FM-EI-36r">
+                                <rect key="frame" x="97" y="115" width="20" height="20"/>
                                 <animations/>
-                                <state key="normal" title="x">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="PGI-un-oG3"/>
+                                    <constraint firstAttribute="width" constant="20" id="puw-ed-He4"/>
+                                </constraints>
+                                <state key="normal" image="remove">
                                     <color key="titleColor" red="0.18823529410000001" green="0.23137254900000001" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hxB-Wu-woM">
-                                <rect key="frame" x="222" y="115" width="25" height="25"/>
-                                <animations/>
-                                <state key="normal" title="x">
-                                    <color key="titleColor" red="0.18823529410000001" green="0.23137254900000001" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lFm-So-FFs">
-                                <rect key="frame" x="350" y="115" width="25" height="25"/>
-                                <animations/>
-                                <state key="normal" title="x">
-                                    <color key="titleColor" red="0.18823529410000001" green="0.23137254900000001" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ivI-hH-rm2">
-                                <rect key="frame" x="274" y="66" width="74" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Post"/>
                                 <connections>
-                                    <action selector="onPostTapped:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="7cb-Jp-IPQ"/>
+                                    <action selector="omRemoveImage1:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="TsA-GQ-9ig"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWP-ln-uIp">
-                                <rect key="frame" x="20" y="28" width="74" height="30"/>
+                                <rect key="frame" x="27" y="28" width="74" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Discard"/>
                                 <connections>
                                     <action selector="onDiscard:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="cVc-ge-agi"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="c0r-rA-q7J">
-                                <rect key="frame" x="150" y="66" width="74" height="30"/>
-                                <animations/>
-                                <state key="normal" title="Take Pic"/>
-                                <connections>
-                                    <action selector="onTakePic:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="9hJ-9Z-eNi"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2it-Cy-Gzl">
@@ -337,21 +328,118 @@
                                 <animations/>
                                 <state key="normal" title="Save draft"/>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcB-kb-mbO">
+                                <rect key="frame" x="223" y="115" width="20" height="20"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="ktY-jK-XZ1"/>
+                                    <constraint firstAttribute="width" constant="20" id="ncd-Ta-ynz"/>
+                                </constraints>
+                                <state key="normal" image="remove">
+                                    <color key="titleColor" red="0.18823529410000001" green="0.23137254900000001" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="onRemoveImage2:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="GZY-As-0Gl"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsk-ie-2qk">
+                                <rect key="frame" x="348" y="115" width="20" height="20"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="20" id="HEm-jI-Cgg"/>
+                                    <constraint firstAttribute="height" constant="20" id="adj-qp-PmV"/>
+                                </constraints>
+                                <state key="normal" image="remove">
+                                    <color key="titleColor" red="0.18823529410000001" green="0.23137254900000001" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="onRemoveImage3:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="fi5-tM-qdn"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ivI-hH-rm2">
+                                <rect key="frame" x="27" y="60" width="74" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Post"/>
+                                <connections>
+                                    <action selector="onPostTapped:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="7cb-Jp-IPQ"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="VqO-L7-xDr" firstAttribute="leading" secondItem="woC-3L-CrH" secondAttribute="leading" constant="12" id="0uC-sj-ISE"/>
+                            <constraint firstItem="QL4-ep-Xye" firstAttribute="width" secondItem="VqO-L7-xDr" secondAttribute="width" id="5E9-4o-tz8"/>
+                            <constraint firstItem="2k0-O0-UtR" firstAttribute="centerX" secondItem="woC-3L-CrH" secondAttribute="centerX" id="8BH-xH-9lC"/>
+                            <constraint firstItem="nsk-ie-2qk" firstAttribute="trailing" secondItem="QL4-ep-Xye" secondAttribute="trailing" constant="5" id="Fhu-IW-KlA"/>
+                            <constraint firstItem="2k0-O0-UtR" firstAttribute="top" secondItem="VqO-L7-xDr" secondAttribute="top" id="FpM-98-KRS"/>
+                            <constraint firstItem="xcB-kb-mbO" firstAttribute="top" secondItem="2k0-O0-UtR" secondAttribute="top" constant="-5" id="OCb-vw-z26"/>
+                            <constraint firstAttribute="trailing" secondItem="QL4-ep-Xye" secondAttribute="trailing" constant="12" id="Pop-ED-RyA"/>
+                            <constraint firstItem="QL4-ep-Xye" firstAttribute="height" secondItem="VqO-L7-xDr" secondAttribute="height" id="Qcq-1e-1vs"/>
+                            <constraint firstItem="QL4-ep-Xye" firstAttribute="top" secondItem="VqO-L7-xDr" secondAttribute="top" id="Rob-X4-hfh"/>
+                            <constraint firstItem="nsk-ie-2qk" firstAttribute="top" secondItem="QL4-ep-Xye" secondAttribute="top" constant="-5" id="Tik-v5-F9M"/>
+                            <constraint firstItem="xcB-kb-mbO" firstAttribute="trailing" secondItem="2k0-O0-UtR" secondAttribute="trailing" constant="5" id="UuJ-ZI-bsM"/>
+                            <constraint firstItem="2k0-O0-UtR" firstAttribute="width" secondItem="VqO-L7-xDr" secondAttribute="width" id="Wfl-KB-2sK"/>
+                            <constraint firstItem="VqO-L7-xDr" firstAttribute="top" secondItem="Udj-DA-9u2" secondAttribute="bottom" constant="100" id="cC9-Wy-lQv"/>
+                            <constraint firstItem="2k0-O0-UtR" firstAttribute="height" secondItem="VqO-L7-xDr" secondAttribute="height" id="fib-gA-Jct"/>
+                            <constraint firstItem="6FM-EI-36r" firstAttribute="trailing" secondItem="VqO-L7-xDr" secondAttribute="trailing" constant="5" id="gtI-OA-67S"/>
+                            <constraint firstItem="6FM-EI-36r" firstAttribute="top" secondItem="VqO-L7-xDr" secondAttribute="top" constant="-5" id="nce-SJ-Ud9"/>
+                        </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Post" image="thumb" id="kx5-Pu-fwF"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
                         <outlet property="conditionSegment" destination="EkA-e2-m5n" id="7Wu-Dg-3bU"/>
                         <outlet property="descriptionText" destination="dNx-Bd-FFR" id="AmC-En-QWb"/>
+                        <outlet property="imageHeight" destination="CmM-1a-0fy" id="3GX-nR-jxf"/>
                         <outlet property="imageView1" destination="VqO-L7-xDr" id="RUd-wp-SE5"/>
+                        <outlet property="imageView2" destination="2k0-O0-UtR" id="Fo6-Qa-ab4"/>
+                        <outlet property="imageView3" destination="QL4-ep-Xye" id="7Iy-Q7-yAl"/>
+                        <outlet property="imageWidth" destination="Eq6-gY-FnB" id="yN9-PO-aKt"/>
+                        <outlet property="iv1DoubleTap" destination="O2E-Zq-0Ec" id="Og1-dR-Erw"/>
+                        <outlet property="iv1SingleTap" destination="nDh-yd-pWB" id="9xq-ku-nEk"/>
+                        <outlet property="iv2DoubleTap" destination="N58-mY-7aD" id="lDD-Ib-MwX"/>
+                        <outlet property="iv2SingleTap" destination="hJO-9s-yOd" id="gJ5-QX-l39"/>
+                        <outlet property="iv3DoubleTap" destination="GR0-8o-Zki" id="Mwg-Rh-VD7"/>
+                        <outlet property="iv3SingleTap" destination="gYT-d9-oDp" id="46M-e2-ZvL"/>
                         <outlet property="priceLabel" destination="K9b-La-vnz" id="hVf-sG-rbC"/>
+                        <outlet property="removeButton1" destination="6FM-EI-36r" id="Dhd-wH-Qhi"/>
+                        <outlet property="removeButton2" destination="xcB-kb-mbO" id="obB-6G-HUc"/>
+                        <outlet property="removeButton3" destination="nsk-ie-2qk" id="nE4-lR-Nrh"/>
                         <outlet property="titleLabel" destination="q6d-kV-Gly" id="DdZ-9q-StF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ehs-vm-Q5M" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer id="nDh-yd-pWB" userLabel="iv1 tap">
+                    <connections>
+                        <action selector="onImageTapped:" destination="Bpo-Cl-zJV" id="gdK-Rc-AhD"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="hJO-9s-yOd" userLabel="iv2 tap">
+                    <connections>
+                        <action selector="onImageTapped:" destination="Bpo-Cl-zJV" id="BKq-uw-wZ7"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer id="gYT-d9-oDp" userLabel="iv3 tap">
+                    <connections>
+                        <action selector="onImageTapped:" destination="Bpo-Cl-zJV" id="uZ4-Wf-Jsv"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="O2E-Zq-0Ec" userLabel="iv1 doubleTap">
+                    <connections>
+                        <action selector="onImageDoubleTapped:" destination="Bpo-Cl-zJV" id="Fj0-9S-NQm"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="N58-mY-7aD" userLabel="iv2 doubleTap">
+                    <connections>
+                        <action selector="onImageDoubleTapped:" destination="Bpo-Cl-zJV" id="osT-Qh-qwV"/>
+                    </connections>
+                </tapGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="GR0-8o-Zki" userLabel="iv3 doubleTap">
+                    <connections>
+                        <action selector="onImageDoubleTapped:" destination="Bpo-Cl-zJV" id="FWA-Fe-4kn"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="581.5" y="1057.5"/>
         </scene>
@@ -665,6 +753,7 @@
         <image name="chat" width="50" height="50"/>
         <image name="chat_white" width="25" height="25"/>
         <image name="new_tag" width="75" height="74"/>
+        <image name="remove" width="32" height="32"/>
         <image name="save" width="50" height="50"/>
         <image name="save_white" width="25" height="25"/>
         <image name="thumb" width="50" height="50"/>
