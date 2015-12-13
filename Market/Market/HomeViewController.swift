@@ -50,11 +50,15 @@ class HomeViewController: UIViewController {
     tableFooterView.addSubview(noMoreResultLabel)
     tableView.tableFooterView = tableFooterView
     
+    let postVC: PostViewController = tabBarController?.viewControllers![1] as! PostViewController
+    postVC.delegate = self
+    
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
     loadNewestData()
   }
   
   func loadNewestData() {
+    posts = []
     loadData(["lastUpdatedAt": NSDate()])
   }
   
@@ -141,5 +145,13 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     
     performSegueWithIdentifier("detailSegue", sender: item)
   }
-  
 }
+
+extension HomeViewController: PostViewControllerDelegate {
+  func postViewController(postViewController: PostViewController, didUploadNewPost post: Post) {
+    print("i get new post, reload now")
+    posts.insert(post, atIndex: 0)
+    tableView.reloadData()
+  }
+}
+

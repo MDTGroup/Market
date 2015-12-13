@@ -9,6 +9,10 @@
 import UIKit
 import Parse
 
+@objc protocol PostViewControllerDelegate {
+  optional func postViewController(postViewController: PostViewController, didUploadNewPost post: Post)
+}
+
 class PostViewController: UIViewController {
   
   @IBOutlet weak var imageView1: UIImageView!
@@ -39,6 +43,8 @@ class PostViewController: UIViewController {
   var currentGeoPoint: PFGeoPoint?
   var selectedImageIndex: Int = 0
   var imagesAvail = [Bool](count: 3, repeatedValue: false)
+  
+  weak var delegate: PostViewControllerDelegate?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -178,6 +184,7 @@ class PostViewController: UIViewController {
     post.isDeleted = false
     post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
       print(post)
+      self.delegate?.postViewController?(self, didUploadNewPost: post)
       self.tabBarController!.selectedIndex = 0
       
       }) { (post: Post, percent: Float) -> Void in

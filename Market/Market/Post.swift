@@ -134,7 +134,7 @@ enum NewsfeedType {
 }
 
 extension Post {
-  static func getNewsfeed(type: NewsfeedType, params: [NSObject:AnyObject], callback: (posts: [Post]?, error: NSError?) -> Void) {
+  static func getNewsfeed(type: NewsfeedType, params: [NSObject: AnyObject], callback: (posts: [Post]?, error: NSError?) -> Void) {
     PFCloud.callFunctionInBackground(type.functionName, withParameters: params) { (responseData, error) -> Void in
       guard error == nil else {
         callback(posts: nil, error: error)
@@ -158,26 +158,26 @@ extension Post {
     let currentUser = User.currentUser()!
     
     if vote == nil {
-        vote = Vote()
+      vote = Vote()
     }
     
     if let vote = vote {
-        if enable {
-          vote.voteCounter++
-          vote.voteUsers.addObject(currentUser)
-          currentUser.votedPosts.addObject(self)
-        } else {
-          vote.voteCounter--
-          if vote.voteCounter < 0 {
-            vote.voteCounter = 0
-          }
-          vote.voteUsers.removeObject(currentUser)
-          currentUser.votedPosts.removeObject(self)
+      if enable {
+        vote.voteCounter++
+        vote.voteUsers.addObject(currentUser)
+        currentUser.votedPosts.addObject(self)
+      } else {
+        vote.voteCounter--
+        if vote.voteCounter < 0 {
+          vote.voteCounter = 0
         }
-        
-        vote.saveInBackgroundWithBlock(callback)
-        currentUser.saveInBackgroundWithBlock(callback)
-        saveInBackgroundWithBlock(callback)
+        vote.voteUsers.removeObject(currentUser)
+        currentUser.votedPosts.removeObject(self)
+      }
+      
+      vote.saveInBackgroundWithBlock(callback)
+      currentUser.saveInBackgroundWithBlock(callback)
+      saveInBackgroundWithBlock(callback)
     }
   }
 }

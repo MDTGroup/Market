@@ -48,7 +48,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     descriptionText.selectable = false
     
     // Create the "padding" for the text
-    descriptionText.textContainerInset = UIEdgeInsetsMake(0, 10, 0, 10)
+    descriptionText.textContainerInset = UIEdgeInsetsMake(8, 10, 0, 10)
     isReadingFullDescription = false
     showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.1)
     
@@ -119,7 +119,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
       if tapLocation.y >= dimmingView.frame.origin.y {
         if !isReadingFullDescription {
           isReadingFullDescription = true
-          showDescription(55, bgAlpha: 0.9)
+          showDescription(54, bgAlpha: 0.9)
         } else {
           isReadingFullDescription = false
           showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.1)
@@ -178,10 +178,10 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     // The size of the textView to fit its content
     let newSize = self.descriptionText.sizeThatFits(CGSize(width: self.descriptionText.frame.width, height: CGFloat.max))
     
-    dimmingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: bgAlpha)
     textHeight.constant = min(dimmingHeight - 8, newSize.height)
     
     UIView.animateWithDuration(0.4) {
+      self.dimmingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: bgAlpha)
       self.view.layoutIfNeeded()
     }
   }
