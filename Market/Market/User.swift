@@ -19,8 +19,9 @@ class User: PFUser {
     @NSManaged var config: PFConfig
     @NSManaged var savedPosts: PFRelation
     @NSManaged var votedPosts: PFRelation
+    @NSManaged var keywords: PFRelation
     
-    func getPosts(lastUpdated:NSDate?, callback: (posts: [Post]?, error: NSError?) -> Void) {
+    func getPosts(lastUpdated:NSDate?, callback: PostResultBlock) {
         if let query = Post.query() {
             query.limit = 20
             if let lastUpdated = lastUpdated {
@@ -39,6 +40,79 @@ class User: PFUser {
                     callback(posts: posts, error: nil)
                 }
             })
+        }
+    }
+    
+    func getFollowings(callback: UserResultBlock) {
+        if let query = Follow.query(), currentUser = User.currentUser() {
+            query.selectKeys(["to"])
+            query.whereKey("from", equalTo: currentUser)
+            query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
+                guard error == nil else {
+                    callback(users: nil, error: error)
+                    return
+                }
+
+                if let users = pfObjs as? [User] {
+                    callback(users: users, error: nil)
+                }
+            })
+        }
+    }
+    
+    func getFollowers(callback: UserResultBlock) {
+        if let query = Follow.query(), currentUser = User.currentUser() {
+            query.selectKeys(["from"])
+            query.whereKey("to", equalTo: currentUser)
+            query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
+                guard error == nil else {
+                    callback(users: nil, error: error)
+                    return
+                }
+                
+                if let users = pfObjs as? [User] {
+                    callback(users: users, error: nil)
+                }
+            })
+        }
+    }
+    
+    func getSavedPosts(callback: PostResultBlock) {
+        savedPosts.query().findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
+            guard error == nil else {
+                callback(posts: nil, error: error)
+                return
+            }
+            
+            if let posts = pfObjs as? [Post] {
+                callback(posts: posts, error: nil)
+            }
+        }
+    }
+    
+    func getVotedPosts(callback: PostResultBlock) {
+        votedPosts.query().findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
+            guard error == nil else {
+                callback(posts: nil, error: error)
+                return
+            }
+            
+            if let posts = pfObjs as? [Post] {
+                callback(posts: posts, error: nil)
+            }
+        }
+    }
+    
+    func getKeywords(callback: KeywordResultBlock) {
+        keywords.query().findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
+            guard error == nil else {
+                callback(keywords: nil, error: error)
+                return
+            }
+            
+            if let keywords = pfObjs as? [Keyword] {
+                callback(keywords: keywords, error: nil)
+            }
         }
     }
 }

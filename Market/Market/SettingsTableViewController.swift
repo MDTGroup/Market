@@ -58,7 +58,7 @@ class SettingsTableViewController: UITableViewController {
 //    }
     
     @IBAction func onLogout(sender: AnyObject) {
-        PFUser.logOut()
+        User.logOut()
         
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             //Return Home screen in storyboard = "Main"

@@ -15,13 +15,13 @@ class Follow: PFObject, PFSubclassing {
         return "Follows"
     }
     
-    @NSManaged var from: PFUser
-    @NSManaged var to: PFUser
+    @NSManaged var from: User
+    @NSManaged var to: User
 }
 
 // MARK: Add follow
 extension Follow {
-    static func follow(targetUser: PFUser, callback: PFBooleanResultBlock) {
+    static func follow(targetUser: User, callback: PFBooleanResultBlock) {
         guard User.currentUser() != nil else {
             print("Current user is nil")
             return

@@ -134,7 +134,7 @@ enum NewsfeedType {
 }
 
 extension Post {
-  static func getNewsfeed(type: NewsfeedType, params: [NSObject:AnyObject], callback: (posts: [Post]?, error: NSError?) -> Void) {
+  static func getNewsfeed(type: NewsfeedType, params: [NSObject:AnyObject], callback: PostResultBlock) {
     PFCloud.callFunctionInBackground(type.functionName, withParameters: params) { (responseData, error) -> Void in
       guard error == nil else {
         callback(posts: nil, error: error)
@@ -198,4 +198,20 @@ extension Post {
     
     currentUser.saveInBackgroundWithBlock(callback)
   }
+}
+
+// MARK: Search
+extension Post {
+    static func search(params: [String:AnyObject], callback: PostResultBlock) {
+        PFCloud.callFunctionInBackground("search", withParameters: params) { (response, error) -> Void in
+            guard error == nil else {
+                callback(posts: nil, error: error)
+                return
+            }
+            
+            if let posts = response as? [Post] {
+                callback(posts: posts, error: nil)
+            }
+        }
+    }
 }

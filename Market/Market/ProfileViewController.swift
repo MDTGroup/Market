@@ -77,19 +77,19 @@ class ProfileViewController: UIViewController {
         let finalEmail = email!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         
         // Validate the text fields
-         if fullname?.characters.count < 5 {
-            let alert = UIAlertView(title: "Invalid", message: "Fullname must be greater than 5 characters", delegate: self, cancelButtonTitle: "OK")
-            alert.show()
-        } else if phone?.characters.count < 1 {
-            let alert = UIAlertView(title: "Invalid", message: "Phone must be greater than 1 characters", delegate: self, cancelButtonTitle: "OK")
-            alert.show()
-        } else if email?.characters.count < 8 {
-            let alert = UIAlertView(title: "Invalid", message: "Please enter a valid email address", delegate: self, cancelButtonTitle: "OK")
-            alert.show()
-        } else if address?.characters.count < 1 {
-            let alert = UIAlertView(title: "Invalid", message: "Address must be greater than 1 characters", delegate: self, cancelButtonTitle: "OK")
-            alert.show()
-        } else {
+//        if fullname?.characters.count < 5 {
+//            let alert = UIAlertView(title: "Invalid", message: "Fullname must be greater than 5 characters", delegate: self, cancelButtonTitle: "OK")
+//            alert.show()
+//        } else if phone?.characters.count < 1 {
+//            let alert = UIAlertView(title: "Invalid", message: "Phone must be greater than 1 characters", delegate: self, cancelButtonTitle: "OK")
+//            alert.show()
+//        } else if email?.characters.count < 8 {
+//            let alert = UIAlertView(title: "Invalid", message: "Please enter a valid email address", delegate: self, cancelButtonTitle: "OK")
+//            alert.show()
+//        } else if address?.characters.count < 1 {
+//            let alert = UIAlertView(title: "Invalid", message: "Address must be greater than 1 characters", delegate: self, cancelButtonTitle: "OK")
+//            alert.show()
+//        } else {
             // Run a spinner to show a task in progress
             let spinner: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0, 0, 150, 150)) as UIActivityIndicatorView
             spinner.startAnimating()
@@ -118,12 +118,12 @@ class ProfileViewController: UIViewController {
                // Stop the spinner
                 spinner.stopAnimating()
                 if ((error) != nil) {
-                    let alert = UIAlertView(title: "Error", message: "\(error)", delegate: self, cancelButtonTitle: "OK")
-                    alert.show()
+//                    let alert = UIAlertView(title: "Error", message: "\(error)", delegate: self, cancelButtonTitle: "OK")
+//                    alert.show()
                     
                 } else {
-                    let alert = UIAlertView(title: "Success", message: "Update profile", delegate: self, cancelButtonTitle: "OK")
-                    alert.show()
+//                    let alert = UIAlertView(title: "Success", message: "Update profile", delegate: self, cancelButtonTitle: "OK")
+//                    alert.show()
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         
                         //Return Settings screen in storyboard = "Settings" 
@@ -134,7 +134,7 @@ class ProfileViewController: UIViewController {
                 }
             })
             }
-        }
+//        }
 
     }
     
