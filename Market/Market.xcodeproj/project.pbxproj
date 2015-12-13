@@ -20,6 +20,8 @@
 		4483EF741C1B41DF002C98DA /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF6F1C1B41DF002C98DA /* SignUpViewController.swift */; };
 		4483EF751C1B41DF002C98DA /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF701C1B41DF002C98DA /* ResetPasswordViewController.swift */; };
 		4483EF771C1B41DF002C98DA /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */; };
+		44E3B1DB1C1DE203003B9908 /* FollowingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3B1D91C1DE203003B9908 /* FollowingTableViewController.swift */; };
+		44E3B1DC1C1DE203003B9908 /* SavedPostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3B1DA1C1DE203003B9908 /* SavedPostsViewController.swift */; };
 		44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F328561C0F815C00BF1CDF /* AppDelegate.swift */; };
 		44F328591C0F815C00BF1CDF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F328581C0F815C00BF1CDF /* ViewController.swift */; };
 		44F3285E1C0F815C00BF1CDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44F3285D1C0F815C00BF1CDF /* Assets.xcassets */; };
@@ -53,6 +55,8 @@
 		4483EF6F1C1B41DF002C98DA /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		4483EF701C1B41DF002C98DA /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		44E3B1D91C1DE203003B9908 /* FollowingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowingTableViewController.swift; sourceTree = "<group>"; };
+		44E3B1DA1C1DE203003B9908 /* SavedPostsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedPostsViewController.swift; sourceTree = "<group>"; };
 		44F328531C0F815C00BF1CDF /* Market.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Market.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44F328561C0F815C00BF1CDF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44F328581C0F815C00BF1CDF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -103,6 +107,8 @@
 		4483EF781C1B41E3002C98DA /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				44E3B1D91C1DE203003B9908 /* FollowingTableViewController.swift */,
+				44E3B1DA1C1DE203003B9908 /* SavedPostsViewController.swift */,
 				44F5BEB61C1BD5A9006317E0 /* DetailViewController.swift */,
 				44F5BEB71C1BD5A9006317E0 /* HomeViewController.swift */,
 				44F5BEBB1C1BD5A9006317E0 /* PostViewController.swift */,
@@ -336,12 +342,14 @@
 				4483EF741C1B41DF002C98DA /* SignUpViewController.swift in Sources */,
 				4483EF671C1B370B002C98DA /* Post.swift in Sources */,
 				44F5BEBF1C1BD5A9006317E0 /* ItemCell.swift in Sources */,
+				44E3B1DB1C1DE203003B9908 /* FollowingTableViewController.swift in Sources */,
 				4483EF751C1B41DF002C98DA /* ResetPasswordViewController.swift in Sources */,
 				18E098AA1C1C112700A1F217 /* ProfileViewController.swift in Sources */,
 				44F328591C0F815C00BF1CDF /* ViewController.swift in Sources */,
 				18E098AC1C1C11BF00A1F217 /* UserTimelineViewController.swift in Sources */,
 				4483EF681C1B370B002C98DA /* Follow.swift in Sources */,
 				44F5BEC11C1BD5A9006317E0 /* PostViewController.swift in Sources */,
+				44E3B1DC1C1DE203003B9908 /* SavedPostsViewController.swift in Sources */,
 				4483EF771C1B41DF002C98DA /* SettingsTableViewController.swift in Sources */,
 				44FBCB0A1C1D399A00722DE2 /* QueryUtils.swift in Sources */,
 				44F5BEC61C1C13FA006317E0 /* Vote.swift in Sources */,
