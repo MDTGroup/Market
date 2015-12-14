@@ -20,7 +20,6 @@
 		4483EF741C1B41DF002C98DA /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF6F1C1B41DF002C98DA /* SignUpViewController.swift */; };
 		4483EF751C1B41DF002C98DA /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF701C1B41DF002C98DA /* ResetPasswordViewController.swift */; };
 		4483EF771C1B41DF002C98DA /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */; };
-		44E3B1DB1C1DE203003B9908 /* FollowingTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3B1D91C1DE203003B9908 /* FollowingTableViewController.swift */; };
 		44E3B1DC1C1DE203003B9908 /* SavedPostsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44E3B1DA1C1DE203003B9908 /* SavedPostsViewController.swift */; };
 		44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F328561C0F815C00BF1CDF /* AppDelegate.swift */; };
 		44F328591C0F815C00BF1CDF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F328581C0F815C00BF1CDF /* ViewController.swift */; };
@@ -39,6 +38,7 @@
 		44FBCB0A1C1D399A00722DE2 /* QueryUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FBCB091C1D399A00722DE2 /* QueryUtils.swift */; };
 		6084BABE268CE5FEEC54FF73 /* Pods_Market.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F9798A0C1DF9D526E69107 /* Pods_Market.framework */; };
 		BA5062AD1C1E7D1800E67EE7 /* FollowingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5062AC1C1E7D1800E67EE7 /* FollowingTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
+		BA5062B11C1E850500E67EE7 /* FollowingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5062B01C1E850500E67EE7 /* FollowingViewController.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,7 +56,6 @@
 		4483EF6F1C1B41DF002C98DA /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		4483EF701C1B41DF002C98DA /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
-		44E3B1D91C1DE203003B9908 /* FollowingTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowingTableViewController.swift; sourceTree = "<group>"; };
 		44E3B1DA1C1DE203003B9908 /* SavedPostsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedPostsViewController.swift; sourceTree = "<group>"; };
 		44F328531C0F815C00BF1CDF /* Market.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Market.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44F328561C0F815C00BF1CDF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -78,6 +77,7 @@
 		57F9BF2C807981DB30BD5F78 /* Pods-Market.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Market.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Market/Pods-Market.debug.xcconfig"; sourceTree = "<group>"; };
 		69654767A8CF7FE4F8CB4B5B /* Pods-Market.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Market.release.xcconfig"; path = "Pods/Target Support Files/Pods-Market/Pods-Market.release.xcconfig"; sourceTree = "<group>"; };
 		BA5062AC1C1E7D1800E67EE7 /* FollowingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowingTableViewCell.swift; sourceTree = "<group>"; };
+		BA5062B01C1E850500E67EE7 /* FollowingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowingViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,8 +109,6 @@
 		4483EF781C1B41E3002C98DA /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				BA5062AC1C1E7D1800E67EE7 /* FollowingTableViewCell.swift */,
-				44E3B1D91C1DE203003B9908 /* FollowingTableViewController.swift */,
 				44E3B1DA1C1DE203003B9908 /* SavedPostsViewController.swift */,
 				44F5BEB61C1BD5A9006317E0 /* DetailViewController.swift */,
 				44F5BEB71C1BD5A9006317E0 /* HomeViewController.swift */,
@@ -122,6 +120,7 @@
 				4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */,
 				18E098A91C1C112700A1F217 /* ProfileViewController.swift */,
 				18E098AB1C1C11BF00A1F217 /* UserTimelineViewController.swift */,
+				BA5062B01C1E850500E67EE7 /* FollowingViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -168,6 +167,7 @@
 			isa = PBXGroup;
 			children = (
 				44F5BEB91C1BD5A9006317E0 /* ItemCell.swift */,
+				BA5062AC1C1E7D1800E67EE7 /* FollowingTableViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -345,8 +345,8 @@
 				4483EF741C1B41DF002C98DA /* SignUpViewController.swift in Sources */,
 				4483EF671C1B370B002C98DA /* Post.swift in Sources */,
 				44F5BEBF1C1BD5A9006317E0 /* ItemCell.swift in Sources */,
-				44E3B1DB1C1DE203003B9908 /* FollowingTableViewController.swift in Sources */,
 				4483EF751C1B41DF002C98DA /* ResetPasswordViewController.swift in Sources */,
+				BA5062B11C1E850500E67EE7 /* FollowingViewController.swift in Sources */,
 				18E098AA1C1C112700A1F217 /* ProfileViewController.swift in Sources */,
 				44F328591C0F815C00BF1CDF /* ViewController.swift in Sources */,
 				18E098AC1C1C11BF00A1F217 /* UserTimelineViewController.swift in Sources */,

@@ -122,7 +122,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <segue destination="6LD-NF-Ojj" kind="push" id="LVi-Gh-yba"/>
+                                            <segue destination="58g-2s-vvS" kind="push" id="nPD-jC-fD3"/>
                                         </connections>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="blue" accessoryType="disclosureIndicator" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="9es-ET-dGF">
@@ -224,54 +224,65 @@
             <point key="canvasLocation" x="425" y="1778"/>
         </scene>
         <!--Following-->
-        <scene sceneID="taK-7M-BTR">
+        <scene sceneID="mc5-dL-r7o">
             <objects>
-                <tableViewController automaticallyAdjustsScrollViewInsets="NO" id="6LD-NF-Ojj" customClass="FollowingTableViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="JXc-GC-KAM">
+                <viewController id="58g-2s-vvS" customClass="FollowingViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="9Q0-jV-dus"/>
+                        <viewControllerLayoutGuide type="bottom" id="p4s-JT-wiL"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="RnQ-CP-Bbi">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="64" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SGT-0l-2uL">
+                                <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FollowingCell" rowHeight="64" id="ls7-Kx-HrN" customClass="FollowingTableViewCell" customModule="Market" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="92" width="320" height="64"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ls7-Kx-HrN" id="DNS-JZ-pip">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="63.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fullname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VmC-Tl-i3d">
+                                                    <rect key="frame" x="73" y="15.5" width="69" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="thumb" translatesAutoresizingMaskIntoConstraints="NO" id="IYu-zn-c4g">
+                                                    <rect key="frame" x="17" y="8" width="48" height="40.5"/>
+                                                </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BCH-zj-t3b">
+                                                    <rect key="frame" x="206" y="10.5" width="85" height="30"/>
+                                                    <state key="normal" title="UnFollowing"/>
+                                                    <connections>
+                                                        <action selector="onUnFollowingTap:" destination="ls7-Kx-HrN" eventType="touchUpInside" id="k3R-rl-TdN"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="fullnameLabel" destination="VmC-Tl-i3d" id="3gU-7y-Rgy"/>
+                                            <outlet property="imgField" destination="IYu-zn-c4g" id="fUV-ag-Qyh"/>
+                                            <outlet property="unfollowingButton" destination="BCH-zj-t3b" id="4V4-Q4-aPs"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="FollowingCell" rowHeight="95" id="TPb-xs-8u2" customClass="FollowingTableViewCell" customModule="Market" customModuleProvider="target">
-                                <rect key="frame" x="0.0" y="28" width="320" height="95"/>
-                                <autoresizingMask key="autoresizingMask"/>
-                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="TPb-xs-8u2" id="un6-Si-aRw">
-                                    <rect key="frame" x="0.0" y="0.0" width="320" height="94.5"/>
-                                    <autoresizingMask key="autoresizingMask"/>
-                                    <subviews>
-                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="eW4-eh-RwM">
-                                            <rect key="frame" x="216" y="48" width="85" height="30"/>
-                                            <state key="normal" title="UnFollowing"/>
-                                        </button>
-                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0be-mF-Up1">
-                                            <rect key="frame" x="8" y="45" width="43" height="41"/>
-                                        </imageView>
-                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fullname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vlD-wT-RTn">
-                                            <rect key="frame" x="59" y="52" width="69" height="21"/>
-                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                            <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                            <nil key="highlightedColor"/>
-                                        </label>
-                                    </subviews>
-                                </tableViewCellContentView>
-                                <connections>
-                                    <outlet property="fullnameLabel" destination="vlD-wT-RTn" id="jzs-Zb-sOX"/>
-                                    <outlet property="imgField" destination="0be-mF-Up1" id="UoH-MK-uTd"/>
-                                    <outlet property="unfollowingButton" destination="eW4-eh-RwM" id="n4q-gy-et4"/>
-                                </connections>
-                            </tableViewCell>
-                        </prototypes>
-                        <sections/>
-                        <connections>
-                            <outlet property="dataSource" destination="6LD-NF-Ojj" id="zZi-aU-0G5"/>
-                            <outlet property="delegate" destination="6LD-NF-Ojj" id="CxQ-ng-FIR"/>
-                        </connections>
-                    </tableView>
-                    <navigationItem key="navigationItem" title="Following" id="Jin-xB-eho"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="jql-ye-KlP" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Following" id="nRS-Wb-9qF"/>
+                    <connections>
+                        <outlet property="tableview" destination="SGT-0l-2uL" id="B12-ef-aD5"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="cUM-9d-Wy0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="760" y="1697"/>
+            <point key="canvasLocation" x="768" y="1724"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="tHn-CC-iYt">
