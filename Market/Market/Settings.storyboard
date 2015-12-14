@@ -235,7 +235,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="64" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SGT-0l-2uL">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="64" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="SGT-0l-2uL">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -246,16 +246,20 @@
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="63.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Fullname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VmC-Tl-i3d">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fullname" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VmC-Tl-i3d">
                                                     <rect key="frame" x="73" y="15.5" width="69" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="thumb" translatesAutoresizingMaskIntoConstraints="NO" id="IYu-zn-c4g">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="thumb" translatesAutoresizingMaskIntoConstraints="NO" id="IYu-zn-c4g">
                                                     <rect key="frame" x="17" y="8" width="48" height="40.5"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="48" id="CuF-U0-I2o"/>
+                                                        <constraint firstAttribute="height" constant="40.5" id="stU-MS-wK6"/>
+                                                    </constraints>
                                                 </imageView>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BCH-zj-t3b">
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BCH-zj-t3b">
                                                     <rect key="frame" x="206" y="10.5" width="85" height="30"/>
                                                     <state key="normal" title="UnFollowing"/>
                                                     <connections>
@@ -263,6 +267,14 @@
                                                     </connections>
                                                 </button>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstItem="BCH-zj-t3b" firstAttribute="top" secondItem="DNS-JZ-pip" secondAttribute="top" constant="10.5" id="Kir-Qw-cku"/>
+                                                <constraint firstItem="VmC-Tl-i3d" firstAttribute="top" secondItem="DNS-JZ-pip" secondAttribute="top" constant="15.5" id="P13-hl-bON"/>
+                                                <constraint firstItem="IYu-zn-c4g" firstAttribute="top" secondItem="DNS-JZ-pip" secondAttribute="top" constant="8" id="Pd1-S2-06U"/>
+                                                <constraint firstItem="VmC-Tl-i3d" firstAttribute="leading" secondItem="IYu-zn-c4g" secondAttribute="trailing" constant="8" id="Uh3-WX-XA1"/>
+                                                <constraint firstItem="IYu-zn-c4g" firstAttribute="leading" secondItem="DNS-JZ-pip" secondAttribute="leading" constant="17" id="ipj-zM-pke"/>
+                                                <constraint firstAttribute="trailing" secondItem="BCH-zj-t3b" secondAttribute="trailing" constant="29" id="rYv-Y5-awn"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="fullnameLabel" destination="VmC-Tl-i3d" id="3gU-7y-Rgy"/>
@@ -274,6 +286,12 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="SGT-0l-2uL" secondAttribute="trailing" id="RJu-cw-2MO"/>
+                            <constraint firstItem="SGT-0l-2uL" firstAttribute="leading" secondItem="RnQ-CP-Bbi" secondAttribute="leading" id="WWc-Sh-ql3"/>
+                            <constraint firstItem="p4s-JT-wiL" firstAttribute="top" secondItem="SGT-0l-2uL" secondAttribute="bottom" id="nyB-nA-Sa0"/>
+                            <constraint firstItem="SGT-0l-2uL" firstAttribute="top" secondItem="RnQ-CP-Bbi" secondAttribute="top" id="yav-fZ-HaB"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Following" id="nRS-Wb-9qF"/>
                     <connections>
