@@ -38,6 +38,7 @@
 		44FBCB071C1D365300722DE2 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FBCB061C1D365300722DE2 /* Conversation.swift */; };
 		44FBCB0A1C1D399A00722DE2 /* QueryUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FBCB091C1D399A00722DE2 /* QueryUtils.swift */; };
 		6084BABE268CE5FEEC54FF73 /* Pods_Market.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 16F9798A0C1DF9D526E69107 /* Pods_Market.framework */; };
+		BA5062AD1C1E7D1800E67EE7 /* FollowingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA5062AC1C1E7D1800E67EE7 /* FollowingTableViewCell.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +77,7 @@
 		44FBCB091C1D399A00722DE2 /* QueryUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueryUtils.swift; sourceTree = "<group>"; };
 		57F9BF2C807981DB30BD5F78 /* Pods-Market.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Market.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Market/Pods-Market.debug.xcconfig"; sourceTree = "<group>"; };
 		69654767A8CF7FE4F8CB4B5B /* Pods-Market.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Market.release.xcconfig"; path = "Pods/Target Support Files/Pods-Market/Pods-Market.release.xcconfig"; sourceTree = "<group>"; };
+		BA5062AC1C1E7D1800E67EE7 /* FollowingTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FollowingTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 		4483EF781C1B41E3002C98DA /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				BA5062AC1C1E7D1800E67EE7 /* FollowingTableViewCell.swift */,
 				44E3B1D91C1DE203003B9908 /* FollowingTableViewController.swift */,
 				44E3B1DA1C1DE203003B9908 /* SavedPostsViewController.swift */,
 				44F5BEB61C1BD5A9006317E0 /* DetailViewController.swift */,
@@ -358,6 +361,7 @@
 				4483EF691C1B370B002C98DA /* User.swift in Sources */,
 				44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */,
 				44FBCB041C1D35AE00722DE2 /* Message.swift in Sources */,
+				BA5062AD1C1E7D1800E67EE7 /* FollowingTableViewCell.swift in Sources */,
 				44FBCB071C1D365300722DE2 /* Conversation.swift in Sources */,
 				44F5BEBD1C1BD5A9006317E0 /* HomeViewController.swift in Sources */,
 				44FBCB021C1D33E800722DE2 /* Keyword.swift in Sources */,
