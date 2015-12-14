@@ -167,6 +167,9 @@
                                                 <constraint firstAttribute="bottom" secondItem="sIl-yT-7LR" secondAttribute="bottom" constant="6.5" id="uqS-k0-DXZ"/>
                                             </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="Nvn-4l-Wny" kind="push" id="BMc-JU-Vlx"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -245,7 +248,67 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vco-Cq-Vj0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="425" y="1778"/>
+            <point key="canvasLocation" x="225" y="1787"/>
+        </scene>
+        <!--Keywords-->
+        <scene sceneID="drt-Ap-hma">
+            <objects>
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="Nvn-4l-Wny" customClass="KeywordsViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="dVI-nS-Vdl"/>
+                        <viewControllerLayoutGuide type="bottom" id="YU4-BF-LFj"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="2Zj-Ad-iWw">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="56" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="8Vx-NP-zcB">
+                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="KeywordsCell1" rowHeight="56" id="PHU-90-zmE" customClass="KeywordsTableViewCell" customModule="Market" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="320" height="56"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PHU-90-zmE" id="3dB-v0-4EM">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="55.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Keyword" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bHh-As-6TW">
+                                                    <rect key="frame" x="28" y="8" width="67" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HDU-3u-9Hc">
+                                                    <rect key="frame" x="241" y="4" width="58" height="30"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <state key="normal" title="Delete">
+                                                        <color key="titleColor" red="0.95699767979999995" green="1" blue="0.98984491720000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="onDeleteTap:" destination="PHU-90-zmE" eventType="touchUpInside" id="Klh-yP-ytz"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="deleteButton" destination="HDU-3u-9Hc" id="VM4-7q-lrI"/>
+                                            <outlet property="keywordLabel" destination="bHh-As-6TW" id="QUE-vs-bh7"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Keywords" id="Kda-7q-M2b"/>
+                    <connections>
+                        <outlet property="tableview" destination="8Vx-NP-zcB" id="Wf4-Nf-wYJ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="OgC-47-puv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="567" y="1797"/>
         </scene>
         <!--Following-->
         <scene sceneID="mc5-dL-r7o">
@@ -285,7 +348,10 @@
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="BCH-zj-t3b">
                                                     <rect key="frame" x="206" y="10.5" width="85" height="30"/>
-                                                    <state key="normal" title="UnFollowing"/>
+                                                    <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <state key="normal" title="UnFollowing">
+                                                        <color key="titleColor" red="0.95699767979999995" green="1" blue="0.98984491720000001" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
                                                     <connections>
                                                         <action selector="onUnFollowingTap:" destination="ls7-Kx-HrN" eventType="touchUpInside" id="k3R-rl-TdN"/>
                                                     </connections>
@@ -324,7 +390,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cUM-9d-Wy0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="768" y="1724"/>
+            <point key="canvasLocation" x="902" y="1743"/>
         </scene>
         <!--Profile View Controller-->
         <scene sceneID="tHn-CC-iYt">
@@ -387,7 +453,7 @@
                                 </constraints>
                             </imageView>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lSS-wc-AHG">
-                                <rect key="frame" x="224" y="180" width="63" height="30"/>
+                                <rect key="frame" x="208" y="164" width="63" height="30"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Upload"/>
                                 <connections>
