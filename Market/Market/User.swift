@@ -19,7 +19,7 @@ class User: PFUser {
     @NSManaged var config: PFConfig
     @NSManaged var savedPosts: PFRelation
     @NSManaged var votedPosts: PFRelation
-    @NSManaged var keywords: PFRelation
+    @NSManaged var keywords: [String]
     
     func getPosts(lastUpdated:NSDate?, callback: PostResultBlock) {
         if let query = Post.query() {
@@ -46,6 +46,7 @@ class User: PFUser {
     func getFollowings(callback: UserResultBlock) {
         if let query = Follow.query(), currentUser = User.currentUser() {
             query.selectKeys(["to"])
+            query.includeKey("to")
             query.whereKey("from", equalTo: currentUser)
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
@@ -53,7 +54,11 @@ class User: PFUser {
                     return
                 }
 
-                if let users = pfObjs as? [User] {
+                if let followings = pfObjs as? [Follow] {
+                    var users = [User]()
+                    for following in followings {
+                        users.append(following.to)
+                    }
                     callback(users: users, error: nil)
                 }
             })
@@ -63,6 +68,7 @@ class User: PFUser {
     func getFollowers(callback: UserResultBlock) {
         if let query = Follow.query(), currentUser = User.currentUser() {
             query.selectKeys(["from"])
+            query.includeKey("from")
             query.whereKey("to", equalTo: currentUser)
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
@@ -70,7 +76,11 @@ class User: PFUser {
                     return
                 }
                 
-                if let users = pfObjs as? [User] {
+                if let followers = pfObjs as? [Follow] {
+                    var users = [User]()
+                    for follower in followers {
+                        users.append(follower.from)
+                    }
                     callback(users: users, error: nil)
                 }
             })
@@ -103,16 +113,12 @@ class User: PFUser {
         }
     }
     
-    func getKeywords(callback: KeywordResultBlock) {
-        keywords.query().findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
-            guard error == nil else {
-                callback(keywords: nil, error: error)
-                return
-            }
-            
-            if let keywords = pfObjs as? [Keyword] {
-                callback(keywords: keywords, error: nil)
-            }
+    func addKeyword(keyword: String, callback: PFBooleanResultBlock) {
+        if keywords.contains(keyword) {
+            callback(false, NSError(domain: "The keyword \(keyword) existed.", code: 0, userInfo: nil))
+            return
         }
+        keywords.append(keyword)
+        saveInBackgroundWithBlock(callback)
     }
 }

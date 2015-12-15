@@ -25,7 +25,7 @@ class Post: PFObject, PFSubclassing {
   @NSManaged var location: PFGeoPoint?
   @NSManaged var sold: Bool
   @NSManaged var user: User
-  @NSManaged var vote: Vote?
+  @NSManaged var vote: Vote
   @NSManaged var voteCounter:Int
   @NSManaged var isDeleted: Bool
   
@@ -155,29 +155,16 @@ extension Post {
       print("Current user is nil")
       return
     }
-    let currentUser = User.currentUser()!
-    
-    if vote == nil {
-        vote = Vote()
-    }
-    
-    if let vote = vote {
-        if enable {
-          vote.voteCounter++
-          vote.voteUsers.addObject(currentUser)
-          currentUser.votedPosts.addObject(self)
-        } else {
-          vote.voteCounter--
-          if vote.voteCounter < 0 {
-            vote.voteCounter = 0
-          }
-          vote.voteUsers.removeObject(currentUser)
-          currentUser.votedPosts.removeObject(self)
+    var params = [NSObject : AnyObject]()
+    params["postId"] = objectId!
+    params["enabled"] = enable
+    PFCloud.callFunctionInBackground("vote", withParameters: params) { (result, error) -> Void in
+        guard error == nil else {
+            callback(false, error)
+            return
         }
         
-        vote.saveInBackgroundWithBlock(callback)
-        currentUser.saveInBackgroundWithBlock(callback)
-        saveInBackgroundWithBlock(callback)
+        callback(true, error)
     }
   }
 }
