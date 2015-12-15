@@ -96,7 +96,8 @@ class ProfileViewController: UIViewController {
                 let thumbnails = resizeImage(image!, newWidth: 150)
                 //let imageFile = PFFile(name: "img1.png", data: UIImagePNGRepresentation(image!)!)!
                 //let imageFile = PFFile(data: UIImagePNGRepresentation(image!)!)
-                let imageFile = PFFile(data: UIImagePNGRepresentation(thumbnails)!)
+                //let imageFile = PFFile(data: UIImagePNGRepresentation(thumbnails)!)
+                let imageFile = PFFile(data: UIImageJPEGRepresentation(thumbnails, 0.4)!)
                 currentUser.avatar = imageFile
                 
                 
@@ -124,8 +125,8 @@ class ProfileViewController: UIViewController {
 //                    alert.show()
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         
-                        //Return Settings screen(that has navigation controller is "NavSettings") in storyboard = "Settings"
-                        let viewController:UIViewController = UIStoryboard(name: "Settings", bundle: nil).instantiateViewControllerWithIdentifier("NavSettings") //as! UIViewController
+                        //Return Settings screen(that has navigation controllet =  "SettingsNav") in storyboard = "Settings"
+                        let viewController:UIViewController = UIStoryboard(name: "Settings", bundle: nil).instantiateViewControllerWithIdentifier("SettingsNav") //as! UIViewController
                         self.presentViewController(viewController, animated: true, completion: nil)
                     })
                     

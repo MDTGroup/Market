@@ -24,6 +24,9 @@ class SettingsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
+        //Setup tableview
+        
+        
         if let currentUser = User.currentUser() {
             //load fullname
             self.fullnameLabel.text = currentUser.fullName
