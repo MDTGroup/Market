@@ -35,17 +35,24 @@ class KeywordsViewController: UIViewController {
     @IBAction func onAddTap(sender: AnyObject) {
         var loginTextField: UITextField?
         let alertController = UIAlertController(title: "Adding a new keyword", message: "Please enter a keyword to get notifications", preferredStyle: .Alert)
+        
+        //When button ok is pressed, then ...
         let ok = UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
             print("Ok Button Pressed")
+            //print string that you have just added
             print("\(loginTextField!.text)")
             
             //insert new string has just inputed into dataKeyword array and refresh tableview
             self.dataKeyword.insert((loginTextField?.text)!, atIndex: 0)
             self.tableview.reloadData()
         })
+        
+        //When button cancel is presses, then…
         let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
             print("Cancel Button Pressed")
         }
+        
+        
         alertController.addAction(ok)
         alertController.addAction(cancel)
         alertController.addTextFieldWithConfigurationHandler { (textField) -> Void in
@@ -71,16 +78,15 @@ extension KeywordsViewController: UITableViewDataSource, UITableViewDelegate {
         return dataKeyword.count
     }
     
+    //Allow swipe right to delete a row in tableview
     func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
     {
         return true
     }
-    
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath)
     {
         if editingStyle == .Delete
         {
-            //yourArray.removeAtIndex(indexPath.row)
             dataKeyword.removeAtIndex(indexPath.row)
             self.tableview.reloadData()
         }
