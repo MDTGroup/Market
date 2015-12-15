@@ -13,7 +13,7 @@ class KeywordsViewController: UIViewController {
 
     @IBOutlet weak var tableview: UITableView!
     
-    let dataKeyword = ["IPhone","SamSung", "IPad"]
+    var dataKeyword = ["IPhone","SamSung", "IPad"]
 
     
     override func viewDidLoad() {
@@ -31,7 +31,30 @@ class KeywordsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+   //Add text into array data
+    @IBAction func onAddTap(sender: AnyObject) {
+        var loginTextField: UITextField?
+        let alertController = UIAlertController(title: "Adding a new keyword", message: "Please enter a keyword to get notifications", preferredStyle: .Alert)
+        let ok = UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
+            print("Ok Button Pressed")
+            print("\(loginTextField!.text)")
+            
+            //insert new string has just inputed into dataKeyword array and refresh tableview
+            self.dataKeyword.insert((loginTextField?.text)!, atIndex: 0)
+            self.tableview.reloadData()
+        })
+        let cancel = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in
+            print("Cancel Button Pressed")
+        }
+        alertController.addAction(ok)
+        alertController.addAction(cancel)
+        alertController.addTextFieldWithConfigurationHandler { (textField) -> Void in
+            // Enter the textfiled customization code here.
+            loginTextField = textField
+            loginTextField?.placeholder = "Enter your Keyword"
+        }
+       presentViewController(alertController, animated: true, completion: nil)
+    }
     /*
     // MARK: - Navigation
 
@@ -46,6 +69,21 @@ class KeywordsViewController: UIViewController {
 extension KeywordsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataKeyword.count
+    }
+    
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath)
+    {
+        if editingStyle == .Delete
+        {
+            //yourArray.removeAtIndex(indexPath.row)
+            dataKeyword.removeAtIndex(indexPath.row)
+            self.tableview.reloadData()
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {

@@ -125,8 +125,8 @@ class ProfileViewController: UIViewController {
 //                    alert.show()
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         
-                        //Return Settings screen(that has storyboard id =  "SettingsScreen") in storyboard = "Settings"
-                        let viewController:UIViewController = UIStoryboard(name: "Settings", bundle: nil).instantiateViewControllerWithIdentifier("SettingsScreen") //as! UIViewController
+                        //Return Settings screen(that has navigation controllet =  "SettingsNav") in storyboard = "Settings"
+                        let viewController:UIViewController = UIStoryboard(name: "Settings", bundle: nil).instantiateViewControllerWithIdentifier("SettingsNav") //as! UIViewController
                         self.presentViewController(viewController, animated: true, completion: nil)
                     })
                     
