@@ -20,7 +20,7 @@ class User: PFUser {
     @NSManaged var savedPosts: PFRelation
     @NSManaged var votedPosts: PFRelation
     
-    func getPosts(lastUpdated:NSDate?, callback: (posts: [Post]?, error: NSError?) -> Void) {
+    func getPosts(lastUpdated: NSDate?, callback: (posts: [Post]?, error: NSError?) -> Void) {
         if let query = Post.query() {
             query.limit = 20
             if let lastUpdated = lastUpdated {

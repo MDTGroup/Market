@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		187F89041C207B050026DA76 /* SimplifiedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 187F89031C207B050026DA76 /* SimplifiedItemCell.swift */; };
 		18DEFF3F1C1BD79400511E88 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18DEFF3D1C1BD79400511E88 /* Home.storyboard */; };
 		18DEFF411C1BE4EC00511E88 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18DEFF401C1BE4EC00511E88 /* Settings.storyboard */; };
 		18E098AA1C1C112700A1F217 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E098A91C1C112700A1F217 /* ProfileViewController.swift */; };
@@ -36,6 +37,7 @@
 
 /* Begin PBXFileReference section */
 		16F9798A0C1DF9D526E69107 /* Pods_Market.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Market.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		187F89031C207B050026DA76 /* SimplifiedItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimplifiedItemCell.swift; sourceTree = "<group>"; };
 		18DEFF3E1C1BD79400511E88 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Home.storyboard; sourceTree = "<group>"; };
 		18DEFF401C1BE4EC00511E88 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		18E098A91C1C112700A1F217 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 			isa = PBXGroup;
 			children = (
 				44F5BEB91C1BD5A9006317E0 /* ItemCell.swift */,
+				187F89031C207B050026DA76 /* SimplifiedItemCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 				44F5BEC61C1C13FA006317E0 /* Vote.swift in Sources */,
 				44F5BEC01C1BD5A9006317E0 /* MyColors.swift in Sources */,
 				4483EF691C1B370B002C98DA /* User.swift in Sources */,
+				187F89041C207B050026DA76 /* SimplifiedItemCell.swift in Sources */,
 				44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */,
 				44F5BEBD1C1BD5A9006317E0 /* HomeViewController.swift in Sources */,
 			);
