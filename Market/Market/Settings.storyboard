@@ -242,7 +242,29 @@
                     <view key="view" contentMode="scaleToFill" id="7aS-nv-o4a">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="85" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="RGr-rt-4re">
+                                <rect key="frame" x="0.0" y="64" width="320" height="504"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="85" id="CIU-kB-y1w">
+                                        <rect key="frame" x="0.0" y="28" width="320" height="85"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CIU-kB-y1w" id="7zd-67-62V">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="84.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailing" secondItem="RGr-rt-4re" secondAttribute="trailing" id="EHT-fG-A3C"/>
+                            <constraint firstItem="RGr-rt-4re" firstAttribute="leading" secondItem="7aS-nv-o4a" secondAttribute="leading" id="OQU-52-Cga"/>
+                            <constraint firstItem="xHw-iC-UoZ" firstAttribute="top" secondItem="RGr-rt-4re" secondAttribute="bottom" id="Vzf-e6-xml"/>
+                            <constraint firstItem="RGr-rt-4re" firstAttribute="top" secondItem="Be1-PX-IsY" secondAttribute="bottom" id="ejz-wi-Jni"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Saved" id="yEj-ut-vjO"/>
                 </viewController>
