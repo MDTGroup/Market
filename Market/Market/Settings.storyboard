@@ -284,24 +284,32 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="56" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="8Vx-NP-zcB">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="48" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="8Vx-NP-zcB">
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="KeywordsCell1" rowHeight="56" id="PHU-90-zmE" customClass="KeywordsTableViewCell" customModule="Market" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="28" width="320" height="56"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="KeywordsCell1" rowHeight="48" id="PHU-90-zmE" customClass="KeywordsTableViewCell" customModule="Market" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="320" height="48"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="PHU-90-zmE" id="3dB-v0-4EM">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="55.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="47.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Keyword" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bHh-As-6TW">
-                                                    <rect key="frame" x="28" y="8" width="162" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Keyword" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bHh-As-6TW">
+                                                    <rect key="frame" x="29" y="8" width="162" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="162" id="L6k-yR-Zgw"/>
+                                                    </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
+                                            <constraints>
+                                                <constraint firstAttribute="bottomMargin" secondItem="bHh-As-6TW" secondAttribute="bottom" constant="10.5" id="PvN-8Z-exP"/>
+                                                <constraint firstItem="bHh-As-6TW" firstAttribute="leading" secondItem="3dB-v0-4EM" secondAttribute="leadingMargin" constant="21" id="a7Q-ik-1tT"/>
+                                                <constraint firstItem="bHh-As-6TW" firstAttribute="top" secondItem="3dB-v0-4EM" secondAttribute="topMargin" id="eQR-9f-Vy6"/>
+                                            </constraints>
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="keywordLabel" destination="bHh-As-6TW" id="QUE-vs-bh7"/>
@@ -311,6 +319,12 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="8Vx-NP-zcB" firstAttribute="leading" secondItem="2Zj-Ad-iWw" secondAttribute="leading" id="4mX-h8-MxD"/>
+                            <constraint firstAttribute="trailing" secondItem="8Vx-NP-zcB" secondAttribute="trailing" id="9hP-4T-azF"/>
+                            <constraint firstItem="8Vx-NP-zcB" firstAttribute="top" secondItem="dVI-nS-Vdl" secondAttribute="bottom" id="Z3M-bK-SJZ"/>
+                            <constraint firstItem="YU4-BF-LFj" firstAttribute="top" secondItem="8Vx-NP-zcB" secondAttribute="bottom" id="h4X-o8-tJc"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Keywords" id="Kda-7q-M2b">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="7xg-CY-62y">
