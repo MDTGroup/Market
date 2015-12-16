@@ -86,6 +86,9 @@ extension AppDelegate {
         User.registerSubclass()
         Post.registerSubclass()
         Follow.registerSubclass()
+        Notification.registerSubclass()
+        Conversation.registerSubclass()
+        Message.registerSubclass()
     }
     
 //    func setupPushNotifications(application: UIApplication, launchOptions: [NSObject: AnyObject]?) {
