@@ -124,10 +124,7 @@ class ProfileViewController: UIViewController {
 //                    let alert = UIAlertView(title: "Success", message: "Update profile", delegate: self, cancelButtonTitle: "OK")
 //                    alert.show()
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        
-                        //Return Settings screen(that has navigation controllet =  "SettingsNav") in storyboard = "Settings"
-                        let viewController:UIViewController = UIStoryboard(name: "Settings", bundle: nil).instantiateViewControllerWithIdentifier("SettingsNav") //as! UIViewController
-                        self.presentViewController(viewController, animated: true, completion: nil)
+                        self.navigationController?.popViewControllerAnimated(true)
                     })
                     
                 }
