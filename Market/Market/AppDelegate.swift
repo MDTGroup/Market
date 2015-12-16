@@ -19,8 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         setupForParse(application, launchOptions: launchOptions)
         
-        let newUser = PFUser.currentUser()
-       // let name = newUser?["fullname"]!
+        let newUser = User.currentUser()
         
         if newUser != nil {
             let vc = storyboard.instantiateViewControllerWithIdentifier("homeVC") //as! UIViewController
@@ -87,6 +86,9 @@ extension AppDelegate {
         User.registerSubclass()
         Post.registerSubclass()
         Follow.registerSubclass()
+        Notification.registerSubclass()
+        Conversation.registerSubclass()
+        Message.registerSubclass()
     }
     
 //    func setupPushNotifications(application: UIApplication, launchOptions: [NSObject: AnyObject]?) {

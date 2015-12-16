@@ -24,6 +24,9 @@ class SettingsTableViewController: UITableViewController {
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem()
         
+        //Setup tableview
+        
+        
         if let currentUser = User.currentUser() {
             //load fullname
             self.fullnameLabel.text = currentUser.fullName
@@ -58,7 +61,7 @@ class SettingsTableViewController: UITableViewController {
 //    }
     
     @IBAction func onLogout(sender: AnyObject) {
-        PFUser.logOut()
+        User.logOut()
         
         dispatch_async(dispatch_get_main_queue(), { () -> Void in
             //Return Home screen in storyboard = "Main"
