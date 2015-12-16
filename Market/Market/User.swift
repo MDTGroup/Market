@@ -121,4 +121,31 @@ class User: PFUser {
         keywords.append(keyword)
         saveInBackgroundWithBlock(callback)
     }
+    
+    func removeKeyword(keyword: String, callback: PFBooleanResultBlock) {
+        if keywords.contains(keyword) {
+            if let index = keywords.indexOf(keyword) {
+                keywords.removeAtIndex(index)
+            }
+        }
+        saveInBackgroundWithBlock(callback)
+    }
+    
+    //MARK: Notifications
+    func getNotifications(lastUpdatedAt: NSDate?, callback: NotificationResultBlock) {
+        if let query = Notification.query(), currentUser = User.currentUser() {
+            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
+            query.whereKey("toUsers", containedIn: [currentUser])
+            query.includeKey("post")
+            query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
+                guard error == nil else {
+                    callback(notifications: nil, error: error)
+                    return
+                }
+                if let notifications = pfObjs as? [Notification] {
+                    callback(notifications: notifications, error: nil)
+                }
+            })
+        }
+    }
 }

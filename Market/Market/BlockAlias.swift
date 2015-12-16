@@ -10,6 +10,6 @@ import Foundation
 
 typealias UserResultBlock = (users: [User]?, error: NSError?) -> Void
 typealias PostResultBlock = (posts: [Post]?, error: NSError?) -> Void
-typealias KeywordResultBlock = (keywords: [Keyword]?, error: NSError?) -> Void
 typealias ConversationResultBlock = (conversations: [Conversation]?, error: NSError?) -> Void
 typealias MessageResultBlock = (messages: [Message]?, error: NSError?) -> Void
+typealias NotificationResultBlock = (notifications: [Notification]?, error: NSError?) -> Void
