@@ -23,7 +23,11 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   @IBOutlet weak var dimmingViewHeight: NSLayoutConstraint!
   @IBOutlet weak var descriptionText: UITextView!
   @IBOutlet weak var textHeight: NSLayoutConstraint!
+  @IBOutlet weak var descTextGap: NSLayoutConstraint!
   
+  @IBOutlet weak var avatarImageView: UIImageView!
+  @IBOutlet weak var sellerLabel: UILabel!
+  @IBOutlet weak var updatedAtLabel: UILabel!
   @IBOutlet weak var itemNameLabel: UILabel!
   @IBOutlet weak var imageView: UIImageView!
   @IBOutlet weak var cancelButton: UIButton!
@@ -47,18 +51,42 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     descriptionText.text = post.descriptionText
     descriptionText.selectable = false
     
+    let formatter = NSDateFormatter()
+    formatter.timeStyle = NSDateFormatterStyle.ShortStyle
+    formatter.dateStyle = NSDateFormatterStyle.MediumStyle
+    updatedAtLabel.text = "Posted on \(formatter.stringFromDate(post.updatedAt!))"
+    
     // Create the "padding" for the text
     descriptionText.textContainerInset = UIEdgeInsetsMake(8, 10, 0, 10)
     isReadingFullDescription = false
-    showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.1)
     
     // Just set the bg color's alpha
     // Don't set the view's alpha else the subView will inherit it
     buttonsView.layer.borderWidth = 0.5
     buttonsView.layer.borderColor = UIColor.grayColor().CGColor
-    dimmingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.1)
+    dimmingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.0)
+    showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.0, showFull: false)
     tapGesture = UITapGestureRecognizer(target: self, action: "showMore:")
     view.addGestureRecognizer(tapGesture)
+    
+    // Load the seller
+    self.sellerLabel.text = ""
+    post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
+      guard error == nil else {
+        print(error)
+        return
+      }
+      if let user = pfObj as? User {
+        self.sellerLabel.text = user.fullName
+      }
+    }
+    if let avatar = post.user.avatar {
+      self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+    } else {
+      // load no image
+    }
+    avatarImageView.layer.cornerRadius = 18
+    avatarImageView.clipsToBounds = true
     
     // Load the thumbnail first for user to see while waiting for loading the full image
     imageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
@@ -119,10 +147,13 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
       if tapLocation.y >= dimmingView.frame.origin.y {
         if !isReadingFullDescription {
           isReadingFullDescription = true
-          showDescription(54, bgAlpha: 0.9)
+          //descTextGap.constant = 25
+          showDescription(54, bgAlpha: 0.9, showFull: true)
+          
         } else {
           isReadingFullDescription = false
-          showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.1)
+          //descTextGap.constant = 5
+          showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.0, showFull: false)
         }
       }
     }
@@ -172,18 +203,36 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   //    }
   //  }
   
-  func showDescription(y: CGFloat, bgAlpha: CGFloat) {
+  func showDescription(y: CGFloat, bgAlpha: CGFloat, showFull: Bool) {
+    
+    
     let dimmingHeight = UIScreen.mainScreen().bounds.height - y - 40
-    dimmingViewHeight.constant = dimmingHeight
+    if showFull {
+      dimmingViewHeight.constant = dimmingHeight
+      view.layoutIfNeeded()
+    }
+    
     // The size of the textView to fit its content
     let newSize = self.descriptionText.sizeThatFits(CGSize(width: self.descriptionText.frame.width, height: CGFloat.max))
     
     textHeight.constant = min(dimmingHeight - 8, newSize.height)
+    descTextGap.constant = showFull ? 25 : 5
     
-    UIView.animateWithDuration(0.4) {
+    UIView.animateWithDuration(0.4, animations: { () -> Void in
+      self.avatarImageView.alpha = bgAlpha
+      self.sellerLabel.alpha = bgAlpha
+      self.updatedAtLabel.alpha = bgAlpha
       self.dimmingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: bgAlpha)
       self.view.layoutIfNeeded()
+      
+      }) { (finished) -> Void in
+        // If not showing full description, only reduce the size of dimming view after change the alpha
+        if !showFull {
+          self.dimmingViewHeight.constant = dimmingHeight
+          self.view.layoutIfNeeded()
+        }
     }
+    
   }
   
   @IBAction func onCancel(sender: UIButton) {

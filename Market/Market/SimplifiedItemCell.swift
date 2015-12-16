@@ -9,7 +9,7 @@
 import UIKit
 
 class SimplifiedItemCell: UITableViewCell {
-
+  
   @IBOutlet weak var itemImageView: UIImageView!
   @IBOutlet weak var itemNameLabel: UILabel!
   @IBOutlet weak var priceLabel: UILabel!
@@ -21,16 +21,18 @@ class SimplifiedItemCell: UITableViewCell {
       let post = item
       // Set seller
       self.sellerLabel.text = ""
-      post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
-        guard error == nil else {
-          print(error)
-          return
-        }
-        if let user = pfObj as? User {
-          self.sellerLabel.text = user.fullName
+      if post.user != User.currentUser() {
+        post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
+          guard error == nil else {
+            print(error)
+            return
+          }
+          if let user = pfObj as? User {
+            self.sellerLabel.text = user.fullName
+          }
         }
       }
-      sellerLabel.hidden = (post.user != User.currentUser())
+      //sellerLabel.hidden = (post.user != User.currentUser())
       
       // Set Item
       if post.medias.count > 0 {
@@ -50,21 +52,21 @@ class SimplifiedItemCell: UITableViewCell {
       postAtLabel.text = "@ \(formatter.stringFromDate(post.updatedAt!))"
       
       priceLabel.text = "\(post.price)"
-//      newTagImageView.hidden = (post.condition > 0)
+      //      newTagImageView.hidden = (post.condition > 0)
     }
   }
   
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-      itemImageView.layer.cornerRadius = 5
-      itemImageView.clipsToBounds = true
-    }
-
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
+  override func awakeFromNib() {
+    super.awakeFromNib()
+    // Initialization code
+    itemImageView.layer.cornerRadius = 5
+    itemImageView.clipsToBounds = true
+  }
+  
+  override func setSelected(selected: Bool, animated: Bool) {
+    super.setSelected(selected, animated: animated)
+    
+    // Configure the view for the selected state
+  }
+  
 }

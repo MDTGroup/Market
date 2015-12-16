@@ -50,7 +50,7 @@ class HomeViewController: UIViewController {
     tableFooterView.addSubview(noMoreResultLabel)
     tableView.tableFooterView = tableFooterView
     
-    let postVC: PostViewController = tabBarController?.viewControllers![1] as! PostViewController
+    let postVC: PostViewController = tabBarController?.viewControllers![2] as! PostViewController
     postVC.delegate = self
     
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
