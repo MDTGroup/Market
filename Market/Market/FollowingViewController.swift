@@ -94,6 +94,9 @@ extension FollowingViewController: UITableViewDataSource, UITableViewDelegate {
         } else {
             print("User has not profile picture")
         }
+        
+        //Get target user in indexPath.row
+        cell.targetUser1 = self.queryArray[indexPath.row]
 
      
         return cell //Tra ve cell hien hanh cua tableview

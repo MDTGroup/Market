@@ -15,6 +15,7 @@ class FollowingTableViewCell: UITableViewCell {
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var unfollowingButton: UIButton!
     var clickedButton: Bool = false
+    var targetUser1 =  User()
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -26,11 +27,20 @@ class FollowingTableViewCell: UITableViewCell {
     @IBAction func onUnFollowingTap(sender: AnyObject) {
         if clickedButton == false {
           self.unfollowingButton.setTitle("Following", forState: .Normal)
-            clickedButton = true
+          clickedButton = true
+          
+            
         } else {
            self.unfollowingButton.setTitle("UnFollowing", forState: .Normal)
 
-            clickedButton = false
+           clickedButton = false
+           Follow.follow(targetUser1, callback: { (success, error: NSError?) -> Void in
+                if error == nil {
+                    print("Unfollowing successfully", self.targetUser1)
+                } else {
+                    print("Can not unfollow \(self.targetUser1)", error)
+                }
+            })
         }
     }
     
