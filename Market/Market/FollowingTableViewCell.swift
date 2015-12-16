@@ -28,6 +28,14 @@ class FollowingTableViewCell: UITableViewCell {
         if clickedButton == false {
           self.unfollowingButton.setTitle("Following", forState: .Normal)
           clickedButton = true
+            Follow.unfollow(targetUser1, callback: { (success, error: NSError?) -> Void in
+                if error == nil {
+                    print("UnFollowing successfully", self.targetUser1.fullName)
+                } else {
+                    print("Can not unfollow \(self.targetUser1.fullName)", error)
+                }
+
+          })
           
             
         } else {
@@ -36,9 +44,9 @@ class FollowingTableViewCell: UITableViewCell {
            clickedButton = false
            Follow.follow(targetUser1, callback: { (success, error: NSError?) -> Void in
                 if error == nil {
-                    print("Unfollowing successfully", self.targetUser1)
+                    print("Following successfully", self.targetUser1.fullName)
                 } else {
-                    print("Can not unfollow \(self.targetUser1)", error)
+                    print("Can not follow \(self.targetUser1.fullName)", error)
                 }
             })
         }

@@ -84,7 +84,7 @@ extension FollowingViewController: UITableViewDataSource, UITableViewDelegate {
         let fullname = self.queryArray[indexPath.row].fullName
         //cell.fullnameLabel.text = "Minh"
         cell.fullnameLabel.text = fullname
-        print("Fullname = ", fullname)
+        print("Fullname= \(fullname) of user in row = ", indexPath.row)
         
         //load avatar
         if let imgFile1 = self.queryArray[indexPath.row].objectForKey("avatar") as? PFFile {
