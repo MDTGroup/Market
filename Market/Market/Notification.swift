@@ -9,10 +9,10 @@
 import Foundation
 import Parse
 
-enum NotificationType: Int {
-    case SavedPost = 1
-    case Following = 2
-    case Keywords = 3
+enum NotificationType: String {
+    case SavedPost = "notifiationsForSavedPosts"
+    case Followers = "notifiationsForFollowers"
+    case Keywords = "notifiationsForKeywords"
 }
 
 class Notification: PFObject, PFSubclassing {
@@ -23,5 +23,16 @@ class Notification: PFObject, PFSubclassing {
     
     static func parseClassName() -> String {
         return "Notification"
+    }
+    
+    static func sendNotifications(type: NotificationType, params: [String : AnyObject], callback: PFBooleanResultBlock) {
+        PFCloud.callFunctionInBackground(type.rawValue, withParameters: params) { (results, error) -> Void in
+            guard error == nil else {
+                callback(false, error)
+                return
+            }
+            
+            callback(true, nil)
+        }
     }
 }
