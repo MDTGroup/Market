@@ -40,7 +40,7 @@ extension Follow {
         }
         if let query = Follow.query(), currentUser = User.currentUser() {
             query.whereKey("from", equalTo: currentUser)
-            query.whereKey("to", equalTo: target)
+            query.whereKey("to", equalTo: targetUser)
             query.findObjectsInBackgroundWithBlock({ (followings, error) -> Void in
                 guard error == nil else {
                     callback(false, error)
