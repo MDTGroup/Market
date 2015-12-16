@@ -12,12 +12,10 @@ import Parse
 class FollowingViewController: UIViewController {
     @IBOutlet weak var tableview: UITableView!
     
+    
    
     let data = ["Minh Dinh","Vo Anh Dung", "Ngo Anh Tai"]
-    
-   // var queryArray: [PFObject] = [PFObject]()
-    var queryArray: [PFUser] = [PFUser]()
-    
+    var queryArray = [User]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,27 +24,31 @@ class FollowingViewController: UIViewController {
         self.tableview.dataSource = self
         self.tableview.delegate  = self
         
-        tableview.reloadData()
-        //loaddata()
-    
+        
+        self.loadData()
+      
+    }
+    func loadData() {
+        User.currentUser()?.getFollowings({ (users, error) -> Void in
+            if error == nil {
+                print("Getting the users who following current user successfully")
+                //self.queryArray = users!
+                for var user in users! {
+                //for var user in self.queryArray {
+                    print("Information of following users: ")
+                    print("Username =", user.fullName)
+                    print("Email = ", user.email!)
+                    self.queryArray.append(user)
+                    self.tableview.reloadData()
+                    
+                }
+            } else {
+                print("Current user has not had anyone following", error)
+            }
+        })
+
     }
     
-//    func loaddata() {
-//        var query = PFQuery(className:"User")
-//        query.findObjectsInBackgroundWithBlock {
-//            (objects: [AnyObject]?, error: NSError?) -> Void in
-//            
-//            if error == nil {
-//                print("Successfully retrieved \(objects!.count) Restaurantes.")
-//                if let _objects = objects as? [PFObject] {
-//                    self.queryArray = _objects
-//                    self.tableView.reloadData()
-//                }
-//            } else {
-//                print("Error: \(error!) \(error!.userInfo!)")
-//            }
-//        }
-//    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -67,23 +69,33 @@ class FollowingViewController: UIViewController {
 }
 extension FollowingViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return data.count//tweets.count
+        //return data.count
+        print("Number of Rows in section = ", queryArray.count)
+        return queryArray.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
        let cell = tableview.dequeueReusableCellWithIdentifier("FollowingCell", forIndexPath: indexPath) as! FollowingTableViewCell
        
-        let cityState = data[indexPath.row].componentsSeparatedByString(", ")
-        cell.fullnameLabel.text = cityState.first
-        
-//        let user = queryArray[indexPath.row] as! PFUser
-//
-//        cell.fullnameLabel.text = user.valueForKey("fullname") //as! NSString
-//        //cell.imageBg.image = UIImage(named: "www.maisturismo.jpg")
-//        
+//        let cityState = data[indexPath.row].componentsSeparatedByString(", ")
+//        cell.fullnameLabel.text = cityState.first
        
-       
+ 
+        let fullname = self.queryArray[indexPath.row].fullName
+        //cell.fullnameLabel.text = "Minh"
+        cell.fullnameLabel.text = fullname
+        print("Fullname = ", fullname)
         
-        return cell //Tra ve cell hien hanh cua tableview 
+        //load avatar
+        if let imgFile1 = self.queryArray[indexPath.row].objectForKey("avatar") as? PFFile {
+            imgFile1.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
+                cell.imgField.image = UIImage(data: data!)
+            }
+        } else {
+            print("User has not profile picture")
+        }
+
+     
+        return cell //Tra ve cell hien hanh cua tableview
     }
 }

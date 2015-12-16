@@ -100,7 +100,7 @@ extension KeywordsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     //Allow swipe right to delete a row in tableview
-  /*  func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
     {
         return true
     }
@@ -108,10 +108,19 @@ extension KeywordsViewController: UITableViewDataSource, UITableViewDelegate {
     {
         if editingStyle == .Delete
         {
-            dataKeyword.removeAtIndex(indexPath.row)
-            self.tableview.reloadData()
+            //dataKeyword.removeAtIndex(indexPath.row)
+            User.currentUser()?.removeKeyword((User.currentUser()?.keywords[indexPath.row])!, callback: { (success, error: NSError?) -> Void in
+                if error == nil {
+                    print("Adding a keyword successfully")
+                    self.tableview.reloadData()
+                } else {
+                    print("Can not delete a new keyword: ", error )
+                }
+            })
+            
+            //self.tableview.reloadData()
         }
-    }*/
+    }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableview.dequeueReusableCellWithIdentifier("KeywordsCell1", forIndexPath: indexPath) as! KeywordsTableViewCell
