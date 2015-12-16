@@ -182,6 +182,7 @@ class PostViewController: UIViewController {
     post.descriptionText = descriptionText.text
     post.location = currentGeoPoint
     post.isDeleted = false
+    post.vote = Vote()
     post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
       print(post)
       self.delegate?.postViewController?(self, didUploadNewPost: post)

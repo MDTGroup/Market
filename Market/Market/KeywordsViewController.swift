@@ -1,3 +1,4 @@
+
 //
 //  KeywordsViewController.swift
 //  Market
@@ -13,8 +14,9 @@ class KeywordsViewController: UIViewController {
 
     @IBOutlet weak var tableview: UITableView!
     
-    var dataKeyword = ["IPhone","SamSung", "IPad"]
-
+    //var dataKeyword = ["IPhone","SamSung", "IPad"]
+    var dataKeyword = User.currentUser()?.keywords
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,6 +26,7 @@ class KeywordsViewController: UIViewController {
         self.tableview.delegate  = self
         
         tableview.reloadData()
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -43,8 +46,24 @@ class KeywordsViewController: UIViewController {
             print("\(loginTextField!.text)")
             
             //insert new string has just inputed into dataKeyword array and refresh tableview
-            self.dataKeyword.insert((loginTextField?.text)!, atIndex: 0)
-            self.tableview.reloadData()
+//            self.dataKeyword.insert((loginTextField?.text)!, atIndex: 0)
+//            self.tableview.reloadData()
+
+            //User.currentUser()?.addKeyword("IPhone6s", callback: { (success, error:
+            User.currentUser()?.addKeyword((loginTextField?.text)!, callback: { (success, error: NSError?) -> Void in
+                if error == nil {
+                    //print keyword in keywords array to console for testing
+                    for var key in (User.currentUser()?.keywords)! {
+                        print(key)
+                    }
+                    print("Adding a keyword successfully")
+                    //refresh tableview
+                    self.tableview.reloadData()
+                } else {
+                    print("Can not add a new keyword: ", error )
+                }
+            })
+            
         })
         
         //When button cancel is presses, then…
@@ -75,11 +94,13 @@ class KeywordsViewController: UIViewController {
 }
 extension KeywordsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataKeyword.count
+            //return dataKeyword.count
+            //return (self.dataKeyword?.count)!
+            return (User.currentUser()?.keywords.count)!
     }
     
     //Allow swipe right to delete a row in tableview
-    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
+  /*  func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool
     {
         return true
     }
@@ -90,13 +111,16 @@ extension KeywordsViewController: UITableViewDataSource, UITableViewDelegate {
             dataKeyword.removeAtIndex(indexPath.row)
             self.tableview.reloadData()
         }
-    }
+    }*/
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableview.dequeueReusableCellWithIdentifier("KeywordsCell1", forIndexPath: indexPath) as! KeywordsTableViewCell
         
-        let keyword = dataKeyword[indexPath.row].componentsSeparatedByString(", ")
-        cell.keywordLabel.text = keyword.first
+        //let keyword = dataKeyword[indexPath.row].componentsSeparatedByString(", ")
+        //let keyword = dataKeyword[indexPath.row]
+        //cell.keywordLabel.text = keyword.first
+        cell.keywordLabel.text = User.currentUser()?.keywords[indexPath.row]
+        
         
 
         return cell //Tra ve cell hien hanh cua tableview
