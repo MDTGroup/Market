@@ -13,6 +13,7 @@ class UserTimelineViewController: UIViewController {
   
   var user: User!
   var posts = [Post]()
+  var isCurrentUser = false
   
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var userLabel: UILabel!
@@ -21,11 +22,18 @@ class UserTimelineViewController: UIViewController {
   
   @IBOutlet weak var followingCountLabel: UILabel!
   @IBOutlet weak var followerCountLabel: UILabel!
+  @IBOutlet weak var editProfileButton: UIButton!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
+    if user == nil {
+      user = User.currentUser()
+      isCurrentUser = true
+    }
+    editProfileButton.hidden = !isCurrentUser
+    
     userLabel.text = user.fullName
     avatarImageView.setImageWithURL(NSURL(string: user.avatar!.url!)!)
     avatarImageView.layer.cornerRadius = 40
@@ -81,5 +89,40 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     cell.item = posts[indexPath.row]
     
     return cell
+  }
+  
+  func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+    // If this is my post then allow these actions
+    if isCurrentUser {
+      let post = posts[indexPath.row]
+      
+      let deleteAction = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
+        // Delete post
+        
+        let alertController = UIAlertController(title: "Market", message: "Are you sure to delete this post?", preferredStyle: .Alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
+          print(action)
+        }
+        alertController.addAction(cancelAction)
+        
+        let destroyAction = UIAlertAction(title: "Clear", style: .Destructive) { (action) in
+          self.posts.removeAtIndex(indexPath.row)
+          tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Bottom)
+        }
+        alertController.addAction(destroyAction)
+        
+        self.presentViewController(alertController, animated: true, completion: nil)
+      }
+      deleteAction.backgroundColor = MyColors.carrot
+      
+      let editAction = UITableViewRowAction(style: .Normal, title: "Edit") { action, index in
+        // Edit post
+      }
+      editAction.backgroundColor = MyColors.bluesky
+      
+      return [deleteAction, editAction]
+    }
+    return []
   }
 }

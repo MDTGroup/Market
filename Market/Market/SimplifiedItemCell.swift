@@ -30,6 +30,7 @@ class SimplifiedItemCell: UITableViewCell {
           self.sellerLabel.text = user.fullName
         }
       }
+      sellerLabel.hidden = (post.user != User.currentUser())
       
       // Set Item
       if post.medias.count > 0 {
