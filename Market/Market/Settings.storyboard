@@ -224,7 +224,7 @@
                 <viewControllerPlaceholder storyboardName="Main" id="s6N-xD-Q60" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="unS-x1-xnr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="148.5" y="1434"/>
+            <point key="canvasLocation" x="834" y="1474"/>
         </scene>
         <!--Saved posts-->
         <scene sceneID="swO-g2-d81">
@@ -392,7 +392,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vco-Cq-Vj0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="816" y="1843"/>
+            <point key="canvasLocation" x="1088" y="1833"/>
         </scene>
         <!--Keywords-->
         <scene sceneID="drt-Ap-hma">
@@ -461,7 +461,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OgC-47-puv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1360" y="1765"/>
+            <point key="canvasLocation" x="1560" y="1833"/>
         </scene>
         <!--Following-->
         <scene sceneID="mc5-dL-r7o">
@@ -538,7 +538,7 @@
                     </view>
                     <navigationItem key="navigationItem" title="Following" id="nRS-Wb-9qF"/>
                     <connections>
-                        <outlet property="tableview" destination="SGT-0l-2uL" id="B12-ef-aD5"/>
+                        <outlet property="tableView" destination="SGT-0l-2uL" id="1lj-yo-kmq"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cUM-9d-Wy0" userLabel="First Responder" sceneMemberID="firstResponder"/>
