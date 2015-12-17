@@ -20,6 +20,7 @@ class HomeViewController: UIViewController {
   var isLoadingNextPage = false
   var isEndOfFeed = false
   var noMoreResultLabel = UILabel()
+  var selectedPostIndex: Int!
   
   //var items = [Item]()
   var posts = [Post]()
@@ -50,15 +51,23 @@ class HomeViewController: UIViewController {
     tableFooterView.addSubview(noMoreResultLabel)
     tableView.tableFooterView = tableFooterView
     
-    let postVC: PostViewController = tabBarController?.viewControllers![1] as! PostViewController
+    let navController = tabBarController?.viewControllers![2] as! UINavigationController
+    let postVC: PostViewController = navController.topViewController as! PostViewController
     postVC.delegate = self
     
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
     loadNewestData()
   }
   
+  override func viewWillAppear(animated: Bool) {
+    // Reload whatever the change from other pages
+    print("new feeds will appear")
+    tableView.reloadData()
+  }
+  
   func loadNewestData() {
     posts = []
+    print("pull to refresh")
     loadData(["lastUpdatedAt": NSDate()])
   }
   
@@ -69,6 +78,7 @@ class HomeViewController: UIViewController {
   func loadData(params: [String: NSDate]) {
     Post.getNewsfeed(NewsfeedType.Newest, params: params) { (posts, error) -> Void in
       if let posts = posts {
+        print("return \(posts.count) posts")
         if posts.count == 0 {
           self.isEndOfFeed = true
         }
@@ -96,6 +106,7 @@ class HomeViewController: UIViewController {
       let detailVC: DetailViewController = segue.destinationViewController as! DetailViewController
       let data = sender as! Post
       detailVC.post = data
+      detailVC.delegate = self
     } else if (segue.identifier == "userTimelineSegue") {
       let userTimelineVC: UserTimelineViewController = segue.destinationViewController as! UserTimelineViewController
       let data = sender as! User
@@ -112,13 +123,28 @@ extension NSDate {
   }
 }
 
+extension HomeViewController: DetailViewControllerDelegate {
+  func detailViewController(detailViewController: DetailViewController, newPost: Post) {
+    print("Newfeeds got signal from detail page")
+    posts[selectedPostIndex] = newPost
+  }
+}
+
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCellDelegate {
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    print("nrows = \(posts.count)")
     return posts.count
   }
   
   func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCellWithIdentifier("itemCell", forIndexPath: indexPath) as! ItemCell
+    
+    // Dont know why but sometime it jumps to here
+    // before data is reloaded (posts.count = 0) but indexPath.row = 4
+    if posts.count == 0 {
+      print("the myth")
+      return cell
+    }
     cell.item = posts[indexPath.row]
     cell.delegate = self
     
@@ -134,15 +160,27 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     return cell
   }
   
+  func itemCell(itemCell: ItemCell, didChangeSave value: Bool) {
+    let indexPath = tableView.indexPathForCell(itemCell)!
+    print("Newfeeds: save changed to \(value)")
+    posts[indexPath.row].iSaveIt = value
+  }
+  
+  func itemCell(itemCell: ItemCell, didChangeVote value: Bool, voteCount: Int) {
+    let indexPath = tableView.indexPathForCell(itemCell)!
+    print("Newfeeds: vote changed to \(value)")
+    posts[indexPath.row].iVoteIt = value
+    posts[indexPath.row].voteCounter = voteCount
+  }
+  
   func itemCell(itemCell: ItemCell, tapOnProfile value: Bool) {
     print(itemCell.item.user.fullName)
     performSegueWithIdentifier("userTimelineSegue", sender: itemCell.item.user)
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    // Perform segue
+    selectedPostIndex = indexPath.row
     let item = posts[indexPath.row]
-    
     performSegueWithIdentifier("detailSegue", sender: item)
   }
 }
