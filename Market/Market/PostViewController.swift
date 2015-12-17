@@ -29,6 +29,12 @@ class PostViewController: UIViewController {
   @IBOutlet weak var priceLabel: UITextField!
   @IBOutlet weak var conditionSegment: UISegmentedControl!
   
+  @IBOutlet weak var navBar: UINavigationItem!
+  @IBOutlet weak var backButton: UIBarButtonItem!
+  @IBOutlet weak var discardButton: UIButton!
+  @IBOutlet weak var draftButton: UIButton!
+  @IBOutlet weak var postButton: UIButton!
+  
   @IBOutlet weak var titleLabel: UITextField!
   @IBOutlet weak var descriptionText: UITextView!
   
@@ -43,6 +49,8 @@ class PostViewController: UIViewController {
   var currentGeoPoint: PFGeoPoint?
   var selectedImageIndex: Int = 0
   var imagesAvail = [Bool](count: 3, repeatedValue: false)
+  var editingPost: Post?
+  var isUpdating = false
   
   weak var delegate: PostViewControllerDelegate?
   
@@ -64,6 +72,32 @@ class PostViewController: UIViewController {
     initImageFrame(imageView3)
     
     getCurrentLocation()
+    
+    if editingPost != nil {
+      title = "Update the item"
+      isUpdating = true
+      loadPostToUpdate()
+    } else {
+      title = "Post new item"
+      isUpdating = false
+      navBar.leftBarButtonItem = nil
+    }
+    discardButton.hidden = isUpdating
+    draftButton.hidden = isUpdating
+    postButton.hidden = isUpdating
+  }
+  
+  func loadPostToUpdate() {
+    priceLabel.text = "\((editingPost?.price)!)"
+    titleLabel.text = editingPost?.title
+    descriptionText.text = editingPost?.descriptionText
+    conditionSegment.selectedSegmentIndex = (editingPost?.condition)!
+    
+    editingPost?.medias.count
+    
+    imageView1.setImageWithURL(NSURL(string: (editingPost?.medias[1].url!)!)!)
+    imageView1.contentMode = .ScaleAspectFill
+    imagesAvail[0] = true
   }
   
   func initImageFrame(iv: UIImageView) {
@@ -137,7 +171,8 @@ class PostViewController: UIViewController {
     savePost()
   }
   
-  func savePost() {
+  func preparePost() -> Post? {
+    let post = Post()
     var images = [UIImage]()
     
     if imagesAvail[0] {
@@ -157,10 +192,9 @@ class PostViewController: UIViewController {
       let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
       alertController.addAction(okAction)
       presentViewController(alertController, animated: true, completion: nil)
-      return
+      return nil
     }
     
-    let post = Post()
     var image = resizeImage(images[0], newWidth: 1200)
     let thumbnails = resizeImage(image, newWidth: 150)
     var imageFile = PFFile(name: "img1.jpg", data: UIImageJPEGRepresentation(image, 0.4)!)
@@ -183,6 +217,12 @@ class PostViewController: UIViewController {
     post.location = currentGeoPoint
     post.isDeleted = false
     post.vote = Vote()
+    
+    return post
+  }
+  
+  func savePost() {
+    if let post = preparePost() {
     post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
       print(post)
       self.delegate?.postViewController?(self, didUploadNewPost: post)
@@ -190,6 +230,7 @@ class PostViewController: UIViewController {
       
       }) { (post: Post, percent: Float) -> Void in
         print(percent)
+    }
     }
   }
   
@@ -208,7 +249,16 @@ class PostViewController: UIViewController {
     return newImage
   }
   
-  @IBAction func omRemoveImage1(sender: UIButton) {
+  @IBAction func onUpdatePost(sender: UIButton) {
+    print("updating post")
+    if let post = preparePost() {
+      Post.updatePost((editingPost?.objectId)!, newPost: post, completion: { (finished, error) -> Void in
+        self.dismissViewControllerAnimated(true, completion: nil)
+      })
+    }
+  }
+  
+  @IBAction func onRemoveImage1(sender: UIButton) {
     initImageFrame(imageView1)
     imagesAvail[0] = false
   }
@@ -226,6 +276,11 @@ class PostViewController: UIViewController {
   @IBAction func onDiscard(sender: UIButton) {
     self.tabBarController!.selectedIndex = 0
   }
+  
+  @IBAction func onDismiss(sender: UIBarButtonItem) {
+    dismissViewControllerAnimated(true, completion: nil)
+  }
+  
 }
 
 extension PostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {

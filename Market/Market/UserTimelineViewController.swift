@@ -9,7 +9,7 @@
 import UIKit
 import MBProgressHUD
 
-class UserTimelineViewController: UIViewController {
+class UserTimelineViewController: UIViewController, PostViewControllerDelegate {
   
   var user: User!
   var posts = [Post]()
@@ -23,6 +23,13 @@ class UserTimelineViewController: UIViewController {
   @IBOutlet weak var followingCountLabel: UILabel!
   @IBOutlet weak var followerCountLabel: UILabel!
   @IBOutlet weak var editProfileButton: UIButton!
+  
+  var refreshControl = UIRefreshControl()
+  var loadingView: UIActivityIndicatorView!
+  var isLoadingNextPage = false
+  var isEndOfFeed = false
+  var noMoreResultLabel = UILabel()
+  var selectedPostIndex: Int!
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -85,8 +92,16 @@ class UserTimelineViewController: UIViewController {
     dismissViewControllerAnimated(true, completion: nil)
   }
   
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    let navController = segue.destinationViewController as! UINavigationController
+    let postVC: PostViewController = navController.topViewController as! PostViewController
+    postVC.delegate = self
+    let data = sender as! Post
+    postVC.editingPost = data
+  }
 }
 
+// MARK: - Table View
 extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource {
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return posts.count
@@ -132,6 +147,9 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
       
       let editAction = UITableViewRowAction(style: .Normal, title: "Edit") { action, index in
         // Edit post
+        self.selectedPostIndex = indexPath.row
+        let p = self.posts[self.selectedPostIndex]
+        self.performSegueWithIdentifier("editSegue", sender: p)
       }
       editAction.backgroundColor = MyColors.bluesky
       

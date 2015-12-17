@@ -210,7 +210,34 @@ extension Post {
     }
   }
 }
-  
+
+// MARK: Update
+extension Post {
+  static func updatePost(postId: String, newPost: Post, completion: PFBooleanResultBlock) {
+    let post = Post(withoutDataWithObjectId: postId)
+    post.fetchInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
+      print(fetchedPFObj)
+      if let postFetched = fetchedPFObj as? Post {
+        postFetched.title = newPost.title
+        postFetched.descriptionText = newPost.descriptionText
+        postFetched.price = newPost.price
+        postFetched.condition = newPost.condition
+        postFetched.medias = newPost.medias
+        postFetched.sold = newPost.sold
+      
+        postFetched.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
+          //print(post)
+          completion(true, nil)
+          }) { (post: Post, percent: Float) -> Void in
+            print(percent)
+        }
+      } else {
+        completion(false, error)
+      }
+    }
+  }
+}
+
 // MARK: Search
 extension Post {
     static func search(params: [String:AnyObject], callback: PostResultBlock) {

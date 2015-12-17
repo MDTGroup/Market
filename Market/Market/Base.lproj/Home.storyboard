@@ -17,7 +17,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="1eR-qq-ZvR">
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="1eR-qq-ZvR">
                                 <rect key="frame" x="5" y="67" width="365" height="31"/>
                                 <animations/>
                                 <constraints>
@@ -29,7 +29,7 @@
                                     <segment title="Users' vote"/>
                                 </segments>
                             </segmentedControl>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="120" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="PlR-Ga-jEU">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" showsSelectionImmediatelyOnTouchBegin="NO" rowHeight="120" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="PlR-Ga-jEU">
                                 <rect key="frame" x="0.0" y="100" width="375" height="518"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -204,7 +204,6 @@
                             <constraint firstItem="PlR-Ga-jEU" firstAttribute="bottom" secondItem="wfy-db-euE" secondAttribute="top" id="vGa-lQ-p7K"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="New feeds" image="news" id="ymh-5m-Jhq"/>
                     <navigationItem key="navigationItem" title="Market" id="f9q-nr-37L"/>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
@@ -215,7 +214,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="721.5" y="-106.5"/>
+            <point key="canvasLocation" x="870.5" y="-148.5"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="PJs-Db-HG6">
@@ -228,9 +227,9 @@
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     </tabBar>
                     <connections>
-                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="viewControllers" id="xFl-An-Ggd"/>
+                        <segue destination="9ek-Fm-uYj" kind="relationship" relationship="viewControllers" id="xFl-An-Ggd"/>
                         <segue destination="yST-Ky-o7j" kind="relationship" relationship="viewControllers" id="DNC-dx-n3s"/>
-                        <segue destination="Bpo-Cl-zJV" kind="relationship" relationship="viewControllers" id="hSK-zQ-87W"/>
+                        <segue destination="JjF-P6-6WB" kind="relationship" relationship="viewControllers" id="hSK-zQ-87W"/>
                         <segue destination="Ff5-gT-lft" kind="relationship" relationship="viewControllers" id="NwR-cf-5uu"/>
                         <segue destination="kZY-du-h5I" kind="relationship" relationship="viewControllers" id="O9o-wh-Pon"/>
                     </connections>
@@ -267,9 +266,9 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FxL-IY-ZxL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1715.5" y="266.5"/>
+            <point key="canvasLocation" x="2247.5" y="266.5"/>
         </scene>
-        <!--Post View Controller-->
+        <!--Post new item-->
         <scene sceneID="gsR-Me-jTN">
             <objects>
                 <viewController id="Bpo-Cl-zJV" customClass="PostViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
@@ -282,7 +281,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="VqO-L7-xDr">
-                                <rect key="frame" x="12" y="120" width="100" height="100"/>
+                                <rect key="frame" x="12" y="114" width="100" height="100"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <gestureRecognizers/>
@@ -296,7 +295,7 @@
                                 </connections>
                             </imageView>
                             <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="2k0-O0-UtR">
-                                <rect key="frame" x="138" y="120" width="100" height="100"/>
+                                <rect key="frame" x="138" y="114" width="100" height="100"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <gestureRecognizers/>
@@ -306,7 +305,7 @@
                                 </connections>
                             </imageView>
                             <imageView contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="QL4-ep-Xye">
-                                <rect key="frame" x="263" y="120" width="100" height="100"/>
+                                <rect key="frame" x="263" y="114" width="100" height="100"/>
                                 <animations/>
                                 <color key="backgroundColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <gestureRecognizers/>
@@ -344,7 +343,7 @@
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6FM-EI-36r">
-                                <rect key="frame" x="97" y="115" width="20" height="20"/>
+                                <rect key="frame" x="97" y="109" width="20" height="20"/>
                                 <animations/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="PGI-un-oG3"/>
@@ -354,11 +353,11 @@
                                     <color key="titleColor" red="0.18823529410000001" green="0.23137254900000001" blue="0.2901960784" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
-                                    <action selector="omRemoveImage1:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="TsA-GQ-9ig"/>
+                                    <action selector="onRemoveImage1:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="fOn-zH-eWD"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fWP-ln-uIp">
-                                <rect key="frame" x="27" y="28" width="74" height="30"/>
+                                <rect key="frame" x="27" y="72" width="74" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Discard"/>
                                 <connections>
@@ -366,12 +365,12 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2it-Cy-Gzl">
-                                <rect key="frame" x="150" y="28" width="74" height="30"/>
+                                <rect key="frame" x="151" y="72" width="74" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Save draft"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xcB-kb-mbO">
-                                <rect key="frame" x="223" y="115" width="20" height="20"/>
+                                <rect key="frame" x="223" y="109" width="20" height="20"/>
                                 <animations/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="ktY-jK-XZ1"/>
@@ -385,7 +384,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nsk-ie-2qk">
-                                <rect key="frame" x="348" y="115" width="20" height="20"/>
+                                <rect key="frame" x="348" y="109" width="20" height="20"/>
                                 <animations/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="20" id="HEm-jI-Cgg"/>
@@ -399,11 +398,19 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ivI-hH-rm2">
-                                <rect key="frame" x="27" y="60" width="74" height="30"/>
+                                <rect key="frame" x="276" y="72" width="74" height="30"/>
                                 <animations/>
                                 <state key="normal" title="Post"/>
                                 <connections>
                                     <action selector="onPostTapped:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="7cb-Jp-IPQ"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sWK-E8-JgI">
+                                <rect key="frame" x="162" y="629" width="51" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Update"/>
+                                <connections>
+                                    <action selector="onUpdatePost:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="9bX-Y7-pkr"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -422,17 +429,26 @@
                             <constraint firstItem="nsk-ie-2qk" firstAttribute="top" secondItem="QL4-ep-Xye" secondAttribute="top" constant="-5" id="Tik-v5-F9M"/>
                             <constraint firstItem="xcB-kb-mbO" firstAttribute="trailing" secondItem="2k0-O0-UtR" secondAttribute="trailing" constant="5" id="UuJ-ZI-bsM"/>
                             <constraint firstItem="2k0-O0-UtR" firstAttribute="width" secondItem="VqO-L7-xDr" secondAttribute="width" id="Wfl-KB-2sK"/>
-                            <constraint firstItem="VqO-L7-xDr" firstAttribute="top" secondItem="Udj-DA-9u2" secondAttribute="bottom" constant="100" id="cC9-Wy-lQv"/>
+                            <constraint firstItem="VqO-L7-xDr" firstAttribute="top" secondItem="Udj-DA-9u2" secondAttribute="bottom" constant="50" id="cC9-Wy-lQv"/>
                             <constraint firstItem="2k0-O0-UtR" firstAttribute="height" secondItem="VqO-L7-xDr" secondAttribute="height" id="fib-gA-Jct"/>
                             <constraint firstItem="6FM-EI-36r" firstAttribute="trailing" secondItem="VqO-L7-xDr" secondAttribute="trailing" constant="5" id="gtI-OA-67S"/>
                             <constraint firstItem="6FM-EI-36r" firstAttribute="top" secondItem="VqO-L7-xDr" secondAttribute="top" constant="-5" id="nce-SJ-Ud9"/>
                         </constraints>
                     </view>
-                    <tabBarItem key="tabBarItem" title="" image="plus" id="kx5-Pu-fwF"/>
+                    <navigationItem key="navigationItem" title="Post new item" id="vFJ-hu-jMV">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="v9v-kk-12C">
+                            <connections>
+                                <action selector="onDismiss:" destination="Bpo-Cl-zJV" id="ohS-lQ-qyr"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="backButton" destination="v9v-kk-12C" id="zDA-ql-ncm"/>
                         <outlet property="conditionSegment" destination="EkA-e2-m5n" id="7Wu-Dg-3bU"/>
                         <outlet property="descriptionText" destination="dNx-Bd-FFR" id="AmC-En-QWb"/>
+                        <outlet property="discardButton" destination="fWP-ln-uIp" id="i6A-rl-eL7"/>
+                        <outlet property="draftButton" destination="2it-Cy-Gzl" id="mjQ-7s-r48"/>
                         <outlet property="imageHeight" destination="CmM-1a-0fy" id="3GX-nR-jxf"/>
                         <outlet property="imageView1" destination="VqO-L7-xDr" id="RUd-wp-SE5"/>
                         <outlet property="imageView2" destination="2k0-O0-UtR" id="Fo6-Qa-ab4"/>
@@ -444,6 +460,8 @@
                         <outlet property="iv2SingleTap" destination="hJO-9s-yOd" id="gJ5-QX-l39"/>
                         <outlet property="iv3DoubleTap" destination="GR0-8o-Zki" id="Mwg-Rh-VD7"/>
                         <outlet property="iv3SingleTap" destination="gYT-d9-oDp" id="46M-e2-ZvL"/>
+                        <outlet property="navBar" destination="vFJ-hu-jMV" id="zm5-tH-Icm"/>
+                        <outlet property="postButton" destination="ivI-hH-rm2" id="gxQ-dg-16i"/>
                         <outlet property="priceLabel" destination="K9b-La-vnz" id="hVf-sG-rbC"/>
                         <outlet property="removeButton1" destination="6FM-EI-36r" id="Dhd-wH-Qhi"/>
                         <outlet property="removeButton2" destination="xcB-kb-mbO" id="obB-6G-HUc"/>
@@ -483,7 +501,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-213.5" y="1063.5"/>
+            <point key="canvasLocation" x="77.5" y="1637.5"/>
         </scene>
         <!--Notifications-->
         <scene sceneID="0y2-DY-zej">
@@ -513,7 +531,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tJY-iu-Qkp" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="224.5" y="1063.5"/>
+            <point key="canvasLocation" x="-783.5" y="1071.5"/>
         </scene>
         <!--Settings-->
         <scene sceneID="rVN-Ky-Kj4">
@@ -523,7 +541,7 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="a8N-Ia-eRL" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1584.5" y="716"/>
+            <point key="canvasLocation" x="1717.5" y="716"/>
         </scene>
         <!--Detail View Controller-->
         <scene sceneID="NaY-q9-oIe">
@@ -784,7 +802,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q2T-9Y-lpv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1234.5" y="-106.5"/>
+            <point key="canvasLocation" x="1430.5" y="-148.5"/>
         </scene>
         <!--Me-->
         <scene sceneID="p9u-3L-KLk">
@@ -997,11 +1015,12 @@
                         <outlet property="followingCountLabel" destination="1aR-JK-gmX" id="dGW-3q-MSx"/>
                         <outlet property="tableView" destination="usf-Rc-hqR" id="Dtu-3p-Ip7"/>
                         <outlet property="userLabel" destination="H5z-Cw-78q" id="8lN-gH-uZv"/>
+                        <segue destination="JjF-P6-6WB" kind="modal" identifier="editSegue" modalTransitionStyle="coverVertical" id="82y-HR-Mfc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="41Z-Ga-o0y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="721.5" y="715.5"/>
+            <point key="canvasLocation" x="750.5" y="1071.5"/>
         </scene>
         <!--Profile-->
         <scene sceneID="BSM-Gt-kJ1">
@@ -1024,7 +1043,53 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3tJ-I9-A4t" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1207" y="716"/>
+            <point key="canvasLocation" x="1233" y="542"/>
+        </scene>
+        <!--New feeds-->
+        <scene sceneID="Is4-xv-Ntb">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="9ek-Fm-uYj" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="New feeds" image="news" id="ymh-5m-Jhq"/>
+                    <toolbarItems/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="200"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="gRA-lT-nve">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="Yoc-Ce-iZb"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nkN-sF-oGH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="459" y="-148"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="8ex-v3-sKp">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="JjF-P6-6WB" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="" image="plus" id="kx5-Pu-fwF">
+                        <offsetWrapper key="titlePositionAdjustment" horizontal="0.0" vertical="15"/>
+                    </tabBarItem>
+                    <toolbarItems/>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="320" height="200"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="JCa-Ux-BXf">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="Bpo-Cl-zJV" kind="relationship" relationship="rootViewController" id="etm-vB-e1T"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="aFR-nS-Xs9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="76" y="1020"/>
         </scene>
     </scenes>
     <resources>
@@ -1046,5 +1111,6 @@
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="ld4-w7-eAL"/>
+        <segue reference="82y-HR-Mfc"/>
     </inferredMetricsTieBreakers>
 </document>
