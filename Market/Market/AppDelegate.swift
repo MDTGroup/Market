@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         setupForParse(application, launchOptions: launchOptions)
-        
+        setupPushNotifications(application, launchOptions: launchOptions)
         let newUser = User.currentUser()
         
         if newUser != nil {
@@ -90,68 +90,71 @@ extension AppDelegate {
         Conversation.registerSubclass()
         Message.registerSubclass()
     }
+}
+
+// MARK: Notifications
+extension AppDelegate {
+    func setupPushNotifications(application: UIApplication, launchOptions: [NSObject: AnyObject]?) {
+        
+        if let launchOptions = launchOptions, notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] as? [NSObject : AnyObject]  {
+            handleNotificationPayload(notificationPayload)
+        }
+
+        if application.applicationState != UIApplicationState.Background {
+            // Track an app open here if we launch with a push, unless
+            // "content_available" was used to trigger a background push (introduced in iOS 7).
+            // In that case, we skip tracking here to avoid double counting the app-open.
+
+            let preBackgroundPush = !application.respondsToSelector("backgroundRefreshStatus")
+            let oldPushHandlerOnly = !self.respondsToSelector("application:didReceiveRemoteNotification:fetchCompletionHandler:")
+            var noPushPayload = false;
+            if let options = launchOptions {
+                noPushPayload = options[UIApplicationLaunchOptionsRemoteNotificationKey] != nil;
+            }
+            if (preBackgroundPush || oldPushHandlerOnly || noPushPayload) {
+                PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
+            }
+        }
+
+        let types: UIUserNotificationType = [UIUserNotificationType.Alert, UIUserNotificationType.Badge, UIUserNotificationType.Sound]
+        let settings = UIUserNotificationSettings(forTypes: types, categories: nil)
+        application.registerUserNotificationSettings(settings)
+        application.registerForRemoteNotifications()
+    }
+
+    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
+        let installation = PFInstallation.currentInstallation()
+        installation.setDeviceTokenFromData(deviceToken)
+        installation.saveInBackground()
+    }
+
+    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
+        if error.code == 3010 {
+            print("Push notifications are not supported in the iOS Simulator.\n")
+        } else {
+            print("application:didFailToRegisterForRemoteNotificationsWithError: %@\n", error)
+        }
+    }
+
+    // Notifications - Analytics
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
+        PFPush.handlePush(userInfo)
+        if application.applicationState == UIApplicationState.Inactive {
+            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
+        }
+    }
+
+    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        handleNotificationPayload(userInfo)
+        if application.applicationState == UIApplicationState.Inactive {
+             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
+        }
+    }
     
-//    func setupPushNotifications(application: UIApplication, launchOptions: [NSObject: AnyObject]?) {
-//        if application.applicationState != UIApplicationState.Background {
-//            // Track an app open here if we launch with a push, unless
-//            // "content_available" was used to trigger a background push (introduced in iOS 7).
-//            // In that case, we skip tracking here to avoid double counting the app-open.
-//            
-//            let preBackgroundPush = !application.respondsToSelector("backgroundRefreshStatus")
-//            let oldPushHandlerOnly = !self.respondsToSelector("application:didReceiveRemoteNotification:fetchCompletionHandler:")
-//            var noPushPayload = false;
-//            if let options = launchOptions {
-//                noPushPayload = options[UIApplicationLaunchOptionsRemoteNotificationKey] != nil;
-//            }
-//            if (preBackgroundPush || oldPushHandlerOnly || noPushPayload) {
-//                PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
-//            }
-//        }
-//        
-//        if #available(iOS 8.0, *) {
-//            let types: UIUserNotificationType = [.Alert, .Badge, .Sound]
-//            let settings = UIUserNotificationSettings(forTypes: types, categories: nil)
-//            application.registerUserNotificationSettings(settings)
-//            application.registerForRemoteNotifications()
-//        } else {
-//            let types: UIRemoteNotificationType = [.Alert, .Badge, .Sound]
-//            application.registerForRemoteNotificationTypes(types)
-//        }
-//    }
-//    
-//    func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
-//        let installation = PFInstallation.currentInstallation()
-//        installation.setDeviceTokenFromData(deviceToken)
-//        installation.saveInBackground()
-//        installation.channels = ["global"]
-//        
-//        PFPush.subscribeToChannelInBackground("global") { (succeeded: Bool, error: NSError?) in
-//            if succeeded {
-//                print("ParseStarterProject successfully subscribed to push notifications on the broadcast channel.\n");
-//            } else {
-//                print("ParseStarterProject failed to subscribe to push notifications on the broadcast channel with error = %@.\n", error)
-//            }
-//        }
-//    }
-//    
-//    func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
-//        if error.code == 3010 {
-//            print("Push notifications are not supported in the iOS Simulator.\n")
-//        } else {
-//            print("application:didFailToRegisterForRemoteNotificationsWithError: %@\n", error)
-//        }
-//    }
-//    
-//    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
-//        PFPush.handlePush(userInfo)
-//        if application.applicationState == UIApplicationState.Inactive {
-//            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
-//        }
-//    }
-//    
-//    func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-//         if application.applicationState == UIApplicationState.Inactive {
-//             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
-//        }
-//    }
+    func handleNotificationPayload(userInfo: [NSObject : AnyObject]) {
+        if let alertMessage = userInfo["aps"]?["alert"] as? String {
+            let alertController = UIAlertController(title: "Push notification's message", message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
+            self.window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
+        }
+    }
 }
