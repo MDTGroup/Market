@@ -27,6 +27,8 @@ class User: PFUser {
             if let lastUpdated = lastUpdated {
                 query.whereKey("updatedAt", lessThan: lastUpdated)
             }
+            query.includeKey("user")
+            query.whereKey("isDeleted", equalTo: false)
             query.whereKey("sold", equalTo: false)
             query.whereKey("user", equalTo: self)
             query.orderByDescending("updatedAt")

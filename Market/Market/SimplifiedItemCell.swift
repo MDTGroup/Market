@@ -21,15 +21,7 @@ class SimplifiedItemCell: UITableViewCell {
       let post = item
       // Set seller
       self.sellerLabel.text = ""
-      post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
-        guard error == nil else {
-          print(error)
-          return
-        }
-        if let user = pfObj as? User {
-          self.sellerLabel.text = user.fullName
-        }
-      }
+      self.sellerLabel.text = post.user.fullName
       sellerLabel.hidden = (post.user != User.currentUser())
       
       // Set Item
