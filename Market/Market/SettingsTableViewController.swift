@@ -13,7 +13,7 @@ class SettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var imagePickerView: UIImageView!
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -43,9 +43,8 @@ class SettingsTableViewController: UITableViewController {
         
     }
     
-     override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    @IBAction func onCloseSettings(sender: AnyObject) {
+        dismissViewControllerAnimated(true, completion: nil)
     }
 
     // MARK: - Table view data source
