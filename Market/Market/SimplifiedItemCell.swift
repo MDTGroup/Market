@@ -13,26 +13,11 @@ class SimplifiedItemCell: UITableViewCell {
   @IBOutlet weak var itemImageView: UIImageView!
   @IBOutlet weak var itemNameLabel: UILabel!
   @IBOutlet weak var priceLabel: UILabel!
-  @IBOutlet weak var sellerLabel: UILabel!
   @IBOutlet weak var postAtLabel: UILabel!
   
   var item: Post! {
     didSet {
       let post = item
-      // Set seller
-      self.sellerLabel.text = ""
-      if post.user != User.currentUser() {
-        post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
-          guard error == nil else {
-            print(error)
-            return
-          }
-          if let user = pfObj as? User {
-            self.sellerLabel.text = user.fullName
-          }
-        }
-      }
-      //sellerLabel.hidden = (post.user != User.currentUser())
       
       // Set Item
       if post.medias.count > 0 {

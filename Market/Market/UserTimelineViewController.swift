@@ -28,28 +28,36 @@ class UserTimelineViewController: UIViewController {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
+    
+  }
+  
+  override func viewWillAppear(animated: Bool) {
     if user == nil {
       user = User.currentUser()
       isCurrentUser = true
     }
+    print("loading \(user.fullName)")
     editProfileButton.hidden = !isCurrentUser
     
     userLabel.text = user.fullName
     avatarImageView.setImageWithURL(NSURL(string: user.avatar!.url!)!)
     avatarImageView.layer.cornerRadius = 40
     avatarImageView.clipsToBounds = true
-    bigAvatarImageView.image = avatarImageView.image
+    bigAvatarImageView.setImageWithURL(NSURL(string: user.avatar!.url!)!)
     bigAvatarImageView.clipsToBounds = true
     
     tableView.dataSource = self
     tableView.delegate = self
     
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    posts = []
     loadData()
   }
   
   func loadData() {
+    print("in loadData")
     user.getPosts(NSDate(), callback: { (posts, error) -> Void in
+      print("loading user's post")
       if let posts = posts {
         if posts.count == 0 {
           //self.isEndOfFeed = true
@@ -106,9 +114,15 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         }
         alertController.addAction(cancelAction)
         
-        let destroyAction = UIAlertAction(title: "Clear", style: .Destructive) { (action) in
-          self.posts.removeAtIndex(indexPath.row)
-          tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Bottom)
+        let destroyAction = UIAlertAction(title: "Delete", style: .Destructive) { (action) in
+          Post.deletePost(post.objectId!, completion: { (finished, error) -> Void in
+            if finished {
+              self.posts.removeAtIndex(indexPath.row)
+              tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Bottom)
+            } else {
+              print("failed to delete post, error = \(error)")
+            }
+          })
         }
         alertController.addAction(destroyAction)
         

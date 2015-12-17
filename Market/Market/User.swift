@@ -28,6 +28,7 @@ class User: PFUser {
                 query.whereKey("updatedAt", lessThan: lastUpdated)
             }
             query.whereKey("sold", equalTo: false)
+            query.whereKey("isDeleted", equalTo: false)
             query.whereKey("user", equalTo: self)
             query.orderByDescending("updatedAt")
 

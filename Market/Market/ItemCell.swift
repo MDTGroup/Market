@@ -11,8 +11,8 @@ import AFNetworking
 import DateTools
 
 @objc protocol ItemCellDelegate {
-  optional func itemCell(tweetCell: ItemCell, didChangeVote value: Bool)
-  optional func itemCell(tweetCell: ItemCell, didChangeSave value: Bool)
+  optional func itemCell(itemCell: ItemCell, didChangeVote value: Bool, voteCount: Int)
+  optional func itemCell(itemCell: ItemCell, didChangeSave value: Bool)
   optional func itemCell(itemCell: ItemCell, tapOnProfile value: Bool)
 }
 
@@ -26,6 +26,7 @@ class ItemCell: UITableViewCell {
   @IBOutlet weak var sellerLabel: UILabel!
   @IBOutlet weak var avatarImageView: UIImageView!
   
+  @IBOutlet weak var voteCountLabel: UILabel!
   @IBOutlet weak var voteButton: UIButton!
   @IBOutlet weak var saveButton: UIButton!
   @IBOutlet weak var chatButton: UIButton!
@@ -39,7 +40,7 @@ class ItemCell: UITableViewCell {
     didSet {
       let post = item
       // Set seller
-      self.sellerLabel.text = ""
+      self.sellerLabel.text = post.user.fullName
       if let avatar = post.user.avatar {
         self.avatarImageView.alpha = 0.0
         UIView.animateWithDuration(0.3, animations: {
@@ -49,8 +50,6 @@ class ItemCell: UITableViewCell {
       } else {
         // load no image
       }
-      
-      self.sellerLabel.text = post.user.fullName
       
       // Set Item
       if post.medias.count > 0 {
@@ -80,6 +79,9 @@ class ItemCell: UITableViewCell {
       
       priceLabel.text = "\(post.price)"
       newTagImageView.hidden = (post.condition > 0)
+      
+      setSaveLabel(post.iSaveIt)
+      setVoteCountLabel(post.voteCounter, voted: post.iVoteIt)
     }
   }
   
@@ -101,27 +103,49 @@ class ItemCell: UITableViewCell {
     // Configure the view for the selected state
   }
   
+  func setSaveLabel(saved: Bool) {
+    if saved {
+      saveButton.setImage(UIImage(named: "save"), forState: .Normal)
+    } else {
+      saveButton.setImage(UIImage(named: "save_gray"), forState: .Normal)
+    }
+  }
+  
+  func setVoteCountLabel(count: Int, voted: Bool) {
+    if voted {
+      voteButton.setImage(UIImage(named: "thumb"), forState: .Normal)
+      voteCountLabel.textColor = MyColors.bluesky
+    } else {
+      voteButton.setImage(UIImage(named: "thumb_gray"), forState: .Normal)
+      voteCountLabel.textColor = UIColor.lightGrayColor()
+    }
+    voteCountLabel.text = "\(count)"
+    voteCountLabel.hidden = !(count > 0)
+  }
+  
   @IBAction func onVoteChanged(sender: UIButton) {
     if sender.imageView?.image == UIImage(named: "thumb") {
       // Un-vote it
-      sender.setImage(UIImage(named: "thumb_gray"), forState: .Normal)
-      self.delegate?.itemCell?(self, didChangeVote: false)
+      let count = Int(self.voteCountLabel.text!)! - 1
+      self.setVoteCountLabel(count, voted: false)
+      self.delegate?.itemCell?(self, didChangeVote: false, voteCount: count)
       
     } else {
       // Vote it
-      sender.setImage(UIImage(named: "thumb"), forState: .Normal)
-      self.delegate?.itemCell?(self, didChangeVote: true)
+      let count = Int(self.voteCountLabel.text!)! + 1
+      self.setVoteCountLabel(count, voted: true)
+      self.delegate?.itemCell?(self, didChangeVote: true, voteCount: count)
     }
   }
   
   @IBAction func onSaveChanged(sender: UIButton) {
     if sender.imageView?.image == UIImage(named: "save") {
-      // Un-vote it
+      // Un-save it
       sender.setImage(UIImage(named: "save_gray"), forState: .Normal)
       self.delegate?.itemCell?(self, didChangeSave: false)
       
     } else {
-      // Vote it
+      // Save it
       sender.setImage(UIImage(named: "save"), forState: .Normal)
       self.delegate?.itemCell?(self, didChangeSave: true)
     }

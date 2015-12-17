@@ -9,6 +9,9 @@
 import UIKit
 import AFNetworking
 
+@objc protocol DetailViewControllerDelegate {
+  optional func detailViewController(detailViewController: DetailViewController, newPost: Post)
+}
 
 class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   
@@ -36,12 +39,17 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   @IBOutlet weak var scrollCircle2: UIImageView!
   @IBOutlet weak var scrollCircle3: UIImageView!
   
+  @IBOutlet weak var voteCountLabel: UILabel!
+  @IBOutlet weak var voteLabel: UILabel!
+  
   var post: Post!
   var isReadingFullDescription: Bool!
   var tapGesture: UITapGestureRecognizer!
   var imagePanGesture: UIPanGestureRecognizer!
   var selectedImage = 1
   var nImages: Int = 1
+  
+  weak var delegate: DetailViewControllerDelegate?
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -70,18 +78,18 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     view.addGestureRecognizer(tapGesture)
     
     // Load the seller
-    self.sellerLabel.text = ""
-    post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
-      guard error == nil else {
-        print(error)
-        return
-      }
-      if let user = pfObj as? User {
-        self.sellerLabel.text = user.fullName
-      }
-    }
+    sellerLabel.text = post.user.fullName
+//    post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
+//      guard error == nil else {
+//        print(error)
+//        return
+//      }
+//      if let user = pfObj as? User {
+//        self.sellerLabel.text = user.fullName
+//      }
+//    }
     if let avatar = post.user.avatar {
-      self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+      avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
     } else {
       // load no image
     }
@@ -106,6 +114,9 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     
     // Set the images scroll indicator
     setImageScroll(1)
+    
+    self.setSaveCountLabel(post.iSaveIt)
+    setVoteCountLabel(post.voteCounter, voted: post.iVoteIt)
     
     // Indicate network status
     //    if Helper.hasConnectivity() {
@@ -240,23 +251,86 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   }
   
   @IBAction func onSaveTapped(sender: UIButton) {
-    post.save(true) { (successful: Bool, error: NSError?) -> Void in
-      if successful {
-        print("saved")
-      } else {
-        print("failed to save")
+    if sender.imageView?.image == UIImage(named: "save_on") {
+      // Un-save it
+      post.save(false) { (successful: Bool, error: NSError?) -> Void in
+        if successful {
+          print("unsaved")
+          self.post.iSaveIt = false
+          self.setSaveCountLabel(false)
+          self.delegate!.detailViewController!(self, newPost: self.post)
+        } else {
+          print("failed to unsave")
+        }
+      }
+      
+    } else {
+      // Save it
+      post.save(true) { (successful: Bool, error: NSError?) -> Void in
+        if successful {
+          print("saved")
+          self.post.iSaveIt = true
+          self.setSaveCountLabel(true)
+          self.delegate!.detailViewController!(self, newPost: self.post)
+        } else {
+          print("failed to save")
+        }
       }
     }
   }
   
   @IBAction func onVoteTapped(sender: UIButton) {
-    post.vote(true) { (successful: Bool, error: NSError?) -> Void in
-      if successful {
-        print("voted")
-      } else {
-        print("failed to vote")
+    if sender.imageView?.image == UIImage(named: "thumb_on") {
+      // Un-vote it
+      post.vote(false) { (successful: Bool, error: NSError?) -> Void in
+        if successful {
+          print("unvoted")
+          self.post.iVoteIt = false
+          sender.setImage(UIImage(named: "thumb_white"), forState: .Normal)
+          self.delegate!.detailViewController!(self, newPost: self.post)
+        } else {
+          print("failed to unvote")
+        }
+      }
+      
+    } else {
+      // Vote it
+      post.vote(true) { (successful: Bool, error: NSError?) -> Void in
+        if successful {
+          print("voted")
+          self.post.iVoteIt = true
+          sender.setImage(UIImage(named: "thumb_on"), forState: .Normal)
+          self.delegate!.detailViewController!(self, newPost: self.post)
+        } else {
+          print("failed to vote")
+        }
       }
     }
   }
   
+}
+
+extension DetailViewController {
+  func setSaveCountLabel(saved: Bool) {
+    if saved {
+      saveButton.setImage(UIImage(named: "save_on"), forState: .Normal)
+      saveButton.setTitleColor(MyColors.bluesky, forState: .Normal)
+    } else {
+      saveButton.setImage(UIImage(named: "save_white"), forState: .Normal)
+      saveButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+    }
+  }
+  
+  func setVoteCountLabel(count: Int, voted: Bool) {
+    if voted {
+      voteButton.setImage(UIImage(named: "thumb_on"), forState: .Normal)
+      voteButton.setTitleColor(MyColors.bluesky, forState: .Normal)
+    } else {
+      voteButton.setImage(UIImage(named: "thumb_white"), forState: .Normal)
+      voteButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
+    }
+    voteCountLabel.text = "\(count)"
+    voteCountLabel.hidden = !(count > 0)
+    voteLabel.hidden = !(count > 0)
+  }
 }
