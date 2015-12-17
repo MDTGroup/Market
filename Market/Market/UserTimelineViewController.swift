@@ -93,11 +93,12 @@ class UserTimelineViewController: UIViewController, PostViewControllerDelegate {
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    let navController = segue.destinationViewController as! UINavigationController
-    let postVC: PostViewController = navController.topViewController as! PostViewController
-    postVC.delegate = self
-    let data = sender as! Post
-    postVC.editingPost = data
+    if let navController = segue.destinationViewController as? UINavigationController {
+        if let postVC = navController.topViewController as? PostViewController {
+            postVC.delegate = self
+            postVC.editingPost = sender as? Post
+        }
+    }
   }
 }
 
