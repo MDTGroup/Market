@@ -14,8 +14,13 @@ class MessageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+       // Do any additional setup after loading the view.
+        self.tableView.delegate = self
+        self.tableView.dataSource = self
+        
+        
+        self.tableView.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -35,3 +40,22 @@ class MessageViewController: UIViewController {
     */
 
 }
+
+extension MessageViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        //return data.count
+       
+        return 1
+    }
+    
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell1", forIndexPath: indexPath) as! MessageCell
+        
+       
+        cell.userFullname.text = "Minh"
+     
+        
+        return cell //Tra ve cell hien hanh cua tableview
+    }
+}
+
