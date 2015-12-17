@@ -83,9 +83,7 @@ class HomeViewController: UIViewController {
           self.isEndOfFeed = true
         }
         
-        for p in posts {
-          self.posts.append(p)
-        }
+        self.posts.appendContentsOf(posts)
         self.tableView.reloadData()
         
       } else {

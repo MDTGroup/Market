@@ -90,8 +90,11 @@ class User: PFUser {
         }
     }
     
-    func getSavedPosts(callback: PostResultBlock) {
-        savedPosts.query().findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
+    func getSavedPosts(lastUpdatedAt:NSDate?, callback: PostResultBlock) {
+        let query = savedPosts.query()
+        query.includeKey("user")
+        QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
+        query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
             guard error == nil else {
                 callback(posts: nil, error: error)
                 return

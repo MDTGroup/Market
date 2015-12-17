@@ -19,7 +19,6 @@ class SavedPostsViewController: UIViewController {
     var isEndOfFeed = false
     var noMoreResultLabel = UILabel()
     
-    //var items = [Item]()
     var posts = [Post]()
     
     override func viewDidLoad() {
@@ -60,23 +59,17 @@ class SavedPostsViewController: UIViewController {
     
     func loadNewestData() {
         posts = []
-        loadData(["lastUpdatedAt": NSDate()])
+        loadData(nil)
     }
     
-    func loadDataSince(lastUpdatedAt: NSDate) {
-        loadData(["lastUpdatedAt": lastUpdatedAt])
-    }
-    
-    func loadData(params: [String: NSDate]) {
-        Post.getNewsfeed(NewsfeedType.Newest, params: params) { (posts, error) -> Void in
+    func loadData(lastUpdatedAt: NSDate?) {
+        User.currentUser()?.getSavedPosts(lastUpdatedAt) { (posts, error) -> Void in
             if let posts = posts {
                 if posts.count == 0 {
                     self.isEndOfFeed = true
                 }
                 
-                for p in posts {
-                    self.posts.append(p)
-                }
+                self.posts.appendContentsOf(posts)
                 self.tableView.reloadData()
                 
             } else {
@@ -91,24 +84,6 @@ class SavedPostsViewController: UIViewController {
             MBProgressHUD.hideHUDForView(self.view, animated: true)
         }
     }
-
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
 //extension NSDate {
 //    func dayBefore(nDays: Int) -> NSDate {
@@ -132,7 +107,7 @@ extension SavedPostsViewController: UITableViewDelegate, UITableViewDataSource, 
             if indexPath.row == posts.count - 1 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadDataSince(cell.item.updatedAt!)
+                loadData(cell.item.updatedAt!)
             }
         }
         
