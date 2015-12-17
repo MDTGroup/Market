@@ -247,7 +247,7 @@
                                 <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="itemCell" rowHeight="132" id="pJL-AM-e1o" customClass="ItemCell" customModule="Market" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="SavedItemCell1" rowHeight="132" id="pJL-AM-e1o" customClass="SavedItemCell" customModule="Market" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="132"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="pJL-AM-e1o" id="fDw-Ka-2AA">
@@ -313,7 +313,7 @@
                                                     </constraints>
                                                     <state key="normal" title="Button" image="thumb"/>
                                                     <connections>
-                                                        <action selector="onVoteChanged:" destination="pJL-AM-e1o" eventType="touchUpInside" id="CAt-5T-esB"/>
+                                                        <action selector="onVoteChanged:" destination="pJL-AM-e1o" eventType="touchUpInside" id="ddi-Tn-Mas"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YOg-rM-ERm">
@@ -324,7 +324,7 @@
                                                     </constraints>
                                                     <state key="normal" title="Button" image="save"/>
                                                     <connections>
-                                                        <action selector="onSaveChanged:" destination="pJL-AM-e1o" eventType="touchUpInside" id="8uK-zI-0Hb"/>
+                                                        <action selector="onSaveChanged:" destination="pJL-AM-e1o" eventType="touchUpInside" id="2DQ-3O-a14"/>
                                                     </connections>
                                                 </button>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rRU-AY-b8N">
@@ -366,17 +366,17 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="avatarImageView" destination="8XH-TX-Rgo" id="fv0-GB-VeB"/>
-                                            <outlet property="chatButton" destination="rRU-AY-b8N" id="ctj-Rb-R9Y"/>
-                                            <outlet property="descriptionLabel" destination="wwf-E1-gLf" id="XUy-j3-TJp"/>
-                                            <outlet property="itemImageView" destination="hSw-cN-K2a" id="4zD-jL-jiT"/>
-                                            <outlet property="itemNameLabel" destination="rEe-UZ-FMS" id="Eyc-fL-hMz"/>
-                                            <outlet property="newTagImageView" destination="f4f-Zq-YP2" id="5QV-1T-YlO"/>
-                                            <outlet property="priceLabel" destination="9He-iQ-p4d" id="g8q-hM-hPU"/>
-                                            <outlet property="saveButton" destination="YOg-rM-ERm" id="IHh-VI-VNB"/>
-                                            <outlet property="sellerLabel" destination="4Ix-pI-Chz" id="ZpE-a8-OPd"/>
-                                            <outlet property="timeAgoLabel" destination="hZ7-RI-IiS" id="U1g-yq-S4r"/>
-                                            <outlet property="voteButton" destination="wgZ-Bl-lIz" id="GVE-vT-R2h"/>
+                                            <outlet property="avatarImageView" destination="8XH-TX-Rgo" id="i2x-a6-uHc"/>
+                                            <outlet property="chatButton" destination="rRU-AY-b8N" id="vR8-gD-kEB"/>
+                                            <outlet property="descriptionLabel" destination="wwf-E1-gLf" id="NeV-fa-IHe"/>
+                                            <outlet property="itemImageView" destination="hSw-cN-K2a" id="ivB-ko-lUC"/>
+                                            <outlet property="itemNameLabel" destination="rEe-UZ-FMS" id="MwC-VU-cVC"/>
+                                            <outlet property="newTagImageView" destination="f4f-Zq-YP2" id="sDD-CH-DWZ"/>
+                                            <outlet property="priceLabel" destination="9He-iQ-p4d" id="WRB-et-RIN"/>
+                                            <outlet property="saveButton" destination="YOg-rM-ERm" id="BBg-hK-Ye2"/>
+                                            <outlet property="sellerLabel" destination="4Ix-pI-Chz" id="NLU-kK-R7A"/>
+                                            <outlet property="timeAgoLabel" destination="hZ7-RI-IiS" id="BZw-WD-s3k"/>
+                                            <outlet property="voteButton" destination="wgZ-Bl-lIz" id="yBl-EA-URJ"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -391,6 +391,9 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Saved" id="yEj-ut-vjO"/>
+                    <connections>
+                        <outlet property="tableView" destination="RGr-rt-4re" id="OXF-Io-Ykl"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vco-Cq-Vj0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

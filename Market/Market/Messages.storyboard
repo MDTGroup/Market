@@ -79,7 +79,7 @@
             </objects>
             <point key="canvasLocation" x="496" y="301"/>
         </scene>
-        <!--Chat View Controller-->
+        <!--Chat-->
         <scene sceneID="wNo-nL-UIW">
             <objects>
                 <viewController id="vFC-Bh-0hw" customClass="ChatViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
@@ -92,7 +92,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="XWS-H7-js8"/>
+                    <navigationItem key="navigationItem" title="Chat" id="XWS-H7-js8"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="35E-af-wac" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
