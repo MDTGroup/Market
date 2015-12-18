@@ -385,8 +385,8 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="RGr-rt-4re" secondAttribute="trailing" id="EHT-fG-A3C"/>
                             <constraint firstItem="RGr-rt-4re" firstAttribute="leading" secondItem="7aS-nv-o4a" secondAttribute="leading" id="OQU-52-Cga"/>
-                            <constraint firstItem="xHw-iC-UoZ" firstAttribute="top" secondItem="RGr-rt-4re" secondAttribute="bottom" id="Vzf-e6-xml"/>
-                            <constraint firstItem="RGr-rt-4re" firstAttribute="top" secondItem="Be1-PX-IsY" secondAttribute="bottom" id="ejz-wi-Jni"/>
+                            <constraint firstItem="RGr-rt-4re" firstAttribute="top" secondItem="Be1-PX-IsY" secondAttribute="bottom" id="T13-j9-lRP"/>
+                            <constraint firstItem="xHw-iC-UoZ" firstAttribute="top" secondItem="RGr-rt-4re" secondAttribute="bottom" id="nwW-C3-D94"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Saved posts" id="yEj-ut-vjO"/>
