@@ -11,7 +11,7 @@ import UIKit
 class NotificationViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    
+    let homeSB = UIStoryboard(name: "Home", bundle: nil)
     var notifications = [Notification]()
     
     override func viewDidLoad() {
@@ -40,9 +40,10 @@ class NotificationViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        print(sender)
-        if let detailVC = segue.destinationViewController as? DetailViewController, notificationTableViewCell = sender as? NotificationTableViewCell {
-            detailVC.post = notificationTableViewCell.post
+        if let detailVC = segue.destinationViewController as? DetailViewController, cell = sender as? NotificationTableViewCell {
+            if let indexPath = tableView.indexPathForCell(cell) {
+                detailVC.post = notifications[indexPath.row].post
+            }
         }
     }
 }
@@ -57,5 +58,11 @@ extension NotificationViewController: UITableViewDelegate, UITableViewDataSource
         cell.post = notifications[indexPath.row].post
         cell.textLabel!.text = String(notifications[indexPath.row].type)
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        self.homeSB.instantiateViewControllerWithIdentifier("postDetail")
     }
 }
