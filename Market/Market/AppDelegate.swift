@@ -94,6 +94,14 @@ extension AppDelegate {
 
 // MARK: Notifications
 extension AppDelegate {
+    
+    static func registerRemoteNotification() {
+        let types: UIUserNotificationType = [UIUserNotificationType.Alert, UIUserNotificationType.Badge, UIUserNotificationType.Sound]
+        let settings = UIUserNotificationSettings(forTypes: types, categories: nil)
+        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        UIApplication.sharedApplication().registerForRemoteNotifications()
+    }
+
     func setupPushNotifications(application: UIApplication, launchOptions: [NSObject: AnyObject]?) {
         
         if let launchOptions = launchOptions, notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] as? [NSObject : AnyObject]  {
@@ -115,11 +123,8 @@ extension AppDelegate {
                 PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
             }
         }
-
-        let types: UIUserNotificationType = [UIUserNotificationType.Alert, UIUserNotificationType.Badge, UIUserNotificationType.Sound]
-        let settings = UIUserNotificationSettings(forTypes: types, categories: nil)
-        application.registerUserNotificationSettings(settings)
-        application.registerForRemoteNotifications()
+        
+        AppDelegate.registerRemoteNotification()
     }
 
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
