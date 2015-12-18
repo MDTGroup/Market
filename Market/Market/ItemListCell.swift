@@ -1,8 +1,8 @@
 //
-//  SavedItemCell.swift
+//  ItemListCell.swift
 //  Market
 //
-//  Created by Dinh Thi Minh on 12/17/15.
+//  Created by Dinh Thi Minh on 12/18/15.
 //  Copyright © 2015 MDT Group. All rights reserved.
 //
 
@@ -10,14 +10,13 @@ import UIKit
 import AFNetworking
 import DateTools
 
-@objc protocol SavedItemCellDelegate {
-    optional func savedItemCell(tweetCell: SavedItemCell, didChangeVote value: Bool)
-    optional func savedItemCell(tweetCell: SavedItemCell, didChangeSave value: Bool)
-    optional func savedItemCell(savedItemCell: SavedItemCell, tapOnProfile value: Bool)
+@objc protocol ItemListCellDelegate {
+    optional func itemListCell(tweetCell: ItemListCell, didChangeVote value: Bool)
+    optional func itemListCell(tweetCell: ItemListCell, didChangeSave value: Bool)
+    optional func itemListCell(itemListCell: ItemListCell, tapOnProfile value: Bool)
 }
 
-class SavedItemCell: UITableViewCell {
-
+class ItemListCell: UITableViewCell {
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var descriptionLabel: UILabel!
@@ -31,10 +30,10 @@ class SavedItemCell: UITableViewCell {
     @IBOutlet weak var chatButton: UIButton!
     @IBOutlet weak var newTagImageView: UIImageView!
     
-    weak var delegate: SavedItemCellDelegate?
+    weak var delegate: ItemListCellDelegate?
     
     var tapGesture: UITapGestureRecognizer!
-
+    
     var item: Post! {
         didSet {
             let post = item
@@ -84,6 +83,7 @@ class SavedItemCell: UITableViewCell {
     }
     
 
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -102,17 +102,16 @@ class SavedItemCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
     @IBAction func onVoteChanged(sender: UIButton) {
         if sender.imageView?.image == UIImage(named: "thumb") {
             // Un-vote it
             sender.setImage(UIImage(named: "thumb_gray"), forState: .Normal)
-            self.delegate?.savedItemCell?(self, didChangeVote: false)
+            self.delegate?.itemListCell?(self, didChangeVote: false)
             
         } else {
             // Vote it
             sender.setImage(UIImage(named: "thumb"), forState: .Normal)
-            self.delegate?.savedItemCell?(self, didChangeVote: true)
+            self.delegate?.itemListCell?(self, didChangeVote: true)
         }
     }
     
@@ -120,17 +119,18 @@ class SavedItemCell: UITableViewCell {
         if sender.imageView?.image == UIImage(named: "save") {
             // Un-vote it
             sender.setImage(UIImage(named: "save_gray"), forState: .Normal)
-            self.delegate?.savedItemCell?(self, didChangeSave: false)
+            self.delegate?.itemListCell?(self, didChangeSave: false)
             
         } else {
             // Vote it
             sender.setImage(UIImage(named: "save"), forState: .Normal)
-            self.delegate?.savedItemCell?(self, didChangeSave: true)
+            self.delegate?.itemListCell?(self, didChangeSave: true)
         }
     }
     func tapOnProfile(gesture: UITapGestureRecognizer) {
         print("i tap on profile pic")
-        self.delegate?.savedItemCell?(self, tapOnProfile: true)
+        self.delegate?.itemListCell?(self, tapOnProfile: true)
     }
+
 
 }
