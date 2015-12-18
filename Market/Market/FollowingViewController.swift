@@ -22,8 +22,9 @@ class FollowingViewController: UIViewController {
         self.tableView.delegate  = self
         
         self.loadData()
-      
     }
+    
+    
     func loadData() {
         User.currentUser()?.getFollowings({ (users, error) -> Void in
             guard error == nil else {

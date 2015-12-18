@@ -42,6 +42,11 @@ class SettingsTableViewController: UITableViewController {
         }
         
     }
+    override func viewWillAppear(animated: Bool) {
+        self.imagePickerView.layer.cornerRadius = self.imagePickerView.frame.size.width / 2
+        self.imagePickerView.clipsToBounds = true
+        
+    }
     
     @IBAction func onCloseSettings(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)

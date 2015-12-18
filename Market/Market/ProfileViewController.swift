@@ -47,7 +47,12 @@ class ProfileViewController: UIViewController {
             self.emailField.text = currentUser.email
         }
    }
-
+    //Making the avatar into round shape
+    override func viewWillAppear(animated: Bool) {
+        self.imagePickerView.layer.cornerRadius = self.imagePickerView.frame.size.width / 2
+        self.imagePickerView.clipsToBounds = true
+       
+    }
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
