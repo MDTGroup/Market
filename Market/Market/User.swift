@@ -47,10 +47,10 @@ class User: PFUser {
     }
     
     func getFollowings(callback: UserResultBlock) {
-        if let query = Follow.query(), currentUser = User.currentUser() {
+        if let query = Follow.query() {
             query.selectKeys(["to"])
             query.includeKey("to")
-            query.whereKey("from", equalTo: currentUser)
+            query.whereKey("from", equalTo: self)
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(users: nil, error: error)
@@ -69,10 +69,10 @@ class User: PFUser {
     }
     
     func getFollowers(callback: UserResultBlock) {
-        if let query = Follow.query(), currentUser = User.currentUser() {
+        if let query = Follow.query() {
             query.selectKeys(["from"])
             query.includeKey("from")
-            query.whereKey("to", equalTo: currentUser)
+            query.whereKey("to", equalTo: self)
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(users: nil, error: error)
@@ -139,9 +139,10 @@ class User: PFUser {
     
     //MARK: Notifications
     func getNotifications(lastUpdatedAt: NSDate?, callback: NotificationResultBlock) {
-        if let query = Notification.query(), currentUser = User.currentUser() {
+        if let query = Notification.query() {
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
-            query.whereKey("toUsers", containedIn: [currentUser])
+            print(self.fullName)
+            query.whereKey("toUsers", equalTo: self)
             query.includeKey("post")
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {

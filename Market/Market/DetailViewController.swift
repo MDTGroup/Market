@@ -54,6 +54,12 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    do {
+        try post.user.fetchIfNeeded()
+    } catch {
+        
+    }
+    
     // Do any additional setup after loading the view.
     itemNameLabel.text = post.title
     descriptionText.text = post.descriptionText

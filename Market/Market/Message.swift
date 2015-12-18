@@ -13,7 +13,7 @@ class Message: PFObject, PFSubclassing {
     static func parseClassName() -> String {
         return "Messages"
     }
-    
+    @NSManaged var conversation: Conversation
     @NSManaged var user: User
     @NSManaged var text: String
 }

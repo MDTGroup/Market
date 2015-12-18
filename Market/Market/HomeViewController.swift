@@ -101,14 +101,14 @@ class HomeViewController: UIViewController {
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if (segue.identifier == "detailSegue") {
-      let detailVC: DetailViewController = segue.destinationViewController as! DetailViewController
-      let data = sender as! Post
-      detailVC.post = data
-      detailVC.delegate = self
+        if let detailVC = segue.destinationViewController as? DetailViewController {
+            detailVC.post = sender as? Post
+            detailVC.delegate = self
+        }
     } else if (segue.identifier == "userTimelineSegue") {
-      let userTimelineVC: UserTimelineViewController = segue.destinationViewController as! UserTimelineViewController
-      let data = sender as! User
-      userTimelineVC.user = data
+        if let userTimelineVC = segue.destinationViewController as? UserTimelineViewController {
+            userTimelineVC.user = sender as? User
+        }
     }
   }
   
@@ -125,7 +125,7 @@ extension HomeViewController: DetailViewControllerDelegate {
   func detailViewController(detailViewController: DetailViewController, newPost: Post) {
     print("Newfeeds got signal from detail page")
     posts[selectedPostIndex] = newPost
-  }
+    }
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCellDelegate {
