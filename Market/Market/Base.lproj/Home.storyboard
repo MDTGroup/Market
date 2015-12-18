@@ -529,7 +529,7 @@
         <!--Detail View Controller-->
         <scene sceneID="NaY-q9-oIe">
             <objects>
-                <viewController id="nif-7J-xtZ" customClass="DetailViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="postDetail" id="nif-7J-xtZ" customClass="DetailViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="NTo-0f-Q48"/>
                         <viewControllerLayoutGuide type="bottom" id="fpT-md-3g4"/>
