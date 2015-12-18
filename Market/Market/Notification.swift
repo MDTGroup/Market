@@ -10,9 +10,9 @@ import Foundation
 import Parse
 
 enum NotificationType: String {
-    case SavedPost = "notifiationsForSavedPosts"
-    case Followers = "notifiationsForFollowers"
-    case Keywords = "notifiationsForKeywords"
+    case SavedPost = "notificationsForSavedPosts"
+    case Followers = "notificationsForFollowers"
+    case Keywords = "notificationsForKeywords"
 }
 
 class Notification: PFObject, PFSubclassing {

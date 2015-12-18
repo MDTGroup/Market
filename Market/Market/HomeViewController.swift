@@ -9,6 +9,7 @@
 
 import UIKit
 import MBProgressHUD
+import Parse
 
 class HomeViewController: UIViewController {
   
@@ -27,6 +28,7 @@ class HomeViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupForInstallation()
     // Do any additional setup after loading the view, typically from a nib.
     tableView.dataSource = self
     tableView.delegate = self
@@ -58,6 +60,12 @@ class HomeViewController: UIViewController {
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
     loadNewestData()
   }
+    
+    func setupForInstallation() {
+        let installation = PFInstallation.currentInstallation()
+        installation["user"] = User.currentUser()
+        installation.saveInBackground()
+    }
   
   override func viewWillAppear(animated: Bool) {
     // Reload whatever the change from other pages
