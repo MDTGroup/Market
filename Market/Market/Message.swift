@@ -11,7 +11,7 @@ import Parse
 
 class Message: PFObject, PFSubclassing {
     static func parseClassName() -> String {
-        return "Messages"
+        return "Message"
     }
     @NSManaged var conversation: Conversation
     @NSManaged var user: User

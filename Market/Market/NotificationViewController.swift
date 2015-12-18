@@ -35,6 +35,7 @@ class NotificationViewController: UIViewController {
             if let notifications = notifications {
                 self.notifications.appendContentsOf(notifications)
                 self.tableView.reloadData()
+                self.tabBarController?.tabBar.selectedItem?.badgeValue = "\(self.notifications.count)"
             }
         })
     }

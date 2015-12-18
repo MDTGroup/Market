@@ -119,8 +119,8 @@
 		4483EF631C1B36F4002C98DA /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				443810351C206EEB00CCD266 /* Notification.swift */,
 				44FBCB051C1D364300722DE2 /* Messages */,
+				443810351C206EEB00CCD266 /* Notification.swift */,
 				44F5BEBA1C1BD5A9006317E0 /* MyColors.swift */,
 				4483EF641C1B370B002C98DA /* Post.swift */,
 				4483EF651C1B370B002C98DA /* Follow.swift */,
@@ -133,10 +133,8 @@
 		4483EF781C1B41E3002C98DA /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				44EB1A271C246E3500905312 /* PostsListViewController.swift */,
+				44EB1A2F1C24A9F600905312 /* Messages */,
 				44EB1A281C246E3500905312 /* NotificationViewController.swift */,
-				44AEE36F1C2339DD004B5E2E /* MessageViewController.swift */,
-				44AEE3721C2339DD004B5E2E /* ChatViewController.swift */,
 				BAF769191C1EA983006870CA /* KeywordsTableViewCell.swift */,
 				44E3B1DA1C1DE203003B9908 /* SavedPostsViewController.swift */,
 				44F5BEB61C1BD5A9006317E0 /* DetailViewController.swift */,
@@ -153,6 +151,16 @@
 				BAF769171C1EA804006870CA /* KeywordsViewController.swift */,
 			);
 			name = "View Controllers";
+			sourceTree = "<group>";
+		};
+		44EB1A2F1C24A9F600905312 /* Messages */ = {
+			isa = PBXGroup;
+			children = (
+				44EB1A271C246E3500905312 /* PostsListViewController.swift */,
+				44AEE36F1C2339DD004B5E2E /* MessageViewController.swift */,
+				44AEE3721C2339DD004B5E2E /* ChatViewController.swift */,
+			);
+			name = Messages;
 			sourceTree = "<group>";
 		};
 		44F3284A1C0F815C00BF1CDF = {
@@ -285,7 +293,7 @@
 				TargetAttributes = {
 					44F328521C0F815C00BF1CDF = {
 						CreatedOnToolsVersion = 7.1.1;
-						DevelopmentTeam = QCBK6P7M2R;
+						DevelopmentTeam = P362UPJSK6;
 					};
 				};
 			};

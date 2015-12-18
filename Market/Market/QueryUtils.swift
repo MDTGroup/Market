@@ -18,4 +18,13 @@ class QueryUtils {
         query.orderByDescending("updatedAt")
         return query
     }
+    
+    static func bindQueryParamsForInfiniteLoadingForChat(query:PFQuery, lastCreatedAt:NSDate?, maxResult: Int = 20) -> PFQuery {
+        query.limit = maxResult
+        if let lastCreatedAt = lastCreatedAt {
+            query.whereKey("createdAt", greaterThan: lastCreatedAt)
+        }
+        query.orderByAscending("createdAt")
+        return query
+    }
 }
