@@ -17,6 +17,11 @@ class FollowingTableViewCell: UITableViewCell {
     var clickedButton: Bool = false
     var targetUser =  User()
     
+    override func awakeFromNib() {
+        imgField.layer.cornerRadius = imgField.frame.size.width/2
+        imgField.clipsToBounds = true
+        
+    }
     //Change title of button "unFollowing" <-> "Following"
     @IBAction func onUnFollowingTap(sender: AnyObject) {
         if clickedButton == false {
