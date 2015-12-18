@@ -35,10 +35,6 @@ class UserTimelineViewController: UIViewController, PostViewControllerDelegate {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
-    
-  }
-  
-  override func viewWillAppear(animated: Bool) {
     if user == nil {
       user = User.currentUser()
       isCurrentUser = true
@@ -56,8 +52,27 @@ class UserTimelineViewController: UIViewController, PostViewControllerDelegate {
     tableView.dataSource = self
     tableView.delegate = self
     
+    // Refresh control
+    refreshControl.addTarget(self, action: Selector("loadData"), forControlEvents: UIControlEvents.ValueChanged)
+    tableView.addSubview(refreshControl)
+    
+    // Add the activity Indicator for table footer for infinity load
+    let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
+    loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+    loadingView.center = tableFooterView.center
+    loadingView.hidesWhenStopped = true
+    tableFooterView.addSubview(loadingView)
+    // Initialize the noMoreResult
+    noMoreResultLabel.frame = tableFooterView.frame
+    noMoreResultLabel.text = "No more result"
+    noMoreResultLabel.textAlignment = NSTextAlignment.Center
+    noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
+    noMoreResultLabel.textColor = UIColor.grayColor()
+    noMoreResultLabel.hidden = true
+    tableFooterView.addSubview(noMoreResultLabel)
+    tableView.tableFooterView = tableFooterView
+    
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-    posts = []
     loadData()
   }
   
@@ -67,7 +82,7 @@ class UserTimelineViewController: UIViewController, PostViewControllerDelegate {
       print("loading user's post")
       if let posts = posts {
         if posts.count == 0 {
-          //self.isEndOfFeed = true
+          self.isEndOfFeed = true
         }
         
         for p in posts {
@@ -77,13 +92,13 @@ class UserTimelineViewController: UIViewController, PostViewControllerDelegate {
         
       } else {
         print(error)
-        //self.isEndOfFeed = true
+        self.isEndOfFeed = true
       }
       
-      //self.noMoreResultLabel.hidden = !self.isEndOfFeed
-      //self.refreshControl.endRefreshing()
-      //self.loadingView.stopAnimating()
-      //self.isLoadingNextPage = false
+      self.noMoreResultLabel.hidden = !self.isEndOfFeed
+      self.refreshControl.endRefreshing()
+      self.loadingView.stopAnimating()
+      self.isLoadingNextPage = false
       MBProgressHUD.hideHUDForView(self.view, animated: true)
     })
   }

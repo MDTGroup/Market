@@ -39,6 +39,9 @@ class Post: PFObject, PFSubclassing {
   var iVoteIt = false
   var iSaveIt = false
   
+//  override init() {
+//    iSaveIt = true
+//  }
 }
 
 // MARK: Save post with medias progress
