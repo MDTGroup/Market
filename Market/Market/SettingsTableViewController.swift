@@ -51,6 +51,8 @@ class SettingsTableViewController: UITableViewController {
     @IBAction func onCloseSettings(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
     }
+    
+    
 
     // MARK: - Table view data source
 
