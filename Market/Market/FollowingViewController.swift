@@ -17,11 +17,8 @@ class FollowingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Do any additional setup after loading the view.
         self.tableView.dataSource = self
         self.tableView.delegate  = self
-        
-        self.loadData()
     }
     
     
@@ -36,7 +33,6 @@ class FollowingViewController: UIViewController {
                 self.tableView.reloadData()
             }
         })
-
     }
 }
 
@@ -50,7 +46,6 @@ extension FollowingViewController: UITableViewDataSource, UITableViewDelegate {
  
         let fullname = self.queryArray[indexPath.row].fullName
         cell.fullnameLabel.text = fullname
-                //load avatar
         if let avatarFile = self.queryArray[indexPath.row].avatar {
             avatarFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
                 cell.imgField.image = UIImage(data: data!)
