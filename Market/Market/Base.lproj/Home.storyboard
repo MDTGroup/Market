@@ -542,6 +542,12 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="avatarImageView" destination="AuM-tk-5jH" id="hnf-k4-Sca"/>
+                                            <outlet property="descriptionLabel" destination="7vP-y2-rZ2" id="9H6-rV-rlv"/>
+                                            <outlet property="itemImageView" destination="wX6-M4-goi" id="6a8-3q-xpK"/>
+                                            <outlet property="itemNameLabel" destination="MsI-v5-trn" id="rdq-I0-a2b"/>
+                                            <outlet property="priceLabel" destination="new-f6-mOF" id="BTJ-g7-l5C"/>
+                                            <outlet property="sellerLabel" destination="eGk-Th-6Mc" id="v0y-gA-sKB"/>
                                             <segue destination="nif-7J-xtZ" kind="modal" identifier="detailSegue" id="2e5-5L-b9F"/>
                                         </connections>
                                     </tableViewCell>
