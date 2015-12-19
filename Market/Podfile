@@ -6,7 +6,6 @@ use_frameworks!
 target 'Market' do
   pod 'Parse'
   pod 'AFNetworking'
-  pod 'DateTools'
   pod 'MBProgressHUD', '~> 0.9.1'
   pod 'JSQMessagesViewController'
 end

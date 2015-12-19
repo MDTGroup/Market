@@ -58,6 +58,7 @@ class PostViewController: UIViewController {
   var imagesAvail = [Bool](count: 3, repeatedValue: false)
   var editingPost: Post?
   var isUpdating = false
+  var isMediaChanged = false
   
   weak var delegate: PostViewControllerDelegate?
   
@@ -102,11 +103,11 @@ class PostViewController: UIViewController {
     descriptionText.delegate = self
     
     progressBar.setProgress(0, animated: false)
-    progressBar.layer.cornerRadius = 2
+    progressBar.layer.cornerRadius = 4
     progressBar.clipsToBounds = true
     progressBar.alpha = 0
-    progressBarLeft.constant = 73
-    progressBarLength.constant = UIScreen.mainScreen().bounds.width - 73 - 25
+    progressBarLeft.constant = 70
+    progressBarLength.constant = UIScreen.mainScreen().bounds.width - 70 - 25
     quickPostLeft.constant = (UIScreen.mainScreen().bounds.width - 50) / 2
     
     // Add observer to detect when the keyboard will be shown/hide
@@ -153,17 +154,20 @@ class PostViewController: UIViewController {
     
     imageView1.setImageWithURL(NSURL(string: (editingPost?.medias[1].url!)!)!)
     imageView1.contentMode = .ScaleAspectFill
+    removeButton1.hidden = false
     imagesAvail[0] = true
     
     if nImages > 2 {
       imageView2.setImageWithURL(NSURL(string: (editingPost?.medias[2].url!)!)!)
       imageView2.contentMode = .ScaleAspectFill
+      removeButton2.hidden = false
       imagesAvail[1] = true
     }
     
     if nImages > 3 {
       imageView3.setImageWithURL(NSURL(string: (editingPost?.medias[3].url!)!)!)
       imageView3.contentMode = .ScaleAspectFill
+      removeButton3.hidden = false
       imagesAvail[2] = true
     }
   }
@@ -353,10 +357,33 @@ class PostViewController: UIViewController {
   func updatePost() {
     showProgressBar()
     print("updating post")
-    if let post = preparePost() {
-      Post.updatePost((editingPost?.objectId)!, newPost: post, completion: { (finished, error) -> Void in
-        self.dismissViewControllerAnimated(true, completion: nil)
-      })
+    if let newPost = preparePost() {
+      
+      let post = Post(withoutDataWithObjectId: (editingPost?.objectId)!)
+      post.fetchInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
+        print(fetchedPFObj)
+        if let fetchedPost = fetchedPFObj as? Post {
+          fetchedPost.title = newPost.title
+          fetchedPost.descriptionText = newPost.descriptionText
+          fetchedPost.price = newPost.price
+          fetchedPost.condition = newPost.condition
+          if self.isMediaChanged {
+            fetchedPost.medias = newPost.medias
+          }
+          fetchedPost.sold = newPost.sold
+          
+          fetchedPost.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
+            self.delegate?.postViewController?(self, didUploadNewPost: post)
+            self.dismissViewControllerAnimated(true, completion: nil)
+            }) { (post: Post, percent: Float) -> Void in
+              print(percent)
+              self.progressBar.setProgress(percent, animated: true)
+          }
+        } else {
+          print("Not able to update post :(")
+        }
+      }
+      
     }
   }
   
@@ -379,16 +406,19 @@ class PostViewController: UIViewController {
   }
   
   @IBAction func onRemoveImage1(sender: UIButton) {
+    isMediaChanged = true
     initImageFrame(imageView1)
     imagesAvail[0] = false
   }
   
   @IBAction func onRemoveImage2(sender: UIButton) {
+    isMediaChanged = true
     initImageFrame(imageView2)
     imagesAvail[1] = false
   }
   
   @IBAction func onRemoveImage3(sender: UIButton) {
+    isMediaChanged = true
     initImageFrame(imageView3)
     imagesAvail[2] = false
   }
@@ -403,9 +433,11 @@ class PostViewController: UIViewController {
   
 }
 
+// MARK: - Image Picker
 extension PostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
     // User selected an image
+    isMediaChanged = true
     if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
       setImageToSelectedImageView(image)
     }

@@ -397,18 +397,6 @@
                                 <color key="textColor" red="0.73333333333333328" green="0.72941176470588232" blue="0.76078431372549016" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9OL-9M-Ton">
-                                <rect key="frame" x="162" y="543" width="50" height="50"/>
-                                <animations/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="50" id="JTH-Xa-7ht"/>
-                                    <constraint firstAttribute="width" constant="50" id="oe5-A3-5eD"/>
-                                </constraints>
-                                <state key="normal" title="Button" image="ok"/>
-                                <connections>
-                                    <action selector="onQuickPost:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="PcJ-3K-WZK"/>
-                                </connections>
-                            </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2it-Cy-Gzl">
                                 <rect key="frame" x="289" y="243" width="74" height="30"/>
                                 <animations/>
@@ -423,6 +411,18 @@
                                     <constraint firstAttribute="width" constant="150" id="GVj-1a-avf"/>
                                 </constraints>
                             </progressView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9OL-9M-Ton">
+                                <rect key="frame" x="162" y="543" width="50" height="50"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="JTH-Xa-7ht"/>
+                                    <constraint firstAttribute="width" constant="50" id="oe5-A3-5eD"/>
+                                </constraints>
+                                <state key="normal" title="Button" image="ok"/>
+                                <connections>
+                                    <action selector="onQuickPost:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="PcJ-3K-WZK"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

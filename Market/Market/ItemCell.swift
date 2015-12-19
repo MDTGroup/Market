@@ -54,6 +54,7 @@ class ItemCell: UITableViewCell {
       // Set Item
       if post.medias.count > 0 {
         itemImageView.alpha = 0.0
+        itemImageView.image = UIImage(named: "loading")
         UIView.animateWithDuration(0.3, animations: {
           self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
           self.itemImageView.alpha = 1.0

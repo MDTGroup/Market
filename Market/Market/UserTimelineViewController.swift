@@ -9,7 +9,7 @@
 import UIKit
 import MBProgressHUD
 
-class UserTimelineViewController: UIViewController, PostViewControllerDelegate {
+class UserTimelineViewController: UIViewController {
   
   var user: User!
   var posts = [Post]()
@@ -142,6 +142,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
           print(action)
+          tableView.setEditing(false, animated: true)
         }
         alertController.addAction(cancelAction)
         
@@ -166,6 +167,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         self.selectedPostIndex = indexPath.row
         let p = self.posts[self.selectedPostIndex]
         self.performSegueWithIdentifier("editSegue", sender: p)
+        tableView.setEditing(false, animated: false)
       }
       editAction.backgroundColor = MyColors.bluesky
       
@@ -173,4 +175,17 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     }
     return []
   }
+
 }
+
+extension UserTimelineViewController: PostViewControllerDelegate {
+  func postViewController(postViewController: PostViewController, didUploadNewPost post: Post) {
+    print("i get updated post, reload now")
+    posts[selectedPostIndex] = post
+    let rowToReload: NSIndexPath = NSIndexPath(forRow: selectedPostIndex, inSection: 0)
+    
+    tableView.reloadRowsAtIndexPaths([rowToReload], withRowAnimation: UITableViewRowAnimation.Automatic)
+    //tableView.reloadData()
+  }
+}
+
