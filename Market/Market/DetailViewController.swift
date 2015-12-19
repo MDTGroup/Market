@@ -131,8 +131,22 @@ class DetailViewController: UIViewController {
     setImageScroll(1)
     
     // Any posibility if will be nil here?
-    self.setSaveLabel(post.iSaveIt!)
-    setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
+    if post.iSaveIt == nil {
+        post.savedPostCurrentUser({ (saved, error) -> Void in
+            self.post.iSaveIt = saved
+            self.setSaveLabel(self.post.iSaveIt!)
+        })
+    } else {
+        setSaveLabel(post.iSaveIt!)
+    }
+    if post.iVoteIt == nil {
+        post.votedPostCurrentUser({ (voted, error) -> Void in
+            self.post.iVoteIt = voted
+            self.setVoteCountLabel(self.post.voteCounter, voted: self.post.iVoteIt!)
+        })
+    } else {
+        setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
+    }
     
     // Indicate network status
     //    if Helper.hasConnectivity() {
