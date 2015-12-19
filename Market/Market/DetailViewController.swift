@@ -57,10 +57,10 @@ class DetailViewController: UIViewController {
   
   weak var delegate: DetailViewControllerDelegate?
   
-    static let homeSB = UIStoryboard(name: "Home", bundle: nil)
+  static let homeSB = UIStoryboard(name: "Home", bundle: nil)
   override func viewDidLoad() {
     super.viewDidLoad()
-
+    
     // Do any additional setup after loading the view.
     itemNameLabel.text = post.title
     descriptionText.text = post.descriptionText
@@ -93,11 +93,11 @@ class DetailViewController: UIViewController {
       if let user = pfObj as? User {
         self.sellerLabel.text = user.fullName
         if let avatar = user.avatar {
-            self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+          self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
         }
       }
     }
-
+    
     avatarImageView.layer.cornerRadius = 18
     avatarImageView.clipsToBounds = true
     
@@ -116,10 +116,10 @@ class DetailViewController: UIViewController {
     
     // Load image while user still redding 1st page
     if nImages > 2 {
-      tempImageView1!.setImageWithURL(NSURL(string: post.medias[2].url!)!)
+      //tempImageView1!.setImageWithURL(NSURL(string: post.medias[2].url!)!)
     }
     if nImages > 3 {
-      tempImageView2!.setImageWithURL(NSURL(string: post.medias[3].url!)!)
+      //tempImageView2!.setImageWithURL(NSURL(string: post.medias[3].url!)!)
     }
     
     // Set the buttons width equally
@@ -132,20 +132,20 @@ class DetailViewController: UIViewController {
     
     // Any posibility if will be nil here?
     if post.iSaveIt == nil {
-        post.savedPostCurrentUser({ (saved, error) -> Void in
-            self.post.iSaveIt = saved
-            self.setSaveLabel(self.post.iSaveIt!)
-        })
+      post.savedPostCurrentUser({ (saved, error) -> Void in
+        self.post.iSaveIt = saved
+        self.setSaveLabel(self.post.iSaveIt!)
+      })
     } else {
-        setSaveLabel(post.iSaveIt!)
+      setSaveLabel(post.iSaveIt!)
     }
     if post.iVoteIt == nil {
-        post.votedPostCurrentUser({ (voted, error) -> Void in
-            self.post.iVoteIt = voted
-            self.setVoteCountLabel(self.post.voteCounter, voted: self.post.iVoteIt!)
-        })
+      post.votedPostCurrentUser({ (voted, error) -> Void in
+        self.post.iVoteIt = voted
+        self.setVoteCountLabel(self.post.voteCounter, voted: self.post.iVoteIt!)
+      })
     } else {
-        setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
+      setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
     }
     
     // Indicate network status
@@ -226,9 +226,9 @@ class DetailViewController: UIViewController {
     }
   }
   
-//  override func prefersStatusBarHidden() -> Bool {
-//    return true
-//  }
+  //  override func prefersStatusBarHidden() -> Bool {
+  //    return true
+  //  }
   
   @IBAction func onPanImage(sender: UIPanGestureRecognizer) {
     let translation = sender.translationInView(view)
@@ -389,7 +389,7 @@ extension DetailViewController {
 
 // MARK: Show view from anywhere
 extension DetailViewController {
-    static var instantiateViewController: DetailViewController {
-        return homeSB.instantiateViewControllerWithIdentifier(StoryboardID.postDetail) as! DetailViewController
-    }
+  static var instantiateViewController: DetailViewController {
+    return homeSB.instantiateViewControllerWithIdentifier(StoryboardID.postDetail) as! DetailViewController
+  }
 }

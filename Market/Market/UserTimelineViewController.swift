@@ -77,6 +77,7 @@ class UserTimelineViewController: UIViewController {
     editProfileButton.layer.cornerRadius = 3
     
     // Load following (this user follows people)
+    followingCountLabel.text = ""
     user.getFollowings { (users, error) -> Void in
       if users != nil {
         self.followingCountLabel.text = "\((users?.count)!)"
@@ -86,6 +87,7 @@ class UserTimelineViewController: UIViewController {
     }
     
     // Load follower (who follows this user)
+    followerCountLabel.text = ""
     user.getFollowers { (users, error) -> Void in
       if users != nil {
         self.followerCountLabel.text = "\((users?.count)!)"
@@ -159,21 +161,34 @@ class UserTimelineViewController: UIViewController {
     dismissViewControllerAnimated(true, completion: nil)
   }
   
+  func setFollowersCounter(count: Int, followed: Bool) {
+    followerCountLabel.text = "\(count)"
+    if followed {
+      followButton.setTitle("Unfollow", forState: .Normal)
+    } else {
+      followButton.setTitle("Follow", forState: .Normal)
+    }
+  }
+  
   @IBAction func onFollow(sender: UIButton) {
     if iFollowThisUser {
-      followButton.setTitle("Follow", forState: .Normal)
+      let count = Int(followerCountLabel.text!)! - 1
+      setFollowersCounter(count, followed: false)
+      
       Follow.unfollow(user, callback: { (success, error: NSError?) -> Void in
         if success {
           print("UnFollowing successfully \(self.user.fullName)")
           self.iFollowThisUser = false
         } else {
           print("Can not unfollow \(self.user.fullName)", error)
-          self.followButton.setTitle("Unfollow", forState: .Normal)
+          self.setFollowersCounter(count + 1, followed: false)
         }
       })
       
     } else {
-      followButton.setTitle("Unfollow", forState: .Normal)
+      let count = Int(followerCountLabel.text!)! + 1
+      setFollowersCounter(count, followed: true)
+      
       Follow.follow(user, callback: { (success, error: NSError?) -> Void in
         if success {
           print("Follow successfully \(self.user.fullName)")
@@ -181,6 +196,7 @@ class UserTimelineViewController: UIViewController {
         } else {
           print("Can't follow \(self.user.fullName)", error)
           self.followButton.setTitle("Follow", forState: .Normal)
+          self.setFollowersCounter(count - 1, followed: true)
         }
       })
     }
