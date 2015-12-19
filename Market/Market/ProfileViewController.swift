@@ -27,7 +27,11 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        
         // Do any additional setup after loading the view.
+//        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWasShow:"), name:UIKeyboardWillShowNotification, object: nil)
+//    
         //cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
         
         if let currentUser = User.currentUser() {
@@ -45,14 +49,84 @@ class ProfileViewController: UIViewController {
             self.phoneField.text = currentUser.phone
             self.addressField.text = currentUser.address
             self.emailField.text = currentUser.email
+            
+            
+            
+           // Add observer to detect when the keyboard will be shown
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name: UIKeyboardWillShowNotification, object: nil)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
+            
+           
+            
+            //Looks for single or multiple taps.
+            let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+            self.view.addGestureRecognizer(tap)
         }
    }
+  
+  
+   //Calls this function when the tap is recognized.
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        self.view.endEditing(true)
+        print("The keyboard is dismissed")
+        
+    }
+    
+    
+    /*MARK: Fix bug when keyboard slides up*/
+//    func keyboardWillShow(notification: NSNotification) {
+//       if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+//          self.view.frame.origin.y -= keyboardSize.height/2
+//            
+//        }
+//    }
+    
+    func keyboardWillShow(sender: NSNotification) {
+        let userInfo: [NSObject : AnyObject] = sender.userInfo!
+        
+        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
+        let offset: CGSize = userInfo[UIKeyboardFrameEndUserInfoKey]!.CGRectValue.size
+        
+        if keyboardSize.height == offset.height {
+            if self.view.frame.origin.y == 0 {
+                UIView.animateWithDuration(0.1, animations: { () -> Void in
+                    self.view.frame.origin.y -= keyboardSize.height/2
+                })
+            }
+        } else {
+            UIView.animateWithDuration(0.1, animations: { () -> Void in
+                self.view.frame.origin.y += keyboardSize.height/2 - offset.height
+            })
+        }
+        print("Keyboard will show and new position y of View",self.view.frame.origin.y)
+        
+    }
+    func keyboardWillHide(sender: NSNotification) {
+        let userInfo: [NSObject : AnyObject] = sender.userInfo!
+        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
+        self.view.frame.origin.y += keyboardSize.height/2
+        print("Keyboard will hide")
+
+    }
+   
+//    func keyboardWillHide(notification: NSNotification) {
+//        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
+//            self.view.frame.origin.y += keyboardSize.height/2
+//            print("Keyboard will hide")
+//        }
+//    }
+    
+
+
     //Making the avatar into round shape
     override func viewWillAppear(animated: Bool) {
+        //Set imagePickerView from square to round shape
         self.imagePickerView.layer.cornerRadius = self.imagePickerView.frame.size.width / 2
         self.imagePickerView.clipsToBounds = true
        
     }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

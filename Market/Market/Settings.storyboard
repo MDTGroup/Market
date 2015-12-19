@@ -552,6 +552,7 @@
         <!--Profile-->
         <scene sceneID="tHn-CC-iYt">
             <objects>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QRe-fV-eBf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="Isu-Xo-m5H" customClass="ProfileViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qMm-na-qh2"/>
@@ -613,6 +614,7 @@
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="jvi-Vz-GjI" firstAttribute="top" secondItem="JoJ-23-hRy" secondAttribute="bottom" constant="60" id="1tR-Jd-J4M"/>
                             <constraint firstItem="AHw-wa-Ct5" firstAttribute="top" secondItem="JoJ-23-hRy" secondAttribute="bottom" constant="15" id="8H5-p1-5Ft"/>
@@ -643,13 +645,8 @@
                         <outlet property="phoneField" destination="JoJ-23-hRy" id="Hy5-lv-JOf"/>
                     </connections>
                 </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="QRe-fV-eBf" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="dxr-wt-o2a">
-                    <rect key="frame" x="0.0" y="0.0" width="240" height="128"/>
-                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                </scrollView>
             </objects>
-            <point key="canvasLocation" x="1900" y="389"/>
+            <point key="canvasLocation" x="1892" y="237"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="mwb-4Q-aPr">
