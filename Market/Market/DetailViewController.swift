@@ -51,6 +51,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   
   weak var delegate: DetailViewControllerDelegate?
   
+    static let homeSB = UIStoryboard(name: "Home", bundle: nil)
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -193,9 +194,9 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     }
   }
   
-  override func prefersStatusBarHidden() -> Bool {
-    return true
-  }
+//  override func prefersStatusBarHidden() -> Bool {
+//    return true
+//  }
   
   // This can detect the tap, but the scroll will be recognized as tap as well :(
   //  override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
@@ -331,4 +332,11 @@ extension DetailViewController {
     voteCountLabel.hidden = !(count > 0)
     voteLabel.hidden = !(count > 0)
   }
+}
+
+// MARK: Show view from anywhere
+extension DetailViewController {
+    static var instantiateViewController: DetailViewController {
+        return homeSB.instantiateViewControllerWithIdentifier("postDetail") as! DetailViewController
+    }
 }
