@@ -32,8 +32,8 @@ class Post: PFObject, PFSubclassing {
   private var uploadedFiles = [PFFile]()
   private var progressFiles = [PFFile: Int]()
     
-    var iSaveIt = false
-    var iVoteIt = false
+  var iSaveIt: Bool?
+  var iVoteIt: Bool?
   
   var totalProgress: Int = 1
   var currentTotalProgress: Int = 0

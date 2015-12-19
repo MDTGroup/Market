@@ -49,22 +49,15 @@
                                                         <constraint firstAttribute="height" constant="80" id="oGG-ty-e7g"/>
                                                     </constraints>
                                                 </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2.5 tr" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="79D-SU-U1a">
-                                                    <rect key="frame" x="28" y="93" width="40" height="18"/>
-                                                    <animations/>
-                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="IPhone 10s" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="F8C-LO-FSQ">
-                                                    <rect key="frame" x="93" y="5" width="81" height="18"/>
+                                                    <rect key="frame" x="93" y="5" width="80.5" height="18"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tDz-HM-ic9">
-                                                    <rect key="frame" x="93" y="26" width="274" height="51"/>
+                                                    <rect key="frame" x="93" y="26" width="274" height="50.5"/>
                                                     <animations/>
                                                     <string key="text">With the iPhone 6S Apple delivered its best handset yet, but aside from sporting some fancy new 3D Touch technology it was also very similar to the iPhone 6.</string>
                                                     <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
@@ -133,11 +126,18 @@
                                                     </constraints>
                                                     <state key="normal" title="Button" image="chat"/>
                                                 </button>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PIi-Y5-jfq">
-                                                    <rect key="frame" x="114" y="94" width="16" height="17"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PIi-Y5-jfq">
+                                                    <rect key="frame" x="114" y="94" width="9" height="17"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="2.5 tr" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="79D-SU-U1a">
+                                                    <rect key="frame" x="28" y="93" width="39.5" height="18"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                             </subviews>
@@ -620,11 +620,11 @@
                                             <constraint firstAttribute="width" constant="110" id="aBt-a0-CZc"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <state key="normal" title=" Save" image="save_white">
+                                        <state key="normal" title="Vote" image="thumb_white">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onSaveTapped:" destination="nif-7J-xtZ" eventType="touchUpInside" id="nII-7e-o2i"/>
+                                            <action selector="onVoteTapped:" destination="nif-7J-xtZ" eventType="touchUpInside" id="AYV-6g-w7L"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MOF-jE-j0V">
@@ -642,11 +642,11 @@
                                         <rect key="frame" x="110" y="0.0" width="147" height="40"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <state key="normal" title=" Vote" image="thumb_white">
+                                        <state key="normal" title="Save" image="save_white">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="onVoteTapped:" destination="nif-7J-xtZ" eventType="touchUpInside" id="dan-v2-GRQ"/>
+                                            <action selector="onSaveTapped:" destination="nif-7J-xtZ" eventType="touchUpOutside" id="pf9-yd-9YX"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -795,14 +795,14 @@
                                     <constraint firstItem="War-Jk-Wxe" firstAttribute="top" secondItem="sK6-qR-HC8" secondAttribute="top" id="rcO-Sa-vkM"/>
                                 </constraints>
                             </view>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="20" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5rz-mE-2ge">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5rz-mE-2ge">
                                 <rect key="frame" x="15" y="609" width="18" height="16"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="13"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Votes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Gk-53-Yd0">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Votes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Gk-53-Yd0">
                                 <rect key="frame" x="36" y="609" width="35" height="16"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
@@ -847,15 +847,15 @@
                         <outlet property="imageView" destination="BDo-wM-PIS" id="AHQ-0j-fms"/>
                         <outlet property="itemNameLabel" destination="4PH-zu-OB4" id="quP-yK-Xp1"/>
                         <outlet property="panGesture" destination="5tJ-ot-WPT" id="tzI-1a-8k6"/>
-                        <outlet property="saveButton" destination="fte-tw-h1I" id="K6P-yb-1yU"/>
-                        <outlet property="saveButtonWidth" destination="aBt-a0-CZc" id="YWs-54-890"/>
+                        <outlet property="saveButton" destination="LAZ-RZ-MCh" id="wOd-3V-WV3"/>
                         <outlet property="scrollCircle1" destination="War-Jk-Wxe" id="Hi4-Gg-Nk3"/>
                         <outlet property="scrollCircle2" destination="sK6-qR-HC8" id="NCa-M8-ssS"/>
                         <outlet property="scrollCircle3" destination="Pwv-uA-s1q" id="vXz-nm-8jy"/>
                         <outlet property="sellerLabel" destination="RXW-UG-ZPU" id="58C-48-O8i"/>
                         <outlet property="textHeight" destination="vgU-Fi-8zT" id="P8n-bK-ZHU"/>
                         <outlet property="updatedAtLabel" destination="jMW-8p-qCt" id="HOB-fl-caI"/>
-                        <outlet property="voteButton" destination="LAZ-RZ-MCh" id="owu-Kp-Jjm"/>
+                        <outlet property="voteButton" destination="fte-tw-h1I" id="40j-dx-ZWd"/>
+                        <outlet property="voteButtonWidth" destination="aBt-a0-CZc" id="UhV-FF-2Zi"/>
                         <outlet property="voteCountLabel" destination="5rz-mE-2ge" id="NIU-hg-lep"/>
                         <outlet property="voteLabel" destination="7Gk-53-Yd0" id="mRi-Gw-ec9"/>
                     </connections>
@@ -1171,8 +1171,8 @@
         <image name="thumb_white" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="O9o-wh-Pon"/>
         <segue reference="hSK-zQ-87W"/>
-        <segue reference="2e5-5L-b9F"/>
+        <segue reference="cpy-Qu-8X7"/>
+        <segue reference="ld4-w7-eAL"/>
     </inferredMetricsTieBreakers>
 </document>

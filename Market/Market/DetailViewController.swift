@@ -19,7 +19,7 @@ class DetailViewController: UIViewController {
   @IBOutlet weak var saveButton: UIButton!
   @IBOutlet weak var voteButton: UIButton!
   @IBOutlet weak var chatButton: UIButton!
-  @IBOutlet weak var saveButtonWidth: NSLayoutConstraint!
+  @IBOutlet weak var voteButtonWidth: NSLayoutConstraint!
   @IBOutlet weak var chatButtonWidth: NSLayoutConstraint!
   
   @IBOutlet weak var dimmingView: UIView!
@@ -123,14 +123,15 @@ class DetailViewController: UIViewController {
     
     // Set the buttons width equally
     let w = UIScreen.mainScreen().bounds.width
-    saveButtonWidth.constant = w / 3
+    voteButtonWidth.constant = w / 3
     chatButtonWidth.constant = w / 3
     
     // Set the images scroll indicator
     setImageScroll(1)
     
-    self.setSaveCountLabel(post.iSaveIt)
-    setVoteCountLabel(post.voteCounter, voted: post.iVoteIt)
+    // Any posibility if will be nil here?
+    self.setSaveLabel(post.iSaveIt!)
+    setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
     
     // Indicate network status
     //    if Helper.hasConnectivity() {
@@ -283,27 +284,29 @@ class DetailViewController: UIViewController {
   @IBAction func onSaveTapped(sender: UIButton) {
     if sender.imageView?.image == UIImage(named: "save_on") {
       // Un-save it
+      setSaveLabel(false)
       post.save(false) { (successful: Bool, error: NSError?) -> Void in
         if successful {
           print("unsaved")
           self.post.iSaveIt = false
-          self.setSaveCountLabel(false)
           self.delegate!.detailViewController!(self, newPost: self.post)
         } else {
           print("failed to unsave")
+          self.setSaveLabel(true)
         }
       }
       
     } else {
       // Save it
+      setSaveLabel(true)
       post.save(true) { (successful: Bool, error: NSError?) -> Void in
         if successful {
           print("saved")
           self.post.iSaveIt = true
-          self.setSaveCountLabel(true)
           self.delegate!.detailViewController!(self, newPost: self.post)
         } else {
           print("failed to save")
+          self.setSaveLabel(false)
         }
       }
     }
@@ -312,27 +315,31 @@ class DetailViewController: UIViewController {
   @IBAction func onVoteTapped(sender: UIButton) {
     if sender.imageView?.image == UIImage(named: "thumb_on") {
       // Un-vote it
+      let count = Int(self.voteCountLabel.text!)! - 1
+      setVoteCountLabel(count, voted: false)
       post.vote(false) { (successful: Bool, error: NSError?) -> Void in
         if successful {
           print("unvoted")
           self.post.iVoteIt = false
-          sender.setImage(UIImage(named: "thumb_white"), forState: .Normal)
           self.delegate!.detailViewController!(self, newPost: self.post)
         } else {
           print("failed to unvote")
+          self.setVoteCountLabel(count + 1, voted: true)
         }
       }
       
     } else {
       // Vote it
+      let count = Int(self.voteCountLabel.text!)! + 1
+      setVoteCountLabel(count, voted: true)
       post.vote(true) { (successful: Bool, error: NSError?) -> Void in
         if successful {
           print("voted")
           self.post.iVoteIt = true
-          sender.setImage(UIImage(named: "thumb_on"), forState: .Normal)
           self.delegate!.detailViewController!(self, newPost: self.post)
         } else {
           print("failed to vote")
+          self.setVoteCountLabel(count - 1, voted: false)
         }
       }
     }
@@ -341,7 +348,7 @@ class DetailViewController: UIViewController {
 }
 
 extension DetailViewController {
-  func setSaveCountLabel(saved: Bool) {
+  func setSaveLabel(saved: Bool) {
     if saved {
       saveButton.setImage(UIImage(named: "save_on"), forState: .Normal)
       saveButton.setTitleColor(MyColors.bluesky, forState: .Normal)

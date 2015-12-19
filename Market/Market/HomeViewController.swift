@@ -100,7 +100,7 @@ class HomeViewController: UIViewController {
           self.isEndOfFeed = true
         }
         
-        self.posts.appendContentsOf(posts)
+        self.posts.appendContentsOf(posts)        
         self.tableView.reloadData()
         
       } else {

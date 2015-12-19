@@ -152,12 +152,14 @@ class PostViewController: UIViewController {
     
     let nImages = editingPost?.medias.count
     
+    imageView1.image = UIImage(named: "loading")
     imageView1.setImageWithURL(NSURL(string: (editingPost?.medias[1].url!)!)!)
     imageView1.contentMode = .ScaleAspectFill
     removeButton1.hidden = false
     imagesAvail[0] = true
     
     if nImages > 2 {
+      imageView1.image = UIImage(named: "loading")
       imageView2.setImageWithURL(NSURL(string: (editingPost?.medias[2].url!)!)!)
       imageView2.contentMode = .ScaleAspectFill
       removeButton2.hidden = false
@@ -165,6 +167,7 @@ class PostViewController: UIViewController {
     }
     
     if nImages > 3 {
+      imageView1.image = UIImage(named: "loading")
       imageView3.setImageWithURL(NSURL(string: (editingPost?.medias[3].url!)!)!)
       imageView3.contentMode = .ScaleAspectFill
       removeButton3.hidden = false
