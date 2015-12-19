@@ -23,6 +23,12 @@ class UserTimelineViewController: UIViewController {
   @IBOutlet weak var followingCountLabel: UILabel!
   @IBOutlet weak var followerCountLabel: UILabel!
   @IBOutlet weak var editProfileButton: UIButton!
+  @IBOutlet weak var backButton: UIButton!
+  @IBOutlet weak var followButton: UIButton!
+  
+  @IBOutlet weak var segmentControl: UISegmentedControl!
+  @IBOutlet weak var segmentPreGap: NSLayoutConstraint!
+  @IBOutlet weak var segmentHeight: NSLayoutConstraint!
   
   var refreshControl = UIRefreshControl()
   var loadingView: UIActivityIndicatorView!
@@ -30,6 +36,7 @@ class UserTimelineViewController: UIViewController {
   var isEndOfFeed = false
   var noMoreResultLabel = UILabel()
   var selectedPostIndex: Int!
+  var iFollowThisUser = false
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -38,9 +45,54 @@ class UserTimelineViewController: UIViewController {
     if user == nil {
       user = User.currentUser()
       isCurrentUser = true
+      segmentPreGap.constant = 15
+      segmentHeight.constant = 28
+    } else {
+      if user.objectId == User.currentUser()?.objectId {
+        isCurrentUser = true
+        segmentPreGap.constant = 15
+        segmentHeight.constant = 28
+      } else {
+        // Dont show the segment
+        segmentPreGap.constant = 0
+        segmentHeight.constant = 0
+        user.didIFollowTheUser({ (followed, error) -> Void in
+          self.iFollowThisUser = followed
+          if followed {
+            self.followButton.setTitle("Unfollow", forState: .Normal)
+          } else {
+            self.followButton.setTitle("Follow", forState: .Normal)
+          }
+        })
+      }
     }
     print("loading \(user.fullName)")
+    segmentControl.hidden = !isCurrentUser
     editProfileButton.hidden = !isCurrentUser
+    backButton.hidden = isCurrentUser
+    followButton.hidden = isCurrentUser
+    
+    backButton.layer.cornerRadius = 3
+    followButton.layer.cornerRadius = 3
+    editProfileButton.layer.cornerRadius = 3
+    
+    // Load following (this user follows people)
+    user.getFollowings { (users, error) -> Void in
+      if users != nil {
+        self.followingCountLabel.text = "\((users?.count)!)"
+      } else {
+        self.followingCountLabel.text = "0"
+      }
+    }
+    
+    // Load follower (who follows this user)
+    user.getFollowers { (users, error) -> Void in
+      if users != nil {
+        self.followerCountLabel.text = "\((users?.count)!)"
+      } else {
+        self.followerCountLabel.text = "0"
+      }
+    }
     
     userLabel.text = user.fullName
     avatarImageView.setImageWithURL(NSURL(string: user.avatar!.url!)!)
@@ -107,12 +159,39 @@ class UserTimelineViewController: UIViewController {
     dismissViewControllerAnimated(true, completion: nil)
   }
   
+  @IBAction func onFollow(sender: UIButton) {
+    if iFollowThisUser {
+      followButton.setTitle("Follow", forState: .Normal)
+      Follow.unfollow(user, callback: { (success, error: NSError?) -> Void in
+        if success {
+          print("UnFollowing successfully \(self.user.fullName)")
+          self.iFollowThisUser = false
+        } else {
+          print("Can not unfollow \(self.user.fullName)", error)
+          self.followButton.setTitle("Unfollow", forState: .Normal)
+        }
+      })
+      
+    } else {
+      followButton.setTitle("Unfollow", forState: .Normal)
+      Follow.follow(user, callback: { (success, error: NSError?) -> Void in
+        if success {
+          print("Follow successfully \(self.user.fullName)")
+          self.iFollowThisUser = true
+        } else {
+          print("Can't follow \(self.user.fullName)", error)
+          self.followButton.setTitle("Follow", forState: .Normal)
+        }
+      })
+    }
+  }
+  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if let navController = segue.destinationViewController as? UINavigationController {
-        if let postVC = navController.topViewController as? PostViewController {
-            postVC.delegate = self
-            postVC.editingPost = sender as? Post
-        }
+      if let postVC = navController.topViewController as? PostViewController {
+        postVC.delegate = self
+        postVC.editingPost = sender as? Post
+      }
     }
   }
 }
@@ -175,7 +254,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     }
     return []
   }
-
+  
 }
 
 extension UserTimelineViewController: PostViewControllerDelegate {
