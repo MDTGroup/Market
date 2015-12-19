@@ -49,10 +49,11 @@ class DetailViewController: UIViewController {
   //var imagePanGesture: UIPanGestureRecognizer!
   var selectedImage = 1
   var nImages: Int = 1
-  var tempImageView1: UIImageView?
-  var tempImageView2: UIImageView?
+  var tempImageView1 = UIImageView()
+  var tempImageView2 = UIImageView()
   
   var imageOriginalCenter: CGPoint!
+  var imageOriginalFrame: CGRect!
   var direction: CGFloat = 1.0
   
   weak var delegate: DetailViewControllerDelegate?
@@ -107,19 +108,19 @@ class DetailViewController: UIViewController {
     //imagePanGesture = UIPanGestureRecognizer(target: self, action: "changeImage:")
     //imageView.addGestureRecognizer(imagePanGesture)
     //imagePanGesture.requireGestureRecognizerToFail(panGesture)
-    imageOriginalCenter = imageView.center
     
+    // Exclude the thumbnail
     nImages = post.medias.count - 1
     scrollCircle1.hidden = nImages < 2
     scrollCircle2.hidden = nImages < 2
     scrollCircle3.hidden = nImages < 3
     
-    // Load image while user still redding 1st page
-    if nImages > 2 {
-      //tempImageView1!.setImageWithURL(NSURL(string: post.medias[2].url!)!)
+    // Load image while user still reading 1st page
+    if nImages > 1 {
+      tempImageView1.setImageWithURL(NSURL(string: post.medias[2].url!)!)
     }
-    if nImages > 3 {
-      //tempImageView2!.setImageWithURL(NSURL(string: post.medias[3].url!)!)
+    if nImages > 2 {
+      tempImageView2.setImageWithURL(NSURL(string: post.medias[3].url!)!)
     }
     
     // Set the buttons width equally
@@ -221,7 +222,6 @@ class DetailViewController: UIViewController {
         }
       }
       imageView.setImageWithURL(NSURL(string: post.medias[selectedImage].url!)!)
-      imageOriginalCenter = imageView.center
       setImageScroll(selectedImage)
     }
   }
@@ -232,33 +232,85 @@ class DetailViewController: UIViewController {
   
   @IBAction func onPanImage(sender: UIPanGestureRecognizer) {
     let translation = sender.translationInView(view)
-    let point = sender.locationInView(view)
+    let point = sender.locationInView(imageView)
     
     if sender.state == .Began {
-      
+      imageOriginalCenter = imageView.center
+      imageOriginalFrame = imageView.frame
       direction = point.y > imageView.frame.height/2 ? -0.15 : 0.15
+      print("image view frame", imageView.frame)
       
     } else if sender.state == .Changed {
-      
       imageView.center = CGPoint(x: imageOriginalCenter.x + translation.x, y: imageOriginalCenter.y)
-      
       imageView.transform = CGAffineTransformMakeRotation((direction * translation.x * CGFloat(M_PI)) / 180.0)
+      
     } else if sender.state == .Ended {
-      // If drag to right, slide in the (n-1)th image from left
-      if translation.x > 50 {
-        
-        UIView.animateWithDuration(1.0, animations: { () -> Void in
-          //self.imageView.center = CGPoint(x: 600, y: self.imageOriginalCenter.y)
-        })
-      } else if translation.x < -50 {
-        UIView.animateWithDuration(1.0, animations: { () -> Void in
-          //self.imageView.center = CGPoint(x: -300, y: self.imageOriginalCenter.y)
-        })
-      } else {
-        UIView.animateWithDuration(0.5, animations: { () -> Void in
+      // If only 1 image then return it to original position
+      if nImages <= 2 {
+        UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 10, options: [], animations: { () -> Void in
           self.imageView.center = self.imageOriginalCenter
           self.imageView.transform = CGAffineTransformMakeRotation(0)
-        })
+          }, completion: nil)
+        
+      } else {
+        // If drag to right, slide in the (n-1)th image from left
+        //        let tempImageView = UIImageView()
+        //        tempImageView.image = tempImageView2.image
+        //        tempImageView.frame = imageOriginalFrame
+        //        tempImageView.frame.origin.x = -UIScreen.mainScreen().bounds.width
+        //        print(tempImageView.frame)
+        //        tempImageView.contentMode = .ScaleAspectFit
+        //        tempImageView.clipsToBounds = true
+        //        view.insertSubview(tempImageView, aboveSubview: imageView)
+        
+        if translation.x > 100 {
+          selectedImage -= 1
+          if selectedImage < 1 {
+            selectedImage = nImages
+          }
+          
+          UIView.animateWithDuration(1.0, animations: { () -> Void in
+            self.imageView.center = CGPoint(x: 800, y: self.imageOriginalCenter.y)
+            }, completion: { (finished) -> Void in
+              self.imageView.center = self.imageOriginalCenter
+              self.imageView.transform = CGAffineTransformMakeRotation(0)
+              self.imageView.image = UIImage(named: "loading")
+              self.imageView.setImageWithURL(NSURL(string: self.post.medias[self.selectedImage].url!)!)
+              self.setImageScroll(self.selectedImage)
+          })
+          
+          //          UIView.animateWithDuration(3, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 10, options: [], animations: { () -> Void in
+          //            self.imageView.center = CGPoint(x: 800, y: self.imageOriginalCenter.y)
+          //            tempImageView.center = self.imageOriginalCenter
+          //            }, completion: { (finished) -> Void in
+          //              self.imageView.center = self.imageOriginalCenter
+          //              self.imageView.transform = CGAffineTransformMakeRotation(0)
+          //              print(self.imageView.frame)
+          //              self.imageView.image = tempImageView.image
+          //              tempImageView.removeFromSuperview()
+          //          })
+          
+        } else if translation.x < -100 {
+          selectedImage += 1
+          if selectedImage > nImages {
+            selectedImage = 1
+          }
+          UIView.animateWithDuration(1.0, animations: { () -> Void in
+            self.imageView.center = CGPoint(x: -400, y: self.imageOriginalCenter.y)
+            }, completion: { (finished) -> Void in
+              self.imageView.center = self.imageOriginalCenter
+              self.imageView.transform = CGAffineTransformMakeRotation(0)
+              self.imageView.image = UIImage(named: "loading")
+              self.imageView.setImageWithURL(NSURL(string: self.post.medias[self.selectedImage].url!)!)
+              self.setImageScroll(self.selectedImage)
+          })
+          
+        } else {
+          UIView.animateWithDuration(0.5, animations: { () -> Void in
+            self.imageView.center = self.imageOriginalCenter
+            self.imageView.transform = CGAffineTransformMakeRotation(0)
+          })
+        }
       }
     }
   }

@@ -590,62 +590,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nck-fO-fE6">
-                                <rect key="frame" x="-1" y="628" width="377" height="40"/>
-                                <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fte-tw-h1I">
-                                        <rect key="frame" x="0.0" y="0.0" width="110" height="40"/>
-                                        <animations/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="110" id="aBt-a0-CZc"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <state key="normal" title="Vote" image="thumb_white">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="onVoteTapped:" destination="nif-7J-xtZ" eventType="touchUpInside" id="AYV-6g-w7L"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MOF-jE-j0V">
-                                        <rect key="frame" x="257" y="0.0" width="120" height="40"/>
-                                        <animations/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="120" id="fCS-Q8-OqI"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <state key="normal" title=" Chat" image="chat_white">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LAZ-RZ-MCh">
-                                        <rect key="frame" x="110" y="0.0" width="147" height="40"/>
-                                        <animations/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <state key="normal" title="Save" image="save_white">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="onSaveTapped:" destination="nif-7J-xtZ" eventType="touchUpOutside" id="pf9-yd-9YX"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
-                                <animations/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstItem="MOF-jE-j0V" firstAttribute="top" secondItem="Nck-fO-fE6" secondAttribute="top" id="3Vs-7e-dou"/>
-                                    <constraint firstAttribute="bottom" secondItem="fte-tw-h1I" secondAttribute="bottom" id="CYd-dL-wOo"/>
-                                    <constraint firstAttribute="height" constant="40" id="VmO-0W-A1w"/>
-                                    <constraint firstItem="fte-tw-h1I" firstAttribute="top" secondItem="Nck-fO-fE6" secondAttribute="top" id="WO8-5o-BNc"/>
-                                    <constraint firstItem="LAZ-RZ-MCh" firstAttribute="top" secondItem="Nck-fO-fE6" secondAttribute="top" id="WSN-vA-aA2"/>
-                                    <constraint firstItem="fte-tw-h1I" firstAttribute="leading" secondItem="Nck-fO-fE6" secondAttribute="leading" id="XNU-My-GHI"/>
-                                    <constraint firstItem="LAZ-RZ-MCh" firstAttribute="leading" secondItem="fte-tw-h1I" secondAttribute="trailing" id="c52-ta-Xla"/>
-                                    <constraint firstAttribute="trailing" secondItem="MOF-jE-j0V" secondAttribute="trailing" id="hHA-zH-mBC"/>
-                                    <constraint firstAttribute="bottom" secondItem="LAZ-RZ-MCh" secondAttribute="bottom" id="kzh-TZ-XaO"/>
-                                    <constraint firstItem="MOF-jE-j0V" firstAttribute="leading" secondItem="LAZ-RZ-MCh" secondAttribute="trailing" id="na6-j7-hcw"/>
-                                    <constraint firstAttribute="bottom" secondItem="MOF-jE-j0V" secondAttribute="bottom" id="qOU-7Q-HGy"/>
-                                </constraints>
-                            </view>
                             <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BDo-wM-PIS">
                                 <rect key="frame" x="0.0" y="75" width="375" height="533"/>
                                 <animations/>
@@ -773,6 +717,62 @@
                                     <constraint firstItem="sK6-qR-HC8" firstAttribute="centerX" secondItem="EeN-d5-mO7" secondAttribute="centerX" id="hmz-QE-0qA"/>
                                     <constraint firstItem="sK6-qR-HC8" firstAttribute="top" secondItem="4PH-zu-OB4" secondAttribute="bottom" constant="10" id="qL4-dz-nmH"/>
                                     <constraint firstItem="War-Jk-Wxe" firstAttribute="top" secondItem="sK6-qR-HC8" secondAttribute="top" id="rcO-Sa-vkM"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nck-fO-fE6">
+                                <rect key="frame" x="-1" y="628" width="377" height="40"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fte-tw-h1I">
+                                        <rect key="frame" x="0.0" y="0.0" width="110" height="40"/>
+                                        <animations/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="110" id="aBt-a0-CZc"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <state key="normal" title="Vote" image="thumb_white">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onVoteTapped:" destination="nif-7J-xtZ" eventType="touchUpInside" id="AYV-6g-w7L"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MOF-jE-j0V">
+                                        <rect key="frame" x="257" y="0.0" width="120" height="40"/>
+                                        <animations/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="120" id="fCS-Q8-OqI"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <state key="normal" title=" Chat" image="chat_white">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LAZ-RZ-MCh">
+                                        <rect key="frame" x="110" y="0.0" width="147" height="40"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <state key="normal" title="Save" image="save_white">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="onSaveTapped:" destination="nif-7J-xtZ" eventType="touchUpOutside" id="pf9-yd-9YX"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <animations/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="MOF-jE-j0V" firstAttribute="top" secondItem="Nck-fO-fE6" secondAttribute="top" id="3Vs-7e-dou"/>
+                                    <constraint firstAttribute="bottom" secondItem="fte-tw-h1I" secondAttribute="bottom" id="CYd-dL-wOo"/>
+                                    <constraint firstAttribute="height" constant="40" id="VmO-0W-A1w"/>
+                                    <constraint firstItem="fte-tw-h1I" firstAttribute="top" secondItem="Nck-fO-fE6" secondAttribute="top" id="WO8-5o-BNc"/>
+                                    <constraint firstItem="LAZ-RZ-MCh" firstAttribute="top" secondItem="Nck-fO-fE6" secondAttribute="top" id="WSN-vA-aA2"/>
+                                    <constraint firstItem="fte-tw-h1I" firstAttribute="leading" secondItem="Nck-fO-fE6" secondAttribute="leading" id="XNU-My-GHI"/>
+                                    <constraint firstItem="LAZ-RZ-MCh" firstAttribute="leading" secondItem="fte-tw-h1I" secondAttribute="trailing" id="c52-ta-Xla"/>
+                                    <constraint firstAttribute="trailing" secondItem="MOF-jE-j0V" secondAttribute="trailing" id="hHA-zH-mBC"/>
+                                    <constraint firstAttribute="bottom" secondItem="LAZ-RZ-MCh" secondAttribute="bottom" id="kzh-TZ-XaO"/>
+                                    <constraint firstItem="MOF-jE-j0V" firstAttribute="leading" secondItem="LAZ-RZ-MCh" secondAttribute="trailing" id="na6-j7-hcw"/>
+                                    <constraint firstAttribute="bottom" secondItem="MOF-jE-j0V" secondAttribute="bottom" id="qOU-7Q-HGy"/>
                                 </constraints>
                             </view>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5rz-mE-2ge">
