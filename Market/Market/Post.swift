@@ -31,17 +31,14 @@ class Post: PFObject, PFSubclassing {
   
   private var uploadedFiles = [PFFile]()
   private var progressFiles = [PFFile: Int]()
+    
+    var iSaveIt = false
+    var iVoteIt = false
   
   var totalProgress: Int = 1
   var currentTotalProgress: Int = 0
   var finishCallback: ((post: Post) -> Void)?
   var progressCallback: ((post: Post, percent: Float) -> Void)?
-  var iVoteIt = false
-  var iSaveIt = false
-  
-//  override init() {
-//    iSaveIt = true
-//  }
 }
 
 // MARK: Save post with medias progress
@@ -239,6 +236,39 @@ extension Post {
       }
     }
   }
+}
+
+// MARK: Saved/Vote post status
+extension Post {
+    func savedPostCurrentUser(callback:PFBooleanResultBlock) {
+        if let currentUser = User.currentUser() {
+            let query = currentUser.savedPosts.query()
+            query.whereKey("objectId", equalTo: objectId!)
+            query.countObjectsInBackgroundWithBlock({ (numResult, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    callback(false, error)
+                    return
+                }
+                callback(numResult > 0, nil)
+            })
+        }
+    }
+    
+    func votedPostCurrentUser(callback:PFBooleanResultBlock) {
+        if let currentUser = User.currentUser() {
+            let query = currentUser.votedPosts.query()
+            query.whereKey("objectId", equalTo: objectId!)
+            query.countObjectsInBackgroundWithBlock({ (numResult, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    callback(false, error)
+                    return
+                }
+                callback(numResult > 0, nil)
+            })
+        }
+    }
 }
 
 // MARK: Search
