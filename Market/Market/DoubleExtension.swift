@@ -16,17 +16,17 @@ extension Double {
 //        return "$\(self)"
         var formattedMoney = ""
         var remain = self
-        if remain > billion {
+        if remain >= billion {
             let after = remain/billion
             remain = remain - after * billion
             formattedMoney += "\(Int(after))t"
         }
-        if remain > million {
+        if remain >= million {
             let after = remain/million
             remain = remain - after * million
             formattedMoney += "\(Int(after))tr"
         }
-        if remain > thousand {
+        if remain >= thousand {
             let after = remain/thousand
             remain = remain - after * thousand
             formattedMoney += "\(Int(after))k"
