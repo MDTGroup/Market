@@ -13,7 +13,7 @@ import DateTools
 @objc protocol SavedItemCellDelegate {
     optional func savedItemCell(tweetCell: SavedItemCell, didChangeVote value: Bool)
     optional func savedItemCell(tweetCell: SavedItemCell, didChangeSave value: Bool)
-    optional func savedItemCell(savedItemCell: SavedItemCell, tapOnProfile value: Bool)
+    optional func savedItemCell(SavedItemCell: SavedItemCell, tapOnProfile value: Bool)
 }
 
 class SavedItemCell: UITableViewCell {
@@ -65,7 +65,7 @@ class SavedItemCell: UITableViewCell {
             itemNameLabel.text = post.title
             descriptionLabel.text = post.descriptionText
             
-            let elapsedTime = NSDate().timeIntervalSinceDate(post.updatedAt!)
+            let elapsedTime = NSDate().timeIntervalSinceDate(post.createdAt!)
             var timeSinceCreated = ""
             if elapsedTime < 60 {
                 timeSinceCreated = String(Int(elapsedTime)) + "s"
@@ -78,7 +78,7 @@ class SavedItemCell: UITableViewCell {
             }
             timeAgoLabel.text = timeSinceCreated
             
-            priceLabel.text = "\(post.price)"
+            priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
         }
     }

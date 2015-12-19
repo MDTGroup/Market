@@ -35,15 +35,9 @@ class NotificationViewController: UIViewController {
             if let notifications = notifications {
                 self.notifications.appendContentsOf(notifications)
                 self.tableView.reloadData()
+                self.tabBarController?.tabBar.selectedItem?.badgeValue = "\(self.notifications.count)"
             }
         })
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        print(sender)
-        if let detailVC = segue.destinationViewController as? DetailViewController, notificationTableViewCell = sender as? NotificationTableViewCell {
-            detailVC.post = notificationTableViewCell.post
-        }
     }
 }
 
@@ -57,5 +51,12 @@ extension NotificationViewController: UITableViewDelegate, UITableViewDataSource
         cell.post = notifications[indexPath.row].post
         cell.textLabel!.text = String(notifications[indexPath.row].type)
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        let vc = DetailViewController.instantiateViewController
+        vc.post = notifications[indexPath.row].post
+        presentViewController(vc, animated: true, completion: nil)
     }
 }

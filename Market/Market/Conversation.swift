@@ -11,35 +11,18 @@ import Parse
 
 class Conversation: PFObject, PFSubclassing {
     static func parseClassName() -> String {
-        return "Conversations"
+        return "Conversation"
     }
     
     @NSManaged var users: [User]
     @NSManaged var usersChooseHideConversation: [User]
     @NSManaged var post: Post
     @NSManaged var messages: PFRelation
-    
-    func getConversations(lastUpdatedAt: NSDate?, callback: ConversationResultBlock) {
-        if let query = Conversation.query(), currentUser = User.currentUser() {
-            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
-            query.whereKey("users", containedIn: [currentUser])
-            query.whereKey("usersChooseHideConversation", notContainedIn: [currentUser])
-            query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
-                guard error == nil else {
-                    callback(conversations: nil, error: error)
-                    return
-                }
-                if let conversations = pfObjs as? [Conversation] {
-                    callback(conversations: conversations, error: nil)
-                }
-            })
-        }
-    }
-    
-    func getMessages(lastUpdatedAt: NSDate?, callback: MessageResultBlock) {
+
+    func getMessages(lastCreatedAt: NSDate?, callback: MessageResultBlock) {
         let query = messages.query()
-        query.whereKey("conversation", equalTo: self)
-        QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
+        query.includeKey("user")
+        QueryUtils.bindQueryParamsForInfiniteLoadingForChat(query, lastCreatedAt: lastCreatedAt)
         query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
             guard error == nil else {
                 callback(messages: nil, error: error)
@@ -51,12 +34,21 @@ class Conversation: PFObject, PFSubclassing {
         }
     }
     
-    func addMessage(currentUser: User, text: String) {
+    func addMessage(currentUser: User, text: String, callback: PFBooleanResultBlock) {
         let message = Message()
         message.user = currentUser
         message.text = text
         message.conversation = self
-        messages.addObject(message)
+        message.saveInBackgroundWithBlock { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+            if success {
+                self.messages.addObject(message)
+                self.saveInBackgroundWithBlock(callback)
+            }
+        }
     }
     
     func hideConversation() {
@@ -88,27 +80,59 @@ class Conversation: PFObject, PFSubclassing {
                 let users = [currentUser, toUser]
                 query.whereKey("post", equalTo: post)
                 query.whereKey("users", containsAllObjectsInArray: users)
-                do {
-                    if let conversations = try query.findObjects() as? [Conversation]
-                    {
+                query.findObjectsInBackgroundWithBlock({ (results, error) -> Void in
+                    if let conversations = results as? [Conversation] {
                         if conversations.count == 0 {
                             let conversation = Conversation()
                             conversation.users = users
                             conversation.usersChooseHideConversation = []
                             conversation.post = post
-                            conversation.addMessage(currentUser, text: text)
+                            let acl = PFACL()
+                            acl.setWriteAccess(true, forUser: currentUser)
+                            acl.setWriteAccess(true, forUser: toUser)
+                            acl.setReadAccess(true, forUser: currentUser)
+                            acl.setReadAccess(true, forUser: toUser)
+                            conversation.ACL = acl
+                            conversation.saveInBackgroundWithBlock({ (success, error) -> Void in
+                                guard error == nil else {
+                                    print(error)
+                                    return
+                                }
+                                conversation.addMessage(currentUser, text: text) {
+                                    (success, error) -> Void in
+                                }
+                            })
                         } else if conversations.count == 1 {
                             let conversation = conversations[0]
                             conversation.usersChooseHideConversation = []
-                            conversation.addMessage(currentUser, text: text)
+                            conversation.addMessage(currentUser, text: text) {
+                                (success, error) -> Void in
+                            }
                         } else {
                             print("Why? Conversations should only have one with these post")
                         }
                     }
-                } catch {
-                    
-                }
+                })
             }
+        }
+    }
+    
+    static func getConversations(lastUpdatedAt: NSDate?, callback: ConversationResultBlock) {
+        if let query = Conversation.query(), currentUser = User.currentUser() {
+            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
+            query.includeKey("post")
+            query.includeKey("users")
+            query.whereKey("users", containedIn: [currentUser])
+            query.whereKey("usersChooseHideConversation", notContainedIn: [currentUser])
+            query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
+                guard error == nil else {
+                    callback(conversations: nil, error: error)
+                    return
+                }
+                if let conversations = pfObjs as? [Conversation] {
+                    callback(conversations: conversations, error: nil)
+                }
+            })
         }
     }
 }

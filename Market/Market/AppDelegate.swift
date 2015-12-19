@@ -13,16 +13,13 @@ import Parse
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var storyboard = UIStoryboard(name: "Home", bundle: nil)
-
+    let storyboard = UIStoryboard(name: "Home", bundle: nil)
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         setupForParse(application, launchOptions: launchOptions)
         setupPushNotifications(application, launchOptions: launchOptions)
-        let newUser = User.currentUser()
-        
-        if newUser != nil {
-            let vc = storyboard.instantiateViewControllerWithIdentifier("homeVC") //as! UIViewController
+        if let _ = User.currentUser() {
+            let vc = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.home)
             window?.rootViewController = vc
         }
         return true
@@ -94,6 +91,14 @@ extension AppDelegate {
 
 // MARK: Notifications
 extension AppDelegate {
+    
+    static func registerRemoteNotification() {
+        let types: UIUserNotificationType = [UIUserNotificationType.Alert, UIUserNotificationType.Badge, UIUserNotificationType.Sound]
+        let settings = UIUserNotificationSettings(forTypes: types, categories: nil)
+        UIApplication.sharedApplication().registerUserNotificationSettings(settings)
+        UIApplication.sharedApplication().registerForRemoteNotifications()
+    }
+
     func setupPushNotifications(application: UIApplication, launchOptions: [NSObject: AnyObject]?) {
         
         if let launchOptions = launchOptions, notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] as? [NSObject : AnyObject]  {
@@ -115,11 +120,8 @@ extension AppDelegate {
                 PFAnalytics.trackAppOpenedWithLaunchOptions(launchOptions)
             }
         }
-
-        let types: UIUserNotificationType = [UIUserNotificationType.Alert, UIUserNotificationType.Badge, UIUserNotificationType.Sound]
-        let settings = UIUserNotificationSettings(forTypes: types, categories: nil)
-        application.registerUserNotificationSettings(settings)
-        application.registerForRemoteNotifications()
+        
+        AppDelegate.registerRemoteNotification()
     }
 
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
@@ -152,9 +154,19 @@ extension AppDelegate {
     }
     
     func handleNotificationPayload(userInfo: [NSObject : AnyObject]) {
-        if let alertMessage = userInfo["aps"]?["alert"] as? String {
-            let alertController = UIAlertController(title: "Push notification's message", message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
-            self.window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
+        if let postId = userInfo["postId"] as? String {
+            let post = Post(withoutDataWithObjectId: postId)
+            post.fetchInBackgroundWithBlock({ (result, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    return
+                }
+                if let result = result as? Post {
+                    let vc = DetailViewController.instantiateViewController
+                    vc.post = result
+                    self.window?.rootViewController?.presentViewController(vc, animated: true, completion: nil)
+                }
+            })
         }
     }
 }

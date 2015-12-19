@@ -32,6 +32,8 @@ class ItemListCell: UITableViewCell {
     
     weak var delegate: ItemListCellDelegate?
     
+    var conversation: Conversation!
+    
     var tapGesture: UITapGestureRecognizer!
     
     var item: Post! {
@@ -64,7 +66,7 @@ class ItemListCell: UITableViewCell {
             itemNameLabel.text = post.title
             descriptionLabel.text = post.descriptionText
             
-            let elapsedTime = NSDate().timeIntervalSinceDate(post.updatedAt!)
+            let elapsedTime = NSDate().timeIntervalSinceDate(post.createdAt!)
             var timeSinceCreated = ""
             if elapsedTime < 60 {
                 timeSinceCreated = String(Int(elapsedTime)) + "s"
@@ -77,7 +79,7 @@ class ItemListCell: UITableViewCell {
             }
             timeAgoLabel.text = timeSinceCreated
             
-            priceLabel.text = "\(post.price)"
+            priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
         }
     }

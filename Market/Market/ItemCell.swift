@@ -34,7 +34,8 @@ class ItemCell: UITableViewCell {
   
   weak var delegate: ItemCellDelegate?
   
-  var tapGesture: UITapGestureRecognizer!
+  var avatarTapGesture: UITapGestureRecognizer!
+  var sellerTapGesture: UITapGestureRecognizer!
   
   var item: Post! {
     didSet {
@@ -54,6 +55,7 @@ class ItemCell: UITableViewCell {
       // Set Item
       if post.medias.count > 0 {
         itemImageView.alpha = 0.0
+        itemImageView.image = UIImage(named: "loading")
         UIView.animateWithDuration(0.3, animations: {
           self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
           self.itemImageView.alpha = 1.0
@@ -64,7 +66,7 @@ class ItemCell: UITableViewCell {
       itemNameLabel.text = post.title
       descriptionLabel.text = post.descriptionText
       
-      let elapsedTime = NSDate().timeIntervalSinceDate(post.updatedAt!)
+      let elapsedTime = NSDate().timeIntervalSinceDate(post.createdAt!)
       var timeSinceCreated = ""
       if elapsedTime < 60 {
         timeSinceCreated = String(Int(elapsedTime)) + "s"
@@ -77,11 +79,25 @@ class ItemCell: UITableViewCell {
       }
       timeAgoLabel.text = timeSinceCreated
       
-      priceLabel.text = "\(post.price)"
+      priceLabel.text = post.price.formatCurrency()
       newTagImageView.hidden = (post.condition > 0)
       
-      setSaveLabel(post.iSaveIt)
-      setVoteCountLabel(post.voteCounter, voted: post.iVoteIt)
+      if post.iSaveIt == nil {
+        post.savedPostCurrentUser({ (saved, error) -> Void in
+          post.iSaveIt = saved
+          self.setSaveLabel(post.iSaveIt!)
+        })
+      } else {
+        setSaveLabel(post.iSaveIt!)
+      }
+      if post.iVoteIt == nil {
+        post.votedPostCurrentUser({ (voted, error) -> Void in
+          post.iVoteIt = voted
+          self.setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
+        })
+      } else {
+        setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
+      }
     }
   }
   
@@ -93,8 +109,10 @@ class ItemCell: UITableViewCell {
     itemImageView.layer.cornerRadius = 8
     itemImageView.clipsToBounds = true
     
-    tapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
-    avatarImageView.addGestureRecognizer(tapGesture)
+    avatarTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
+    sellerTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
+    avatarImageView.addGestureRecognizer(avatarTapGesture)
+    sellerLabel.addGestureRecognizer(sellerTapGesture)
   }
   
   override func setSelected(selected: Bool, animated: Bool) {
@@ -127,32 +145,69 @@ class ItemCell: UITableViewCell {
     if sender.imageView?.image == UIImage(named: "thumb") {
       // Un-vote it
       let count = Int(self.voteCountLabel.text!)! - 1
-      self.setVoteCountLabel(count, voted: false)
-      self.delegate?.itemCell?(self, didChangeVote: false, voteCount: count)
+      setVoteCountLabel(count, voted: false)
+      
+      item.vote(false) { (successful: Bool, error: NSError?) -> Void in
+        if successful {
+          print("unvoted")
+          self.item.iVoteIt = false
+          self.delegate?.itemCell?(self, didChangeVote: true, voteCount: count)
+        } else {
+          print("failed to unvote")
+          self.setVoteCountLabel(count + 1, voted: true)
+        }
+      }
       
     } else {
       // Vote it
       let count = Int(self.voteCountLabel.text!)! + 1
-      self.setVoteCountLabel(count, voted: true)
-      self.delegate?.itemCell?(self, didChangeVote: true, voteCount: count)
+      setVoteCountLabel(count, voted: true)
+      item.vote(true) { (successful: Bool, error: NSError?) -> Void in
+        if successful {
+          print("voted")
+          self.item.iVoteIt = true
+          self.delegate?.itemCell?(self, didChangeVote: true, voteCount: count)
+        } else {
+          print("failed to vote")
+          self.setVoteCountLabel(count - 1, voted: false)
+        }
+      }
     }
   }
   
   @IBAction func onSaveChanged(sender: UIButton) {
     if sender.imageView?.image == UIImage(named: "save") {
       // Un-save it
-      sender.setImage(UIImage(named: "save_gray"), forState: .Normal)
-      self.delegate?.itemCell?(self, didChangeSave: false)
+      setSaveLabel(false)
+      item.save(false) { (successful: Bool, error: NSError?) -> Void in
+        if successful {
+          print("unsaved")
+          self.item.iSaveIt = false
+          self.delegate?.itemCell?(self, didChangeSave: false)
+        } else {
+          print("failed to unsave")
+          self.setSaveLabel(true)
+        }
+      }
       
     } else {
       // Save it
-      sender.setImage(UIImage(named: "save"), forState: .Normal)
-      self.delegate?.itemCell?(self, didChangeSave: true)
+      setSaveLabel(true)
+      item.save(true) { (successful: Bool, error: NSError?) -> Void in
+        if successful {
+          print("saved")
+          self.item.iSaveIt = true
+          self.delegate?.itemCell?(self, didChangeSave: true)
+        } else {
+          print("failed to save")
+          self.setSaveLabel(false)
+        }
+      }
     }
   }
   
   func tapOnProfile(gesture: UITapGestureRecognizer) {
-    print("i tap on profile pic")
+    print("i tap on profile pic/name")
     self.delegate?.itemCell?(self, tapOnProfile: true)
   }
 }

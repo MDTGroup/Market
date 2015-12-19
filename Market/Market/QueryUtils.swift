@@ -13,9 +13,18 @@ class QueryUtils {
     static func bindQueryParamsForInfiniteLoading(query:PFQuery, lastUpdatedAt:NSDate?, maxResult: Int = 20) -> PFQuery {
         query.limit = maxResult
         if let lastUpdatedAt = lastUpdatedAt {
-            query.whereKey("updatedAt", lessThan: lastUpdatedAt)
+            query.whereKey("createdAt", lessThan: lastUpdatedAt)
         }
-        query.orderByDescending("updatedAt")
+        query.orderByDescending("createdAt")
+        return query
+    }
+    
+    static func bindQueryParamsForInfiniteLoadingForChat(query:PFQuery, lastCreatedAt:NSDate?, maxResult: Int = 20) -> PFQuery {
+        query.limit = maxResult
+        if let lastCreatedAt = lastCreatedAt {
+            query.whereKey("createdAt", greaterThan: lastCreatedAt)
+        }
+        query.orderByAscending("createdAt")
         return query
     }
 }

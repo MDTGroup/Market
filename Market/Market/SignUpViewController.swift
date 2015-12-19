@@ -21,7 +21,7 @@ class SignUpViewController: UIViewController {
         spinner = UIActivityIndicatorView(frame: CGRectMake(0, 0, 150, 150))
         
         //set focus to fullnameField
-        self.fullnameField.becomeFirstResponder()
+       // self.fullnameField.becomeFirstResponder()
     }
     
     @IBAction func signUpTap(sender: AnyObject) {
@@ -62,12 +62,7 @@ class SignUpViewController: UIViewController {
 //                    alert.show()
                     
                 } else {
-//                    let alert = UIAlertView(title: "Success", message: "Signed Up", delegate: self, cancelButtonTitle: "OK")
-//                    alert.show()
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        //let viewController:UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("Home") //as! UIViewController
-                        //self.presentViewController(viewController, animated: true, completion: nil)
-                        print("registered")
                         self.gotoHome()
                     })
                 }

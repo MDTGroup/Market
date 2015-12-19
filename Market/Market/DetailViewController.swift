@@ -13,13 +13,13 @@ import AFNetworking
   optional func detailViewController(detailViewController: DetailViewController, newPost: Post)
 }
 
-class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
+class DetailViewController: UIViewController {
   
   @IBOutlet weak var buttonsView: UIView!
   @IBOutlet weak var saveButton: UIButton!
   @IBOutlet weak var voteButton: UIButton!
   @IBOutlet weak var chatButton: UIButton!
-  @IBOutlet weak var saveButtonWidth: NSLayoutConstraint!
+  @IBOutlet weak var voteButtonWidth: NSLayoutConstraint!
   @IBOutlet weak var chatButtonWidth: NSLayoutConstraint!
   
   @IBOutlet weak var dimmingView: UIView!
@@ -41,25 +41,26 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   
   @IBOutlet weak var voteCountLabel: UILabel!
   @IBOutlet weak var voteLabel: UILabel!
+  @IBOutlet var panGesture: UIPanGestureRecognizer!
   
   var post: Post!
   var isReadingFullDescription: Bool!
   var tapGesture: UITapGestureRecognizer!
-  var imagePanGesture: UIPanGestureRecognizer!
+  //var imagePanGesture: UIPanGestureRecognizer!
   var selectedImage = 1
   var nImages: Int = 1
+  var tempImageView1: UIImageView?
+  var tempImageView2: UIImageView?
+  
+  var imageOriginalCenter: CGPoint!
+  var direction: CGFloat = 1.0
   
   weak var delegate: DetailViewControllerDelegate?
   
+    static let homeSB = UIStoryboard(name: "Home", bundle: nil)
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    do {
-        try post.user.fetchIfNeeded()
-    } catch {
-        
-    }
-    
+
     // Do any additional setup after loading the view.
     itemNameLabel.text = post.title
     descriptionText.text = post.descriptionText
@@ -68,7 +69,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     let formatter = NSDateFormatter()
     formatter.timeStyle = NSDateFormatterStyle.ShortStyle
     formatter.dateStyle = NSDateFormatterStyle.MediumStyle
-    updatedAtLabel.text = "Posted on \(formatter.stringFromDate(post.updatedAt!))"
+    updatedAtLabel.text = "Posted on \(formatter.stringFromDate(post.createdAt!))"
     
     // Create the "padding" for the text
     descriptionText.textContainerInset = UIEdgeInsetsMake(8, 10, 0, 10)
@@ -84,45 +85,68 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     view.addGestureRecognizer(tapGesture)
     
     // Load the seller
-    sellerLabel.text = post.user.fullName
-//    post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
-//      guard error == nil else {
-//        print(error)
-//        return
-//      }
-//      if let user = pfObj as? User {
-//        self.sellerLabel.text = user.fullName
-//      }
-//    }
-    if let avatar = post.user.avatar {
-      avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
-    } else {
-      // load no image
+    post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
+      guard error == nil else {
+        print(error)
+        return
+      }
+      if let user = pfObj as? User {
+        self.sellerLabel.text = user.fullName
+        if let avatar = user.avatar {
+            self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+        }
+      }
     }
+
     avatarImageView.layer.cornerRadius = 18
     avatarImageView.clipsToBounds = true
     
     // Load the thumbnail first for user to see while waiting for loading the full image
     imageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
     imageView.setImageWithURL(NSURL(string: post.medias[1].url!)!)
-    imagePanGesture = UIPanGestureRecognizer(target: self, action: "changeImage:")
-    imageView.addGestureRecognizer(imagePanGesture)
+    //imagePanGesture = UIPanGestureRecognizer(target: self, action: "changeImage:")
+    //imageView.addGestureRecognizer(imagePanGesture)
+    //imagePanGesture.requireGestureRecognizerToFail(panGesture)
+    imageOriginalCenter = imageView.center
     
     nImages = post.medias.count - 1
     scrollCircle1.hidden = nImages < 2
     scrollCircle2.hidden = nImages < 2
     scrollCircle3.hidden = nImages < 3
     
+    // Load image while user still redding 1st page
+    if nImages > 2 {
+      tempImageView1!.setImageWithURL(NSURL(string: post.medias[2].url!)!)
+    }
+    if nImages > 3 {
+      tempImageView2!.setImageWithURL(NSURL(string: post.medias[3].url!)!)
+    }
+    
     // Set the buttons width equally
     let w = UIScreen.mainScreen().bounds.width
-    saveButtonWidth.constant = w / 3
+    voteButtonWidth.constant = w / 3
     chatButtonWidth.constant = w / 3
     
     // Set the images scroll indicator
     setImageScroll(1)
     
-    self.setSaveCountLabel(post.iSaveIt)
-    setVoteCountLabel(post.voteCounter, voted: post.iVoteIt)
+    // Any posibility if will be nil here?
+    if post.iSaveIt == nil {
+        post.savedPostCurrentUser({ (saved, error) -> Void in
+            self.post.iSaveIt = saved
+            self.setSaveLabel(self.post.iSaveIt!)
+        })
+    } else {
+        setSaveLabel(post.iSaveIt!)
+    }
+    if post.iVoteIt == nil {
+        post.votedPostCurrentUser({ (voted, error) -> Void in
+            self.post.iVoteIt = voted
+            self.setVoteCountLabel(self.post.voteCounter, voted: self.post.iVoteIt!)
+        })
+    } else {
+        setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
+    }
     
     // Indicate network status
     //    if Helper.hasConnectivity() {
@@ -197,32 +221,49 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
         }
       }
       imageView.setImageWithURL(NSURL(string: post.medias[selectedImage].url!)!)
+      imageOriginalCenter = imageView.center
       setImageScroll(selectedImage)
     }
   }
   
-  override func prefersStatusBarHidden() -> Bool {
-    return true
+//  override func prefersStatusBarHidden() -> Bool {
+//    return true
+//  }
+  
+  @IBAction func onPanImage(sender: UIPanGestureRecognizer) {
+    let translation = sender.translationInView(view)
+    let point = sender.locationInView(view)
+    
+    if sender.state == .Began {
+      
+      direction = point.y > imageView.frame.height/2 ? -0.15 : 0.15
+      
+    } else if sender.state == .Changed {
+      
+      imageView.center = CGPoint(x: imageOriginalCenter.x + translation.x, y: imageOriginalCenter.y)
+      
+      imageView.transform = CGAffineTransformMakeRotation((direction * translation.x * CGFloat(M_PI)) / 180.0)
+    } else if sender.state == .Ended {
+      // If drag to right, slide in the (n-1)th image from left
+      if translation.x > 50 {
+        
+        UIView.animateWithDuration(1.0, animations: { () -> Void in
+          //self.imageView.center = CGPoint(x: 600, y: self.imageOriginalCenter.y)
+        })
+      } else if translation.x < -50 {
+        UIView.animateWithDuration(1.0, animations: { () -> Void in
+          //self.imageView.center = CGPoint(x: -300, y: self.imageOriginalCenter.y)
+        })
+      } else {
+        UIView.animateWithDuration(0.5, animations: { () -> Void in
+          self.imageView.center = self.imageOriginalCenter
+          self.imageView.transform = CGAffineTransformMakeRotation(0)
+        })
+      }
+    }
   }
   
-  // This can detect the tap, but the scroll will be recognized as tap as well :(
-  //  override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-  //    let touch = touches.first
-  //    let touchLocation = touch!.locationInView(self.view)
-  //    if touchLocation.y >= dimmingView.frame.origin.y {
-  //      if !isReadingFullDescription {
-  //        isReadingFullDescription = true
-  //        showSynopsis(65, bgAlpha: 0.7)
-  //      } else {
-  //        isReadingFullDescription = false
-  //        showSynopsis(UIScreen.mainScreen().bounds.height - 100, bgAlpha: 0.1)
-  //      }
-  //    }
-  //  }
-  
   func showDescription(y: CGFloat, bgAlpha: CGFloat, showFull: Bool) {
-    
-    
     let dimmingHeight = UIScreen.mainScreen().bounds.height - y - 40
     if showFull {
       dimmingViewHeight.constant = dimmingHeight
@@ -249,7 +290,6 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
           self.view.layoutIfNeeded()
         }
     }
-    
   }
   
   @IBAction func onCancel(sender: UIButton) {
@@ -259,27 +299,29 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   @IBAction func onSaveTapped(sender: UIButton) {
     if sender.imageView?.image == UIImage(named: "save_on") {
       // Un-save it
+      setSaveLabel(false)
       post.save(false) { (successful: Bool, error: NSError?) -> Void in
         if successful {
           print("unsaved")
           self.post.iSaveIt = false
-          self.setSaveCountLabel(false)
           self.delegate!.detailViewController!(self, newPost: self.post)
         } else {
           print("failed to unsave")
+          self.setSaveLabel(true)
         }
       }
       
     } else {
       // Save it
+      setSaveLabel(true)
       post.save(true) { (successful: Bool, error: NSError?) -> Void in
         if successful {
           print("saved")
           self.post.iSaveIt = true
-          self.setSaveCountLabel(true)
           self.delegate!.detailViewController!(self, newPost: self.post)
         } else {
           print("failed to save")
+          self.setSaveLabel(false)
         }
       }
     }
@@ -288,27 +330,31 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   @IBAction func onVoteTapped(sender: UIButton) {
     if sender.imageView?.image == UIImage(named: "thumb_on") {
       // Un-vote it
+      let count = Int(self.voteCountLabel.text!)! - 1
+      setVoteCountLabel(count, voted: false)
       post.vote(false) { (successful: Bool, error: NSError?) -> Void in
         if successful {
           print("unvoted")
           self.post.iVoteIt = false
-          sender.setImage(UIImage(named: "thumb_white"), forState: .Normal)
           self.delegate!.detailViewController!(self, newPost: self.post)
         } else {
           print("failed to unvote")
+          self.setVoteCountLabel(count + 1, voted: true)
         }
       }
       
     } else {
       // Vote it
+      let count = Int(self.voteCountLabel.text!)! + 1
+      setVoteCountLabel(count, voted: true)
       post.vote(true) { (successful: Bool, error: NSError?) -> Void in
         if successful {
           print("voted")
           self.post.iVoteIt = true
-          sender.setImage(UIImage(named: "thumb_on"), forState: .Normal)
           self.delegate!.detailViewController!(self, newPost: self.post)
         } else {
           print("failed to vote")
+          self.setVoteCountLabel(count - 1, voted: false)
         }
       }
     }
@@ -317,7 +363,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
 }
 
 extension DetailViewController {
-  func setSaveCountLabel(saved: Bool) {
+  func setSaveLabel(saved: Bool) {
     if saved {
       saveButton.setImage(UIImage(named: "save_on"), forState: .Normal)
       saveButton.setTitleColor(MyColors.bluesky, forState: .Normal)
@@ -339,4 +385,11 @@ extension DetailViewController {
     voteCountLabel.hidden = !(count > 0)
     voteLabel.hidden = !(count > 0)
   }
+}
+
+// MARK: Show view from anywhere
+extension DetailViewController {
+    static var instantiateViewController: DetailViewController {
+        return homeSB.instantiateViewControllerWithIdentifier(StoryboardID.postDetail) as! DetailViewController
+    }
 }

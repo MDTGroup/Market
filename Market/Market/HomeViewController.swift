@@ -9,6 +9,7 @@
 
 import UIKit
 import MBProgressHUD
+import Parse
 
 class HomeViewController: UIViewController {
   
@@ -27,6 +28,7 @@ class HomeViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupForInstallation()
     // Do any additional setup after loading the view, typically from a nib.
     tableView.dataSource = self
     tableView.delegate = self
@@ -57,7 +59,26 @@ class HomeViewController: UIViewController {
     
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
     loadNewestData()
+    
+    initTabBar()
   }
+    
+    func initTabBar() {
+        if let tabBarItem = tabBarController?.tabBar.items![1] {
+            tabBarItem.image = UIImage(named: "message")
+            tabBarItem.title = "Messages"
+        }
+        if let tabBarItem = tabBarController?.tabBar.items![3] {
+            tabBarItem.image = UIImage(named: "noti")
+            tabBarItem.title = "Notifications"
+        }
+    }
+    
+    func setupForInstallation() {
+        let installation = PFInstallation.currentInstallation()
+        installation["user"] = User.currentUser()
+        installation.saveInBackground()
+    }
   
   override func viewWillAppear(animated: Bool) {
     // Reload whatever the change from other pages
@@ -83,7 +104,7 @@ class HomeViewController: UIViewController {
           self.isEndOfFeed = true
         }
         
-        self.posts.appendContentsOf(posts)
+        self.posts.appendContentsOf(posts)        
         self.tableView.reloadData()
         
       } else {
@@ -151,7 +172,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
       if indexPath.row == posts.count - 1 {
         loadingView.startAnimating()
         isLoadingNextPage = true
-        loadDataSince(cell.item.updatedAt!)
+        loadDataSince(cell.item.createdAt!)
       }
     }
     

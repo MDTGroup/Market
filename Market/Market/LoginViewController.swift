@@ -22,8 +22,60 @@ class LoginViewController: UIViewController {
         spinner = UIActivityIndicatorView(frame: CGRectMake(0, 0, 150, 150))
         
         //set focus to usernameField
-        self.usernameField.becomeFirstResponder()
+        //self.usernameField.becomeFirstResponder()
+        
+        // Add observer to detect when the keyboard will be shown
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
+        
+        
+        
+        //Looks for single or multiple taps.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        self.view.addGestureRecognizer(tap)
+
     }
+    //Calls this function when the tap is recognized.
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        self.view.endEditing(true)
+        print("The keyboard is dismissed")
+        
+    }
+    
+
+    
+    /*MARK: Fix bug when keyboard slides up*/
+    
+    func keyboardWillShow(sender: NSNotification) {
+        let userInfo: [NSObject : AnyObject] = sender.userInfo!
+        
+        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
+        let offset: CGSize = userInfo[UIKeyboardFrameEndUserInfoKey]!.CGRectValue.size
+        
+        if keyboardSize.height == offset.height {
+            if self.view.frame.origin.y == 0 {
+                UIView.animateWithDuration(0.1, animations: { () -> Void in
+                    self.view.frame.origin.y -= keyboardSize.height/2
+                })
+            }
+        } else {
+            UIView.animateWithDuration(0.1, animations: { () -> Void in
+                self.view.frame.origin.y += keyboardSize.height/2 - offset.height
+            })
+        }
+        print("Keyboard will show and new position y of View",self.view.frame.origin.y)
+        
+    }
+    
+    func keyboardWillHide(sender: NSNotification) {
+        let userInfo: [NSObject : AnyObject] = sender.userInfo!
+        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
+        self.view.frame.origin.y += keyboardSize.height/2
+        print("Keyboard will hide")
+        
+    }
+
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
@@ -61,20 +113,15 @@ class LoginViewController: UIViewController {
                 // Stop the spinner
                 self.spinner.stopAnimating()
                 
-                if ((user) != nil) {
-//                    let alert = UIAlertView(title: "Success", message: "Logged In", delegate: self, cancelButtonTitle: "OK")
-//                    alert.show()
-                    
+                if  user != nil {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-//                        let viewController:UIViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("Home") //as! UIViewController
-//                        self.presentViewController(viewController, animated: true, completion: nil)
                         print("login successfully")
                       self.gotoHome()
                     })
                     
                 } else {
-//                    let alert = UIAlertView(title: "Error", message: "\(error)", delegate: self, cancelButtonTitle: "OK")
-//                    alert.show()
+                    let alert = UIAlertView(title: "Error", message: "\(error)", delegate: self, cancelButtonTitle: "OK")
+                    alert.show()
                 }
             })
         }

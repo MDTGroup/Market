@@ -31,14 +31,14 @@ class Post: PFObject, PFSubclassing {
   
   private var uploadedFiles = [PFFile]()
   private var progressFiles = [PFFile: Int]()
+    
+  var iSaveIt: Bool?
+  var iVoteIt: Bool?
   
   var totalProgress: Int = 1
   var currentTotalProgress: Int = 0
   var finishCallback: ((post: Post) -> Void)?
   var progressCallback: ((post: Post, percent: Float) -> Void)?
-  var iVoteIt = false
-  var iSaveIt = false
-  
 }
 
 // MARK: Save post with medias progress
@@ -211,31 +211,37 @@ extension Post {
   }
 }
 
-// MARK: Update
+// MARK: Saved/Vote post status
 extension Post {
-  static func updatePost(postId: String, newPost: Post, completion: PFBooleanResultBlock) {
-    let post = Post(withoutDataWithObjectId: postId)
-    post.fetchInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
-      print(fetchedPFObj)
-      if let postFetched = fetchedPFObj as? Post {
-        postFetched.title = newPost.title
-        postFetched.descriptionText = newPost.descriptionText
-        postFetched.price = newPost.price
-        postFetched.condition = newPost.condition
-        postFetched.medias = newPost.medias
-        postFetched.sold = newPost.sold
-      
-        postFetched.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
-          //print(post)
-          completion(true, nil)
-          }) { (post: Post, percent: Float) -> Void in
-            print(percent)
+    func savedPostCurrentUser(callback:PFBooleanResultBlock) {
+        if let currentUser = User.currentUser() {
+            let query = currentUser.savedPosts.query()
+            query.whereKey("objectId", equalTo: objectId!)
+            query.countObjectsInBackgroundWithBlock({ (numResult, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    callback(false, error)
+                    return
+                }
+                callback(numResult > 0, nil)
+            })
         }
-      } else {
-        completion(false, error)
-      }
     }
-  }
+    
+    func votedPostCurrentUser(callback:PFBooleanResultBlock) {
+        if let currentUser = User.currentUser() {
+            let query = currentUser.votedPosts.query()
+            query.whereKey("objectId", equalTo: objectId!)
+            query.countObjectsInBackgroundWithBlock({ (numResult, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    callback(false, error)
+                    return
+                }
+                callback(numResult > 0, nil)
+            })
+        }
+    }
 }
 
 // MARK: Search
