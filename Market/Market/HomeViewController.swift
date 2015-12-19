@@ -68,6 +68,10 @@ class HomeViewController: UIViewController {
             tabBarItem.image = UIImage(named: "message")
             tabBarItem.title = "Messages"
         }
+        if let tabBarItem = tabBarController?.tabBar.items![3] {
+            tabBarItem.image = UIImage(named: "noti")
+            tabBarItem.title = "Notifications"
+        }
     }
     
     func setupForInstallation() {

@@ -13,16 +13,13 @@ import Parse
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var storyboard = UIStoryboard(name: "Home", bundle: nil)
-
+    let storyboard = UIStoryboard(name: "Home", bundle: nil)
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         setupForParse(application, launchOptions: launchOptions)
         setupPushNotifications(application, launchOptions: launchOptions)
-        let newUser = User.currentUser()
-        
-        if newUser != nil {
-            let vc = storyboard.instantiateViewControllerWithIdentifier("homeVC") //as! UIViewController
+        if let _ = User.currentUser() {
+            let vc = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.home)
             window?.rootViewController = vc
         }
         return true

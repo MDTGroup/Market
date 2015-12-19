@@ -129,7 +129,7 @@ class PostViewController: UIViewController {
   }
   
   func loadPostToUpdate() {
-    priceLabel.text = "\((editingPost?.price)!)"
+    priceLabel.text = "\((editingPost?.price.formatCurrency())!)"
     titleLabel.text = editingPost?.title
     descriptionText.text = editingPost?.descriptionText
     descPlaceHolder.hidden = true

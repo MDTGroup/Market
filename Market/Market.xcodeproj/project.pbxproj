@@ -34,6 +34,8 @@
 		44EB1A2E1C246E3D00905312 /* ItemListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB1A2C1C246E3D00905312 /* ItemListCell.swift */; };
 		44EB6E1A1C250F4A0044992A /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB6E191C250F4A0044992A /* SearchViewController.swift */; };
 		44EB6E1C1C25217D0044992A /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB6E1B1C25217D0044992A /* DoubleExtension.swift */; };
+		44EB6E1E1C2535CF0044992A /* StoryboardID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB6E1D1C2535CF0044992A /* StoryboardID.swift */; };
+		44EB6E201C2538E50044992A /* Notification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44EB6E1F1C2538E50044992A /* Notification.storyboard */; };
 		44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F328561C0F815C00BF1CDF /* AppDelegate.swift */; };
 		44F328591C0F815C00BF1CDF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F328581C0F815C00BF1CDF /* ViewController.swift */; };
 		44F3285E1C0F815C00BF1CDF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 44F3285D1C0F815C00BF1CDF /* Assets.xcassets */; };
@@ -84,6 +86,8 @@
 		44EB1A2C1C246E3D00905312 /* ItemListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ItemListCell.swift; sourceTree = "<group>"; };
 		44EB6E191C250F4A0044992A /* SearchViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		44EB6E1B1C25217D0044992A /* DoubleExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
+		44EB6E1D1C2535CF0044992A /* StoryboardID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryboardID.swift; sourceTree = "<group>"; };
+		44EB6E1F1C2538E50044992A /* Notification.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Notification.storyboard; sourceTree = "<group>"; };
 		44F328531C0F815C00BF1CDF /* Market.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Market.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		44F328561C0F815C00BF1CDF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		44F328581C0F815C00BF1CDF /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -201,6 +205,7 @@
 				18DEFF3D1C1BD79400511E88 /* Home.storyboard */,
 				44AEE3701C2339DD004B5E2E /* Messages.storyboard */,
 				18DEFF401C1BE4EC00511E88 /* Settings.storyboard */,
+				44EB6E1F1C2538E50044992A /* Notification.storyboard */,
 				4483EF6A1C1B37B1002C98DA /* Config.plist */,
 				44F328621C0F815C00BF1CDF /* Info.plist */,
 			);
@@ -225,6 +230,7 @@
 			isa = PBXGroup;
 			children = (
 				44FBCAFF1C1D327C00722DE2 /* BlockAlias.swift */,
+				44EB6E1D1C2535CF0044992A /* StoryboardID.swift */,
 			);
 			name = Constants;
 			sourceTree = "<group>";
@@ -331,6 +337,7 @@
 				44F328611C0F815C00BF1CDF /* LaunchScreen.storyboard in Resources */,
 				18DEFF411C1BE4EC00511E88 /* Settings.storyboard in Resources */,
 				44AEE3741C2339DD004B5E2E /* Messages.storyboard in Resources */,
+				44EB6E201C2538E50044992A /* Notification.storyboard in Resources */,
 				44F3285E1C0F815C00BF1CDF /* Assets.xcassets in Resources */,
 				4483EF6D1C1B415B002C98DA /* Main.storyboard in Resources */,
 			);
@@ -415,6 +422,7 @@
 				44AEE3761C2339DD004B5E2E /* ChatViewController.swift in Sources */,
 				44EB1A2D1C246E3D00905312 /* NotificationTableViewCell.swift in Sources */,
 				44FBCB0A1C1D399A00722DE2 /* QueryUtils.swift in Sources */,
+				44EB6E1E1C2535CF0044992A /* StoryboardID.swift in Sources */,
 				44F5BEC61C1C13FA006317E0 /* Vote.swift in Sources */,
 				44AEE36E1C2339C9004B5E2E /* SavedItemCell.swift in Sources */,
 				44EB6E1A1C250F4A0044992A /* SearchViewController.swift in Sources */,
