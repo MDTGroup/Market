@@ -18,11 +18,11 @@ class PostsListViewController: UIViewController {
     var isEndOfFeed = false
     var noMoreResultLabel = UILabel()
     
-    var posts = [Post]()
+    var conversations = [Conversation]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
         tableView.dataSource = self
         tableView.delegate = self
@@ -54,27 +54,28 @@ class PostsListViewController: UIViewController {
         
         MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loadNewestData()
-
+        
     }
     
     func loadNewestData() {
-        posts = []
+        conversations = []
         loadData(nil)
     }
     
     func loadData(lastUpdatedAt: NSDate?) {
-        User.currentUser()?.getSavedPosts(lastUpdatedAt) { (posts, error) -> Void in
-            if let posts = posts {
-                if posts.count == 0 {
-                    self.isEndOfFeed = true
-                }
-                
-                self.posts.appendContentsOf(posts)
-                self.tableView.reloadData()
-                
-            } else {
+        Conversation.getConversations(lastUpdatedAt) { (conversations, error) -> Void in
+            guard error == nil else {
                 print(error)
                 self.isEndOfFeed = true
+                return
+            }
+            if let conversations = conversations {
+                if conversations.count == 0 {
+                    self.isEndOfFeed = true
+                }
+                self.conversations.appendContentsOf(conversations)
+                self.filterDuplicatePost()
+                self.tableView.reloadData()
             }
             
             self.noMoreResultLabel.hidden = !self.isEndOfFeed
@@ -84,23 +85,48 @@ class PostsListViewController: UIViewController {
             MBProgressHUD.hideHUDForView(self.view, animated: true)
         }
     }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let messageVC = segue.destinationViewController as? MessageViewController,
+        cell = sender as? ItemListCell {
+//            if let indexPath = tableView.indexPathForCell(cell) {
+                messageVC.conversations = conversations
+//            }
+        }
+    }
+    
+    func filterDuplicatePost() {
+        var posts = [String]()
+        var newConversations = [Conversation]()
+        for conversation in conversations.reverse() {
+            if posts.contains(conversation.post.objectId!) {
+                continue
+            }
+            posts.append(conversation.post.objectId!)
+            print(conversation.post.objectId!)
+            newConversations.append(conversation)
+        }
+        conversations = newConversations
+    }
 }
+
 extension PostsListViewController: UITableViewDelegate, UITableViewDataSource, ItemListCellDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count
+        return conversations.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ItemListCell1", forIndexPath: indexPath) as! ItemListCell
-        cell.item = posts[indexPath.row]
+        cell.conversation = conversations[indexPath.row]
+        cell.textLabel!.text = cell.conversation.post.title
         cell.delegate = self
         
         // Infinite load if last cell
         if !isLoadingNextPage && !isEndOfFeed {
-            if indexPath.row == posts.count - 1 {
+            if indexPath.row == conversations.count - 1 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadData(cell.item.updatedAt!)
+                loadData(conversations[indexPath.row].updatedAt!)
             }
         }
         

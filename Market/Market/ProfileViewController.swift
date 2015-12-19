@@ -138,19 +138,8 @@ class ProfileViewController: UIViewController {
 //        }
 
     }
-    
-  
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
+
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
             // User selected an image
@@ -187,8 +176,3 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         self.presentViewController(imagePicker, animated: true, completion: nil)
     }
 }
-
-
-    
-    
-

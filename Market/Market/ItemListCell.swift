@@ -32,6 +32,8 @@ class ItemListCell: UITableViewCell {
     
     weak var delegate: ItemListCellDelegate?
     
+    var conversation: Conversation!
+    
     var tapGesture: UITapGestureRecognizer!
     
     var item: Post! {

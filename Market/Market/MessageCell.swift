@@ -17,6 +17,7 @@ class MessageCell: UITableViewCell {
     @IBOutlet weak var lastMessageLabel: UILabel!
     @IBOutlet weak var counterLabel: UILabel!
     
+    var conversation: Conversation!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code

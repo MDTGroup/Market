@@ -59,13 +59,7 @@ class DetailViewController: UIViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    do {
-        try post.user.fetchIfNeeded()
-    } catch {
-        
-    }
-    
+
     // Do any additional setup after loading the view.
     itemNameLabel.text = post.title
     descriptionText.text = post.descriptionText
@@ -90,21 +84,19 @@ class DetailViewController: UIViewController {
     view.addGestureRecognizer(tapGesture)
     
     // Load the seller
-    sellerLabel.text = post.user.fullName
-//    post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
-//      guard error == nil else {
-//        print(error)
-//        return
-//      }
-//      if let user = pfObj as? User {
-//        self.sellerLabel.text = user.fullName
-//      }
-//    }
-    if let avatar = post.user.avatar {
-      avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
-    } else {
-      // load no image
+    post.user.fetchIfNeededInBackgroundWithBlock { (pfObj, error) -> Void in
+      guard error == nil else {
+        print(error)
+        return
+      }
+      if let user = pfObj as? User {
+        self.sellerLabel.text = user.fullName
+        if let avatar = user.avatar {
+            self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+        }
+      }
     }
+
     avatarImageView.layer.cornerRadius = 18
     avatarImageView.clipsToBounds = true
     
