@@ -13,7 +13,7 @@ import AFNetworking
   optional func detailViewController(detailViewController: DetailViewController, newPost: Post)
 }
 
-class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
+class DetailViewController: UIViewController {
   
   @IBOutlet weak var buttonsView: UIView!
   @IBOutlet weak var saveButton: UIButton!
@@ -41,13 +41,19 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
   
   @IBOutlet weak var voteCountLabel: UILabel!
   @IBOutlet weak var voteLabel: UILabel!
+  @IBOutlet var panGesture: UIPanGestureRecognizer!
   
   var post: Post!
   var isReadingFullDescription: Bool!
   var tapGesture: UITapGestureRecognizer!
-  var imagePanGesture: UIPanGestureRecognizer!
+  //var imagePanGesture: UIPanGestureRecognizer!
   var selectedImage = 1
   var nImages: Int = 1
+  var tempImageView1: UIImageView?
+  var tempImageView2: UIImageView?
+  
+  var imageOriginalCenter: CGPoint!
+  var direction: CGFloat = 1.0
   
   weak var delegate: DetailViewControllerDelegate?
   
@@ -105,13 +111,23 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     // Load the thumbnail first for user to see while waiting for loading the full image
     imageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
     imageView.setImageWithURL(NSURL(string: post.medias[1].url!)!)
-    imagePanGesture = UIPanGestureRecognizer(target: self, action: "changeImage:")
-    imageView.addGestureRecognizer(imagePanGesture)
+    //imagePanGesture = UIPanGestureRecognizer(target: self, action: "changeImage:")
+    //imageView.addGestureRecognizer(imagePanGesture)
+    //imagePanGesture.requireGestureRecognizerToFail(panGesture)
+    imageOriginalCenter = imageView.center
     
     nImages = post.medias.count - 1
     scrollCircle1.hidden = nImages < 2
     scrollCircle2.hidden = nImages < 2
     scrollCircle3.hidden = nImages < 3
+    
+    // Load image while user still redding 1st page
+    if nImages > 2 {
+      tempImageView1!.setImageWithURL(NSURL(string: post.medias[2].url!)!)
+    }
+    if nImages > 3 {
+      tempImageView2!.setImageWithURL(NSURL(string: post.medias[3].url!)!)
+    }
     
     // Set the buttons width equally
     let w = UIScreen.mainScreen().bounds.width
@@ -197,6 +213,7 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
         }
       }
       imageView.setImageWithURL(NSURL(string: post.medias[selectedImage].url!)!)
+      imageOriginalCenter = imageView.center
       setImageScroll(selectedImage)
     }
   }
@@ -205,24 +222,40 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
     return true
   }
   
-  // This can detect the tap, but the scroll will be recognized as tap as well :(
-  //  override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
-  //    let touch = touches.first
-  //    let touchLocation = touch!.locationInView(self.view)
-  //    if touchLocation.y >= dimmingView.frame.origin.y {
-  //      if !isReadingFullDescription {
-  //        isReadingFullDescription = true
-  //        showSynopsis(65, bgAlpha: 0.7)
-  //      } else {
-  //        isReadingFullDescription = false
-  //        showSynopsis(UIScreen.mainScreen().bounds.height - 100, bgAlpha: 0.1)
-  //      }
-  //    }
-  //  }
+  @IBAction func onPanImage(sender: UIPanGestureRecognizer) {
+    let translation = sender.translationInView(view)
+    let point = sender.locationInView(view)
+    
+    if sender.state == .Began {
+      
+      direction = point.y > imageView.frame.height/2 ? -0.15 : 0.15
+      
+    } else if sender.state == .Changed {
+      
+      imageView.center = CGPoint(x: imageOriginalCenter.x + translation.x, y: imageOriginalCenter.y)
+      
+      imageView.transform = CGAffineTransformMakeRotation((direction * translation.x * CGFloat(M_PI)) / 180.0)
+    } else if sender.state == .Ended {
+      // If drag to right, slide in the (n-1)th image from left
+      if translation.x > 50 {
+        
+        UIView.animateWithDuration(1.0, animations: { () -> Void in
+          //self.imageView.center = CGPoint(x: 600, y: self.imageOriginalCenter.y)
+        })
+      } else if translation.x < -50 {
+        UIView.animateWithDuration(1.0, animations: { () -> Void in
+          //self.imageView.center = CGPoint(x: -300, y: self.imageOriginalCenter.y)
+        })
+      } else {
+        UIView.animateWithDuration(0.5, animations: { () -> Void in
+          self.imageView.center = self.imageOriginalCenter
+          self.imageView.transform = CGAffineTransformMakeRotation(0)
+        })
+      }
+    }
+  }
   
   func showDescription(y: CGFloat, bgAlpha: CGFloat, showFull: Bool) {
-    
-    
     let dimmingHeight = UIScreen.mainScreen().bounds.height - y - 40
     if showFull {
       dimmingViewHeight.constant = dimmingHeight
@@ -249,7 +282,6 @@ class DetailViewController: UIViewController, UIGestureRecognizerDelegate {
           self.view.layoutIfNeeded()
         }
     }
-    
   }
   
   @IBAction func onCancel(sender: UIButton) {

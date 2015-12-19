@@ -390,14 +390,6 @@
                                     <action selector="onRemoveImage3:" destination="Bpo-Cl-zJV" eventType="touchUpInside" id="fi5-tM-qdn"/>
                                 </connections>
                             </button>
-                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="0WO-P0-b87">
-                                <rect key="frame" x="112" y="585" width="150" height="8"/>
-                                <animations/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="8" id="9xZ-gX-pSj"/>
-                                    <constraint firstAttribute="width" constant="150" id="GVj-1a-avf"/>
-                                </constraints>
-                            </progressView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Description" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TKx-BP-wEx">
                                 <rect key="frame" x="20" y="290" width="74.5" height="17"/>
                                 <animations/>
@@ -422,17 +414,25 @@
                                 <animations/>
                                 <state key="normal" title="Save draft"/>
                             </button>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="0WO-P0-b87">
+                                <rect key="frame" x="112" y="564" width="150" height="8"/>
+                                <animations/>
+                                <color key="tintColor" red="0.074509803921568626" green="0.61960784313725492" blue="0.92549019607843142" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="8" id="9xZ-gX-pSj"/>
+                                    <constraint firstAttribute="width" constant="150" id="GVj-1a-avf"/>
+                                </constraints>
+                            </progressView>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="VqO-L7-xDr" firstAttribute="leading" secondItem="woC-3L-CrH" secondAttribute="leading" constant="12" id="0uC-sj-ISE"/>
-                            <constraint firstItem="0WO-P0-b87" firstAttribute="centerX" secondItem="woC-3L-CrH" secondAttribute="centerX" id="4JA-2g-AsZ"/>
                             <constraint firstItem="QL4-ep-Xye" firstAttribute="width" secondItem="VqO-L7-xDr" secondAttribute="width" id="5E9-4o-tz8"/>
                             <constraint firstItem="q6d-kV-Gly" firstAttribute="trailing" secondItem="QL4-ep-Xye" secondAttribute="trailing" id="78w-vz-10b"/>
                             <constraint firstItem="2k0-O0-UtR" firstAttribute="centerX" secondItem="woC-3L-CrH" secondAttribute="centerX" id="8BH-xH-9lC"/>
                             <constraint firstItem="EkA-e2-m5n" firstAttribute="leading" secondItem="2k0-O0-UtR" secondAttribute="leading" id="8Yj-mH-X27"/>
-                            <constraint firstItem="2zF-Yx-PlX" firstAttribute="top" secondItem="0WO-P0-b87" secondAttribute="bottom" constant="25" id="EJ5-eu-PH5"/>
+                            <constraint firstItem="2zF-Yx-PlX" firstAttribute="top" secondItem="0WO-P0-b87" secondAttribute="bottom" constant="46" id="EJ5-eu-PH5"/>
                             <constraint firstItem="nsk-ie-2qk" firstAttribute="trailing" secondItem="QL4-ep-Xye" secondAttribute="trailing" constant="5" id="Fhu-IW-KlA"/>
                             <constraint firstItem="2k0-O0-UtR" firstAttribute="top" secondItem="VqO-L7-xDr" secondAttribute="top" id="FpM-98-KRS"/>
                             <constraint firstItem="EkA-e2-m5n" firstAttribute="trailing" secondItem="QL4-ep-Xye" secondAttribute="trailing" id="Jhv-ka-MKo"/>
@@ -452,14 +452,15 @@
                             <constraint firstItem="q6d-kV-Gly" firstAttribute="leading" secondItem="VqO-L7-xDr" secondAttribute="leading" id="b6c-Ya-kWF"/>
                             <constraint firstItem="VqO-L7-xDr" firstAttribute="top" secondItem="Udj-DA-9u2" secondAttribute="bottom" constant="15" id="cC9-Wy-lQv"/>
                             <constraint firstItem="2k0-O0-UtR" firstAttribute="height" secondItem="VqO-L7-xDr" secondAttribute="height" id="fib-gA-Jct"/>
+                            <constraint firstItem="0WO-P0-b87" firstAttribute="leading" secondItem="woC-3L-CrH" secondAttribute="leading" constant="112" id="gKg-ug-UKP"/>
                             <constraint firstItem="dNx-Bd-FFR" firstAttribute="leading" secondItem="TKx-BP-wEx" secondAttribute="leading" constant="-8" id="gbc-by-a0i"/>
                             <constraint firstItem="6FM-EI-36r" firstAttribute="trailing" secondItem="VqO-L7-xDr" secondAttribute="trailing" constant="5" id="gtI-OA-67S"/>
                             <constraint firstItem="EkA-e2-m5n" firstAttribute="bottom" secondItem="K9b-La-vnz" secondAttribute="bottom" id="iBe-zs-gKB"/>
                             <constraint firstItem="dNx-Bd-FFR" firstAttribute="trailing" secondItem="q6d-kV-Gly" secondAttribute="trailing" id="jeK-rk-NGV"/>
-                            <constraint firstItem="9OL-9M-Ton" firstAttribute="centerX" secondItem="woC-3L-CrH" secondAttribute="centerX" id="lBi-ye-BxW"/>
                             <constraint firstItem="2zF-Yx-PlX" firstAttribute="top" secondItem="9OL-9M-Ton" secondAttribute="bottom" constant="25" id="mbs-dW-8Nh"/>
                             <constraint firstItem="6FM-EI-36r" firstAttribute="top" secondItem="VqO-L7-xDr" secondAttribute="top" constant="-5" id="nce-SJ-Ud9"/>
                             <constraint firstItem="K9b-La-vnz" firstAttribute="leading" secondItem="VqO-L7-xDr" secondAttribute="leading" id="rSV-VM-gZ5"/>
+                            <constraint firstItem="9OL-9M-Ton" firstAttribute="leading" secondItem="woC-3L-CrH" secondAttribute="leading" constant="162" id="sAK-ny-q5y"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Post new item" id="vFJ-hu-jMV">
@@ -490,7 +491,11 @@
                         <outlet property="iv3SingleTap" destination="gYT-d9-oDp" id="46M-e2-ZvL"/>
                         <outlet property="navBar" destination="vFJ-hu-jMV" id="zm5-tH-Icm"/>
                         <outlet property="priceLabel" destination="K9b-La-vnz" id="hVf-sG-rbC"/>
+                        <outlet property="progressBar" destination="0WO-P0-b87" id="Hj2-2v-ufc"/>
+                        <outlet property="progressBarLeft" destination="gKg-ug-UKP" id="fcJ-Xb-3BK"/>
+                        <outlet property="progressBarLength" destination="GVj-1a-avf" id="OyL-ch-fYl"/>
                         <outlet property="quickPostButton" destination="9OL-9M-Ton" id="mkb-kG-Xwh"/>
+                        <outlet property="quickPostLeft" destination="sAK-ny-q5y" id="UzS-aJ-aPT"/>
                         <outlet property="removeButton1" destination="6FM-EI-36r" id="Dhd-wH-Qhi"/>
                         <outlet property="removeButton2" destination="xcB-kb-mbO" id="obB-6G-HUc"/>
                         <outlet property="removeButton3" destination="nsk-ie-2qk" id="nE4-lR-Nrh"/>
@@ -665,6 +670,10 @@
                                 <rect key="frame" x="0.0" y="75" width="375" height="533"/>
                                 <animations/>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="5tJ-ot-WPT" appends="YES" id="Oon-xH-Gb2"/>
+                                </connections>
                             </imageView>
                             <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XEL-Je-kAP">
                                 <rect key="frame" x="0.0" y="453" width="375" height="155"/>
@@ -837,6 +846,7 @@
                         <outlet property="dimmingViewHeight" destination="UrH-mX-a1g" id="K9S-3g-MhP"/>
                         <outlet property="imageView" destination="BDo-wM-PIS" id="AHQ-0j-fms"/>
                         <outlet property="itemNameLabel" destination="4PH-zu-OB4" id="quP-yK-Xp1"/>
+                        <outlet property="panGesture" destination="5tJ-ot-WPT" id="tzI-1a-8k6"/>
                         <outlet property="saveButton" destination="fte-tw-h1I" id="K6P-yb-1yU"/>
                         <outlet property="saveButtonWidth" destination="aBt-a0-CZc" id="YWs-54-890"/>
                         <outlet property="scrollCircle1" destination="War-Jk-Wxe" id="Hi4-Gg-Nk3"/>
@@ -851,6 +861,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q2T-9Y-lpv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <panGestureRecognizer minimumNumberOfTouches="1" id="5tJ-ot-WPT">
+                    <connections>
+                        <action selector="onPanImage:" destination="nif-7J-xtZ" id="SfD-FL-37R"/>
+                    </connections>
+                </panGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="902.5" y="-405.5"/>
         </scene>
@@ -958,7 +973,7 @@
                                 </constraints>
                                 <blurEffect style="light"/>
                             </visualEffectView>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="usf-Rc-hqR">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="usf-Rc-hqR">
                                 <rect key="frame" x="0.0" y="180" width="375" height="438"/>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>

@@ -34,11 +34,17 @@ class PostViewController: UIViewController {
   
   @IBOutlet weak var conditionSegment: UISegmentedControl!
   
+  @IBOutlet weak var progressBar: UIProgressView!
   @IBOutlet weak var navBar: UINavigationItem!
   @IBOutlet weak var backButton: UIBarButtonItem!
   @IBOutlet weak var draftButton: UIButton!
   @IBOutlet weak var quickPostButton: UIButton!
+  
 
+  @IBOutlet weak var progressBarLength: NSLayoutConstraint!
+  @IBOutlet weak var progressBarLeft: NSLayoutConstraint!
+  @IBOutlet weak var quickPostLeft: NSLayoutConstraint!
+  
   @IBOutlet var iv1SingleTap: UITapGestureRecognizer!
   @IBOutlet var iv2SingleTap: UITapGestureRecognizer!
   @IBOutlet var iv3SingleTap: UITapGestureRecognizer!
@@ -94,6 +100,14 @@ class PostViewController: UIViewController {
     descriptionText.backgroundColor = UIColor.whiteColor()
     descriptionText.clipsToBounds = true
     descriptionText.delegate = self
+    
+    progressBar.setProgress(0, animated: false)
+    progressBar.layer.cornerRadius = 2
+    progressBar.clipsToBounds = true
+    progressBar.alpha = 0
+    progressBarLeft.constant = 73
+    progressBarLength.constant = UIScreen.mainScreen().bounds.width - 73 - 25
+    quickPostLeft.constant = (UIScreen.mainScreen().bounds.width - 50) / 2
     
     // Add observer to detect when the keyboard will be shown/hide
     NSNotificationCenter.defaultCenter().addObserver(self,
@@ -307,6 +321,7 @@ class PostViewController: UIViewController {
   }
   
   func newPost() {
+    showProgressBar()
     if let post = preparePost() {
     post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
       print(post)
@@ -315,6 +330,7 @@ class PostViewController: UIViewController {
       
       }) { (post: Post, percent: Float) -> Void in
         print(percent)
+        self.progressBar.setProgress(percent, animated: true)
       }
     }
   }
@@ -335,11 +351,22 @@ class PostViewController: UIViewController {
   }
   
   func updatePost() {
+    showProgressBar()
     print("updating post")
     if let post = preparePost() {
       Post.updatePost((editingPost?.objectId)!, newPost: post, completion: { (finished, error) -> Void in
         self.dismissViewControllerAnimated(true, completion: nil)
       })
+    }
+  }
+  
+  func showProgressBar() {
+    view.endEditing(true)
+    self.quickPostLeft.constant = 25
+    
+    UIView.animateWithDuration(0.3) { () -> Void in
+      self.view.layoutIfNeeded()
+      self.progressBar.alpha = 1
     }
   }
   
