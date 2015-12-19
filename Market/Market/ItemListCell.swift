@@ -66,7 +66,7 @@ class ItemListCell: UITableViewCell {
             itemNameLabel.text = post.title
             descriptionLabel.text = post.descriptionText
             
-            let elapsedTime = NSDate().timeIntervalSinceDate(post.updatedAt!)
+            let elapsedTime = NSDate().timeIntervalSinceDate(post.createdAt!)
             var timeSinceCreated = ""
             if elapsedTime < 60 {
                 timeSinceCreated = String(Int(elapsedTime)) + "s"

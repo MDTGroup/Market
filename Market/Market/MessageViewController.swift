@@ -116,7 +116,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource, Ite
             if indexPath.row == conversations.count - 1 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadData(conversations[indexPath.row].updatedAt!)
+                loadData(conversations[indexPath.row].createdAt!)
             }
         }
         

@@ -34,7 +34,7 @@ class SimplifiedItemCell: UITableViewCell {
       let formatter = NSDateFormatter()
       formatter.timeStyle = NSDateFormatterStyle.ShortStyle
       formatter.dateStyle = NSDateFormatterStyle.MediumStyle
-      postAtLabel.text = "@ \(formatter.stringFromDate(post.updatedAt!))"
+      postAtLabel.text = "@ \(formatter.stringFromDate(post.createdAt!))"
       
       priceLabel.text = post.price.formatCurrency()
       //      newTagImageView.hidden = (post.condition > 0)

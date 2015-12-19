@@ -25,14 +25,14 @@ class User: PFUser {
         if let query = Post.query() {
             query.limit = 20
             if let lastUpdated = lastUpdated {
-                query.whereKey("updatedAt", lessThan: lastUpdated)
+                query.whereKey("createdAt", lessThan: lastUpdated)
             }
             query.includeKey("user")
             query.whereKey("isDeleted", equalTo: false)
             query.whereKey("sold", equalTo: false)
             query.whereKey("isDeleted", equalTo: false)
             query.whereKey("user", equalTo: self)
-            query.orderByDescending("updatedAt")
+            query.orderByDescending("createdAt")
 
             query.findObjectsInBackgroundWithBlock({ (pfObj: [PFObject]?, error: NSError?) -> Void in
                 guard error == nil else {
@@ -141,7 +141,6 @@ class User: PFUser {
     func getNotifications(lastUpdatedAt: NSDate?, callback: NotificationResultBlock) {
         if let query = Notification.query() {
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
-            print(self.fullName)
             query.whereKey("toUsers", equalTo: self)
             query.includeKey("post")
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
