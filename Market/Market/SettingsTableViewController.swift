@@ -46,7 +46,7 @@ class SettingsTableViewController: UITableViewController {
     @IBAction func onLogout(sender: AnyObject) {
         User.logOut()
         
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier("Home")
+        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier(StoryboardID.main)
         self.presentViewController(viewController, animated: true, completion: nil)
     }
     

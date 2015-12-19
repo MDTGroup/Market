@@ -88,7 +88,7 @@ class PostsListViewController: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let messageVC = segue.destinationViewController as? MessageViewController,
-        cell = sender as? ItemListCell {
+        _ = sender as? ItemListCell {
 //            if let indexPath = tableView.indexPathForCell(cell) {
                 messageVC.conversations = conversations
 //            }

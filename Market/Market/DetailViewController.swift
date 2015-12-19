@@ -57,6 +57,7 @@ class DetailViewController: UIViewController {
   
   weak var delegate: DetailViewControllerDelegate?
   
+    static let homeSB = UIStoryboard(name: "Home", bundle: nil)
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -211,9 +212,9 @@ class DetailViewController: UIViewController {
     }
   }
   
-  override func prefersStatusBarHidden() -> Bool {
-    return true
-  }
+//  override func prefersStatusBarHidden() -> Bool {
+//    return true
+//  }
   
   @IBAction func onPanImage(sender: UIPanGestureRecognizer) {
     let translation = sender.translationInView(view)
@@ -370,4 +371,11 @@ extension DetailViewController {
     voteCountLabel.hidden = !(count > 0)
     voteLabel.hidden = !(count > 0)
   }
+}
+
+// MARK: Show view from anywhere
+extension DetailViewController {
+    static var instantiateViewController: DetailViewController {
+        return homeSB.instantiateViewControllerWithIdentifier(StoryboardID.postDetail) as! DetailViewController
+    }
 }
