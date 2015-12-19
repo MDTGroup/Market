@@ -8,7 +8,6 @@
 
 import UIKit
 import AFNetworking
-import DateTools
 
 @objc protocol SavedItemCellDelegate {
     optional func savedItemCell(tweetCell: SavedItemCell, didChangeVote value: Bool)

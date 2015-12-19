@@ -8,7 +8,6 @@
 
 import UIKit
 import AFNetworking
-import DateTools
 
 @objc protocol ItemListCellDelegate {
     optional func itemListCell(tweetCell: ItemListCell, didChangeVote value: Bool)
