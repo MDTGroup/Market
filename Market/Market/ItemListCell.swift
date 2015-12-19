@@ -79,7 +79,7 @@ class ItemListCell: UITableViewCell {
             }
             timeAgoLabel.text = timeSinceCreated
             
-            priceLabel.text = "\(post.price)"
+            priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
         }
     }

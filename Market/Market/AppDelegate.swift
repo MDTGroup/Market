@@ -157,9 +157,19 @@ extension AppDelegate {
     }
     
     func handleNotificationPayload(userInfo: [NSObject : AnyObject]) {
-        if let alertMessage = userInfo["aps"]?["alert"] as? String {
-            let alertController = UIAlertController(title: "Push notification's message", message: alertMessage, preferredStyle: UIAlertControllerStyle.Alert)
-            self.window?.rootViewController?.presentViewController(alertController, animated: true, completion: nil)
+        if let postId = userInfo["postId"] as? String {
+            let post = Post(withoutDataWithObjectId: postId)
+            post.fetchInBackgroundWithBlock({ (result, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    return
+                }
+                if let result = result as? Post {
+                    let vc = DetailViewController.instantiateViewController
+                    vc.post = result
+                    self.window?.rootViewController?.presentViewController(vc, animated: true, completion: nil)
+                }
+            })
         }
     }
 }
