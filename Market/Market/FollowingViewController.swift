@@ -19,7 +19,7 @@ class FollowingViewController: UIViewController {
 
         self.tableView.dataSource = self
         self.tableView.delegate  = self
-        self.tableView.reloadData()
+        self.loadData()
     }
     
     

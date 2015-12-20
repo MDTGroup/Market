@@ -309,6 +309,11 @@
 					44F328521C0F815C00BF1CDF = {
 						CreatedOnToolsVersion = 7.1.1;
 						DevelopmentTeam = QCBK6P7M2R;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 				};
 			};

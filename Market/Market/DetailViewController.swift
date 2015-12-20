@@ -8,6 +8,7 @@
 
 import UIKit
 import AFNetworking
+import Haneke
 
 @objc protocol DetailViewControllerDelegate {
   optional func detailViewController(detailViewController: DetailViewController, newPost: Post)
@@ -94,7 +95,9 @@ class DetailViewController: UIViewController {
       if let user = pfObj as? User {
         self.sellerLabel.text = user.fullName
         if let avatar = user.avatar {
-          self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+          self.avatarImageView.hnk_setImageFromURL(NSURL(string: avatar.url!)!)
+        } else {
+          self.avatarImageView.image = UIImage(named: "profile_blank")
         }
       }
     }
@@ -103,8 +106,8 @@ class DetailViewController: UIViewController {
     avatarImageView.clipsToBounds = true
     
     // Load the thumbnail first for user to see while waiting for loading the full image
-    imageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-    imageView.setImageWithURL(NSURL(string: post.medias[1].url!)!)
+    imageView.hnk_setImageFromURL(NSURL(string: post.medias[0].url!)!)
+    imageView.hnk_setImageFromURL(NSURL(string: post.medias[1].url!)!)
     //imagePanGesture = UIPanGestureRecognizer(target: self, action: "changeImage:")
     //imageView.addGestureRecognizer(imagePanGesture)
     //imagePanGesture.requireGestureRecognizerToFail(panGesture)
@@ -117,10 +120,12 @@ class DetailViewController: UIViewController {
     
     // Load image while user still reading 1st page
     if nImages > 1 {
-      tempImageView1.setImageWithURL(NSURL(string: post.medias[2].url!)!)
+      tempImageView1.frame = imageView.frame
+      tempImageView1.hnk_setImageFromURL(NSURL(string: post.medias[2].url!)!)
     }
     if nImages > 2 {
-      tempImageView2.setImageWithURL(NSURL(string: post.medias[3].url!)!)
+      tempImageView2.frame = imageView.frame
+      tempImageView2.hnk_setImageFromURL(NSURL(string: post.medias[3].url!)!)
     }
     
     // Set the buttons width equally
@@ -221,14 +226,14 @@ class DetailViewController: UIViewController {
           selectedImage = nImages
         }
       }
-      imageView.setImageWithURL(NSURL(string: post.medias[selectedImage].url!)!)
+      imageView.hnk_setImageFromURL(NSURL(string: post.medias[selectedImage].url!)!)
       setImageScroll(selectedImage)
     }
   }
   
-  //  override func prefersStatusBarHidden() -> Bool {
-  //    return true
-  //  }
+  override func prefersStatusBarHidden() -> Bool {
+    return true
+  }
   
   @IBAction func onPanImage(sender: UIPanGestureRecognizer) {
     let translation = sender.translationInView(view)
@@ -275,7 +280,7 @@ class DetailViewController: UIViewController {
               self.imageView.center = self.imageOriginalCenter
               self.imageView.transform = CGAffineTransformMakeRotation(0)
               self.imageView.image = UIImage(named: "loading")
-              self.imageView.setImageWithURL(NSURL(string: self.post.medias[self.selectedImage].url!)!)
+              self.imageView.hnk_setImageFromURL(NSURL(string: self.post.medias[self.selectedImage].url!)!)
               self.setImageScroll(self.selectedImage)
           })
           
@@ -301,15 +306,15 @@ class DetailViewController: UIViewController {
               self.imageView.center = self.imageOriginalCenter
               self.imageView.transform = CGAffineTransformMakeRotation(0)
               self.imageView.image = UIImage(named: "loading")
-              self.imageView.setImageWithURL(NSURL(string: self.post.medias[self.selectedImage].url!)!)
+              self.imageView.hnk_setImageFromURL(NSURL(string: self.post.medias[self.selectedImage].url!)!)
               self.setImageScroll(self.selectedImage)
           })
           
         } else {
-          UIView.animateWithDuration(0.5, animations: { () -> Void in
+          UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 10, options: [], animations: { () -> Void in
             self.imageView.center = self.imageOriginalCenter
             self.imageView.transform = CGAffineTransformMakeRotation(0)
-          })
+            }, completion: nil)
         }
       }
     }

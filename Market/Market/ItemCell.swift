@@ -8,6 +8,7 @@
 
 import UIKit
 import AFNetworking
+import Haneke
 
 @objc protocol ItemCellDelegate {
   optional func itemCell(itemCell: ItemCell, didChangeVote value: Bool, voteCount: Int)
@@ -45,34 +46,41 @@ class ItemCell: UITableViewCell {
       // Set seller
       sellerLabel.text = post.user.fullName
       if let avatar = post.user.avatar {
-        avatarImageView.alpha = 0.0
+        //        avatarImageView.alpha = 0.0
+        //        avatarImageView.image = nil
+        //        UIView.animateWithDuration(0.3, animations: {
+        //          self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+        //          self.avatarImageView.alpha = 1.0
+        //        })
+        
+        // Set it nil first to prevent it reuses image from other cell when new post
         avatarImageView.image = nil
-        UIView.animateWithDuration(0.3, animations: {
-          self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
-          self.avatarImageView.alpha = 1.0
-          })
+        avatarImageView.hnk_setImageFromURL(NSURL(string: avatar.url!)!)
       } else {
-        // load no image
+        avatarImageView.image = UIImage(named: "profile_blank")
       }
       
       // Set Item
       if post.medias.count > 0 {
-        loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-        loadingView.center = CGPoint(x: 40, y: 40)
-        //print(loadingView.frame)
-        loadingView.hidesWhenStopped = true
-        loadingView.startAnimating()
-        itemImageView.addSubview(loadingView)
-        itemImageView.alpha = 0.0
-        itemImageView.image = nil
-        UIView.animateWithDuration(0.3, animations: {
-          self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-          self.itemImageView.alpha = 1.0
-          }, completion: { (finished) -> Void in
-            self.loadingView.stopAnimating()
-            self.loadingView.removeFromSuperview()
-        })
+        //        loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        //        loadingView.center = CGPoint(x: 40, y: 40)
+        //        //print(loadingView.frame)
+        //        loadingView.hidesWhenStopped = true
+        //        loadingView.startAnimating()
+        //        itemImageView.addSubview(loadingView)
+        //        itemImageView.alpha = 0.0
+        //        itemImageView.image = nil
+        //        UIView.animateWithDuration(0.3, animations: {
+        //          self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
+        //          self.itemImageView.alpha = 1.0
+        //          }, completion: { (finished) -> Void in
+        //            self.loadingView.stopAnimating()
+        //            self.loadingView.removeFromSuperview()
+        //        })
         
+        // Set it nil first to prevent it reuses image from other cell when new post
+        itemImageView.image = nil
+        itemImageView.hnk_setImageFromURL(NSURL(string: post.medias[0].url!)!)
       } else {
         // Load no image
       }
@@ -108,10 +116,10 @@ class ItemCell: UITableViewCell {
     // Initialization code
     avatarImageView.layer.cornerRadius = 18
     avatarImageView.clipsToBounds = true
-//    itemImageView.layer.cornerRadius = 8
-//    itemImageView.clipsToBounds = true
-//    priceLabel.layer.cornerRadius = 5
-//    priceLabel.clipsToBounds = true
+    //    itemImageView.layer.cornerRadius = 8
+    //    itemImageView.clipsToBounds = true
+    //    priceLabel.layer.cornerRadius = 5
+    //    priceLabel.clipsToBounds = true
     imageContainer.layer.cornerRadius = 8
     imageContainer.clipsToBounds = true
     

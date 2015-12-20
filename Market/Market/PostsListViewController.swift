@@ -114,7 +114,7 @@ class PostsListViewController: UIViewController {
             posts.append(conversation.post.objectId!)
             newConversations.append(conversation)
         }
-        filteredConversationsByPost = newConversations
+        filteredConversationsByPost = newConversations.reverse()
     }
 }
 
@@ -133,7 +133,7 @@ extension PostsListViewController: UITableViewDelegate, UITableViewDataSource {
             if indexPath.row == filteredConversationsByPost.count - 1 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadData(filteredConversationsByPost[0].createdAt!)
+                loadData(filteredConversationsByPost[indexPath.row].createdAt!)
             }
         }
         
