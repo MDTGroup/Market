@@ -40,3 +40,10 @@ https://docs.google.com/forms/d/1wsMt7Bk3--dh_hLzaJecRANQeoRHm7UsOQV9N03SMOA/vie
 ![Video Walkthrough](market.gif)
 
 You can also try on browsers: https://invis.io/UQ5735UED
+
+Libraries we are using:
+- Parse
+- AFNetworking
+- MBProgressHUD
+- JSQMessagesViewController
+- HanekeSwift
