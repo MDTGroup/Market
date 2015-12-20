@@ -96,7 +96,7 @@ class MessageViewController: UIViewController {
     }
 }
 
-extension MessageViewController: UITableViewDelegate, UITableViewDataSource, ItemListCellDelegate {
+extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return conversations.count
     }

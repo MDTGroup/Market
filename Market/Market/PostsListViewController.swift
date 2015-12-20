@@ -23,7 +23,6 @@ class PostsListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
         tableView.dataSource = self
         tableView.delegate = self
         
@@ -48,9 +47,6 @@ class PostsListViewController: UIViewController {
         noMoreResultLabel.hidden = true
         tableFooterView.addSubview(noMoreResultLabel)
         tableView.tableFooterView = tableFooterView
-        
-        //        let postVC: PostViewController = tabBarController?.viewControllers![1] as! PostViewController
-        //        postVC.delegate = self
         
         MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         loadNewestData()
@@ -87,11 +83,8 @@ class PostsListViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let messageVC = segue.destinationViewController as? MessageViewController,
-        _ = sender as? ItemListCell {
-//            if let indexPath = tableView.indexPathForCell(cell) {
-                messageVC.conversations = conversations
-//            }
+        if let messageVC = segue.destinationViewController as? MessageViewController {
+            messageVC.conversations = conversations
         }
     }
     
@@ -110,16 +103,15 @@ class PostsListViewController: UIViewController {
     }
 }
 
-extension PostsListViewController: UITableViewDelegate, UITableViewDataSource, ItemListCellDelegate {
+extension PostsListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return conversations.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("ItemListCell1", forIndexPath: indexPath) as! ItemListCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("ItemListCell", forIndexPath: indexPath) as! ItemListCell
+
         cell.conversation = conversations[indexPath.row]
-        cell.textLabel!.text = cell.conversation.post.title
-        cell.delegate = self
         
         // Infinite load if last cell
         if !isLoadingNextPage && !isEndOfFeed {
