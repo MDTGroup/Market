@@ -8,6 +8,7 @@
 
 import UIKit
 import MBProgressHUD
+import Haneke
 
 class UserTimelineViewController: UIViewController {
   
@@ -185,7 +186,7 @@ class UserTimelineViewController: UIViewController {
       } else {
         self.followingCountLabel.text = "0"
       }
-    }
+    } // Why sometimes it crashes here EXC_BAD_ACCESS code=2
     
     // Load follower (who follows this user)
     followerCountLabel.text = ""
@@ -198,10 +199,15 @@ class UserTimelineViewController: UIViewController {
     }
     
     userLabel.text = user.fullName
-    avatarImageView.setImageWithURL(NSURL(string: user.avatar!.url!)!)
+    if let avatar = user.avatar {
+      avatarImageView.hnk_setImageFromURL(NSURL(string: avatar.url!)!)
+      bigAvatarImageView.hnk_setImageFromURL(NSURL(string: avatar.url!)!)
+    } else {
+      avatarImageView.image = UIImage(named: "profile_blank")
+      bigAvatarImageView.image = UIImage(named: "profile_blank")
+    }
     avatarImageView.layer.cornerRadius = 40
     avatarImageView.clipsToBounds = true
-    bigAvatarImageView.setImageWithURL(NSURL(string: user.avatar!.url!)!)
     bigAvatarImageView.clipsToBounds = true
   }
   
@@ -284,7 +290,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         loadDataSince(cell.item.updatedAt!)
       }
     }
-
+    
     return cell
   }
   
