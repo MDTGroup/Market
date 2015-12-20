@@ -23,6 +23,7 @@ class HomeViewController: UIViewController {
   var selectedPostIndex: Int!
 
   var posts = [Post]()
+  var loadDataBy = NewsfeedType.Newest
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -55,6 +56,7 @@ class HomeViewController: UIViewController {
     let postVC: PostViewController = navController.topViewController as! PostViewController
     postVC.delegate = self
     
+    loadDataBy = NewsfeedType.Newest
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
     loadNewestData()
     
@@ -102,7 +104,7 @@ class HomeViewController: UIViewController {
   }
   
   func loadData(params: [String: NSDate]) {
-    Post.getNewsfeed(NewsfeedType.Newest, params: params) { (posts, error) -> Void in
+    Post.getNewsfeed(loadDataBy, params: params) { (posts, error) -> Void in
       if let posts = posts {
         print("return \(posts.count) posts")
         if posts.count == 0 {
@@ -123,6 +125,16 @@ class HomeViewController: UIViewController {
       self.isLoadingNextPage = false
       MBProgressHUD.hideHUDForView(self.view, animated: true)
     }
+  }
+  
+  @IBAction func onCategoryChanged(sender: UISegmentedControl) {
+    switch sender.selectedSegmentIndex {
+    case 0: loadDataBy = NewsfeedType.Newest
+    case 1: loadDataBy = NewsfeedType.Following
+    case 2: loadDataBy = NewsfeedType.UsersVote
+    default: loadDataBy = NewsfeedType.Newest
+    }
+    loadNewestData()
   }
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -202,7 +214,12 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
   
   func itemCell(itemCell: ItemCell, tapOnProfile value: Bool) {
     print(itemCell.item.user.fullName)
-    performSegueWithIdentifier("userTimelineSegue", sender: itemCell.item.user)
+    if itemCell.item.user.objectId == User.currentUser()?.objectId {
+      // I'm tap on myself
+      self.tabBarController!.selectedIndex = 4
+    } else {
+      performSegueWithIdentifier("userTimelineSegue", sender: itemCell.item.user)
+    }
   }
   
   func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

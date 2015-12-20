@@ -59,7 +59,7 @@ class ItemCell: UITableViewCell {
       if post.medias.count > 0 {
         loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         loadingView.center = CGPoint(x: 40, y: 40)
-        print(loadingView.frame)
+        //print(loadingView.frame)
         loadingView.hidesWhenStopped = true
         loadingView.startAnimating()
         itemImageView.addSubview(loadingView)
