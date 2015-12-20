@@ -361,7 +361,7 @@ class DetailViewController: UIViewController {
         if successful {
           print("unsaved")
           self.post.iSaveIt = false
-          self.delegate!.detailViewController!(self, newPost: self.post)
+          self.delegate?.detailViewController!(self, newPost: self.post)
         } else {
           print("failed to unsave")
           self.setSaveLabel(true)

@@ -47,6 +47,7 @@
 		44F5BEC01C1BD5A9006317E0 /* MyColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F5BEBA1C1BD5A9006317E0 /* MyColors.swift */; };
 		44F5BEC11C1BD5A9006317E0 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F5BEBB1C1BD5A9006317E0 /* PostViewController.swift */; };
 		44F5BEC61C1C13FA006317E0 /* Vote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F5BEC51C1C13FA006317E0 /* Vote.swift */; };
+		44F9693B1C2734C50078E7E8 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F9693A1C2734C50078E7E8 /* SearchTableViewCell.swift */; };
 		44FBCB001C1D327C00722DE2 /* BlockAlias.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FBCAFF1C1D327C00722DE2 /* BlockAlias.swift */; };
 		44FBCB041C1D35AE00722DE2 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FBCB031C1D35AE00722DE2 /* Message.swift */; };
 		44FBCB071C1D365300722DE2 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44FBCB061C1D365300722DE2 /* Conversation.swift */; };
@@ -102,6 +103,7 @@
 		44F5BEBA1C1BD5A9006317E0 /* MyColors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyColors.swift; sourceTree = "<group>"; };
 		44F5BEBB1C1BD5A9006317E0 /* PostViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		44F5BEC51C1C13FA006317E0 /* Vote.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Vote.swift; sourceTree = "<group>"; };
+		44F9693A1C2734C50078E7E8 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		44FBCAFF1C1D327C00722DE2 /* BlockAlias.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BlockAlias.swift; sourceTree = "<group>"; };
 		44FBCB031C1D35AE00722DE2 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		44FBCB061C1D365300722DE2 /* Conversation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
@@ -224,6 +226,7 @@
 				4401D0F31C21311C004A9BD9 /* SimplifiedItemCell.swift */,
 				44F5BEB91C1BD5A9006317E0 /* ItemCell.swift */,
 				BA5062AC1C1E7D1800E67EE7 /* FollowingTableViewCell.swift */,
+				44F9693A1C2734C50078E7E8 /* SearchTableViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -308,7 +311,7 @@
 				TargetAttributes = {
 					44F328521C0F815C00BF1CDF = {
 						CreatedOnToolsVersion = 7.1.1;
-						DevelopmentTeam = QCBK6P7M2R;
+						DevelopmentTeam = P362UPJSK6;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -427,6 +430,7 @@
 				44F5BEC11C1BD5A9006317E0 /* PostViewController.swift in Sources */,
 				44E3B1DC1C1DE203003B9908 /* SavedPostsViewController.swift in Sources */,
 				4483EF771C1B41DF002C98DA /* SettingsTableViewController.swift in Sources */,
+				44F9693B1C2734C50078E7E8 /* SearchTableViewCell.swift in Sources */,
 				BAF7691A1C1EA983006870CA /* KeywordsTableViewCell.swift in Sources */,
 				44AEE3761C2339DD004B5E2E /* ChatViewController.swift in Sources */,
 				44EB1A2D1C246E3D00905312 /* NotificationTableViewCell.swift in Sources */,
@@ -564,7 +568,7 @@
 				INFOPLIST_FILE = Market/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.drm.Market;
+				PRODUCT_BUNDLE_IDENTIFIER = coderschool.mdtgroup.Market;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};
@@ -582,7 +586,7 @@
 				INFOPLIST_FILE = Market/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.drm.Market;
+				PRODUCT_BUNDLE_IDENTIFIER = coderschool.mdtgroup.Market;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 			};

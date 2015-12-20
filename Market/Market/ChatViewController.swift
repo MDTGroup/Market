@@ -296,7 +296,6 @@ extension ChatViewController {
         if let tabBarController = UIApplication.sharedApplication().delegate?.window??.rootViewController as? UITabBarController {
             let storyboard = UIStoryboard(name: "Messages", bundle: nil)
             if let messageVC = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.messageViewController) as? MessageViewController, chatVC = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.chatViewController) as? ChatViewController {
-                
                 Conversation.addConversation(post.user, post: post, callback: { (conversation, error) -> Void in
                     guard error == nil else {
                         print(error)
@@ -310,7 +309,7 @@ extension ChatViewController {
                                 print(error)
                                 return
                             }
-                            
+                            navController.popToRootViewControllerAnimated(false)
                             navController.pushViewController(messageVC, animated: false)
                             navController.pushViewController(chatVC, animated: false)
                         })

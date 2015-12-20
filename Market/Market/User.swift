@@ -161,7 +161,7 @@ class User: PFUser {
     func getNotifications(lastUpdatedAt: NSDate?, callback: NotificationResultBlock) {
         if let query = Notification.query() {
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
-            print(self.fullName)
+            query.includeKey("fromUser")
             query.whereKey("toUsers", equalTo: self)
             query.includeKey("post")
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in

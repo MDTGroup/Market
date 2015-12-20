@@ -23,15 +23,15 @@ class NotificationTableViewCell: UITableViewCell {
         didSet {
             let post = notification.post
             self.sellerLabel.text = ""
-            post.user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
-                if let avatar = post.user.avatar {
+            notification.fromUser.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
+                if let avatar = self.notification.fromUser.avatar {
                     self.avatarImageView.alpha = 0.0
                     UIView.animateWithDuration(0.3, animations: {
                         self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
                         self.avatarImageView.alpha = 1.0
                         }, completion: nil)
                 }
-                self.sellerLabel.text = post.user.fullName
+                self.sellerLabel.text = self.notification.fromUser.fullName
             }
             
             // Set Item

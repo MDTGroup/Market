@@ -180,6 +180,10 @@ class UserTimelineViewController: UIViewController {
     // Load following (this user follows people)
     followingCountLabel.text = ""
     user.getFollowings { (users, error) -> Void in
+        guard error == nil else {
+            print(error)
+            return
+        }
       if users != nil {
         self.followingCountLabel.text = "\((users?.count)!)"
       } else {
