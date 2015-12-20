@@ -21,6 +21,7 @@ class SearchViewController: UIViewController {
     
     func initControls() {
         let searchBar = UISearchBar()
+        searchBar.placeholder = "Search posts (ex: iPhone 6S 18tr, #iphone6s)"
         searchBar.delegate = self
         navigationItem.titleView = searchBar
         

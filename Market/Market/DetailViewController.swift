@@ -71,7 +71,7 @@ class DetailViewController: UIViewController {
     let formatter = NSDateFormatter()
     formatter.timeStyle = NSDateFormatterStyle.ShortStyle
     formatter.dateStyle = NSDateFormatterStyle.MediumStyle
-    updatedAtLabel.text = "Posted on \(formatter.stringFromDate(post.updatedAt!))"
+    updatedAtLabel.text = "Posted on \(formatter.stringFromDate(post.createdAt!))"
     
     // Create the "padding" for the text
     descriptionText.textContainerInset = UIEdgeInsetsMake(8, 10, 0, 10)
