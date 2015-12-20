@@ -13,7 +13,6 @@ import Parse
 
 class HomeViewController: UIViewController {
   
-  
   @IBOutlet weak var tableView: UITableView!
   
   var refreshControl = UIRefreshControl()
@@ -22,8 +21,7 @@ class HomeViewController: UIViewController {
   var isEndOfFeed = false
   var noMoreResultLabel = UILabel()
   var selectedPostIndex: Int!
-  
-  //var items = [Item]()
+
   var posts = [Post]()
   
   override func viewDidLoad() {
@@ -62,28 +60,35 @@ class HomeViewController: UIViewController {
     
     initTabBar()
   }
-    
-    func initTabBar() {
-        if let tabBarItem = tabBarController?.tabBar.items![1] {
-            tabBarItem.image = UIImage(named: "message")
-            tabBarItem.title = "Messages"
-        }
-        if let tabBarItem = tabBarController?.tabBar.items![3] {
-            tabBarItem.image = UIImage(named: "noti")
-            tabBarItem.title = "Notifications"
-        }
+  
+  func initTabBar() {
+    if let tabBarItem = tabBarController?.tabBar.items![1] {
+      tabBarItem.image = UIImage(named: "message")
+      tabBarItem.title = "Messages"
     }
-    
-    func setupForInstallation() {
-        let installation = PFInstallation.currentInstallation()
-        installation["user"] = User.currentUser()
-        installation.saveInBackground()
+    if let tabBarItem = tabBarController?.tabBar.items![3] {
+      tabBarItem.image = UIImage(named: "noti")
+      tabBarItem.title = "Notifications"
     }
+  }
+  
+  func setupForInstallation() {
+    let installation = PFInstallation.currentInstallation()
+    installation["user"] = User.currentUser()
+    installation.saveInBackground()
+  }
   
   override func viewWillAppear(animated: Bool) {
     // Reload whatever the change from other pages
     print("new feeds will appear")
     tableView.reloadData()
+  }
+  
+  override func viewDidAppear(animated: Bool) {
+    // Clear the selection of tableView
+    if selectedPostIndex != nil {
+      tableView.deselectRowAtIndexPath(NSIndexPath(forRow: selectedPostIndex, inSection: 0), animated: true)
+    }
   }
   
   func loadNewestData() {
@@ -104,7 +109,7 @@ class HomeViewController: UIViewController {
           self.isEndOfFeed = true
         }
         
-        self.posts.appendContentsOf(posts)        
+        self.posts.appendContentsOf(posts)
         self.tableView.reloadData()
         
       } else {
@@ -122,14 +127,14 @@ class HomeViewController: UIViewController {
   
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if (segue.identifier == "detailSegue") {
-        if let detailVC = segue.destinationViewController as? DetailViewController {
-            detailVC.post = sender as? Post
-            detailVC.delegate = self
-        }
+      if let detailVC = segue.destinationViewController as? DetailViewController {
+        detailVC.post = sender as? Post
+        detailVC.delegate = self
+      }
     } else if (segue.identifier == "userTimelineSegue") {
-        if let userTimelineVC = segue.destinationViewController as? UserTimelineViewController {
-            userTimelineVC.user = sender as? User
-        }
+      if let userTimelineVC = segue.destinationViewController as? UserTimelineViewController {
+        userTimelineVC.user = sender as? User
+      }
     }
   }
   
@@ -146,7 +151,10 @@ extension HomeViewController: DetailViewControllerDelegate {
   func detailViewController(detailViewController: DetailViewController, newPost: Post) {
     print("Newfeeds got signal from detail page")
     posts[selectedPostIndex] = newPost
-    }
+    
+    let rowToReload: NSIndexPath = NSIndexPath(forRow: selectedPostIndex, inSection: 0)
+    tableView.reloadRowsAtIndexPaths([rowToReload], withRowAnimation: .Automatic)
+  }
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCellDelegate {
@@ -202,6 +210,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     let item = posts[indexPath.row]
     performSegueWithIdentifier("detailSegue", sender: item)
   }
+  
 }
 
 extension HomeViewController: PostViewControllerDelegate {

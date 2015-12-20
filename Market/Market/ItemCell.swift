@@ -24,6 +24,7 @@ class ItemCell: UITableViewCell {
   @IBOutlet weak var priceLabel: UILabel!
   @IBOutlet weak var sellerLabel: UILabel!
   @IBOutlet weak var avatarImageView: UIImageView!
+  @IBOutlet weak var imageContainer: UIView!
   
   @IBOutlet weak var voteCountLabel: UILabel!
   @IBOutlet weak var voteButton: UIButton!
@@ -36,29 +37,42 @@ class ItemCell: UITableViewCell {
   var avatarTapGesture: UITapGestureRecognizer!
   var sellerTapGesture: UITapGestureRecognizer!
   
+  var loadingView: UIActivityIndicatorView!
+  
   var item: Post! {
     didSet {
       let post = item
       // Set seller
-      self.sellerLabel.text = post.user.fullName
+      sellerLabel.text = post.user.fullName
       if let avatar = post.user.avatar {
-        self.avatarImageView.alpha = 0.0
+        avatarImageView.alpha = 0.0
+        avatarImageView.image = nil
         UIView.animateWithDuration(0.3, animations: {
           self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
           self.avatarImageView.alpha = 1.0
-          }, completion: nil)
+          })
       } else {
         // load no image
       }
       
       // Set Item
       if post.medias.count > 0 {
+        loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        loadingView.center = CGPoint(x: 40, y: 40)
+        print(loadingView.frame)
+        loadingView.hidesWhenStopped = true
+        loadingView.startAnimating()
+        itemImageView.addSubview(loadingView)
         itemImageView.alpha = 0.0
-        itemImageView.image = UIImage(named: "loading")
+        itemImageView.image = nil
         UIView.animateWithDuration(0.3, animations: {
           self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
           self.itemImageView.alpha = 1.0
-          }, completion: nil)
+          }, completion: { (finished) -> Void in
+            self.loadingView.stopAnimating()
+            self.loadingView.removeFromSuperview()
+        })
+        
       } else {
         // Load no image
       }
@@ -105,8 +119,12 @@ class ItemCell: UITableViewCell {
     // Initialization code
     avatarImageView.layer.cornerRadius = 18
     avatarImageView.clipsToBounds = true
-    itemImageView.layer.cornerRadius = 8
-    itemImageView.clipsToBounds = true
+//    itemImageView.layer.cornerRadius = 8
+//    itemImageView.clipsToBounds = true
+//    priceLabel.layer.cornerRadius = 5
+//    priceLabel.clipsToBounds = true
+    imageContainer.layer.cornerRadius = 8
+    imageContainer.clipsToBounds = true
     
     avatarTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
     sellerTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")

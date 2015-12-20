@@ -40,7 +40,7 @@ class PostViewController: UIViewController {
   @IBOutlet weak var draftButton: UIButton!
   @IBOutlet weak var quickPostButton: UIButton!
   
-
+  
   @IBOutlet weak var progressBarLength: NSLayoutConstraint!
   @IBOutlet weak var progressBarLeft: NSLayoutConstraint!
   @IBOutlet weak var quickPostLeft: NSLayoutConstraint!
@@ -144,7 +144,7 @@ class PostViewController: UIViewController {
   }
   
   func loadPostToUpdate() {
-    priceLabel.text = "\((editingPost?.price.formatCurrency())!)"
+    priceLabel.text = "\((editingPost?.price)!)"
     titleLabel.text = editingPost?.title
     descriptionText.text = editingPost?.descriptionText
     descPlaceHolder.hidden = true
@@ -318,26 +318,30 @@ class PostViewController: UIViewController {
     post.title = titleLabel.text!
     post.price = Double(priceLabel.text!)!
     post.condition = conditionSegment.selectedSegmentIndex // 0 = new
-    post.sold = false
+    
     post.descriptionText = descriptionText.text
     post.location = currentGeoPoint
-    post.isDeleted = false
+    
     post.vote = Vote()
     
     return post
   }
   
   func newPost() {
-    showProgressBar()
     if let post = preparePost() {
-    post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
-      print(post)
-      self.delegate?.postViewController?(self, didUploadNewPost: post)
-      self.tabBarController!.selectedIndex = 0
-      
-      }) { (post: Post, percent: Float) -> Void in
-        print(percent)
-        self.progressBar.setProgress(percent, animated: true)
+      showProgressBar()
+      // Set these initial values only for new post
+      post.sold = false
+      post.isDeleted = false
+      post.voteCounter = 0
+      post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
+        print(post)
+        self.delegate?.postViewController?(self, didUploadNewPost: post)
+        self.tabBarController!.selectedIndex = 0
+        
+        }) { (post: Post, percent: Float) -> Void in
+          print(percent)
+          self.progressBar.setProgress(percent, animated: true)
       }
     }
   }
@@ -358,10 +362,9 @@ class PostViewController: UIViewController {
   }
   
   func updatePost() {
-    showProgressBar()
     print("updating post")
     if let newPost = preparePost() {
-      
+      showProgressBar()
       let post = Post(withoutDataWithObjectId: (editingPost?.objectId)!)
       post.fetchInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
         print(fetchedPFObj)

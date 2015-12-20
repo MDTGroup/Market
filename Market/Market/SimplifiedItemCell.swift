@@ -14,6 +14,7 @@ class SimplifiedItemCell: UITableViewCell {
   @IBOutlet weak var itemNameLabel: UILabel!
   @IBOutlet weak var priceLabel: UILabel!
   @IBOutlet weak var postAtLabel: UILabel!
+  @IBOutlet weak var newTagImageView: UIImageView!
   
   var item: Post! {
     didSet {
@@ -37,7 +38,7 @@ class SimplifiedItemCell: UITableViewCell {
       postAtLabel.text = "@ \(formatter.stringFromDate(post.updatedAt!))"
       
       priceLabel.text = post.price.formatCurrency()
-      //      newTagImageView.hidden = (post.condition > 0)
+      newTagImageView.hidden = (post.condition > 0)
     }
   }
   
@@ -46,6 +47,8 @@ class SimplifiedItemCell: UITableViewCell {
     // Initialization code
     itemImageView.layer.cornerRadius = 5
     itemImageView.clipsToBounds = true
+    priceLabel.layer.cornerRadius = 5
+    priceLabel.clipsToBounds = true
   }
   
   override func setSelected(selected: Bool, animated: Bool) {
