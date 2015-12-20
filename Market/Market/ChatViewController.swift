@@ -20,24 +20,39 @@ class ChatViewController: JSQMessagesViewController {
     
     var outgoingBubbleImage = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
     var incomingBubbleImage = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
-    var blankAvatarImage: JSQMessagesAvatarImage!
+    var blankAvatarImage = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "profile_blank"), diameter: 30)
     var isLoading = false
     var conversation: Conversation!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if let navController = navigationController, messageVC = navController.viewControllers[navController.viewControllers.count - 2] as? MessageViewController {
+            messageVC.title = conversation.post.title
+        }
+        
         if let currentUser = User.currentUser() {
             senderId = currentUser.objectId!
             senderDisplayName = currentUser.fullName
         }
+        isLoading = false
         loadMessages()
     }
+
     
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
+    override func willMoveToParentViewController(parent: UIViewController?) {
+        if parent == nil {
+            
+            if let navController = navigationController, messageVC = navController.viewControllers[navController.viewControllers.count - 2] as? MessageViewController {
+                messageVC.post = conversation.post
+            }
+        }
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         tabBarController?.tabBar.hidden = true
-        collectionView!.collectionViewLayout.springinessEnabled = true
+//        collectionView!.collectionViewLayout.springinessEnabled = true
         timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
     }
     
@@ -53,7 +68,7 @@ class ChatViewController: JSQMessagesViewController {
     
     override func didPressAccessoryButton(sender: UIButton!) {
         let action = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Take photo", "Choose existing photo", "Choose existing video")
-        action.showInView(self.view)
+        action.showInView(view)
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {
@@ -70,8 +85,8 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
-        let user = self.users[indexPath.item]
-        if self.avatars[user.objectId!] == nil {
+        let user = users[indexPath.item]
+        if avatars[user.objectId!] == nil {
             user.avatar?.getDataInBackgroundWithBlock({ (imageData, error) -> Void in
                 guard error == nil else {
                     print(error)
@@ -83,13 +98,13 @@ class ChatViewController: JSQMessagesViewController {
             })
             return blankAvatarImage
         } else {
-            return self.avatars[user.objectId!]
+            return avatars[user.objectId!]
         }
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, attributedTextForCellTopLabelAtIndexPath indexPath: NSIndexPath!) -> NSAttributedString! {
         if indexPath.item % 3 == 0 {
-            let message = self.messages[indexPath.item]
+            let message = messages[indexPath.item]
             return JSQMessagesTimestampFormatter.sharedFormatter().attributedTimestampForDate(message.date)
         }
         return nil;
@@ -128,9 +143,9 @@ class ChatViewController: JSQMessagesViewController {
         
         let message = messages[indexPath.item]
         if message.senderId == senderId {
-            cell.textView?.textColor = UIColor.blackColor()
-        } else {
             cell.textView?.textColor = UIColor.whiteColor()
+        } else {
+            cell.textView?.textColor = UIColor.blackColor()
         }
         
         return cell
@@ -144,13 +159,13 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, layout collectionViewLayout: JSQMessagesCollectionViewFlowLayout!, heightForMessageBubbleTopLabelAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
-        let message = self.messages[indexPath.item]
-        if message.senderId == self.senderId {
+        let message = messages[indexPath.item]
+        if message.senderId == senderId {
             return 0
         }
         
         if indexPath.item - 1 > 0 {
-            let previousMessage = self.messages[indexPath.item - 1]
+            let previousMessage = messages[indexPath.item - 1]
             if previousMessage.senderId == message.senderId {
                 return 0
             }
@@ -172,11 +187,11 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
-//        let message = self.messages[indexPath.item]
+//        let message = messages[indexPath.item]
 //        if message.isMediaMessage {
 //            if let mediaItem = message.media as? JSQVideoMediaItem {
 //                let moviePlayer = MPMoviePlayerViewController(contentURL: mediaItem.fileURL)
-//                self.presentMoviePlayerViewControllerAnimated(moviePlayer)
+//                presentMoviePlayerViewControllerAnimated(moviePlayer)
 //                moviePlayer.moviePlayer.play()
 //            }
 //        }
@@ -208,15 +223,15 @@ extension ChatViewController {
                         self.finishReceivingMessage()
                         self.scrollToBottomAnimated(false)
                     }
-                    self.automaticallyScrollsToMostRecentMessage = true
                 }
+                self.automaticallyScrollsToMostRecentMessage = true
                 self.isLoading = false
             })
         }
     }
     
     func addMessage(message:Message) {
-        let jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt, text: message.text)
+        let jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, text: message.text)
         
         users.append(message.user)
         messages.append(jsqMessage)
@@ -231,7 +246,7 @@ extension ChatViewController {
             JSQSystemSoundPlayer.jsq_playMessageSentSound()
             self.loadMessages()
         }
-        self.finishSendingMessage()
+        finishSendingMessage()
     }
 }
 
@@ -257,5 +272,40 @@ extension ChatViewController: UIImagePickerControllerDelegate {
 //        self.sendMessage("", video: video, picture: picture)
         
         picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+
+extension ChatViewController {
+    static func showChat(post: Post) {
+        if post.user.objectId == User.currentUser()?.objectId {
+            print("Cannot message your self")
+            return
+        }
+        
+        if let tabBarController = UIApplication.sharedApplication().delegate?.window??.rootViewController as? UITabBarController {
+            let storyboard = UIStoryboard(name: "Messages", bundle: nil)
+            if let messageVC = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.messageViewController) as? MessageViewController, chatVC = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.chatViewController) as? ChatViewController {
+                
+                Conversation.addConversation(post.user, post: post, callback: { (conversation, error) -> Void in
+                    guard error == nil else {
+                        print(error)
+                        return
+                    }
+                    tabBarController.selectedIndex = 1
+                    if let navController = tabBarController.selectedViewController as? UINavigationController {
+                        chatVC.conversation = conversation
+                        chatVC.conversation.post.fetchIfNeededInBackgroundWithBlock({ (post, error) -> Void in
+                            guard error == nil else {
+                                print(error)
+                                return
+                            }
+                            
+                            navController.pushViewController(messageVC, animated: false)
+                            navController.pushViewController(chatVC, animated: false)
+                        })
+                    }
+                })
+            }
+        }
     }
 }

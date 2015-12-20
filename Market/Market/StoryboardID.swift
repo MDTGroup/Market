@@ -12,4 +12,6 @@ struct StoryboardID {
     static let home:String = "home"
     static let postDetail:String = "postDetail"
     static let main:String = "main"
+    static let chatViewController:String = "chatViewController"
+    static let messageViewController:String = "messageViewController"
 }

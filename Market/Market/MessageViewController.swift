@@ -19,14 +19,18 @@ class MessageViewController: UIViewController {
     var isEndOfFeed = false
     var noMoreResultLabel = UILabel()
     
-    var conversations: [Conversation]!
+    var conversations = [Conversation]()
+    var post: Post!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
         tableView.dataSource = self
         tableView.delegate = self
+        
+        if self.conversations.count > 0 {
+            self.title =  self.conversations[0].post.title
+        }
         
         // Refresh control
         refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
@@ -50,12 +54,17 @@ class MessageViewController: UIViewController {
         tableFooterView.addSubview(noMoreResultLabel)
         tableView.tableFooterView = tableFooterView
         
-        //        let postVC: PostViewController = tabBarController?.viewControllers![1] as! PostViewController
-        //        postVC.delegate = self
-        
         MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loadNewestData()
         
+        if conversations.count == 0 {
+            loadNewestData()
+        } else {
+            isLoadingNextPage = true
+            self.noMoreResultLabel.hidden = !self.isEndOfFeed
+            self.refreshControl.endRefreshing()
+            self.loadingView.stopAnimating()
+            MBProgressHUD.hideHUDForView(self.view, animated: true)
+        }   
     }
     
     func loadNewestData() {
@@ -64,7 +73,10 @@ class MessageViewController: UIViewController {
     }
     
     func loadData(lastUpdatedAt: NSDate?) {
-        Conversation.getConversations(lastUpdatedAt) { (conversations, error) -> Void in
+        if post == nil {
+            return
+        }
+        Conversation.getConversationsByPost(post, lastUpdatedAt: lastUpdatedAt) { (conversations, error) -> Void in
             guard error == nil else {
                 print(error)
                 self.isEndOfFeed = true
@@ -73,9 +85,14 @@ class MessageViewController: UIViewController {
             if let conversations = conversations {
                 if conversations.count == 0 {
                     self.isEndOfFeed = true
+                } else {
+                    self.conversations.appendContentsOf(conversations)
+                    self.tableView.reloadData()
                 }
-                self.conversations.appendContentsOf(conversations)
-                self.tableView.reloadData()
+            }
+            
+            if self.conversations.count > 0 {
+                self.title =  self.conversations[0].post.title
             }
             
             self.noMoreResultLabel.hidden = !self.isEndOfFeed
@@ -102,14 +119,9 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell1", forIndexPath: indexPath) as! MessageCell
-        cell.conversation = conversations[indexPath.row]
+        let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell", forIndexPath: indexPath) as! MessageCell
         
-        var userName = ""
-        for user in cell.conversation.users {
-            userName += "\(user.fullName) - "
-        }
-        cell.textLabel!.text = userName
+        cell.conversation = conversations[indexPath.row]
         
         // Infinite load if last cell
         if !isLoadingNextPage && !isEndOfFeed {
@@ -121,5 +133,9 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
         }
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath((indexPath), animated: true)
     }
 }

@@ -216,4 +216,8 @@ class ItemCell: UITableViewCell {
     print("i tap on profile pic/name")
     self.delegate?.itemCell?(self, tapOnProfile: true)
   }
+    
+    @IBAction func onMessage(sender: UIButton) {
+        ChatViewController.showChat(item)
+    }
 }

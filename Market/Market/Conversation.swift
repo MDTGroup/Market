@@ -71,13 +71,14 @@ class Conversation: PFObject, PFSubclassing {
         }
     }
     
-    static func addConversation(toUser: User, post: Post, text: String) {
+    static func addConversation(toUser: User, post: Post, callback: ConversationResultBlock) {
         if let currentUser = User.currentUser() {
             if currentUser.objectId == toUser.objectId {
                 return
             }
             if let query = Conversation.query() {
                 let users = [currentUser, toUser]
+                query.includeKey("post")
                 query.whereKey("post", equalTo: post)
                 query.whereKey("users", containsAllObjectsInArray: users)
                 query.findObjectsInBackgroundWithBlock({ (results, error) -> Void in
@@ -95,19 +96,17 @@ class Conversation: PFObject, PFSubclassing {
                             conversation.ACL = acl
                             conversation.saveInBackgroundWithBlock({ (success, error) -> Void in
                                 guard error == nil else {
-                                    print(error)
+                                    callback(conversation: nil, error: error)
                                     return
                                 }
-                                conversation.addMessage(currentUser, text: text) {
-                                    (success, error) -> Void in
-                                }
+                                conversation.post.fetchIfNeededInBackgroundWithBlock({ (post, error) -> Void in
+                                    callback(conversation: conversation, error: nil)
+                                })
                             })
                         } else if conversations.count == 1 {
                             let conversation = conversations[0]
                             conversation.usersChooseHideConversation = []
-                            conversation.addMessage(currentUser, text: text) {
-                                (success, error) -> Void in
-                            }
+                            callback(conversation: conversation, error: nil)
                         } else {
                             print("Why? Conversations should only have one with these post")
                         }
@@ -117,11 +116,31 @@ class Conversation: PFObject, PFSubclassing {
         }
     }
     
-    static func getConversations(lastUpdatedAt: NSDate?, callback: ConversationResultBlock) {
+    static func getConversations(lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
         if let query = Conversation.query(), currentUser = User.currentUser() {
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
             query.includeKey("post")
             query.includeKey("users")
+            query.whereKey("users", containedIn: [currentUser])
+            query.whereKey("usersChooseHideConversation", notContainedIn: [currentUser])
+            query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
+                guard error == nil else {
+                    callback(conversations: nil, error: error)
+                    return
+                }
+                if let conversations = pfObjs as? [Conversation] {
+                    callback(conversations: conversations, error: nil)
+                }
+            })
+        }
+    }
+    
+    static func getConversationsByPost(post:Post, lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
+        if let query = Conversation.query(), currentUser = User.currentUser() {
+            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
+            query.includeKey("post")
+            query.includeKey("users")
+            query.whereKey("post", equalTo: post)
             query.whereKey("users", containedIn: [currentUser])
             query.whereKey("usersChooseHideConversation", notContainedIn: [currentUser])
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in

@@ -18,6 +18,7 @@ class PostsListViewController: UIViewController {
     var isEndOfFeed = false
     var noMoreResultLabel = UILabel()
     
+    var filteredConversationsByPost = [Conversation]()
     var conversations = [Conversation]()
     
     override func viewDidLoad() {
@@ -66,12 +67,17 @@ class PostsListViewController: UIViewController {
                 return
             }
             if let conversations = conversations {
+                
+                for conversation in conversations {
+                    print(conversation.createdAt)
+                }
                 if conversations.count == 0 {
                     self.isEndOfFeed = true
+                } else {
+                    self.conversations.appendContentsOf(conversations)
+                    self.filterDuplicatePost()
+                    self.tableView.reloadData()
                 }
-                self.conversations.appendContentsOf(conversations)
-                self.filterDuplicatePost()
-                self.tableView.reloadData()
             }
             
             self.noMoreResultLabel.hidden = !self.isEndOfFeed
@@ -84,7 +90,17 @@ class PostsListViewController: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let messageVC = segue.destinationViewController as? MessageViewController {
-            messageVC.conversations = conversations
+            if let cell = sender as? ItemListCell {
+                let post = cell.conversation.post
+                var conversationsByPost = [Conversation]()
+                for conversation in conversations {
+                    if conversation.post.objectId == post.objectId {
+                        conversationsByPost.append(conversation)
+                    }
+                }
+                messageVC.post = post
+                messageVC.conversations = conversationsByPost
+            }
         }
     }
     
@@ -96,32 +112,35 @@ class PostsListViewController: UIViewController {
                 continue
             }
             posts.append(conversation.post.objectId!)
-            print(conversation.post.objectId!)
             newConversations.append(conversation)
         }
-        conversations = newConversations
+        filteredConversationsByPost = newConversations
     }
 }
 
 extension PostsListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return conversations.count
+        return filteredConversationsByPost.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ItemListCell", forIndexPath: indexPath) as! ItemListCell
 
-        cell.conversation = conversations[indexPath.row]
+        cell.conversation = filteredConversationsByPost[indexPath.row]
         
         // Infinite load if last cell
         if !isLoadingNextPage && !isEndOfFeed {
-            if indexPath.row == conversations.count - 1 {
+            if indexPath.row == filteredConversationsByPost.count - 1 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadData(conversations[indexPath.row].createdAt!)
+                loadData(filteredConversationsByPost[0].createdAt!)
             }
         }
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 }

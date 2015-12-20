@@ -411,7 +411,12 @@ class DetailViewController: UIViewController {
       }
     }
   }
-  
+    
+    @IBAction func onMessageTapped(sender: UIButton) {
+        dismissViewControllerAnimated(true) { () -> Void in
+            ChatViewController.showChat(self.post)
+        }
+    }
 }
 
 extension DetailViewController {
