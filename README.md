@@ -4,23 +4,23 @@ An iOS Swift application for shopping. People can use this app for selling/buyin
 ### Features
 
 #### Required
-- [ ] User can login/logout/signup
-- [ ] User can see a list of posts from:
-    - [ ] Following sellers
-    - [ ] User's choice
-    - [ ] Newest posts
-- [ ] User can view post detail
-- [ ] User can see other user's profile and posts
-- [ ] User can follow each other
-- [ ] User can submit/edit/delete a post with images (from camera, taken photo), video, price, description, status, location...
-- [ ] User can vote for posts have a good price/deal
-- [ ] User can message with each other
+- [x] User can login/logout/signup
+- [x] User can see a list of posts from:
+    - [x] Following sellers
+    - [x] User's choice
+    - [x] Newest posts
+- [x] User can view post detail
+- [x] User can see other user's profile and posts
+- [x] User can follow each other
+- [x] User can submit/edit/delete a post with images (from camera, taken photo), video, price, description, status, location...
+- [x] User can vote for posts have a good price/deal
+- [x] User can message with each other
 - [ ] User can search by hashtag, title, description, people/branches, price, location
-- [ ] User can receive notifications for: 
-    - [ ] Messages
-    - [ ] Saved post content changes
-    - [ ] Specific keywords
-- [ ] A Settings page to control Saved list, profile, Following, Notifications hashtag …
+- [x] User can receive notifications for: 
+    - [x] Messages
+    - [x] Saved post content changes
+    - [x] Specific keywords
+- [x] A Settings page to control Saved list, profile, Following, Notifications hashtag …
     
 #### Optional
 - [ ] Login Facebook/Twitter
