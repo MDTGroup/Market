@@ -55,7 +55,7 @@ class ItemListCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        avatarImageView.layer.cornerRadius = 12
+        avatarImageView.layer.cornerRadius = 10
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true

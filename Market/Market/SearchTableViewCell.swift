@@ -8,8 +8,8 @@
 
 import UIKit
 
-class NotificationTableViewCell: UITableViewCell {
-    
+class SearchTableViewCell: UITableViewCell {
+
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var timeAgoLabel: UILabel!
@@ -17,28 +17,26 @@ class NotificationTableViewCell: UITableViewCell {
     @IBOutlet weak var sellerLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var newTagImageView: UIImageView!
-    @IBOutlet weak var type: UILabel!
     
-    var notification: Notification! {
+    var post: Post! {
         didSet {
-            let post = notification.post
             self.sellerLabel.text = ""
             post.user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
-                if let avatar = post.user.avatar {
+                if let avatar = self.post.user.avatar {
                     self.avatarImageView.alpha = 0.0
                     UIView.animateWithDuration(0.3, animations: {
                         self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
                         self.avatarImageView.alpha = 1.0
                         }, completion: nil)
                 }
-                self.sellerLabel.text = post.user.fullName
+                self.sellerLabel.text = self.post.user.fullName
             }
             
             // Set Item
             if post.medias.count > 0 {
                 itemImageView.alpha = 0.0
                 UIView.animateWithDuration(0.3, animations: {
-                    self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
+                    self.itemImageView.setImageWithURL(NSURL(string: self.post.medias[0].url!)!)
                     self.itemImageView.alpha = 1.0
                     }, completion: nil)
             }
@@ -47,7 +45,6 @@ class NotificationTableViewCell: UITableViewCell {
             timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
             priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
-            type.text = NotificationType.fromInt(notification.type)
         }
     }
     

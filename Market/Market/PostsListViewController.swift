@@ -67,10 +67,6 @@ class PostsListViewController: UIViewController {
                 return
             }
             if let conversations = conversations {
-                
-                for conversation in conversations {
-                    print(conversation.createdAt)
-                }
                 if conversations.count == 0 {
                     self.isEndOfFeed = true
                 } else {

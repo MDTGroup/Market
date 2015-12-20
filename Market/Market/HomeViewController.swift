@@ -82,7 +82,6 @@ class HomeViewController: UIViewController {
   
   override func viewWillAppear(animated: Bool) {
     // Reload whatever the change from other pages
-    print("new feeds will appear")
     tableView.reloadData()
   }
   
@@ -95,7 +94,6 @@ class HomeViewController: UIViewController {
   
   func loadNewestData() {
     posts = []
-    print("pull to refresh")
     loadData(["lastUpdatedAt": NSDate()])
   }
   
@@ -106,7 +104,6 @@ class HomeViewController: UIViewController {
   func loadData(params: [String: NSDate]) {
     Post.getNewsfeed(loadDataBy, params: params) { (posts, error) -> Void in
       if let posts = posts {
-        print("return \(posts.count) posts")
         if posts.count == 0 {
           self.isEndOfFeed = true
         }
@@ -172,7 +169,6 @@ extension HomeViewController: DetailViewControllerDelegate {
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCellDelegate {
   func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    print("nrows = \(posts.count)")
     return posts.count
   }
   

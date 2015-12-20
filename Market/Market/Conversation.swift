@@ -18,7 +18,7 @@ class Conversation: PFObject, PFSubclassing {
     @NSManaged var usersChooseHideConversation: [User]
     @NSManaged var post: Post
     @NSManaged var messages: PFRelation
-
+    
     func getMessages(lastCreatedAt: NSDate?, callback: MessageResultBlock) {
         let query = messages.query()
         query.includeKey("user")

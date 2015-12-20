@@ -12,7 +12,7 @@ import Haneke
 
 class UserTimelineViewController: UIViewController {
   
-  var user: User!
+    var user: User!
   var posts = [Post]()
   var isCurrentUser = false
   
@@ -79,7 +79,6 @@ class UserTimelineViewController: UIViewController {
   
   func loadNewestData() {
     posts = []
-    print("pull to refresh")
     loadData(NSDate())
   }
   
@@ -168,7 +167,7 @@ class UserTimelineViewController: UIViewController {
         })
       }
     }
-    print("loading \(user.fullName)")
+
     segmentControl.hidden = !isCurrentUser
     editProfileButton.hidden = !isCurrentUser
     backButton.hidden = isCurrentUser

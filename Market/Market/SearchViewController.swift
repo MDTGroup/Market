@@ -12,6 +12,7 @@ class SearchViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var posts = [Post]()
+    var searchBar: UISearchBar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,9 +20,13 @@ class SearchViewController: UIViewController {
         initControls()
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        searchBar.endEditing(true)
+    }
+    
     func initControls() {
-        let searchBar = UISearchBar()
-        searchBar.placeholder = "Search posts (ex: iPhone 6S 18tr, #iphone6s)"
+        searchBar = UISearchBar()
+        searchBar.placeholder = "Search posts"
         searchBar.delegate = self
         navigationItem.titleView = searchBar
         
@@ -36,8 +41,6 @@ class SearchViewController: UIViewController {
             }
         }
     }
-    
-    
 }
 
 extension SearchViewController: UISearchBarDelegate {
@@ -46,12 +49,17 @@ extension SearchViewController: UISearchBarDelegate {
         params["lastUpdatedAt"] = nil
         params["text"] = searchBar.text
         Post.search(params) { (posts, error) -> Void in
-            print(posts, error)
+            guard error == nil else {
+                print(error)
+                return
+            }
             if let posts = posts {
                 self.posts = posts
                 self.tableView.reloadData()
             }
         }
+        
+        searchBar.endEditing(true)
     }
 }
 
@@ -61,8 +69,8 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
-        cell.textLabel!.text = posts[indexPath.row].title
+        let cell = tableView.dequeueReusableCellWithIdentifier("SearchTableViewCell", forIndexPath: indexPath) as! SearchTableViewCell
+        cell.post = posts[indexPath.row]
         return cell
     }
     

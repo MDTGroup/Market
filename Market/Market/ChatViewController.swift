@@ -12,8 +12,8 @@ import Foundation
 import MediaPlayer
 
 class ChatViewController: JSQMessagesViewController {
-
-    var timer: NSTimer = NSTimer()
+    
+    var timer = NSTimer()
     var messages = [JSQMessage]()
     var avatars = Dictionary<String, JSQMessagesAvatarImage>()
     var users = [User]()
@@ -35,10 +35,20 @@ class ChatViewController: JSQMessagesViewController {
             senderId = currentUser.objectId!
             senderDisplayName = currentUser.fullName
         }
+        
+        for user in conversation.users {
+            if user.objectId != User.currentUser()?.objectId {
+                user.fetchIfNeededInBackgroundWithBlock({ (result, error) -> Void in
+                    self.title = user.fullName
+                })
+                break
+            }
+        }
+        
         isLoading = false
         loadMessages()
     }
-
+    
     
     override func willMoveToParentViewController(parent: UIViewController?) {
         if parent == nil {
@@ -52,8 +62,9 @@ class ChatViewController: JSQMessagesViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         tabBarController?.tabBar.hidden = true
-//        collectionView!.collectionViewLayout.springinessEnabled = true
-        timer = NSTimer.scheduledTimerWithTimeInterval(5.0, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
+        //        collectionView!.collectionViewLayout.springinessEnabled = true
+        inputToolbar?.contentView?.leftBarButtonItem = nil
+        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -66,10 +77,10 @@ class ChatViewController: JSQMessagesViewController {
         sendMessage(text)
     }
     
-    override func didPressAccessoryButton(sender: UIButton!) {
-        let action = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Take photo", "Choose existing photo", "Choose existing video")
-        action.showInView(view)
-    }
+    //    override func didPressAccessoryButton(sender: UIButton!) {
+    //        let action = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Take photo", "Choose existing photo", "Choose existing video")
+    //        action.showInView(view)
+    //    }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {
         return messages[indexPath.item]
@@ -92,7 +103,7 @@ class ChatViewController: JSQMessagesViewController {
                     print(error)
                     return
                 }
-
+                
                 self.avatars[user.objectId!] = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(data: imageData!), diameter: 30)
                 self.collectionView!.reloadData()
             })
@@ -187,14 +198,14 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
-//        let message = messages[indexPath.item]
-//        if message.isMediaMessage {
-//            if let mediaItem = message.media as? JSQVideoMediaItem {
-//                let moviePlayer = MPMoviePlayerViewController(contentURL: mediaItem.fileURL)
-//                presentMoviePlayerViewControllerAnimated(moviePlayer)
-//                moviePlayer.moviePlayer.play()
-//            }
-//        }
+        //        let message = messages[indexPath.item]
+        //        if message.isMediaMessage {
+        //            if let mediaItem = message.media as? JSQVideoMediaItem {
+        //                let moviePlayer = MPMoviePlayerViewController(contentURL: mediaItem.fileURL)
+        //                presentMoviePlayerViewControllerAnimated(moviePlayer)
+        //                moviePlayer.moviePlayer.play()
+        //            }
+        //        }
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapCellAtIndexPath indexPath: NSIndexPath!, touchLocation: CGPoint) {
@@ -250,30 +261,30 @@ extension ChatViewController {
     }
 }
 
-extension ChatViewController: UIActionSheetDelegate {
-    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
-//        if buttonIndex != actionSheet.cancelButtonIndex {
-//            if buttonIndex == 1 {
-//                Camera.shouldStartCamera(self, canEdit: true, frontFacing: true)
-//            } else if buttonIndex == 2 {
-//                Camera.shouldStartPhotoLibrary(self, canEdit: true)
-//            } else if buttonIndex == 3 {
-//                Camera.shouldStartVideoLibrary(self, canEdit: true)
-//            }
-//        }
-    }
-}
-
-extension ChatViewController: UIImagePickerControllerDelegate {
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        let video = info[UIImagePickerControllerMediaURL] as? NSURL
-        let picture = info[UIImagePickerControllerEditedImage] as? UIImage
-        
-//        self.sendMessage("", video: video, picture: picture)
-        
-        picker.dismissViewControllerAnimated(true, completion: nil)
-    }
-}
+//extension ChatViewController: UIActionSheetDelegate {
+//    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
+////        if buttonIndex != actionSheet.cancelButtonIndex {
+////            if buttonIndex == 1 {
+////                Camera.shouldStartCamera(self, canEdit: true, frontFacing: true)
+////            } else if buttonIndex == 2 {
+////                Camera.shouldStartPhotoLibrary(self, canEdit: true)
+////            } else if buttonIndex == 3 {
+////                Camera.shouldStartVideoLibrary(self, canEdit: true)
+////            }
+////        }
+//    }
+//}
+//
+//extension ChatViewController: UIImagePickerControllerDelegate {
+//    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+//        let video = info[UIImagePickerControllerMediaURL] as? NSURL
+//        let picture = info[UIImagePickerControllerEditedImage] as? UIImage
+//
+////        self.sendMessage("", video: video, picture: picture)
+//
+//        picker.dismissViewControllerAnimated(true, completion: nil)
+//    }
+//}
 
 extension ChatViewController {
     static func showChat(post: Post) {

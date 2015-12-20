@@ -68,7 +68,7 @@ class MessageCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         
-        userImage.layer.cornerRadius = 20
+        userImage.layer.cornerRadius = 21
         userImage.layer.masksToBounds = true
     }
     
