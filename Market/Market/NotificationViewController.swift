@@ -49,7 +49,7 @@ extension NotificationViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("NotificationTableViewCell", forIndexPath: indexPath) as! NotificationTableViewCell
         cell.post = notifications[indexPath.row].post
-        cell.textLabel!.text = String(notifications[indexPath.row].type)
+        cell.textLabel!.text = String(notifications[indexPath.row].post.title)
         return cell
     }
     

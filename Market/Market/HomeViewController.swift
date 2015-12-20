@@ -193,7 +193,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
       if indexPath.row == posts.count - 1 {
         loadingView.startAnimating()
         isLoadingNextPage = true
-        loadDataSince(cell.item.updatedAt!)
+        loadDataSince(cell.item.createdAt!)
       }
     }
     

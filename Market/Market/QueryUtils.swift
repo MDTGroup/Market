@@ -13,9 +13,9 @@ class QueryUtils {
     static func bindQueryParamsForInfiniteLoading(query:PFQuery, lastUpdatedAt:NSDate?, maxResult: Int = 20) -> PFQuery {
         query.limit = maxResult
         if let lastUpdatedAt = lastUpdatedAt {
-            query.whereKey("updatedAt", lessThan: lastUpdatedAt)
+            query.whereKey("createdAt", lessThan: lastUpdatedAt)
         }
-        query.orderByDescending("updatedAt")
+        query.orderByDescending("createdAt")
         return query
     }
     

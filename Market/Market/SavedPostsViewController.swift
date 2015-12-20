@@ -107,7 +107,7 @@ extension SavedPostsViewController: UITableViewDelegate, UITableViewDataSource, 
             if indexPath.row == posts.count - 1 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadData(cell.item.updatedAt!)
+                loadData(cell.item.createdAt!)
             }
         }
         
