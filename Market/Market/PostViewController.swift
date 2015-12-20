@@ -301,15 +301,15 @@ class PostViewController: UIViewController {
     }
     
     // Collect info
-    var image = resizeImage(images[0], newWidth: 1200)
-    let thumbnails = resizeImage(image, newWidth: 150)
+    var image = Helper.resizeImage(images[0], newWidth: 1200)
+    let thumbnails = Helper.resizeImage(image, newWidth: 150)
     var imageFile = PFFile(name: "img1.jpg", data: UIImageJPEGRepresentation(image, 0.4)!)
     let thumbnailsFile = PFFile(name: "thumb.jpg", data: UIImageJPEGRepresentation(thumbnails, 0.4)!)
     post.medias = [thumbnailsFile!, imageFile!]
     
     if images.count > 1 {
       for i in 1...images.count-1 {
-        image = resizeImage(images[i], newWidth: 1200)
+        image = Helper.resizeImage(images[i], newWidth: 1200)
         imageFile = PFFile(name: "img\(i+1).jpg", data: UIImageJPEGRepresentation(image, 0.4)!)
         post.medias.append(imageFile!)
       }
@@ -344,21 +344,6 @@ class PostViewController: UIViewController {
           self.progressBar.setProgress(percent, animated: true)
       }
     }
-  }
-  
-  func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
-    if image.size.width <= newWidth {
-      return image
-    }
-    
-    let scale = newWidth / image.size.width
-    let newHeight = image.size.height * scale
-    UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight))
-    image.drawInRect(CGRectMake(0, 0, newWidth, newHeight))
-    let newImage = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
-    
-    return newImage
   }
   
   func updatePost() {

@@ -1042,13 +1042,6 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="posted on" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rUQ-bZ-4iW">
-                                                    <rect key="frame" x="68" y="32" width="65" height="17"/>
-                                                    <animations/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="25 000" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Pkn-Gy-c0P">
                                                     <rect key="frame" x="307" y="4" width="60" height="18"/>
                                                     <animations/>
@@ -1069,29 +1062,57 @@
                                                         <constraint firstAttribute="height" constant="30" id="tza-Kw-eyu"/>
                                                     </constraints>
                                                 </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="8l5-cF-t1L">
+                                                    <rect key="frame" x="68" y="23" width="32" height="32"/>
+                                                    <animations/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="32" id="6l5-Kb-m2m"/>
+                                                        <constraint firstAttribute="height" constant="32" id="aEv-YH-Z3w"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="davevo" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FMi-24-8E2">
+                                                    <rect key="frame" x="108" y="30" width="46" height="17"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="posted on" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rUQ-bZ-4iW">
+                                                    <rect key="frame" x="302" y="30" width="65" height="17"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <animations/>
                                             <constraints>
+                                                <constraint firstItem="FMi-24-8E2" firstAttribute="centerY" secondItem="8l5-cF-t1L" secondAttribute="centerY" id="4hJ-sg-IW3"/>
                                                 <constraint firstItem="Pkn-Gy-c0P" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="8Oo-TT-YYq" secondAttribute="trailing" constant="5" id="8gW-y5-zm4"/>
+                                                <constraint firstItem="rUQ-bZ-4iW" firstAttribute="bottom" secondItem="FMi-24-8E2" secondAttribute="bottom" id="91f-vx-HvA"/>
                                                 <constraint firstItem="AiH-HD-BLC" firstAttribute="leading" secondItem="p21-Yd-fSa" secondAttribute="leading" constant="5" id="A6p-kb-jI1"/>
                                                 <constraint firstAttribute="trailing" secondItem="Pkn-Gy-c0P" secondAttribute="trailing" constant="8" id="G0K-QB-Ajx"/>
                                                 <constraint firstItem="fAR-YJ-fkL" firstAttribute="top" secondItem="p21-Yd-fSa" secondAttribute="top" constant="5" id="Ter-l6-gX4"/>
                                                 <constraint firstItem="Pkn-Gy-c0P" firstAttribute="bottom" secondItem="8Oo-TT-YYq" secondAttribute="bottom" id="V00-hv-o7e"/>
                                                 <constraint firstItem="8Oo-TT-YYq" firstAttribute="top" secondItem="p21-Yd-fSa" secondAttribute="top" constant="5" id="XKz-LZ-hJE"/>
                                                 <constraint firstItem="fAR-YJ-fkL" firstAttribute="leading" secondItem="p21-Yd-fSa" secondAttribute="leading" constant="8" id="aKZ-H6-Cig"/>
-                                                <constraint firstItem="rUQ-bZ-4iW" firstAttribute="top" secondItem="8Oo-TT-YYq" secondAttribute="bottom" constant="10" id="ilJ-vZ-N2b"/>
+                                                <constraint firstItem="8l5-cF-t1L" firstAttribute="leading" secondItem="8Oo-TT-YYq" secondAttribute="leading" id="i01-gE-HOa"/>
+                                                <constraint firstItem="8l5-cF-t1L" firstAttribute="bottom" secondItem="fAR-YJ-fkL" secondAttribute="bottom" id="jaY-vT-c8A"/>
+                                                <constraint firstItem="FMi-24-8E2" firstAttribute="leading" secondItem="8l5-cF-t1L" secondAttribute="trailing" constant="8" id="lGQ-0s-Bvb"/>
+                                                <constraint firstAttribute="trailing" secondItem="rUQ-bZ-4iW" secondAttribute="trailing" constant="8" id="oT8-Nw-AIb"/>
                                                 <constraint firstItem="AiH-HD-BLC" firstAttribute="top" secondItem="p21-Yd-fSa" secondAttribute="top" constant="2" id="q3P-wM-8Fl"/>
                                                 <constraint firstItem="8Oo-TT-YYq" firstAttribute="leading" secondItem="fAR-YJ-fkL" secondAttribute="trailing" constant="10" id="yoY-MZ-BGh"/>
-                                                <constraint firstItem="rUQ-bZ-4iW" firstAttribute="leading" secondItem="8Oo-TT-YYq" secondAttribute="leading" id="zc9-Qf-8vq"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <animations/>
                                         <connections>
+                                            <outlet property="avatarImageView" destination="8l5-cF-t1L" id="6op-5B-50b"/>
                                             <outlet property="itemImageView" destination="fAR-YJ-fkL" id="LH4-NJ-bUz"/>
                                             <outlet property="itemNameLabel" destination="8Oo-TT-YYq" id="P1B-Bc-HjL"/>
                                             <outlet property="newTagImageView" destination="AiH-HD-BLC" id="wX0-Me-RfB"/>
                                             <outlet property="postAtLabel" destination="rUQ-bZ-4iW" id="U19-TV-cEj"/>
                                             <outlet property="priceLabel" destination="Pkn-Gy-c0P" id="bog-Ei-qXU"/>
+                                            <outlet property="sellerLabel" destination="FMi-24-8E2" id="b9J-dp-rkk"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1105,8 +1126,10 @@
                                 <segments>
                                     <segment title="Posts"/>
                                     <segment title="Saved"/>
-                                    <segment title="Following"/>
                                 </segments>
+                                <connections>
+                                    <action selector="onCategoryChanged:" destination="kZY-du-h5I" eventType="valueChanged" id="1Vv-v4-RYT"/>
+                                </connections>
                             </segmentedControl>
                         </subviews>
                         <animations/>

@@ -37,11 +37,110 @@ class UserTimelineViewController: UIViewController {
   var noMoreResultLabel = UILabel()
   var selectedPostIndex: Int!
   var iFollowThisUser = false
+  var dataToLoad: Int = 0 // 0: user's posts, 1: user's saved posts
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
     // Do any additional setup after loading the view.
+    refreshProfile()
+    
+    tableView.dataSource = self
+    tableView.delegate = self
+    
+    // Refresh control
+    refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
+    tableView.addSubview(refreshControl)
+    
+    // Add the activity Indicator for table footer for infinity load
+    let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
+    loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+    loadingView.center = tableFooterView.center
+    loadingView.hidesWhenStopped = true
+    tableFooterView.addSubview(loadingView)
+    // Initialize the noMoreResult
+    noMoreResultLabel.frame = tableFooterView.frame
+    noMoreResultLabel.text = "No more result"
+    noMoreResultLabel.textAlignment = NSTextAlignment.Center
+    noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
+    noMoreResultLabel.textColor = UIColor.grayColor()
+    noMoreResultLabel.hidden = true
+    tableFooterView.addSubview(noMoreResultLabel)
+    tableView.tableFooterView = tableFooterView
+    
+    MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    loadNewestData()
+  }
+  
+  override func viewWillAppear(animated: Bool) {
+    refreshProfile()
+  }
+  
+  func loadNewestData() {
+    posts = []
+    print("pull to refresh")
+    loadData(NSDate())
+  }
+  
+  func loadDataSince(lastUpdatedAt: NSDate) {
+    loadData(lastUpdatedAt)
+  }
+  
+  func loadData(byThisDate: NSDate) {
+    if dataToLoad == 0 {
+      print("loading user's posts")
+      user.getPosts(byThisDate, callback: { (posts, error) -> Void in
+        if let posts = posts {
+          if posts.count == 0 {
+            self.isEndOfFeed = true
+          }
+          
+          for p in posts {
+            self.posts.append(p)
+          }
+          self.tableView.reloadData()
+          
+        } else {
+          print(error)
+          self.isEndOfFeed = true
+        }
+        
+        self.noMoreResultLabel.hidden = !self.isEndOfFeed
+        self.refreshControl.endRefreshing()
+        self.loadingView.stopAnimating()
+        self.isLoadingNextPage = false
+        MBProgressHUD.hideHUDForView(self.view, animated: true)
+      })
+      
+    } else {
+      print("loading user's saved posts")
+      user.getSavedPosts(byThisDate, callback: { (posts, error) -> Void in
+        if let posts = posts {
+          if posts.count == 0 {
+            self.isEndOfFeed = true
+          }
+          
+          for p in posts {
+            self.posts.append(p)
+          }
+          self.tableView.reloadData()
+          
+        } else {
+          print(error)
+          self.isEndOfFeed = true
+        }
+        
+        self.noMoreResultLabel.hidden = !self.isEndOfFeed
+        self.refreshControl.endRefreshing()
+        self.loadingView.stopAnimating()
+        self.isLoadingNextPage = false
+        MBProgressHUD.hideHUDForView(self.view, animated: true)
+      })
+    }
+    
+  }
+  
+  func refreshProfile() {
     if user == nil {
       user = User.currentUser()
       isCurrentUser = true
@@ -52,6 +151,8 @@ class UserTimelineViewController: UIViewController {
         isCurrentUser = true
         segmentPreGap.constant = 15
         segmentHeight.constant = 28
+        // Reload if any change in current user's profile
+        user = User.currentUser()
       } else {
         // Dont show the segment
         segmentPreGap.constant = 0
@@ -102,59 +203,6 @@ class UserTimelineViewController: UIViewController {
     avatarImageView.clipsToBounds = true
     bigAvatarImageView.setImageWithURL(NSURL(string: user.avatar!.url!)!)
     bigAvatarImageView.clipsToBounds = true
-    
-    tableView.dataSource = self
-    tableView.delegate = self
-    
-    // Refresh control
-    refreshControl.addTarget(self, action: Selector("loadData"), forControlEvents: UIControlEvents.ValueChanged)
-    tableView.addSubview(refreshControl)
-    
-    // Add the activity Indicator for table footer for infinity load
-    let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
-    loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-    loadingView.center = tableFooterView.center
-    loadingView.hidesWhenStopped = true
-    tableFooterView.addSubview(loadingView)
-    // Initialize the noMoreResult
-    noMoreResultLabel.frame = tableFooterView.frame
-    noMoreResultLabel.text = "No more result"
-    noMoreResultLabel.textAlignment = NSTextAlignment.Center
-    noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
-    noMoreResultLabel.textColor = UIColor.grayColor()
-    noMoreResultLabel.hidden = true
-    tableFooterView.addSubview(noMoreResultLabel)
-    tableView.tableFooterView = tableFooterView
-    
-    MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-    loadData()
-  }
-  
-  func loadData() {
-    print("in loadData")
-    user.getPosts(NSDate(), callback: { (posts, error) -> Void in
-      print("loading user's post")
-      if let posts = posts {
-        if posts.count == 0 {
-          self.isEndOfFeed = true
-        }
-        
-        for p in posts {
-          self.posts.append(p)
-        }
-        self.tableView.reloadData()
-        
-      } else {
-        print(error)
-        self.isEndOfFeed = true
-      }
-      
-      self.noMoreResultLabel.hidden = !self.isEndOfFeed
-      self.refreshControl.endRefreshing()
-      self.loadingView.stopAnimating()
-      self.isLoadingNextPage = false
-      MBProgressHUD.hideHUDForView(self.view, animated: true)
-    })
   }
   
   @IBAction func onBack(sender: UIButton) {
@@ -202,6 +250,12 @@ class UserTimelineViewController: UIViewController {
     }
   }
   
+  @IBAction func onCategoryChanged(sender: UISegmentedControl) {
+    isEndOfFeed = false
+    dataToLoad = sender.selectedSegmentIndex
+    loadNewestData()
+  }
+  
   override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     if let navController = segue.destinationViewController as? UINavigationController {
       if let postVC = navController.topViewController as? PostViewController {
@@ -222,6 +276,15 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     let cell = tableView.dequeueReusableCellWithIdentifier("simplifiedItemCell", forIndexPath: indexPath) as! SimplifiedItemCell
     cell.item = posts[indexPath.row]
     
+    // Infinite load if last cell
+    if !isLoadingNextPage && !isEndOfFeed {
+      if indexPath.row == posts.count - 1 {
+        loadingView.startAnimating()
+        isLoadingNextPage = true
+        loadDataSince(cell.item.updatedAt!)
+      }
+    }
+
     return cell
   }
   

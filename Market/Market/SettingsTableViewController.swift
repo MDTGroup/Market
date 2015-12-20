@@ -16,24 +16,25 @@ class SettingsTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         initControls()
-        
-        if let currentUser = User.currentUser() {
-            self.fullnameLabel.text = currentUser.fullName
-            
-            //load avatar
-            if let imageFile = currentUser.avatar {
-                imageFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
-                    self.imagePickerView.image = UIImage(data: data!)
-                }
-            } else {
-                print("User has not profile picture")
-            }
-        }
-        
     }
-    
+  
+  override func viewWillAppear(animated: Bool) {
+    // The avatar, name may chang during edit profile, when go back, need to reload
+    if let currentUser = User.currentUser() {
+      self.fullnameLabel.text = currentUser.fullName
+      
+      //load avatar
+      if let imageFile = currentUser.avatar {
+        imageFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
+          self.imagePickerView.image = UIImage(data: data!)
+        }
+      } else {
+        print("User has not profile picture")
+      }
+    }
+  }
+  
     func initControls() {
         self.imagePickerView.layer.cornerRadius = self.imagePickerView.frame.size.width / 2
         self.imagePickerView.clipsToBounds = true

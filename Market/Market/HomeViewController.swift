@@ -128,6 +128,7 @@ class HomeViewController: UIViewController {
   }
   
   @IBAction func onCategoryChanged(sender: UISegmentedControl) {
+    isEndOfFeed = false
     switch sender.selectedSegmentIndex {
     case 0: loadDataBy = NewsfeedType.Newest
     case 1: loadDataBy = NewsfeedType.Following
