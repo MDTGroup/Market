@@ -19,9 +19,9 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var switchCellFollowing: UISwitch!
     @IBOutlet weak var switchCellKeyword: UISwitch!
     
-    var switchStateSaved = false
-    var switchStateFollowing = false
-    var switchStateKeyword = false
+    var switchStateSaved = true
+    var switchStateFollowing = true
+    var switchStateKeyword = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
