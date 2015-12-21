@@ -29,7 +29,8 @@ class KeywordsViewController: UIViewController {
         
         //When button ok is pressed, then ...
         let ok = UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
-            User.currentUser()?.addKeyword((loginTextField?.text)!, callback: { (success, error: NSError?) -> Void in
+            let addedString = ((loginTextField?.text)!).lowercaseString
+            User.currentUser()?.addKeyword(addedString, callback: { (success, error: NSError?) -> Void in
                 guard error == nil else {
                     print(error)
                     return
