@@ -21,7 +21,7 @@ class HomeViewController: UIViewController {
   var isEndOfFeed = false
   var noMoreResultLabel = UILabel()
   var selectedPostIndex: Int!
-
+  
   var posts = [Post]()
   var loadDataBy = NewsfeedType.Newest
   
@@ -188,9 +188,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     cell.item = posts[indexPath.row]
     cell.delegate = self
     
-    // Infinite load if last cell
+    // Infinite load if about to reach last cell
     if !isLoadingNextPage && !isEndOfFeed {
-      if indexPath.row == posts.count - 1 {
+      if indexPath.row >= posts.count - 2 {
         loadingView.startAnimating()
         isLoadingNextPage = true
         loadDataSince(cell.item.createdAt!)
