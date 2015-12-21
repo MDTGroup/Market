@@ -14,13 +14,12 @@ class KeywordsViewController: UIViewController {
 
     @IBOutlet weak var tableview: UITableView!
     
-    var dataKeyword = User.currentUser()?.keywords
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.tableview.dataSource = self
-        self.tableview.delegate  = self
+        tableview.dataSource = self
+        tableview.delegate  = self
+        tableview.reloadData()
     }
     
     @IBAction func onAddTap(sender: AnyObject) {
@@ -29,13 +28,15 @@ class KeywordsViewController: UIViewController {
         
         //When button ok is pressed, then ...
         let ok = UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
-            User.currentUser()?.addKeyword((loginTextField?.text)!, callback: { (success, error: NSError?) -> Void in
-                guard error == nil else {
-                    print(error)
-                    return
-                }
-                self.tableview.reloadData()
-            })
+            if let currentUser = User.currentUser() {
+                currentUser.addKeyword((loginTextField?.text)!, callback: { (success, error: NSError?) -> Void in
+                    guard error == nil else {
+                        print(error)
+                        return
+                    }
+                    self.tableview.reloadData()
+                })
+            }
         })
         
         //When button cancel is presses, then…
@@ -69,13 +70,15 @@ extension KeywordsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
-            User.currentUser()?.removeKeyword((User.currentUser()?.keywords[indexPath.row])!, callback: { (success, error: NSError?) -> Void in
-                guard error == nil else {
-                    print(error)
-                    return
-                }
-                self.tableview.reloadData()
-            })
+            if let currentUser = User.currentUser() {
+                currentUser.removeKeyword(currentUser.keywords[indexPath.row], callback: { (success, error: NSError?) -> Void in
+                    guard error == nil else {
+                        print(error)
+                        return
+                    }
+                    self.tableview.reloadData()
+                })
+            }
         }
     }
     

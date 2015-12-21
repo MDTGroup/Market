@@ -24,16 +24,18 @@ class FollowingViewController: UIViewController {
     
     
     func loadData() {
-        User.currentUser()?.getFollowings({ (users, error) -> Void in
-            guard error == nil else {
-                print(error)
-                return
-            }
-            if let users = users {
-                self.queryArray = users
-                self.tableView.reloadData()
-            }
-        })
+        if let currentUser = User.currentUser() {
+            currentUser.getFollowings({ (users, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    return
+                }
+                if let users = users {
+                    self.queryArray = users
+                    self.tableView.reloadData()
+                }
+            })
+        }
     }
 }
 

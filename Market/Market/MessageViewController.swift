@@ -54,7 +54,8 @@ class MessageViewController: UIViewController {
         tableFooterView.addSubview(noMoreResultLabel)
         tableView.tableFooterView = tableFooterView
         
-        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        hud.labelText = "Loading messages..."
         
         if conversations.count == 0 {
             loadNewestData()

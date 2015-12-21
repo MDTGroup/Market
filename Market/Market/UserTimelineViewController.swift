@@ -38,7 +38,7 @@ class UserTimelineViewController: UIViewController {
   var noMoreResultLabel = UILabel()
   var selectedPostIndex: Int!
   var iFollowThisUser = false
-  var dataToLoad: Int = 0 // 0: user's posts, 1: user's saved posts
+  var dataToLoad = 0 // 0: user's posts, 1: user's saved posts
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -189,7 +189,7 @@ class UserTimelineViewController: UIViewController {
     
     // Load follower (who follows this user)
     followerCountLabel.text = "0"
-    user.getNumFollowings { (numFollower, error) -> Void in
+    user.getNumFollowers { (numFollower, error) -> Void in
         guard error == nil else {
             print(error)
             return

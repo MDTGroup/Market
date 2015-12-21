@@ -18,7 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         setupForParse(application, launchOptions: launchOptions)
         setupPushNotifications(application, launchOptions: launchOptions)
-        if let _ = User.currentUser() {
+        if User.currentUser() != nil {
             let vc = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.home)
             window?.rootViewController = vc
         }

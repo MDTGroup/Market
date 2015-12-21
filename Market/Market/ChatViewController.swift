@@ -10,6 +10,7 @@ import UIKit
 import JSQMessagesViewController
 import Foundation
 import MediaPlayer
+import MBProgressHUD
 
 class ChatViewController: JSQMessagesViewController {
     
@@ -34,14 +35,14 @@ class ChatViewController: JSQMessagesViewController {
         if let currentUser = User.currentUser() {
             senderId = currentUser.objectId!
             senderDisplayName = currentUser.fullName
-        }
-        
-        for user in conversation.users {
-            if user.objectId != User.currentUser()?.objectId {
-                user.fetchIfNeededInBackgroundWithBlock({ (result, error) -> Void in
-                    self.title = user.fullName
-                })
-                break
+            
+            for user in conversation.users {
+                if user.objectId != currentUser.objectId {
+                    user.fetchIfNeededInBackgroundWithBlock({ (result, error) -> Void in
+                        self.title = user.fullName
+                    })
+                    break
+                }
             }
         }
         
@@ -287,17 +288,22 @@ extension ChatViewController {
 //}
 
 extension ChatViewController {
-    static func showChat(post: Post) {
-        if post.user.objectId == User.currentUser()?.objectId {
-            print("Cannot message your self")
-            return
+    static func show(post: Post) {
+        if let currentUser = User.currentUser() {
+            if post.user.objectId == currentUser.objectId {
+                print("Cannot message your self")
+                return
+            }
         }
         
         if let tabBarController = UIApplication.sharedApplication().delegate?.window??.rootViewController as? UITabBarController {
             let storyboard = UIStoryboard(name: "Messages", bundle: nil)
             if let messageVC = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.messageViewController) as? MessageViewController, chatVC = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.chatViewController) as? ChatViewController {
+                let hud = MBProgressHUD.showHUDAddedTo(tabBarController.view, animated: true)
+                hud.labelText = "Opening chat..."
                 Conversation.addConversation(post.user, post: post, callback: { (conversation, error) -> Void in
                     guard error == nil else {
+                        hud.hide(true)
                         print(error)
                         return
                     }
@@ -309,6 +315,8 @@ extension ChatViewController {
                                 print(error)
                                 return
                             }
+                            
+                            hud.hide(true)
                             navController.popToRootViewControllerAnimated(false)
                             navController.pushViewController(messageVC, animated: false)
                             navController.pushViewController(chatVC, animated: false)
