@@ -13,7 +13,16 @@ class SettingsTableViewController: UITableViewController {
 
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var imagePickerView: UIImageView!
-
+    
+    
+    @IBOutlet weak var switchCellSaved: UISwitch!
+    @IBOutlet weak var switchCellFollowing: UISwitch!
+    @IBOutlet weak var switchCellKeyword: UISwitch!
+    
+    var switchStateSaved = false
+    var switchStateFollowing = false
+    var switchStateKeyword = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initControls()
@@ -42,6 +51,41 @@ class SettingsTableViewController: UITableViewController {
     
     @IBAction func onCloseSettings(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    //MARK:Get State of Switches: Saved, Following, Keyword
+    @IBAction func onChangeSwitchSaved(sender: AnyObject) {
+        
+        if self.switchStateSaved == true  {
+            self.switchStateSaved = false
+        } else {
+             self.switchStateSaved  = true
+        }
+        self.switchCellSaved.on = self.switchStateSaved
+        print("Switch saved da duoc nhan", self.switchStateSaved)
+    }
+    
+    
+    @IBAction func onChangeSwitchFollowing(sender: AnyObject) {
+        if self.switchStateFollowing == true  {
+            self.switchStateFollowing = false
+        } else {
+            self.switchStateFollowing  = true
+        }
+        self.switchCellFollowing.on = self.switchStateFollowing
+        print("Switch Following  da duoc nhan", self.switchStateFollowing)
+
+    }
+    
+    @IBAction func onChangeSwitchKeyword(sender: AnyObject) {
+        if self.switchStateKeyword == true  {
+            self.switchStateKeyword = false
+        } else {
+            self.switchStateKeyword  = true
+        }
+        self.switchCellKeyword.on = self.switchStateKeyword
+        print("Switch Keyword  da duoc nhan", self.switchStateKeyword)
+        
+
     }
     
     @IBAction func onLogout(sender: AnyObject) {
