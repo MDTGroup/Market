@@ -27,10 +27,14 @@ extension Follow {
             return
         }
         
-        let follow = Follow()
-        follow.from = User.currentUser()!
-        follow.to = targetUser
-        follow.saveInBackgroundWithBlock(callback)
+        if let currentUser = User.currentUser() {
+            let follow = Follow()
+            follow.from = currentUser
+            follow.to = targetUser
+            follow.saveInBackgroundWithBlock(callback)
+            
+            currentUser.numFollowing = nil
+        }
     }
     
     static func unfollow(targetUser: User, callback: PFBooleanResultBlock) {
@@ -49,6 +53,7 @@ extension Follow {
                 
                 PFObject.deleteAllInBackground(followings, block: callback)
             })
+            currentUser.numFollowing = nil
         }
     }
 }

@@ -178,27 +178,23 @@ class UserTimelineViewController: UIViewController {
     editProfileButton.layer.cornerRadius = 3
     
     // Load following (this user follows people)
-    followingCountLabel.text = ""
-    user.getFollowings { (users, error) -> Void in
+    followingCountLabel.text = "0"
+    user.getNumFollowings { (numFollowing, error) -> Void in
         guard error == nil else {
             print(error)
             return
         }
-      if users != nil {
-        self.followingCountLabel.text = "\((users?.count)!)"
-      } else {
-        self.followingCountLabel.text = "0"
-      }
-    } // Why sometimes it crashes here EXC_BAD_ACCESS code=2
+        self.followingCountLabel.text = "\(numFollowing)"
+    }
     
     // Load follower (who follows this user)
-    followerCountLabel.text = ""
-    user.getFollowers { (users, error) -> Void in
-      if users != nil {
-        self.followerCountLabel.text = "\((users?.count)!)"
-      } else {
-        self.followerCountLabel.text = "0"
-      }
+    followerCountLabel.text = "0"
+    user.getNumFollowings { (numFollower, error) -> Void in
+        guard error == nil else {
+            print(error)
+            return
+        }
+        self.followerCountLabel.text = "\(numFollower)"
     }
     
     userLabel.text = user.fullName

@@ -21,6 +21,10 @@ class User: PFUser {
     @NSManaged var votedPosts: PFRelation
     @NSManaged var keywords: [String]
     
+    // Reset to nil to make it get data from server
+    var numFollowing: Int32?
+    var numFollower: Int32?
+    
     func getPosts(lastUpdated:NSDate?, callback: PostResultBlock) {
         if let query = Post.query() {
             query.limit = 20
@@ -42,6 +46,38 @@ class User: PFUser {
                 if let posts = pfObj as? [Post] {
                     callback(posts: posts, error: nil)
                 }
+            })
+        }
+    }
+    
+    func getNumFollowings(callback: PFIntegerResultBlock) {
+        if let numFollowing = numFollowing {
+            callback(numFollowing, nil)
+            return
+        }
+        if let query = Follow.query() {
+            query.selectKeys(["to"])
+            query.includeKey("to")
+            query.whereKey("from", equalTo: self)
+            query.countObjectsInBackgroundWithBlock({ (num, error) -> Void in
+                self.numFollowing = num
+                callback(num, error)
+            })
+        }
+    }
+    
+    func getNumFollowers(callback: PFIntegerResultBlock) {
+        if let numFollower = numFollower {
+            callback(numFollower, nil)
+            return
+        }
+        if let query = Follow.query() {
+            query.selectKeys(["from"])
+            query.includeKey("from")
+            query.whereKey("to", equalTo: self)
+            query.countObjectsInBackgroundWithBlock({ (num, error) -> Void in
+                self.numFollower = num
+                callback(num, error)
             })
         }
     }
