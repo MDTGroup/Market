@@ -27,8 +27,8 @@ class MessageViewController: UIViewController {
         
         initControls()
         
-        if self.conversations.count > 0 {
-            self.title =  self.conversations[0].post.title
+        if conversations.count > 0 {
+            title =  conversations[0].post.title
         }
         
         let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
@@ -142,5 +142,8 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath((indexPath), animated: true)
+        
+        let conversation = conversations[indexPath.row]
+        conversation.markRead()
     }
 }

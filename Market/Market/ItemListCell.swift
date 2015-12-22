@@ -47,6 +47,10 @@ class ItemListCell: UITableViewCell {
             timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
             priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
+            
+            if let currentUser = User.currentUser(), userObjectId = currentUser.objectId {
+                self.backgroundColor = conversation.readUsers.contains(userObjectId) ? UIColor.whiteColor() : UIColor.grayColor()
+            }
         }
     }
 

@@ -16,8 +16,25 @@ class Conversation: PFObject, PFSubclassing {
     
     @NSManaged var users: [User]
     @NSManaged var usersChooseHideConversation: [User]
+    @NSManaged var readUsers: [String]
     @NSManaged var post: Post
     @NSManaged var messages: PFRelation
+    
+    func markRead() {
+        if let currentUser = User.currentUser(), userObjectId = currentUser.objectId {
+            if !readUsers.contains(userObjectId) {
+                readUsers.append(userObjectId)
+                var params = [String : AnyObject]()
+                params["id"] = objectId!
+                PFCloud.callFunctionInBackground("conversation_markRead", withParameters: params) { (result, error) -> Void in
+                    guard error == nil else {
+                        print(error)
+                        return
+                    }
+                }
+            }
+        }
+    }
     
     func getMessages(lastCreatedAt: NSDate?, callback: MessageResultBlock) {
         let query = messages.query()
@@ -51,26 +68,6 @@ class Conversation: PFObject, PFSubclassing {
         }
     }
     
-    func hideConversation() {
-        if let currentUser = User.currentUser() {
-            if !usersChooseHideConversation.contains(currentUser) {
-                usersChooseHideConversation.append(currentUser)
-                saveInBackground()
-            }
-        }
-    }
-    
-    func showConversation() {
-        if let currentUser = User.currentUser() {
-            if usersChooseHideConversation.contains(currentUser) {
-                if let index = usersChooseHideConversation.indexOf(currentUser) {
-                    usersChooseHideConversation.removeAtIndex(index)
-                    saveInBackground()
-                }
-            }
-        }
-    }
-    
     static func addConversation(toUser: User, post: Post, callback: ConversationResultBlock) {
         if let currentUser = User.currentUser() {
             if currentUser.objectId == toUser.objectId {
@@ -100,7 +97,9 @@ class Conversation: PFObject, PFSubclassing {
                                     return
                                 }
                                 conversation.post.fetchIfNeededInBackgroundWithBlock({ (post, error) -> Void in
-                                    callback(conversation: conversation, error: nil)
+                                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                        callback(conversation: conversation, error: nil)
+                                    })
                                 })
                             })
                         } else if conversations.count == 1 {
@@ -121,8 +120,8 @@ class Conversation: PFObject, PFSubclassing {
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
             query.includeKey("post")
             query.includeKey("users")
-            query.whereKey("users", containedIn: [currentUser])
-            query.whereKey("usersChooseHideConversation", notContainedIn: [currentUser])
+            query.whereKey("users", equalTo: currentUser)
+            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser)
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(conversations: nil, error: error)
@@ -141,8 +140,8 @@ class Conversation: PFObject, PFSubclassing {
             query.includeKey("post")
             query.includeKey("users")
             query.whereKey("post", equalTo: post)
-            query.whereKey("users", containedIn: [currentUser])
-            query.whereKey("usersChooseHideConversation", notContainedIn: [currentUser])
+            query.whereKey("users", equalTo: currentUser)
+            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser)
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(conversations: nil, error: error)

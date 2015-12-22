@@ -220,8 +220,11 @@ class ItemCell: UITableViewCell {
         }
     }
     
+    @IBAction func onMessage(sender: UIButton) {
+        ParentChatViewController.show(item)
+    }
+    
     func tapOnProfile(gesture: UITapGestureRecognizer) {
-        print("i tap on profile pic/name")
         self.delegate?.itemCell?(self, tapOnProfile: true)
     }
 }

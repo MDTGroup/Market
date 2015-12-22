@@ -41,7 +41,7 @@ class ChatViewController: JSQMessagesViewController {
         super.viewWillAppear(animated)
         //        collectionView!.collectionViewLayout.springinessEnabled = true
         inputToolbar?.contentView?.leftBarButtonItem = nil
-        timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
     }
     
     override func viewWillDisappear(animated: Bool) {

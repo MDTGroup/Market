@@ -389,6 +389,9 @@ class DetailViewController: UIViewController {
         }
     }
     
+    @IBAction func onMessage(sender: UIButton) {
+        ParentChatViewController.show(post)
+    }
 }
 
 extension DetailViewController {

@@ -21,7 +21,9 @@ class MessageCell: UITableViewCell {
             timeElapedLabel.text = ""
             self.userFullname.text = ""
             
-            if let currentUser = User.currentUser() {
+            if let currentUser = User.currentUser(), userObjectId = currentUser.objectId {
+                self.backgroundColor = conversation.readUsers.contains(userObjectId) ? UIColor.whiteColor() : UIColor.grayColor()
+                
                 for user in conversation.users {
                     if user.objectId != currentUser.objectId {
                         user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in

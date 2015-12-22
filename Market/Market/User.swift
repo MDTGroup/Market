@@ -196,16 +196,39 @@ class User: PFUser {
     func getNotifications(lastUpdatedAt: NSDate?, callback: NotificationResultBlock) {
         if let query = Notification.query() {
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
+            query.includeKey("post")
             query.includeKey("fromUser")
             query.whereKey("toUsers", equalTo: self)
-            query.includeKey("post")
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(notifications: nil, error: error)
                     return
                 }
                 if let notifications = pfObjs as? [Notification] {
-                    callback(notifications: notifications, error: nil)
+                    
+                    if let queryForUnread = Notification.query() {
+                        QueryUtils.bindQueryParamsForInfiniteLoading(queryForUnread, lastUpdatedAt: lastUpdatedAt)
+                        queryForUnread.whereKey("toUsers", equalTo: self)
+                        queryForUnread.whereKey("readUsers", equalTo: self)
+                        
+                        queryForUnread.findObjectsInBackgroundWithBlock({ (notificationsUnread, error) -> Void in
+                            guard error == nil else {
+                                callback(notifications: nil, error: error)
+                                return
+                            }
+                            if let notificationsUnread = notificationsUnread as? [Notification] {
+                                for notification in notifications {
+                                    for notificationUnread in notificationsUnread {
+                                        if notification.objectId == notificationUnread.objectId {
+                                            notification.isRead = true
+                                        }
+                                    }
+                                }
+                                callback(notifications: notifications, error: nil)
+                            }
+                        })
+                    }
+                    
                 }
             })
         }

@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol NotificationTableViewCellDelegate {
+    func notificationTableViewCell(notificationTableViewCell: UITableViewCell, user: User)
+}
+
 class NotificationTableViewCell: UITableViewCell {
     
     @IBOutlet weak var itemImageView: UIImageView!
@@ -21,6 +25,7 @@ class NotificationTableViewCell: UITableViewCell {
     
     var notification: Notification! {
         didSet {
+            self.backgroundColor = UIColor.whiteColor()
             let post = notification.post
             self.sellerLabel.text = ""
             notification.fromUser.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
@@ -34,7 +39,6 @@ class NotificationTableViewCell: UITableViewCell {
                 self.sellerLabel.text = self.notification.fromUser.fullName
             }
             
-            // Set Item
             if post.medias.count > 0 {
                 itemImageView.alpha = 0.0
                 UIView.animateWithDuration(0.3, animations: {
@@ -48,10 +52,10 @@ class NotificationTableViewCell: UITableViewCell {
             priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
             type.text = NotificationType.fromInt(notification.type)
+            
+            self.backgroundColor = notification.isRead ? UIColor.whiteColor() : UIColor.grayColor()
         }
     }
-    
-    var tapGesture: UITapGestureRecognizer!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -60,11 +64,5 @@ class NotificationTableViewCell: UITableViewCell {
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
-        tapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
-        avatarImageView.addGestureRecognizer(tapGesture)
-    }
-    
-    func tapOnProfile(gesture: UITapGestureRecognizer) {
-        //        self.delegate?.itemListCell?(self, tapOnProfile: true)
     }
 }

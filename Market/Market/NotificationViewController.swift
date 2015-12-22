@@ -29,6 +29,16 @@ class NotificationViewController: UIViewController {
         hud.labelText = "Loading notifications..."
         
         loadNewestData()
+        self.tabBarController?.tabBar.selectedItem?.badgeValue = nil
+        Notification.countUnread { (numUnread, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+            if numUnread > 0 {
+                self.tabBarController?.tabBar.selectedItem?.badgeValue = "\(numUnread)"
+            }
+        }
     }
     
     func initControls() {
@@ -84,8 +94,6 @@ class NotificationViewController: UIViewController {
                     self.noMoreResultLabel.hidden = !self.isEndOfFeed
                     self.refreshControl.endRefreshing()
                     self.loadingView.stopAnimating()
-                    
-                    self.tabBarController?.tabBar.selectedItem?.badgeValue = "\(self.notifications.count)"
                 }
             })
         }
@@ -114,7 +122,11 @@ extension NotificationViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let vc = DetailViewController.instantiateViewController
-        vc.post = notifications[indexPath.row].post
+        let notification = notifications[indexPath.row]
+        notification.markRead()
+        tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
+        vc.post = notification.post
         presentViewController(vc, animated: true, completion: nil)
+        
     }
 }
