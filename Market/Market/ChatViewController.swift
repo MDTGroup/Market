@@ -235,10 +235,10 @@ extension ChatViewController {
                 print(error)
                 return
             }
-            JSQSystemSoundPlayer.jsq_playMessageSentSound()
             self.loadMessages()
+            JSQSystemSoundPlayer.jsq_playMessageSentSound()
         }
-        finishSendingMessage()
+        self.finishSendingMessage()
     }
 }
 

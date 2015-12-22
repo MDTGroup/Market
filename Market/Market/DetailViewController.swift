@@ -390,7 +390,7 @@ class DetailViewController: UIViewController {
     }
     
     @IBAction func onMessage(sender: UIButton) {
-        ParentChatViewController.show(post)
+        ParentChatViewController.show(post, fromUser: User.currentUser()!, toUser: post.user)
     }
 }
 

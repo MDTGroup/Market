@@ -221,7 +221,7 @@ class ItemCell: UITableViewCell {
     }
     
     @IBAction func onMessage(sender: UIButton) {
-        ParentChatViewController.show(item)
+        ParentChatViewController.show(item, fromUser: User.currentUser()!, toUser: item.user)
     }
     
     func tapOnProfile(gesture: UITapGestureRecognizer) {

@@ -102,7 +102,7 @@ extension AppDelegate {
     func setupPushNotifications(application: UIApplication, launchOptions: [NSObject: AnyObject]?) {
         
         if let launchOptions = launchOptions, notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] as? [NSObject : AnyObject]  {
-            handleNotificationPayload(notificationPayload)
+            PushNotification.handlePayload(application, userInfo: notificationPayload)
         }
 
         if application.applicationState != UIApplicationState.Background {
@@ -147,26 +147,9 @@ extension AppDelegate {
     }
 
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
-        handleNotificationPayload(userInfo)
+        PushNotification.handlePayload(application, userInfo: userInfo)
         if application.applicationState == UIApplicationState.Inactive {
              PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
-        }
-    }
-    
-    func handleNotificationPayload(userInfo: [NSObject : AnyObject]) {
-        if let postId = userInfo["postId"] as? String {
-            let post = Post(withoutDataWithObjectId: postId)
-            post.fetchInBackgroundWithBlock({ (result, error) -> Void in
-                guard error == nil else {
-                    print(error)
-                    return
-                }
-                if let result = result as? Post {
-                    let vc = DetailViewController.instantiateViewController
-                    vc.post = result
-                    self.window?.rootViewController?.presentViewController(vc, animated: true, completion: nil)
-                }
-            })
         }
     }
 }

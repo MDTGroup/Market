@@ -52,6 +52,9 @@ class Conversation: PFObject, PFSubclassing {
     }
     
     func addMessage(currentUser: User, text: String, callback: PFBooleanResultBlock) {
+        if text.isEmpty {
+            return
+        }
         let message = Message()
         message.user = currentUser
         message.text = text
@@ -63,55 +66,56 @@ class Conversation: PFObject, PFSubclassing {
             }
             if success {
                 self.messages.addObject(message)
+                for user in self.users where user.objectId !=  currentUser.objectId {
+                    message.sendPushNotification(user.objectId!, postId: self.post.objectId!, text: text)
+                }
                 self.saveInBackgroundWithBlock(callback)
             }
         }
     }
     
-    static func addConversation(toUser: User, post: Post, callback: ConversationResultBlock) {
-        if let currentUser = User.currentUser() {
-            if currentUser.objectId == toUser.objectId {
-                return
-            }
-            if let query = Conversation.query() {
-                let users = [currentUser, toUser]
-                query.includeKey("post")
-                query.whereKey("post", equalTo: post)
-                query.whereKey("users", containsAllObjectsInArray: users)
-                query.findObjectsInBackgroundWithBlock({ (results, error) -> Void in
-                    if let conversations = results as? [Conversation] {
-                        if conversations.count == 0 {
-                            let conversation = Conversation()
-                            conversation.users = users
-                            conversation.usersChooseHideConversation = []
-                            conversation.post = post
-                            let acl = PFACL()
-                            acl.setWriteAccess(true, forUser: currentUser)
-                            acl.setWriteAccess(true, forUser: toUser)
-                            acl.setReadAccess(true, forUser: currentUser)
-                            acl.setReadAccess(true, forUser: toUser)
-                            conversation.ACL = acl
-                            conversation.saveInBackgroundWithBlock({ (success, error) -> Void in
-                                guard error == nil else {
-                                    callback(conversation: nil, error: error)
-                                    return
-                                }
-                                conversation.post.fetchIfNeededInBackgroundWithBlock({ (post, error) -> Void in
-                                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                                        callback(conversation: conversation, error: nil)
-                                    })
+    static func addConversation(fromUser: User, toUser: User, post: Post, callback: ConversationResultBlock) {
+        if fromUser.objectId == toUser.objectId {
+            return
+        }
+        if let query = Conversation.query() {
+            let users = [fromUser, toUser]
+            query.includeKey("post")
+            query.whereKey("post", equalTo: post)
+            query.whereKey("users", containsAllObjectsInArray: users)
+            query.findObjectsInBackgroundWithBlock({ (results, error) -> Void in
+                if let conversations = results as? [Conversation] {
+                    if conversations.count == 0 {
+                        let conversation = Conversation()
+                        conversation.users = users
+                        conversation.usersChooseHideConversation = []
+                        conversation.post = post
+                        let acl = PFACL()
+                        acl.setWriteAccess(true, forUser: fromUser)
+                        acl.setWriteAccess(true, forUser: toUser)
+                        acl.setReadAccess(true, forUser: fromUser)
+                        acl.setReadAccess(true, forUser: toUser)
+                        conversation.ACL = acl
+                        conversation.saveInBackgroundWithBlock({ (success, error) -> Void in
+                            guard error == nil else {
+                                callback(conversation: nil, error: error)
+                                return
+                            }
+                            conversation.post.fetchIfNeededInBackgroundWithBlock({ (post, error) -> Void in
+                                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                    callback(conversation: conversation, error: nil)
                                 })
                             })
-                        } else if conversations.count == 1 {
-                            let conversation = conversations[0]
-                            conversation.usersChooseHideConversation = []
-                            callback(conversation: conversation, error: nil)
-                        } else {
-                            print("Why? Conversations should only have one with these post")
-                        }
+                        })
+                    } else if conversations.count == 1 {
+                        let conversation = conversations[0]
+                        conversation.usersChooseHideConversation = []
+                        callback(conversation: conversation, error: nil)
+                    } else {
+                        print("Why? Conversations should only have one with these post")
                     }
-                })
-            }
+                }
+            })
         }
     }
     
@@ -151,6 +155,14 @@ class Conversation: PFObject, PFSubclassing {
                     callback(conversations: conversations, error: nil)
                 }
             })
+        }
+    }
+    
+    static func countUnread(callback: PFIntegerResultBlock) {
+        if let query = Conversation.query(), currentUser = User.currentUser() {
+            query.whereKey("users", equalTo: currentUser)
+            query.whereKey("readUsers", notEqualTo: currentUser)
+            query.countObjectsInBackgroundWithBlock(callback)
         }
     }
 }

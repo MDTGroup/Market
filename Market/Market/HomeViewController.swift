@@ -28,6 +28,7 @@ class HomeViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupForInstallation()
+    
     // Do any additional setup after loading the view, typically from a nib.
     tableView.dataSource = self
     tableView.delegate = self
@@ -60,18 +61,7 @@ class HomeViewController: UIViewController {
     MBProgressHUD.showHUDAddedTo(self.view, animated: true)
     loadNewestData()
     
-    initTabBar()
-  }
-  
-  func initTabBar() {
-    if let tabBarItem = tabBarController?.tabBar.items![1] {
-      tabBarItem.image = UIImage(named: "message")
-      tabBarItem.title = "Messages"
-    }
-    if let tabBarItem = tabBarController?.tabBar.items![3] {
-      tabBarItem.image = UIImage(named: "noti")
-      tabBarItem.title = "Notifications"
-    }
+    TabBarController.instance.initTabBar(self.tabBarController!)
   }
   
   func setupForInstallation() {

@@ -123,12 +123,10 @@ class ParentChatViewController: UIViewController {
 }
 
 extension ParentChatViewController {
-    static func show(post: Post) {
-        if let currentUser = User.currentUser() {
-            if post.user.objectId == currentUser.objectId {
-                print("Cannot message your self")
-                return
-            }
+    static func show(post: Post, fromUser: User, toUser: User) {
+        if fromUser.objectId == toUser.objectId {
+            print("Cannot chat your self")
+            return
         }
         
         if let tabBarController = UIApplication.sharedApplication().delegate?.window??.rootViewController as? UITabBarController {
@@ -144,7 +142,7 @@ extension ParentChatViewController {
                 
                 let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
                 hud.labelText = "Opening chat..."
-                Conversation.addConversation(post.user, post: post, callback: { (conversation, error) -> Void in
+                Conversation.addConversation(fromUser, toUser: toUser, post: post, callback: { (conversation, error) -> Void in
                     guard error == nil else {
                         hud.hide(true)
                         print(error)
