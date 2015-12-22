@@ -28,6 +28,7 @@ class HomeViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setupForInstallation()
+    TabBarController.instance.initTabBar(self.tabBarController!)
     
     // Do any additional setup after loading the view, typically from a nib.
     tableView.dataSource = self
