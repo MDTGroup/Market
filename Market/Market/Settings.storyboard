@@ -92,6 +92,9 @@
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mb2-94-Iwd">
                                                     <rect key="frame" x="230" y="6" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="onChangeSwitchSaved:" destination="icx-xC-ESp" eventType="valueChanged" id="pIF-gh-n1A"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>
@@ -122,6 +125,9 @@
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ba7-PO-xae">
                                                     <rect key="frame" x="230" y="6" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="onChangeSwitchFollowing:" destination="icx-xC-ESp" eventType="valueChanged" id="Dll-5t-pLb"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>
@@ -150,8 +156,11 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sIl-yT-7LR">
-                                                    <rect key="frame" x="230" y="6" width="51" height="31"/>
+                                                <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="sIl-yT-7LR">
+                                                    <rect key="frame" x="230" y="4" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="onChangeSwitchKeyword:" destination="icx-xC-ESp" eventType="valueChanged" id="Vpm-h9-IjK"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>
@@ -216,6 +225,9 @@
                     <connections>
                         <outlet property="fullnameLabel" destination="mtO-Ki-VsE" id="k2l-wr-uT9"/>
                         <outlet property="imagePickerView" destination="64n-bd-gJt" id="kA6-Vd-TMA"/>
+                        <outlet property="switchCellFollowing" destination="ba7-PO-xae" id="LgT-Km-gj8"/>
+                        <outlet property="switchCellKeyword" destination="sIl-yT-7LR" id="ZXL-mj-qcG"/>
+                        <outlet property="switchCellSaved" destination="mb2-94-Iwd" id="dHZ-00-Q8e"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xUO-dR-p2K" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -552,7 +564,6 @@
         <!--Profile-->
         <scene sceneID="tHn-CC-iYt">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="QRe-fV-eBf" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="Isu-Xo-m5H" customClass="ProfileViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="qMm-na-qh2"/>
@@ -645,6 +656,7 @@
                         <outlet property="phoneField" destination="JoJ-23-hRy" id="Hy5-lv-JOf"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="QRe-fV-eBf" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1892" y="237"/>
         </scene>

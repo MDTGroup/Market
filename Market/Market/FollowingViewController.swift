@@ -19,23 +19,23 @@ class FollowingViewController: UIViewController {
 
         self.tableView.dataSource = self
         self.tableView.delegate  = self
+        
+        //Show data to tableview
         self.loadData()
     }
     
     
     func loadData() {
-        if let currentUser = User.currentUser() {
-            currentUser.getFollowings({ (users, error) -> Void in
-                guard error == nil else {
-                    print(error)
-                    return
-                }
-                if let users = users {
-                    self.queryArray = users
-                    self.tableView.reloadData()
-                }
-            })
-        }
+        User.currentUser()?.getFollowings({ (users, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+            if let users = users {
+                self.queryArray = users
+                self.tableView.reloadData()
+            }
+        })
     }
 }
 

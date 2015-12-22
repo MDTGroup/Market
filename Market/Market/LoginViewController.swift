@@ -24,10 +24,11 @@ class LoginViewController: UIViewController {
         //set focus to usernameField
         //self.usernameField.becomeFirstResponder()
         
+        
         // Add observer to detect when the keyboard will be shown
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
-        
+      
         
         
         //Looks for single or multiple taps.
@@ -35,6 +36,7 @@ class LoginViewController: UIViewController {
         self.view.addGestureRecognizer(tap)
 
     }
+    
     //Calls this function when the tap is recognized.
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
@@ -46,6 +48,11 @@ class LoginViewController: UIViewController {
 
     
     /*MARK: Fix bug when keyboard slides up*/
+    //Remove observers before you leave the view  to prevent unnecessary messages from being transmitted.
+    override func viewWillDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: self.view.window)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: self.view.window)
+    }
     
     func keyboardWillShow(sender: NSNotification) {
         let userInfo: [NSObject : AnyObject] = sender.userInfo!
