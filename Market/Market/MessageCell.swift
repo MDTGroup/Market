@@ -9,8 +9,6 @@
 import UIKit
 
 class MessageCell: UITableViewCell {
-
-    
     @IBOutlet weak var userImage: UIImageView!
     @IBOutlet weak var userFullname: UILabel!
     @IBOutlet weak var timeElapedLabel: UILabel!

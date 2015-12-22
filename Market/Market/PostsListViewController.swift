@@ -24,19 +24,28 @@ class PostsListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        initControls()
+        
+        let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        hud.labelText = "Loading posts..."
+        
+        loadNewestData()
+    }
+    
+    func initControls() {
         tableView.dataSource = self
         tableView.delegate = self
         
         // Refresh control
         refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
-        tableView.addSubview(refreshControl)
+        tableView.insertSubview(refreshControl, atIndex: 0)
         
         // Add the activity Indicator for table footer for infinity load
         let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
         loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         loadingView.center = tableFooterView.center
         loadingView.hidesWhenStopped = true
-        tableFooterView.addSubview(loadingView)
+        tableFooterView.insertSubview(loadingView, atIndex: 0)
         
         
         // Initialize the noMoreResult
@@ -48,11 +57,6 @@ class PostsListViewController: UIViewController {
         noMoreResultLabel.hidden = true
         tableFooterView.addSubview(noMoreResultLabel)
         tableView.tableFooterView = tableFooterView
-        
-        let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        hud.labelText = "Loading posts..."
-        loadNewestData()
-        
     }
     
     func loadNewestData() {

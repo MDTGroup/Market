@@ -25,34 +25,11 @@ class MessageViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tableView.dataSource = self
-        tableView.delegate = self
+        initControls()
         
         if self.conversations.count > 0 {
             self.title =  self.conversations[0].post.title
         }
-        
-        // Refresh control
-        refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
-        tableView.addSubview(refreshControl)
-        
-        // Add the activity Indicator for table footer for infinity load
-        let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
-        loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-        loadingView.center = tableFooterView.center
-        loadingView.hidesWhenStopped = true
-        tableFooterView.addSubview(loadingView)
-        
-        
-        // Initialize the noMoreResult
-        noMoreResultLabel.frame = tableFooterView.frame
-        noMoreResultLabel.text = "No more result"
-        noMoreResultLabel.textAlignment = NSTextAlignment.Center
-        noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
-        noMoreResultLabel.textColor = UIColor.grayColor()
-        noMoreResultLabel.hidden = true
-        tableFooterView.addSubview(noMoreResultLabel)
-        tableView.tableFooterView = tableFooterView
         
         let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         hud.labelText = "Loading messages..."
@@ -66,6 +43,33 @@ class MessageViewController: UIViewController {
             self.loadingView.stopAnimating()
             MBProgressHUD.hideHUDForView(self.view, animated: true)
         }   
+    }
+    
+    func initControls() {
+        tableView.dataSource = self
+        tableView.delegate = self
+        
+        // Refresh control
+        refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
+        tableView.insertSubview(refreshControl, atIndex: 0)
+        
+        // Add the activity Indicator for table footer for infinity load
+        let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
+        loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        loadingView.center = tableFooterView.center
+        loadingView.hidesWhenStopped = true
+        tableFooterView.insertSubview(loadingView, atIndex: 0)
+        
+        
+        // Initialize the noMoreResult
+        noMoreResultLabel.frame = tableFooterView.frame
+        noMoreResultLabel.text = "No more result"
+        noMoreResultLabel.textAlignment = NSTextAlignment.Center
+        noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
+        noMoreResultLabel.textColor = UIColor.grayColor()
+        noMoreResultLabel.hidden = true
+        tableFooterView.addSubview(noMoreResultLabel)
+        tableView.tableFooterView = tableFooterView
     }
     
     func loadNewestData() {
@@ -105,11 +109,11 @@ class MessageViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let chatVC = segue.destinationViewController as? ChatViewController,
-        cell = sender as? MessageCell {
-            if let indexPath = tableView.indexPathForCell(cell) {
-                chatVC.conversation = conversations[indexPath.row]
-            }
+        if let chatVC = segue.destinationViewController as? ParentChatViewController,
+            cell = sender as? MessageCell {
+                if let indexPath = tableView.indexPathForCell(cell) {
+                    chatVC.conversation = conversations[indexPath.row]
+                }
         }
     }
 }

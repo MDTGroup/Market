@@ -28,41 +28,17 @@ class ChatViewController: JSQMessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let navController = navigationController, messageVC = navController.viewControllers[navController.viewControllers.count - 2] as? MessageViewController {
-            messageVC.title = conversation.post.title
-        }
-        
         if let currentUser = User.currentUser() {
             senderId = currentUser.objectId!
             senderDisplayName = currentUser.fullName
-            
-            for user in conversation.users {
-                if user.objectId != currentUser.objectId {
-                    user.fetchIfNeededInBackgroundWithBlock({ (result, error) -> Void in
-                        self.title = user.fullName
-                    })
-                    break
-                }
-            }
         }
         
         isLoading = false
         loadMessages()
     }
     
-    
-    override func willMoveToParentViewController(parent: UIViewController?) {
-        if parent == nil {
-            
-            if let navController = navigationController, messageVC = navController.viewControllers[navController.viewControllers.count - 2] as? MessageViewController {
-                messageVC.post = conversation.post
-            }
-        }
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
-        tabBarController?.tabBar.hidden = true
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         //        collectionView!.collectionViewLayout.springinessEnabled = true
         inputToolbar?.contentView?.leftBarButtonItem = nil
         timer = NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
@@ -70,7 +46,6 @@ class ChatViewController: JSQMessagesViewController {
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        tabBarController?.tabBar.hidden = false
         timer.invalidate()
     }
     
@@ -195,7 +170,12 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapAvatarImageView avatarImageView: UIImageView!, atIndexPath indexPath: NSIndexPath!) {
-        print("didTapAvatarImageview")
+        let tapUser = users[indexPath.row]
+        if tapUser.objectId != User.currentUser()?.objectId {
+            let userTimelineVC = UserTimelineViewController.instantiateViewController
+            userTimelineVC.user = tapUser
+            presentViewController(userTimelineVC, animated: true, completion: nil)
+        }
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
@@ -286,44 +266,3 @@ extension ChatViewController {
 //        picker.dismissViewControllerAnimated(true, completion: nil)
 //    }
 //}
-
-extension ChatViewController {
-    static func show(post: Post) {
-        if let currentUser = User.currentUser() {
-            if post.user.objectId == currentUser.objectId {
-                print("Cannot message your self")
-                return
-            }
-        }
-        
-        if let tabBarController = UIApplication.sharedApplication().delegate?.window??.rootViewController as? UITabBarController {
-            let storyboard = UIStoryboard(name: "Messages", bundle: nil)
-            if let messageVC = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.messageViewController) as? MessageViewController, chatVC = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.chatViewController) as? ChatViewController {
-                let hud = MBProgressHUD.showHUDAddedTo(tabBarController.view, animated: true)
-                hud.labelText = "Opening chat..."
-                Conversation.addConversation(post.user, post: post, callback: { (conversation, error) -> Void in
-                    guard error == nil else {
-                        hud.hide(true)
-                        print(error)
-                        return
-                    }
-                    tabBarController.selectedIndex = 1
-                    if let navController = tabBarController.selectedViewController as? UINavigationController {
-                        chatVC.conversation = conversation
-                        chatVC.conversation.post.fetchIfNeededInBackgroundWithBlock({ (post, error) -> Void in
-                            guard error == nil else {
-                                print(error)
-                                return
-                            }
-                            
-                            hud.hide(true)
-                            navController.popToRootViewControllerAnimated(false)
-                            navController.pushViewController(messageVC, animated: false)
-                            navController.pushViewController(chatVC, animated: false)
-                        })
-                    }
-                })
-            }
-        }
-    }
-}

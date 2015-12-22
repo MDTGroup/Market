@@ -226,6 +226,6 @@ class ItemCell: UITableViewCell {
   }
     
     @IBAction func onMessage(sender: UIButton) {
-        ChatViewController.show(item)
+        ParentChatViewController.show(item)
     }
 }

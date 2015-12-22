@@ -419,7 +419,7 @@ class DetailViewController: UIViewController {
     
     @IBAction func onMessageTapped(sender: UIButton) {
         dismissViewControllerAnimated(true) { () -> Void in
-            ChatViewController.show(self.post)
+            ParentChatViewController.show(self.post)
         }
     }
 }

@@ -49,8 +49,6 @@ class ItemListCell: UITableViewCell {
             newTagImageView.hidden = (post.condition > 0)
         }
     }
-    
-    var tapGesture: UITapGestureRecognizer!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -59,11 +57,5 @@ class ItemListCell: UITableViewCell {
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
-        tapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
-        avatarImageView.addGestureRecognizer(tapGesture)
-    }
-
-    func tapOnProfile(gesture: UITapGestureRecognizer) {
-//        self.delegate?.itemListCell?(self, tapOnProfile: true)
     }
 }

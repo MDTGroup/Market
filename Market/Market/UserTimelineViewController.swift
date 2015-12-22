@@ -15,6 +15,8 @@ class UserTimelineViewController: UIViewController {
     var user: User!
   var posts = [Post]()
   var isCurrentUser = false
+    
+    static let homeSB = UIStoryboard(name: "Home", bundle: nil)
   
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var userLabel: UILabel!
@@ -178,7 +180,7 @@ class UserTimelineViewController: UIViewController {
     editProfileButton.layer.cornerRadius = 3
     
     // Load following (this user follows people)
-    followingCountLabel.text = "0"
+    followingCountLabel.text = " "
     user.getNumFollowings { (numFollowing, error) -> Void in
         guard error == nil else {
             print(error)
@@ -188,7 +190,7 @@ class UserTimelineViewController: UIViewController {
     }
     
     // Load follower (who follows this user)
-    followerCountLabel.text = "0"
+    followerCountLabel.text = " "
     user.getNumFollowers { (numFollower, error) -> Void in
         guard error == nil else {
             print(error)
@@ -352,3 +354,9 @@ extension UserTimelineViewController: PostViewControllerDelegate {
   }
 }
 
+// MARK: Show view from anywhere
+extension UserTimelineViewController {
+    static var instantiateViewController: UserTimelineViewController {
+        return homeSB.instantiateViewControllerWithIdentifier(StoryboardID.userTimeline) as! UserTimelineViewController
+    }
+}

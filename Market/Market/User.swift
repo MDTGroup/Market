@@ -37,7 +37,6 @@ class User: PFUser {
             query.whereKey("isDeleted", equalTo: false)
             query.whereKey("user", equalTo: self)
             query.orderByDescending("updatedAt")
-            
             query.findObjectsInBackgroundWithBlock({ (pfObj: [PFObject]?, error: NSError?) -> Void in
                 guard error == nil else {
                     callback(posts: nil, error: error)
