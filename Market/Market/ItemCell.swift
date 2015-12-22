@@ -27,11 +27,17 @@ class ItemCell: UITableViewCell {
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var imageContainer: UIView!
     
+    @IBOutlet weak var buttonsView: UIView!
     @IBOutlet weak var voteCountLabel: UILabel!
     @IBOutlet weak var voteButton: UIButton!
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var chatButton: UIButton!
     @IBOutlet weak var newTagImageView: UIImageView!
+    
+    @IBOutlet weak var gap2Columns: NSLayoutConstraint!
+    @IBOutlet weak var avatarToItemImage: NSLayoutConstraint!
+    @IBOutlet weak var voteButtonWidth: NSLayoutConstraint!
+    @IBOutlet weak var chatButtonWidth: NSLayoutConstraint!
     
     weak var delegate: ItemCellDelegate?
     
@@ -69,7 +75,7 @@ class ItemCell: UITableViewCell {
                 //loadingView.startAnimating()
                 //itemImageView.addSubview(loadingView)
                 itemImageView.alpha = 0.0
-                itemImageView.image = nil
+                itemImageView.image = UIImage(named: "camera")
                 UIView.animateWithDuration(0.3, animations: {
                     self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
                     self.itemImageView.alpha = 1.0
@@ -84,10 +90,28 @@ class ItemCell: UITableViewCell {
             } else {
                 // Load no image
             }
+            
             itemNameLabel.text = post.title
             descriptionLabel.text = post.descriptionText
+            let screenWidth = UIScreen.mainScreen().bounds.width
+            gap2Columns.constant = screenWidth > 330 ? 10 : 8
+            // Set the buttons width equally
+            voteButtonWidth.constant = screenWidth / 3
+            chatButtonWidth.constant = screenWidth / 3
+            buttonsView.layer.borderWidth = 0.5
+            buttonsView.layer.borderColor = UIColor.grayColor().CGColor
+            buttonsView.backgroundColor = UIColor.whiteColor()
             
-            timeAgoLabel.text = Helper.timeSinceDateToNow(post.createdAt!)
+            // The size of the descText to fit its content
+            let newSize = descriptionLabel.sizeThatFits(CGSize(width: descriptionLabel.frame.width, height: CGFloat.max))
+            print(newSize.height)
+            avatarToItemImage.constant = newSize.height > 40 ? 5 : -13
+            
+            //timeAgoLabel.text = Helper.timeSinceDateToNow(post.createdAt!)
+            let formatter = NSDateFormatter()
+            formatter.timeStyle = NSDateFormatterStyle.ShortStyle
+            formatter.dateStyle = NSDateFormatterStyle.ShortStyle
+            timeAgoLabel.text = "Posted on \(formatter.stringFromDate(post.updatedAt!))"
             
             priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
@@ -114,12 +138,12 @@ class ItemCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        avatarImageView.layer.cornerRadius = 16
+        avatarImageView.layer.cornerRadius = 18
         avatarImageView.clipsToBounds = true
         //    itemImageView.layer.cornerRadius = 8
         //    itemImageView.clipsToBounds = true
-        //    priceLabel.layer.cornerRadius = 5
-        //    priceLabel.clipsToBounds = true
+        priceLabel.layer.cornerRadius = 5
+        priceLabel.clipsToBounds = true
         imageContainer.layer.cornerRadius = 8
         imageContainer.clipsToBounds = true
         
