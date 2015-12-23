@@ -93,14 +93,6 @@ class ItemCell: UITableViewCell {
             
             itemNameLabel.text = post.title
             descriptionLabel.text = post.descriptionText
-            let screenWidth = UIScreen.mainScreen().bounds.width
-            gap2Columns.constant = screenWidth > 330 ? 10 : 8
-            // Set the buttons width equally
-            voteButtonWidth.constant = screenWidth / 3
-            chatButtonWidth.constant = screenWidth / 3
-            buttonsView.layer.borderWidth = 0.5
-            buttonsView.layer.borderColor = UIColor.grayColor().CGColor
-            buttonsView.backgroundColor = UIColor.whiteColor()
             
             // The size of the descText to fit its content
             let newSize = descriptionLabel.sizeThatFits(CGSize(width: descriptionLabel.frame.width, height: CGFloat.max))
@@ -151,6 +143,34 @@ class ItemCell: UITableViewCell {
         sellerTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
         avatarImageView.addGestureRecognizer(avatarTapGesture)
         sellerLabel.addGestureRecognizer(sellerTapGesture)
+        
+        let screenWidth = UIScreen.mainScreen().bounds.width
+        gap2Columns.constant = screenWidth > 330 ? 10 : 8
+        // Set the buttons width equally
+        voteButtonWidth.constant = screenWidth / 3
+        chatButtonWidth.constant = screenWidth / 3
+        buttonsView.layer.borderWidth = 0.5
+        buttonsView.layer.borderColor = UIColor.grayColor().CGColor
+        buttonsView.backgroundColor = UIColor.whiteColor()
+        
+        //        //create the path
+        //        let plusPath = UIBezierPath()
+        //        
+        //        //set the path's line width to the height of the stroke
+        //        plusPath.lineWidth = 0.5
+        //        
+        //        //move the initial point of the path
+        //        //to the start of the horizontal stroke
+        //        plusPath.moveToPoint(CGPoint(x: 10, y:55))
+        //        
+        //        //add a point to the path at the end of the stroke
+        //        plusPath.addLineToPoint(CGPoint(x: 10, y: screenWidth-20))
+        //        
+        //        //set the stroke color
+        //        UIColor.redColor().setStroke()
+        //        
+        //        //draw the stroke
+        //        plusPath.stroke()
     }
     
     override func setSelected(selected: Bool, animated: Bool) {
@@ -161,7 +181,7 @@ class ItemCell: UITableViewCell {
     
     func setSaveLabel(saved: Bool) {
         if saved {
-            saveButton.setImage(UIImage(named: "save"), forState: .Normal)
+            saveButton.setImage(UIImage(named: "save_on"), forState: .Normal)
         } else {
             saveButton.setImage(UIImage(named: "save_gray"), forState: .Normal)
         }
@@ -169,7 +189,7 @@ class ItemCell: UITableViewCell {
     
     func setVoteCountLabel(count: Int, voted: Bool) {
         if voted {
-            voteButton.setImage(UIImage(named: "thumb"), forState: .Normal)
+            voteButton.setImage(UIImage(named: "thumb_on"), forState: .Normal)
             voteCountLabel.textColor = MyColors.bluesky
         } else {
             voteButton.setImage(UIImage(named: "thumb_gray"), forState: .Normal)
@@ -180,7 +200,7 @@ class ItemCell: UITableViewCell {
     }
     
     @IBAction func onVoteChanged(sender: UIButton) {
-        if sender.imageView?.image == UIImage(named: "thumb") {
+        if sender.imageView?.image == UIImage(named: "thumb_on") {
             // Un-vote it
             let count = Int(self.voteCountLabel.text!)! - 1
             setVoteCountLabel(count, voted: false)
@@ -214,7 +234,7 @@ class ItemCell: UITableViewCell {
     }
     
     @IBAction func onSaveChanged(sender: UIButton) {
-        if sender.imageView?.image == UIImage(named: "save") {
+        if sender.imageView?.image == UIImage(named: "save_on") {
             // Un-save it
             setSaveLabel(false)
             item.save(false) { (successful: Bool, error: NSError?) -> Void in
