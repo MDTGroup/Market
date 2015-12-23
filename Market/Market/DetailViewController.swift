@@ -224,69 +224,73 @@ class DetailViewController: UIViewController {
             print("image view frame", imageView.frame)
             
         } else if sender.state == .Changed {
-            imageView.center = CGPoint(x: imageOriginalCenter.x + translation.x, y: imageOriginalCenter.y)
+            imageView.center = CGPoint(x: imageOriginalCenter.x + translation.x, y: imageOriginalCenter.y + translation.y)
             imageView.transform = CGAffineTransformMakeRotation((direction * translation.x * CGFloat(M_PI)) / 180.0)
             
         } else if sender.state == .Ended {
-            // If only 1 image then return it to original position
-            if nImages < 2 {
-                UIView.animateWithDuration(0.5, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 10, options: [], animations: { () -> Void in
-                    self.imageView.center = self.imageOriginalCenter
-                    self.imageView.transform = CGAffineTransformMakeRotation(0)
-                    }, completion: nil)
-                
+            print(translation.y)
+            if translation.y > 150 {
+                dismissViewControllerAnimated(true, completion: nil)
             } else {
-                if translation.x > 80 {
-                    selectedImage -= 1
-                    if selectedImage < 1 {
-                        selectedImage = nImages
-                    }
-                    print("loading image \(selectedImage)")
-                    tempImageViews[selectedImage-1].alpha = 0
-                    tempImageViews[selectedImage-1].center.x = -imageOriginalCenter.x
-                    
-                    UIView.animateWithDuration(0.5, animations: { () -> Void in
-                        self.imageView.alpha = 0
-                        self.tempImageViews[self.selectedImage-1].alpha = 1
-                        self.imageView.center.x += self.imageView.frame.width
-                        self.tempImageViews[self.selectedImage-1].center = self.imageOriginalCenter
-                        }, completion: { (finished) -> Void in
-                            self.imageView.alpha = 1
-                            self.imageView.center = self.imageOriginalCenter
-                            self.imageView.transform = CGAffineTransformMakeRotation(0)
-                            self.setImageScroll(self.selectedImage)
-                            self.imageView.image = self.tempImageViews[self.selectedImage-1].image
-                            self.tempImageViews[self.selectedImage-1].center.x = -self.imageOriginalCenter.x
-                    })
-                    
-                } else if translation.x < -80 {
-                    selectedImage += 1
-                    if selectedImage > nImages {
-                        selectedImage = 1
-                    }
-                    print("loading image \(selectedImage)")
-                    tempImageViews[selectedImage-1].alpha = 0
-                    tempImageViews[selectedImage-1].center.x = imageView.frame.width + imageOriginalCenter.x
-                    
-                    UIView.animateWithDuration(0.5, animations: { () -> Void in
-                        self.imageView.alpha = 0
-                        self.tempImageViews[self.selectedImage-1].alpha = 1
-                        self.imageView.center.x -= self.imageView.frame.width
-                        self.tempImageViews[self.selectedImage-1].center = self.imageOriginalCenter
-                        }, completion: { (finished) -> Void in
-                            self.imageView.alpha = 1
-                            self.imageView.center = self.imageOriginalCenter
-                            self.imageView.transform = CGAffineTransformMakeRotation(0)
-                            self.setImageScroll(self.selectedImage)
-                            self.imageView.image = self.tempImageViews[self.selectedImage-1].image
-                            self.tempImageViews[self.selectedImage-1].center.x = self.imageView.frame.width + self.imageOriginalCenter.x
-                    })
-                    
-                } else {
+                // If only 1 image then return it to original position
+                if nImages < 2 {
                     UIView.animateWithDuration(0.3, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 10, options: [], animations: { () -> Void in
                         self.imageView.center = self.imageOriginalCenter
                         self.imageView.transform = CGAffineTransformMakeRotation(0)
                         }, completion: nil)
+                } else {
+                    if translation.x > 80 {
+                        selectedImage -= 1
+                        if selectedImage < 1 {
+                            selectedImage = nImages
+                        }
+                        print("loading image \(selectedImage)")
+                        tempImageViews[selectedImage-1].alpha = 0
+                        tempImageViews[selectedImage-1].center.x = -imageOriginalCenter.x
+                        
+                        UIView.animateWithDuration(0.5, animations: { () -> Void in
+                            self.imageView.alpha = 0
+                            self.tempImageViews[self.selectedImage-1].alpha = 1
+                            self.imageView.center.x += self.imageView.frame.width
+                            self.tempImageViews[self.selectedImage-1].center = self.imageOriginalCenter
+                            }, completion: { (finished) -> Void in
+                                self.imageView.alpha = 1
+                                self.imageView.center = self.imageOriginalCenter
+                                self.imageView.transform = CGAffineTransformMakeRotation(0)
+                                self.setImageScroll(self.selectedImage)
+                                self.imageView.image = self.tempImageViews[self.selectedImage-1].image
+                                self.tempImageViews[self.selectedImage-1].center.x = -self.imageOriginalCenter.x
+                        })
+                        
+                    } else if translation.x < -80 {
+                        selectedImage += 1
+                        if selectedImage > nImages {
+                            selectedImage = 1
+                        }
+                        print("loading image \(selectedImage)")
+                        tempImageViews[selectedImage-1].alpha = 0
+                        tempImageViews[selectedImage-1].center.x = imageView.frame.width + imageOriginalCenter.x
+                        
+                        UIView.animateWithDuration(0.5, animations: { () -> Void in
+                            self.imageView.alpha = 0
+                            self.tempImageViews[self.selectedImage-1].alpha = 1
+                            self.imageView.center.x -= self.imageView.frame.width
+                            self.tempImageViews[self.selectedImage-1].center = self.imageOriginalCenter
+                            }, completion: { (finished) -> Void in
+                                self.imageView.alpha = 1
+                                self.imageView.center = self.imageOriginalCenter
+                                self.imageView.transform = CGAffineTransformMakeRotation(0)
+                                self.setImageScroll(self.selectedImage)
+                                self.imageView.image = self.tempImageViews[self.selectedImage-1].image
+                                self.tempImageViews[self.selectedImage-1].center.x = self.imageView.frame.width + self.imageOriginalCenter.x
+                        })
+                        
+                    } else {
+                        UIView.animateWithDuration(0.3, delay: 0, usingSpringWithDamping: 0.6, initialSpringVelocity: 10, options: [], animations: { () -> Void in
+                            self.imageView.center = self.imageOriginalCenter
+                            self.imageView.transform = CGAffineTransformMakeRotation(0)
+                            }, completion: nil)
+                    }
                 }
             }
         }
