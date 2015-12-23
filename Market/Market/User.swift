@@ -148,7 +148,7 @@ class User: PFUser {
     func getSavedPosts(lastUpdatedAt:NSDate?, callback: PostResultBlock) {
         let query = savedPosts.query()
         query.includeKey("user")
-        QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
+        QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt)
         query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
             guard error == nil else {
                 callback(posts: nil, error: error)
@@ -195,7 +195,7 @@ class User: PFUser {
     //MARK: Notifications
     func getNotifications(lastUpdatedAt: NSDate?, callback: NotificationResultBlock) {
         if let query = Notification.query() {
-            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
+            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt)
             query.includeKey("post")
             query.includeKey("fromUser")
             query.whereKey("toUsers", equalTo: self)
@@ -207,7 +207,7 @@ class User: PFUser {
                 if let notifications = pfObjs as? [Notification] {
                     
                     if let queryForUnread = Notification.query() {
-                        QueryUtils.bindQueryParamsForInfiniteLoading(queryForUnread, lastUpdatedAt: lastUpdatedAt)
+                        QueryUtils.bindQueryParamsForInfiniteLoading(queryForUnread, lastCreatedAt: lastUpdatedAt)
                         queryForUnread.whereKey("toUsers", equalTo: self)
                         queryForUnread.whereKey("readUsers", equalTo: self)
                         

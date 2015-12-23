@@ -23,10 +23,13 @@ class ChatViewController: JSQMessagesViewController {
     var incomingBubbleImage = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
     var blankAvatarImage = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "profile_blank"), diameter: 30)
     var isLoading = false
+    var isLoadingEarlierMessages = false
     var conversation: Conversation!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        inputToolbar?.contentView?.leftBarButtonItem = nil
         
         if let currentUser = User.currentUser() {
             senderId = currentUser.objectId!
@@ -34,19 +37,30 @@ class ChatViewController: JSQMessagesViewController {
         }
         
         isLoading = false
-        loadMessages()
+        isLoadingEarlierMessages = false
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        //        collectionView!.collectionViewLayout.springinessEnabled = true
-        inputToolbar?.contentView?.leftBarButtonItem = nil
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onPushNotificationMessage:", name: TabBarController.newMessage, object: nil)
+        conversation.markRead { (success, error) -> Void in
+            TabBarController.instance.onRefreshMessageBadge(nil)
+        }
+        
+        showLoadEarlierMessagesHeader = true
+    }
+    
+    func onPushNotificationMessage(notification: Notification) {
+        conversation.markRead {
+            (success, error) -> Void in
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         timer.invalidate()
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: TabBarController.newMessage, object: nil)
     }
     
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
@@ -61,6 +75,7 @@ class ChatViewController: JSQMessagesViewController {
     override func collectionView(collectionView: JSQMessagesCollectionView!, messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {
         return messages[indexPath.item]
     }
+    
     override func collectionView(collectionView: JSQMessagesCollectionView!, messageBubbleImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageBubbleImageDataSource! {
         let message = messages[indexPath.item]
         
@@ -166,7 +181,7 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, header headerView: JSQMessagesLoadEarlierHeaderView!, didTapLoadEarlierMessagesButton sender: UIButton!) {
-        print("didTapLoadEarlierMessagesButton")
+        loadEarlierMessages()
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapAvatarImageView avatarImageView: UIImageView!, atIndexPath indexPath: NSIndexPath!) {
@@ -196,6 +211,43 @@ class ChatViewController: JSQMessagesViewController {
 
 // MARK: Backend
 extension ChatViewController {
+    func loadEarlierMessages() {
+        if !isLoadingEarlierMessages {
+            isLoadingEarlierMessages = true
+            let firstMessage = messages.first
+            print("firstMessage", firstMessage?.date)
+            conversation.getEarlierMessages(firstMessage?.date, callback: { (messages, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    return
+                }
+                self.automaticallyScrollsToMostRecentMessage = false
+                if let messages = messages {
+                    self.addEarlierMessages(messages)
+                    if messages.count > 0 {
+                        self.finishReceivingMessage()
+                    } else {
+                        self.showLoadEarlierMessagesHeader = false
+                    }
+                }
+                self.isLoadingEarlierMessages = false
+            })
+        }
+    }
+    
+    func addEarlierMessages(messages: [Message]) {
+        var jsqMessages = [JSQMessage]()
+        var users = [User]()
+        for message in messages {
+            let jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, text: message.text)
+            jsqMessages.append(jsqMessage)
+            users.append(message.user)
+        }
+        
+        self.users.insertContentsOf(users, at: 0)
+        self.messages.insertContentsOf(jsqMessages, at: 0)
+    }
+
     func loadMessages() {
         if !isLoading {
             isLoading = true
@@ -206,27 +258,32 @@ extension ChatViewController {
                     print(error)
                     return
                 }
-                self.automaticallyScrollsToMostRecentMessage = false
+                self.automaticallyScrollsToMostRecentMessage = true
+                
                 if let messages = messages {
-                    for message in messages {
-                        self.addMessage(message)
-                    }
+                    self.addMessages(messages)
                     if messages.count > 0 {
                         self.finishReceivingMessage()
                         self.scrollToBottomAnimated(false)
                     }
                 }
-                self.automaticallyScrollsToMostRecentMessage = true
+                
                 self.isLoading = false
             })
         }
     }
     
-    func addMessage(message:Message) {
-        let jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, text: message.text)
+    func addMessages(messages: [Message]) {
+        var jsqMessages = [JSQMessage]()
+        var users = [User]()
+        for message in messages {
+            let jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, text: message.text)
+            jsqMessages.append(jsqMessage)
+            users.append(message.user)
+        }
         
-        users.append(message.user)
-        messages.append(jsqMessage)
+        self.users.appendContentsOf(users)
+        self.messages.appendContentsOf(jsqMessages)
     }
     
     func sendMessage(text: String) {

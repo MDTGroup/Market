@@ -14,13 +14,13 @@ class Conversation: PFObject, PFSubclassing {
         return "Conversation"
     }
     
-    @NSManaged var users: [User]
+    @NSManaged var userIds: [String]
     @NSManaged var usersChooseHideConversation: [User]
     @NSManaged var readUsers: [String]
     @NSManaged var post: Post
     @NSManaged var messages: PFRelation
     
-    func markRead() {
+    func markRead(callback: PFBooleanResultBlock) {
         if let currentUser = User.currentUser(), userObjectId = currentUser.objectId {
             if !readUsers.contains(userObjectId) {
                 readUsers.append(userObjectId)
@@ -29,8 +29,10 @@ class Conversation: PFObject, PFSubclassing {
                 PFCloud.callFunctionInBackground("conversation_markRead", withParameters: params) { (result, error) -> Void in
                     guard error == nil else {
                         print(error)
+                        callback(false, nil)
                         return
                     }
+                    callback(true, nil)
                 }
             }
         }
@@ -39,14 +41,37 @@ class Conversation: PFObject, PFSubclassing {
     func getMessages(lastCreatedAt: NSDate?, callback: MessageResultBlock) {
         let query = messages.query()
         query.includeKey("user")
-        QueryUtils.bindQueryParamsForInfiniteLoadingForChat(query, lastCreatedAt: lastCreatedAt)
+        query.limit = 10
+        if let lastCreatedAt = lastCreatedAt {
+            query.whereKey("createdAt", greaterThan: lastCreatedAt)
+        }
+        query.orderByDescending("createdAt")
         query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
             guard error == nil else {
                 callback(messages: nil, error: error)
                 return
             }
             if let messages = pfObjs as? [Message] {
-                callback(messages: messages, error: nil)
+                callback(messages: messages.reverse(), error: nil)
+            }
+        }
+    }
+    
+    func getEarlierMessages(createdAt: NSDate?, callback: MessageResultBlock) {
+        let query = messages.query()
+        query.includeKey("user")
+        query.limit = 5
+        if let createdAt = createdAt {
+            query.whereKey("createdAt", lessThan: createdAt)
+        }
+        query.orderByDescending("createdAt")
+        query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
+            guard error == nil else {
+                callback(messages: nil, error: error)
+                return
+            }
+            if let messages = pfObjs as? [Message] {
+                callback(messages: messages.reverse(), error: nil)
             }
         }
     }
@@ -66,9 +91,10 @@ class Conversation: PFObject, PFSubclassing {
             }
             if success {
                 self.messages.addObject(message)
-                for user in self.users where user.objectId !=  currentUser.objectId {
-                    message.sendPushNotification(user.objectId!, postId: self.post.objectId!, text: text)
+                for userId in self.userIds where userId !=  currentUser.objectId {
+                    message.sendPushNotification(userId, postId: self.post.objectId!, text: text)
                 }
+                self.readUsers = [currentUser.objectId!]
                 self.saveInBackgroundWithBlock(callback)
             }
         }
@@ -79,15 +105,16 @@ class Conversation: PFObject, PFSubclassing {
             return
         }
         if let query = Conversation.query() {
-            let users = [fromUser, toUser]
+            let userIds = [fromUser.objectId!, toUser.objectId!]
             query.includeKey("post")
             query.whereKey("post", equalTo: post)
-            query.whereKey("users", containsAllObjectsInArray: users)
+            query.whereKey("userIds", containsAllObjectsInArray: userIds)
             query.findObjectsInBackgroundWithBlock({ (results, error) -> Void in
                 if let conversations = results as? [Conversation] {
                     if conversations.count == 0 {
                         let conversation = Conversation()
-                        conversation.users = users
+                        conversation.userIds = userIds
+                        conversation.readUsers = [fromUser.objectId!]
                         conversation.usersChooseHideConversation = []
                         conversation.post = post
                         let acl = PFACL()
@@ -123,9 +150,8 @@ class Conversation: PFObject, PFSubclassing {
         if let query = Conversation.query(), currentUser = User.currentUser() {
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
             query.includeKey("post")
-            query.includeKey("users")
-            query.whereKey("users", equalTo: currentUser)
-            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser)
+            query.whereKey("userIds", equalTo: currentUser.objectId!)
+            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(conversations: nil, error: error)
@@ -142,10 +168,9 @@ class Conversation: PFObject, PFSubclassing {
         if let query = Conversation.query(), currentUser = User.currentUser() {
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
             query.includeKey("post")
-            query.includeKey("users")
             query.whereKey("post", equalTo: post)
-            query.whereKey("users", equalTo: currentUser)
-            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser)
+            query.whereKey("userIds", equalTo: currentUser.objectId!)
+            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(conversations: nil, error: error)
@@ -160,8 +185,8 @@ class Conversation: PFObject, PFSubclassing {
     
     static func countUnread(callback: PFIntegerResultBlock) {
         if let query = Conversation.query(), currentUser = User.currentUser() {
-            query.whereKey("users", equalTo: currentUser)
-            query.whereKey("readUsers", notEqualTo: currentUser)
+            query.whereKey("userIds", equalTo: currentUser.objectId!)
+            query.whereKey("readUsers", notEqualTo: currentUser.objectId!)
             query.countObjectsInBackgroundWithBlock(callback)
         }
     }

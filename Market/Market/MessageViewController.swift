@@ -34,7 +34,7 @@ class MessageViewController: UIViewController {
         let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         hud.labelText = "Loading messages..."
         
-        if conversations.count == 0 {
+        if conversations.count == 0 || PostsListViewController.needToRefresh == false {
             loadNewestData()
         } else {
             isLoadingNextPage = true
@@ -43,6 +43,20 @@ class MessageViewController: UIViewController {
             self.loadingView.stopAnimating()
             MBProgressHUD.hideHUDForView(self.view, animated: true)
         }   
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if PostsListViewController.needToRefresh {
+            loadNewestData()
+            PostsListViewController.needToRefresh = false
+        }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        MBProgressHUD.hideHUDForView(view, animated: true)
+        
     }
     
     func initControls() {
@@ -133,7 +147,7 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
             if indexPath.row == conversations.count - 1 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadData(conversations[indexPath.row].createdAt!)
+                loadData(conversations[indexPath.row].updatedAt!)
             }
         }
         
@@ -142,8 +156,5 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath((indexPath), animated: true)
-        
-        let conversation = conversations[indexPath.row]
-        conversation.markRead()
     }
 }

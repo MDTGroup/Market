@@ -10,6 +10,7 @@ import UIKit
 import MBProgressHUD
 
 class PostsListViewController: UIViewController {
+    static var needToRefresh = false
     @IBOutlet weak var tableView: UITableView!
     
     var refreshControl = UIRefreshControl()
@@ -20,6 +21,7 @@ class PostsListViewController: UIViewController {
     
     var filteredConversationsByPost = [Conversation]()
     var conversations = [Conversation]()
+    var countMessages = [String : (unread: Int, total: Int)]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,8 +30,23 @@ class PostsListViewController: UIViewController {
         
         let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
         hud.labelText = "Loading posts..."
-        
-        loadNewestData()
+
+        if PostsListViewController.needToRefresh == false {
+            loadNewestData()
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if PostsListViewController.needToRefresh {
+            loadNewestData()
+            PostsListViewController.needToRefresh = false
+        }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        MBProgressHUD.hideHUDForView(self.view, animated: true)
     }
     
     func initControls() {
@@ -61,6 +78,7 @@ class PostsListViewController: UIViewController {
     
     func loadNewestData() {
         conversations = []
+        countMessages.removeAll()
         loadData(nil)
     }
     
@@ -108,8 +126,21 @@ class PostsListViewController: UIViewController {
     func filterDuplicatePost() {
         var posts = [String]()
         var newConversations = [Conversation]()
+        let currentUserId = User.currentUser()!.objectId!
         for conversation in conversations.reverse() {
-            if posts.contains(conversation.post.objectId!) {
+            let id = conversation.post.objectId!
+            if countMessages[id] == nil {
+                countMessages[id] = (0,0)
+            }
+            if var tupleCount = countMessages[id] {
+                if !conversation.readUsers.contains(currentUserId) {
+                    tupleCount.unread += 1
+                }
+                tupleCount.total += 1
+                countMessages[id] = tupleCount
+            }
+            
+            if posts.contains(id) {
                 continue
             }
             posts.append(conversation.post.objectId!)
@@ -126,15 +157,19 @@ extension PostsListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ItemListCell", forIndexPath: indexPath) as! ItemListCell
-
-        cell.conversation = filteredConversationsByPost[indexPath.row]
+        
+        let conversation = filteredConversationsByPost[indexPath.row]
+        if let tupleCount = countMessages[conversation.post.objectId!] {
+            cell.countMessages = tupleCount
+        }
+        cell.conversation = conversation
         
         // Infinite load if last cell
         if !isLoadingNextPage && !isEndOfFeed {
             if indexPath.row == filteredConversationsByPost.count - 1 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadData(filteredConversationsByPost[indexPath.row].createdAt!)
+                loadData(filteredConversationsByPost[indexPath.row].updatedAt!)
             }
         }
         

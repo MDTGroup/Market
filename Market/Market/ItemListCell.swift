@@ -17,30 +17,27 @@ class ItemListCell: UITableViewCell {
     @IBOutlet weak var sellerLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var newTagImageView: UIImageView!
+    @IBOutlet weak var countMessagesLabel: UILabel!
     
+    var countMessages: (unread: Int, total: Int)! {
+        didSet {
+            countMessagesLabel.text = "\(countMessages.unread)/\(countMessages.total)"
+        }
+    }
     var conversation: Conversation! {
         didSet {
             let post = conversation.post
             
             self.sellerLabel.text = ""
             post.user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
-                if let avatar = post.user.avatar {
-                    self.avatarImageView.alpha = 0.0
-                    UIView.animateWithDuration(0.3, animations: {
-                        self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
-                        self.avatarImageView.alpha = 1.0
-                        }, completion: nil)
+                if let avatar = post.user.avatar, url = avatar.url {
+                    self.avatarImageView.setImageWithURL(NSURL(string: url)!)
                 }
                 self.sellerLabel.text = post.user.fullName
             }
 
-            // Set Item
             if post.medias.count > 0 {
-                itemImageView.alpha = 0.0
-                UIView.animateWithDuration(0.3, animations: {
-                    self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-                    self.itemImageView.alpha = 1.0
-                    }, completion: nil)
+                self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
             }
             
             itemNameLabel.text = post.title
@@ -48,8 +45,18 @@ class ItemListCell: UITableViewCell {
             priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
             
-            if let currentUser = User.currentUser(), userObjectId = currentUser.objectId {
-                self.backgroundColor = conversation.readUsers.contains(userObjectId) ? UIColor.whiteColor() : UIColor.grayColor()
+            if countMessages.unread == 0 {
+                itemNameLabel.font = UIFont.systemFontOfSize(14)
+                timeAgoLabel.font = UIFont.systemFontOfSize(12)
+                sellerLabel.font = UIFont.systemFontOfSize(12)
+                countMessagesLabel.font = UIFont.systemFontOfSize(12)
+                backgroundColor = UIColor.whiteColor()
+            } else {
+                itemNameLabel.font = UIFont.boldSystemFontOfSize(14)
+                timeAgoLabel.font = UIFont.boldSystemFontOfSize(12)
+                sellerLabel.font = UIFont.boldSystemFontOfSize(12)
+                countMessagesLabel.font = UIFont.boldSystemFontOfSize(12)
+                backgroundColor = MyColors.highlightForNotification
             }
         }
     }
@@ -61,5 +68,7 @@ class ItemListCell: UITableViewCell {
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
+        priceLabel.layer.cornerRadius = 5
+        priceLabel.clipsToBounds = true
     }
 }

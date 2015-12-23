@@ -29,16 +29,6 @@ class NotificationViewController: UIViewController {
         hud.labelText = "Loading notifications..."
         
         loadNewestData()
-        self.tabBarController?.tabBar.selectedItem?.badgeValue = nil
-        Notification.countUnread { (numUnread, error) -> Void in
-            guard error == nil else {
-                print(error)
-                return
-            }
-            if numUnread > 0 {
-                self.tabBarController?.tabBar.selectedItem?.badgeValue = "\(numUnread)"
-            }
-        }
     }
     
     func initControls() {
@@ -63,7 +53,7 @@ class NotificationViewController: UIViewController {
         noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
         noMoreResultLabel.textColor = UIColor.grayColor()
         noMoreResultLabel.hidden = true
-        tableFooterView.addSubview(noMoreResultLabel)
+        tableFooterView.insertSubview(noMoreResultLabel, atIndex: 0)
         tableView.tableFooterView = tableFooterView
     }
     

@@ -19,4 +19,5 @@ class MyColors {
     static let navigationTintColor = bluesky
     static let selectedCellColor = UIColor(red: 1, green: 230/255, blue: 230/255, alpha: 1)
     static let tableColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
+    static let highlightForNotification = UIColor(red: 224/255, green: 243/255, blue: 255/255, alpha: 1)
 }

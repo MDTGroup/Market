@@ -51,9 +51,9 @@ class TabBarController: NSObject {
             self.numUnreadNotification = Int(numUnread)
             if numUnread > 0 {
                 self.updateAppBadge()
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.notificationTab.badgeValue = "\(numUnread)"
-                })
+                self.notificationTab.badgeValue = "\(numUnread)"
+            } else {
+                self.notificationTab.badgeValue = nil
             }
         }
     }
@@ -67,9 +67,10 @@ class TabBarController: NSObject {
             self.numUnreadMessage = Int(numUnread)
             if numUnread > 0 {
                 self.updateAppBadge()
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.messageTab.badgeValue = "\(numUnread)"
-                })
+                self.messageTab.badgeValue = "\(numUnread)"
+                PostsListViewController.needToRefresh = true
+            } else {
+                self.messageTab.badgeValue = nil
             }
         }
     }

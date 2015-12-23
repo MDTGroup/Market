@@ -22,45 +22,45 @@ class MessageCell: UITableViewCell {
             self.userFullname.text = ""
             
             if let currentUser = User.currentUser(), userObjectId = currentUser.objectId {
-                self.backgroundColor = conversation.readUsers.contains(userObjectId) ? UIColor.whiteColor() : UIColor.grayColor()
-                
-                for user in conversation.users {
-                    if user.objectId != currentUser.objectId {
-                        user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
-                            if let avatar = user.avatar {
-                                self.userImage.alpha = 0.0
-                                UIView.animateWithDuration(0.3, animations: {
-                                    self.userImage.setImageWithURL(NSURL(string: avatar.url!)!)
-                                    self.userImage.alpha = 1.0
-                                    }, completion: nil)
-                            }
-                            self.userFullname.text = user.fullName
+                for userId in conversation.userIds where userId != currentUser.objectId! {
+                    let user = User(withoutDataWithObjectId: userId)
+                    user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
+                        if let avatar = user.avatar, url = avatar.url {
+                            self.userImage.setImageWithURL(NSURL(string: url)!)
                         }
-                        break
+                        self.userFullname.text = user.fullName
+                        
+                        let messageQuery = self.conversation.messages.query()
+                        messageQuery.orderByDescending("createdAt")
+                        messageQuery.getFirstObjectInBackgroundWithBlock({ (message, error) -> Void in
+                            guard error == nil else {
+                                print(error)
+                                return
+                            }
+                            
+                            if let message = message as? Message {
+                                var text = message.text
+                                if message.user.objectId == currentUser.objectId {
+                                    text = "You: \(text)"
+                                }
+                                self.lastMessageLabel.text = text
+                                self.timeElapedLabel.text = Helper.timeSinceDateToNow(message.createdAt!)
+                            }
+                        })
                     }
                 }
                 
-                let messageQuery = conversation.messages.query()
-                messageQuery.orderByDescending("createdAt")
-                messageQuery.limit = 1
-                messageQuery.findObjectsInBackgroundWithBlock({ (messages, error) -> Void in
-                    guard error == nil else {
-                        print(error)
-                        return
-                    }
-                    
-                    if let messages = messages as? [Message] {
-                        if messages.count > 0 {
-                            let message = messages[0]
-                            var text = message.text
-                            if message.user.objectId == currentUser.objectId {
-                                text = "You: \(text)"
-                            }
-                            self.lastMessageLabel.text = text
-                            self.timeElapedLabel.text = Helper.timeSinceDateToNow(message.createdAt!)
-                        }
-                    }
-                })
+                if conversation.readUsers.contains(userObjectId) {
+                    userFullname.font = UIFont.systemFontOfSize(14)
+                    timeElapedLabel.font = UIFont.systemFontOfSize(12)
+                    lastMessageLabel.font = UIFont.systemFontOfSize(12)
+                    backgroundColor = UIColor.whiteColor()
+                } else {
+                    userFullname.font = UIFont.boldSystemFontOfSize(14)
+                    timeElapedLabel.font = UIFont.boldSystemFontOfSize(12)
+                    lastMessageLabel.font = UIFont.boldSystemFontOfSize(12)
+                    backgroundColor = MyColors.highlightForNotification
+                }
             }
         }
     }

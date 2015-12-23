@@ -11,21 +11,8 @@ import Parse
 
 enum NotificationType: String {
     case SavedPost = "notificationsForSavedPosts"
-    case Followers = "notificationsForFollowers"
+    case Following = "notificationsForFollowers"
     case Keywords = "notificationsForKeywords"
-    
-    static func fromInt(type: Int) -> String {
-        switch type {
-        case 1:
-            return NotificationType.SavedPost.rawValue
-        case 2:
-            return NotificationType.Followers.rawValue
-        case 3:
-            return NotificationType.Keywords.rawValue
-        default:
-            return "nothing"
-        }
-    }
 }
 
 class Notification: PFObject, PFSubclassing {

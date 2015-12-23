@@ -20,6 +20,7 @@ class ParentChatViewController: UIViewController {
     @IBOutlet weak var newTagImageView: UIImageView!
     @IBOutlet weak var postView: UIView!
     @IBOutlet weak var profileView: UIView!
+    @IBOutlet weak var postContentView: UIView!
     
     var tapGesture: UITapGestureRecognizer!
     
@@ -30,12 +31,16 @@ class ParentChatViewController: UIViewController {
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
+        priceLabel.layer.cornerRadius = 5
+        priceLabel.clipsToBounds = true
         
         let tapPostGesture = UITapGestureRecognizer(target: self, action: "onTapPost:")
         postView.addGestureRecognizer(tapPostGesture)
         
-        let tapProfileGesture = UITapGestureRecognizer(target: self, action: "onTapProfile:")
-        profileView.addGestureRecognizer(tapProfileGesture)
+        if let currentUser = User.currentUser() where conversation.post.user.objectId != currentUser.objectId {
+            let tapProfileGesture = UITapGestureRecognizer(target: self, action: "onTapProfile:")
+            profileView.addGestureRecognizer(tapProfileGesture)
+        }
     }
     
     func onTapProfile(gesture: UITapGestureRecognizer) {
@@ -61,13 +66,12 @@ class ParentChatViewController: UIViewController {
         }
         
         if let currentUser = User.currentUser() {
-            for user in conversation.users {
-                if user.objectId != currentUser.objectId {
-                    user.fetchIfNeededInBackgroundWithBlock({ (result, error) -> Void in
-                        self.title = user.fullName
-                    })
-                    break
-                }
+            for userId in conversation.userIds where userId != currentUser.objectId! {
+                let user = User(withoutDataWithObjectId: userId)
+                user.fetchIfNeededInBackgroundWithBlock({ (result, error) -> Void in
+                    self.title = user.fullName
+                })
+                break
             }
         }
     }
@@ -77,23 +81,14 @@ class ParentChatViewController: UIViewController {
         
         self.sellerLabel.text = ""
         post.user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
-            if let avatar = post.user.avatar {
-                self.avatarImageView.alpha = 0.0
-                UIView.animateWithDuration(0.3, animations: {
-                    self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
-                    self.avatarImageView.alpha = 1.0
-                    }, completion: nil)
+            if let avatar = post.user.avatar, url = avatar.url {
+                self.avatarImageView.setImageWithURL(NSURL(string: url)!)
             }
             self.sellerLabel.text = post.user.fullName
         }
         
-        // Set Item
         if post.medias.count > 0 {
-            itemImageView.alpha = 0.0
-            UIView.animateWithDuration(0.3, animations: {
-                self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-                self.itemImageView.alpha = 1.0
-                }, completion: nil)
+            self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
         }
         
         itemNameLabel.text = post.title

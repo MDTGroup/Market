@@ -51,9 +51,29 @@ class NotificationTableViewCell: UITableViewCell {
             timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
             priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
-            type.text = NotificationType.fromInt(notification.type)
             
-            self.backgroundColor = notification.isRead ? UIColor.whiteColor() : UIColor.grayColor()
+            switch notification.type {
+            case 1:
+                type.text = "SavedPost"
+            case 2:
+                type.text = "Following"
+            case 3:
+                type.text = "Keywords"
+            default:
+                type.text = "???"
+            }
+            
+            if notification.isRead {
+                itemNameLabel.font = UIFont.systemFontOfSize(14)
+                timeAgoLabel.font = UIFont.systemFontOfSize(12)
+                sellerLabel.font = UIFont.systemFontOfSize(12)
+                backgroundColor = UIColor.whiteColor()
+            } else {
+                itemNameLabel.font = UIFont.boldSystemFontOfSize(14)
+                timeAgoLabel.font = UIFont.boldSystemFontOfSize(12)
+                sellerLabel.font = UIFont.boldSystemFontOfSize(12)
+                backgroundColor = MyColors.highlightForNotification
+            }
         }
     }
     
@@ -64,5 +84,9 @@ class NotificationTableViewCell: UITableViewCell {
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
+        priceLabel.layer.cornerRadius = 5
+        priceLabel.clipsToBounds = true
+        type.layer.cornerRadius = 5
+        type.clipsToBounds = true
     }
 }
