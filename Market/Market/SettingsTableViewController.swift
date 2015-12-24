@@ -8,6 +8,7 @@
 
 import UIKit
 import Parse
+import MBProgressHUD
 
 class SettingsTableViewController: UITableViewController {
 
@@ -85,10 +86,18 @@ class SettingsTableViewController: UITableViewController {
      }
     
     @IBAction func onLogout(sender: AnyObject) {
-        User.logOut()
-        
-        let viewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier(StoryboardID.main)
-        self.presentViewController(viewController, animated: true, completion: nil)
+        let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+        hud.labelText = "Logging out..."
+        User.logOutInBackgroundWithBlock({ (error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+            hud.hide(true)
+            UIApplication.sharedApplication().applicationIconBadgeNumber = 0
+            let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier(StoryboardID.main)
+            UIApplication.sharedApplication().delegate!.window!!.rootViewController = vc
+        })
     }
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

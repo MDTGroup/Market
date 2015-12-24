@@ -71,7 +71,7 @@ class UserTimelineViewController: UIViewController {
     tableFooterView.addSubview(noMoreResultLabel)
     tableView.tableFooterView = tableFooterView
     
-    MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+    MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
     loadNewestData()
   }
   
@@ -111,7 +111,7 @@ class UserTimelineViewController: UIViewController {
         self.refreshControl.endRefreshing()
         self.loadingView.stopAnimating()
         self.isLoadingNextPage = false
-        MBProgressHUD.hideHUDForView(self.view, animated: true)
+        MBProgressHUD.hideHUDForView(self.tableView, animated: true)
       })
       
     } else {
@@ -136,7 +136,7 @@ class UserTimelineViewController: UIViewController {
         self.refreshControl.endRefreshing()
         self.loadingView.stopAnimating()
         self.isLoadingNextPage = false
-        MBProgressHUD.hideHUDForView(self.view, animated: true)
+        MBProgressHUD.hideHUDForView(self.tableView, animated: true)
       })
     }
     

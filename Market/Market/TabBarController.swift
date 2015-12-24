@@ -50,11 +50,11 @@ class TabBarController: NSObject {
             }
             self.numUnreadNotification = Int(numUnread)
             if numUnread > 0 {
-                self.updateAppBadge()
                 self.notificationTab.badgeValue = "\(numUnread)"
             } else {
                 self.notificationTab.badgeValue = nil
             }
+            self.updateAppBadge()
         }
     }
     
@@ -66,12 +66,12 @@ class TabBarController: NSObject {
             }
             self.numUnreadMessage = Int(numUnread)
             if numUnread > 0 {
-                self.updateAppBadge()
                 self.messageTab.badgeValue = "\(numUnread)"
                 PostsListViewController.needToRefresh = true
             } else {
                 self.messageTab.badgeValue = nil
             }
+            self.updateAppBadge()
         }
     }
     

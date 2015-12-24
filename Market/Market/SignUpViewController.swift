@@ -21,7 +21,7 @@ class SignUpViewController: UIViewController {
         spinner = UIActivityIndicatorView(frame: CGRectMake(0, 0, 150, 150))
         
         //set focus to fullnameField
-       // self.fullnameField.becomeFirstResponder()
+        // self.fullnameField.becomeFirstResponder()
         
         // Add observer to detect when the keyboard will be shown
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name: UIKeyboardWillShowNotification, object: nil)
@@ -38,18 +38,14 @@ class SignUpViewController: UIViewController {
         fullnameField.delegate = self
         passwordField.delegate = self
         emailField.delegate = self
-
-    }
-    
- //Calls this function when the tap is recognized.
-    func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
-        self.view.endEditing(true)
-        print("The keyboard is dismissed")
         
     }
     
-    
+    //Calls this function when the tap is recognized.
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        self.view.endEditing(true)
+    }
     
     /*MARK: Fix bug when keyboard slides up*/
     
@@ -76,18 +72,13 @@ class SignUpViewController: UIViewController {
                 self.view.frame.origin.y += keyboardSize.height/2 - offset.height
             })
         }
-        print("Keyboard will show and new position y of View",self.view.frame.origin.y)
-        
     }
     
     func keyboardWillHide(sender: NSNotification) {
         let userInfo: [NSObject : AnyObject] = sender.userInfo!
         let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
         self.view.frame.origin.y += keyboardSize.height/2
-        print("Keyboard will hide")
-        
     }
-
     
     @IBAction func signUpTap(sender: AnyObject) {
         
@@ -99,16 +90,16 @@ class SignUpViewController: UIViewController {
         
         // Validate the text fields
         if fullName.characters.count < 5 {
-//            let alert = UIAlertView(title: "Invalid", message: "Fullname must be greater than 5 characters", delegate: self, cancelButtonTitle: "OK")
-//            alert.show()
+            //            let alert = UIAlertView(title: "Invalid", message: "Fullname must be greater than 5 characters", delegate: self, cancelButtonTitle: "OK")
+            //            alert.show()
         } else if password.characters.count < 1 {
-        //} else if count(password) < 8 {
-//            let alert = UIAlertView(title: "Invalid", message: "Password must be greater than 1 characters", delegate: self, cancelButtonTitle: "OK")
-//            alert.show()
+            //} else if count(password) < 8 {
+            //            let alert = UIAlertView(title: "Invalid", message: "Password must be greater than 1 characters", delegate: self, cancelButtonTitle: "OK")
+            //            alert.show()
         } else if email.characters.count < 8 {
-        //} else if count(email) < 8 {
-//            let alert = UIAlertView(title: "Invalid", message: "Please enter a valid email address", delegate: self, cancelButtonTitle: "OK")
-//            alert.show()
+            //} else if count(email) < 8 {
+            //            let alert = UIAlertView(title: "Invalid", message: "Please enter a valid email address", delegate: self, cancelButtonTitle: "OK")
+            //            alert.show()
             
         } else {
             // Run a spinner to show a task in progress
@@ -123,8 +114,8 @@ class SignUpViewController: UIViewController {
                 
                 self.spinner.stopAnimating()
                 if ((error) != nil) {
-//                    let alert = UIAlertView(title: "Error", message: "\(error)", delegate: self, cancelButtonTitle: "OK")
-//                    alert.show()
+                    //                    let alert = UIAlertView(title: "Error", message: "\(error)", delegate: self, cancelButtonTitle: "OK")
+                    //                    alert.show()
                     
                 } else {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
@@ -136,9 +127,9 @@ class SignUpViewController: UIViewController {
     }
     
     func gotoHome() {
-
+        
         view.endEditing(true)
-       let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
         
         let vc = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.home)
         UIApplication.sharedApplication().delegate!.window!!.rootViewController = vc
@@ -149,6 +140,7 @@ class SignUpViewController: UIViewController {
         dismissViewControllerAnimated(true, completion: nil)
     }
 }
+
 extension SignUpViewController : UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         fullnameField.returnKeyType = UIReturnKeyType.Next
@@ -162,7 +154,7 @@ extension SignUpViewController : UITextFieldDelegate {
             emailField.becomeFirstResponder()
         }
         if textField == emailField {
-           fullnameField.becomeFirstResponder()
+            fullnameField.becomeFirstResponder()
         }
         
         return true
