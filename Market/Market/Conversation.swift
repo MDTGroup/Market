@@ -38,10 +38,10 @@ class Conversation: PFObject, PFSubclassing {
         }
     }
     
-    func getMessages(lastCreatedAt: NSDate?, callback: MessageResultBlock) {
+    func getMessages(lastCreatedAt: NSDate?, maxResultPerRequest: Int, callback: MessageResultBlock) {
         let query = messages.query()
         query.includeKey("user")
-        query.limit = 10
+        query.limit = maxResultPerRequest
         if let lastCreatedAt = lastCreatedAt {
             query.whereKey("createdAt", greaterThan: lastCreatedAt)
         }

@@ -25,6 +25,7 @@ class ChatViewController: JSQMessagesViewController {
     var isLoading = false
     var isLoadingEarlierMessages = false
     var conversation: Conversation!
+    let maxResultPerRequest = 10
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,13 +43,12 @@ class ChatViewController: JSQMessagesViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        self.showLoadEarlierMessagesHeader = false
         timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "onPushNotificationMessage:", name: TabBarController.newMessage, object: nil)
         conversation.markRead { (success, error) -> Void in
             TabBarController.instance.onRefreshMessageBadge(nil)
         }
-        
-        showLoadEarlierMessagesHeader = true
     }
     
     func onPushNotificationMessage(notification: Notification) {
@@ -253,7 +253,7 @@ extension ChatViewController {
             isLoading = true
             let lastMessage = messages.last
             
-            conversation.getMessages(lastMessage?.date, callback: { (messages, error) -> Void in
+            conversation.getMessages(lastMessage?.date, maxResultPerRequest: maxResultPerRequest, callback: { (messages, error) -> Void in
                 guard error == nil else {
                     print(error)
                     return
@@ -265,6 +265,7 @@ extension ChatViewController {
                     if messages.count > 0 {
                         self.finishReceivingMessage()
                         self.scrollToBottomAnimated(false)
+                        self.showLoadEarlierMessagesHeader = messages.count >= self.maxResultPerRequest
                     }
                 }
                 
