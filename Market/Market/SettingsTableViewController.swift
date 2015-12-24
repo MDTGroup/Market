@@ -14,7 +14,7 @@ class SettingsTableViewController: UITableViewController {
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var imagePickerView: UIImageView!
     
-    
+    //SWITCH BUTTONS
     @IBOutlet weak var switchCellSaved: UISwitch!
     @IBOutlet weak var switchCellFollowing: UISwitch!
     @IBOutlet weak var switchCellKeyword: UISwitch!
@@ -63,8 +63,6 @@ class SettingsTableViewController: UITableViewController {
         self.switchCellSaved.on = self.switchStateSaved
         print("Switch saved da duoc nhan", self.switchStateSaved)
     }
-    
-    
     @IBAction func onChangeSwitchFollowing(sender: AnyObject) {
         if self.switchStateFollowing == true  {
             self.switchStateFollowing = false
@@ -84,9 +82,7 @@ class SettingsTableViewController: UITableViewController {
         }
         self.switchCellKeyword.on = self.switchStateKeyword
         print("Switch Keyword  da duoc nhan", self.switchStateKeyword)
-        
-
-    }
+     }
     
     @IBAction func onLogout(sender: AnyObject) {
         User.logOut()
