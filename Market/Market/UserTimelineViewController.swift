@@ -110,7 +110,7 @@ class UserTimelineViewController: UIViewController {
                 self.refreshControl.endRefreshing()
                 self.loadingView.stopAnimating()
                 self.isLoadingNextPage = false
-                MBProgressHUD.hideHUDForView(tableView, animated: true)
+                MBProgressHUD.hideHUDForView(self.tableView, animated: true)
             })
             
         } else {
@@ -135,7 +135,7 @@ class UserTimelineViewController: UIViewController {
                 self.refreshControl.endRefreshing()
                 self.loadingView.stopAnimating()
                 self.isLoadingNextPage = false
-                MBProgressHUD.hideHUDForView(tableView, animated: true)
+                MBProgressHUD.hideHUDForView(self.tableView, animated: true)
             })
         }
         
