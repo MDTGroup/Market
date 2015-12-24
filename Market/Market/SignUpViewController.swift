@@ -151,18 +151,24 @@ class SignUpViewController: UIViewController {
 
 extension SignUpViewController : UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        fullnameField.returnKeyType = UIReturnKeyType.Next
-        passwordField.returnKeyType = UIReturnKeyType.Next
-        emailField.returnKeyType = UIReturnKeyType.Next
-        
-        if textField == fullnameField {
+      if textField == fullnameField {
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
             passwordField.becomeFirstResponder()
         }
         if textField == passwordField {
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
             emailField.becomeFirstResponder()
         }
+
         if textField == emailField {
-            fullnameField.becomeFirstResponder()
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
+           signUpTap(textField)
         }
         
         return true
