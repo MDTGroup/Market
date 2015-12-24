@@ -17,6 +17,9 @@ class LoginViewController: UIViewController {
     
     var origin: CGPoint!
     
+    //Change pwd
+    var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -90,8 +93,10 @@ class LoginViewController: UIViewController {
         let username = self.usernameField.text!
         let password = self.passwordField.text!
         
+        self.pause()
         // Validate the text fields
         if username.characters.count == 0 || password.characters.count == 0 {
+            self.restore()
             return
         } else {
             let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
@@ -110,6 +115,7 @@ class LoginViewController: UIViewController {
                     self.presentViewController(alertVC, animated: true, completion: nil)
                 }
             })
+            self.restore()
         }
     }
     
@@ -123,6 +129,21 @@ class LoginViewController: UIViewController {
     
     @IBAction func onClose(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func pause(){
+        activityIndicator = UIActivityIndicatorView(frame: CGRectMake(0, 0, 50, 50))
+        activityIndicator.center = self.view.center
+        activityIndicator.hidesWhenStopped = true
+        activityIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        view.addSubview(activityIndicator)
+        activityIndicator.startAnimating()
+        UIApplication.sharedApplication().beginIgnoringInteractionEvents()
+    }
+    
+    func restore(){
+        activityIndicator.stopAnimating()
+        UIApplication.sharedApplication().endIgnoringInteractionEvents()
     }
 }
 
