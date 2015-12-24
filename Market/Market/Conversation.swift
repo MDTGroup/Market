@@ -18,8 +18,10 @@ class Conversation: PFObject, PFSubclassing {
     @NSManaged var usersChooseHideConversation: [User]
     @NSManaged var readUsers: [String]
     @NSManaged var post: Post
-    @NSManaged var messages: PFRelation
     @NSManaged var lastMessage: Message?
+    var messages: PFRelation! {
+        return relationForKey("messages")
+    }
     
     var toUser: User?
     
@@ -148,7 +150,7 @@ class Conversation: PFObject, PFSubclassing {
                         conversation.usersChooseHideConversation = []
                         callback(conversation: conversation, error: nil)
                     } else {
-                        print("Why? Conversations should only have one with these post")
+                        print("Something wrong! A conversation for a post should only have 2 users")
                     }
                 }
             })

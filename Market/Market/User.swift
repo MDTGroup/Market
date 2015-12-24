@@ -17,9 +17,13 @@ class User: PFUser {
     @NSManaged var phone: String?
     @NSManaged var role: PFRole
     @NSManaged var config: PFConfig
-    @NSManaged var savedPosts: PFRelation
-    @NSManaged var votedPosts: PFRelation
     @NSManaged var keywords: [String]
+    var savedPosts: PFRelation! {
+        return relationForKey("savedPosts")
+    }
+    var votedPosts: PFRelation! {
+        return relationForKey("votedPosts")
+    }
     
     // Reset to nil to make it get data from server
     var numFollowing: Int32?

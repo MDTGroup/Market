@@ -97,7 +97,6 @@ class ItemCell: UITableViewCell {
             
             // The size of the descText to fit its content
             let newSize = descriptionLabel.sizeThatFits(CGSize(width: descriptionLabel.frame.width, height: CGFloat.max))
-            print(newSize.height)
             avatarToItemImage.constant = newSize.height > 40 ? 5 : -13
             
             //timeAgoLabel.text = Helper.timeSinceDateToNow(post.createdAt!)
