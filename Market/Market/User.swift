@@ -28,6 +28,7 @@ class User: PFUser {
     func getPosts(lastUpdated:NSDate?, callback: PostResultBlock) {
         if let query = Post.query() {
             query.limit = 20
+            query.selectKeys(["title", "descriptionText", "price", "user", "medias", "location", "condition", "sold", "voteCounter"])
             if let lastUpdated = lastUpdated {
                 query.whereKey("updatedAt", lessThan: lastUpdated)
             }
@@ -196,7 +197,7 @@ class User: PFUser {
     func getNotifications(lastUpdatedAt: NSDate?, callback: NotificationResultBlock) {
         if let query = Notification.query() {
             query.selectKeys(["post", "fromUser", "type", "extraInfo"])
-            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt)
+            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt, maxResult: 12)
             query.includeKey("post")
             query.includeKey("fromUser")
             query.whereKey("toUsers", equalTo: self)

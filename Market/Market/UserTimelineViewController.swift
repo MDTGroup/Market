@@ -70,7 +70,7 @@ class UserTimelineViewController: UIViewController {
         tableFooterView.addSubview(noMoreResultLabel)
         tableView.tableFooterView = tableFooterView
         
-        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        MBProgressHUD.showHUDAddedTo(tableView, animated: true)
         loadNewestData()
     }
     

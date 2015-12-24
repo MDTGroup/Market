@@ -11,7 +11,7 @@ import Parse
 import MBProgressHUD
 
 class SettingsTableViewController: UITableViewController {
-
+    
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var imagePickerView: UIImageView!
     
@@ -31,26 +31,62 @@ class SettingsTableViewController: UITableViewController {
         super.viewDidLoad()
         initControls()
     }
-  
-  override func viewWillAppear(animated: Bool) {
-    // The avatar, name may chang during edit profile, when go back, need to reload
-    if let currentUser = User.currentUser() {
-      self.fullnameLabel.text = currentUser.fullName
-      
-      //load avatar
-      if let imageFile = currentUser.avatar {
-        imageFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
-          self.imagePickerView.image = UIImage(data: data!)
+    
+    override func viewWillAppear(animated: Bool) {
+        // The avatar, name may chang during edit profile, when go back, need to reload
+        if let currentUser = User.currentUser() {
+            self.fullnameLabel.text = currentUser.fullName
+            
+            //load avatar
+            if let imageFile = currentUser.avatar {
+                imageFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
+                    self.imagePickerView.image = UIImage(data: data!)
+                }
+            } else {
+                print("User has not profile picture")
+            }
         }
-      } else {
-        print("User has not profile picture")
-      }
     }
-  }
-  
+    
     func initControls() {
         self.imagePickerView.layer.cornerRadius = self.imagePickerView.frame.size.width / 2
         self.imagePickerView.clipsToBounds = true
+        
+        //set state for swicher from Cloud
+        var needToSaveToCloud = false
+        let installation = PFInstallation.currentInstallation()
+        var enableNotificationForSavedPosts = installation.valueForKey("enableNotificationForSavedPosts") as? Bool
+        if enableNotificationForSavedPosts == nil {
+            enableNotificationForSavedPosts = true
+            needToSaveToCloud = true
+        }
+        switchCellSaved.on = enableNotificationForSavedPosts!
+        
+        var enableNotificationForFollowing = installation.valueForKey("enableNotificationForFollowing") as? Bool
+        if enableNotificationForFollowing == nil {
+            enableNotificationForFollowing = true
+            needToSaveToCloud = true
+        }
+        switchCellFollowing.on = enableNotificationForFollowing!
+        
+        var enableNotificationForKeywords = installation.valueForKey("enableNotificationForKeywords") as? Bool
+        if enableNotificationForKeywords == nil {
+            enableNotificationForKeywords = true
+            needToSaveToCloud = true
+        }
+        switchCellKeyword.on = enableNotificationForKeywords!
+        
+        if needToSaveToCloud {
+            updateNotificationConfig()
+        }
+    }
+    
+    func updateNotificationConfig() {
+        let installation = PFInstallation.currentInstallation()
+        installation.setValue(switchCellSaved.on, forKey: "enableNotificationForSavedPosts")
+        installation.setValue(switchCellFollowing.on, forKey: "enableNotificationForFollowing")
+        installation.setValue(switchCellKeyword.on, forKey: "enableNotificationForKeywords")
+        installation.saveInBackground()
     }
     
     @IBAction func onCloseSettings(sender: AnyObject) {
@@ -59,34 +95,8 @@ class SettingsTableViewController: UITableViewController {
     //MARK:Get State of Switches: Saved, Following, Keyword
     @IBAction func onChangeSwitchSaved(sender: AnyObject) {
         
-        if self.switchStateSaved == true  {
-            self.switchStateSaved = false
-        } else {
-             self.switchStateSaved  = true
-        }
-        self.switchCellSaved.on = self.switchStateSaved
-        print("Switch saved da duoc nhan", self.switchStateSaved)
+        updateNotificationConfig()
     }
-    @IBAction func onChangeSwitchFollowing(sender: AnyObject) {
-        if self.switchStateFollowing == true  {
-            self.switchStateFollowing = false
-        } else {
-            self.switchStateFollowing  = true
-        }
-        self.switchCellFollowing.on = self.switchStateFollowing
-        print("Switch Following  da duoc nhan", self.switchStateFollowing)
-
-    }
-    
-    @IBAction func onChangeSwitchKeyword(sender: AnyObject) {
-        if self.switchStateKeyword == true  {
-            self.switchStateKeyword = false
-        } else {
-            self.switchStateKeyword  = true
-        }
-        self.switchCellKeyword.on = self.switchStateKeyword
-        print("Switch Keyword  da duoc nhan", self.switchStateKeyword)
-     }
     
     @IBAction func onLogout(sender: AnyObject) {
         let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
@@ -126,10 +136,6 @@ class SettingsTableViewController: UITableViewController {
         
         self.presentViewController(titlePrompt, animated: true, completion: nil)
     }
-//    @IBAction func resetPasswordPressed(sender: AnyObject) {
-//        
-//        
-//    }
     
     func resetPassword(email : String){
         
@@ -160,7 +166,7 @@ class SettingsTableViewController: UITableViewController {
             }
         }
     }
-    /* 
+    /*
     If you want to put in a activity indicator, so that users see that the app is busy in between the actions, create the following two methods and call Pause() in the Reset action and Restore() just before or after the if/else in the resetPassword method
     */
     func pause(){
