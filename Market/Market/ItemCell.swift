@@ -103,7 +103,7 @@ class ItemCell: UITableViewCell {
             let formatter = NSDateFormatter()
             formatter.timeStyle = NSDateFormatterStyle.ShortStyle
             formatter.dateStyle = NSDateFormatterStyle.ShortStyle
-            timeAgoLabel.text = "Posted on \(formatter.stringFromDate(post.updatedAt!))"
+            timeAgoLabel.text = "Posted on \(formatter.stringFromDate(post.createdAt!))"
             
             priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)

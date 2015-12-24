@@ -21,6 +21,7 @@ class Notification: PFObject, PFSubclassing {
     @NSManaged var fromUser: User
     @NSManaged var type: Int
     @NSManaged var readUsers: PFRelation
+    @NSManaged var extraInfo: String
     
     var isRead = false
     

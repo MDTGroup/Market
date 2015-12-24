@@ -27,21 +27,17 @@ class MessageViewController: UIViewController {
         
         initControls()
         
-        if conversations.count > 0 {
-            title =  conversations[0].post.title
-        }
-        
-        let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
         hud.labelText = "Loading messages..."
         
-        if conversations.count == 0 || PostsListViewController.needToRefresh == false {
-            loadNewestData()
-        } else {
+        if conversations.count > 0 {
             isLoadingNextPage = true
             self.noMoreResultLabel.hidden = !self.isEndOfFeed
             self.refreshControl.endRefreshing()
             self.loadingView.stopAnimating()
-            MBProgressHUD.hideHUDForView(self.view, animated: true)
+            MBProgressHUD.hideHUDForView(view, animated: true)
+        } else if PostsListViewController.needToRefresh == false {
+            loadNewestData()
         }   
     }
     
@@ -110,10 +106,6 @@ class MessageViewController: UIViewController {
                 }
             }
             
-            if self.conversations.count > 0 {
-                self.title =  self.conversations[0].post.title
-            }
-            
             self.noMoreResultLabel.hidden = !self.isEndOfFeed
             self.refreshControl.endRefreshing()
             self.loadingView.stopAnimating()
@@ -126,7 +118,9 @@ class MessageViewController: UIViewController {
         if let chatVC = segue.destinationViewController as? ParentChatViewController,
             cell = sender as? MessageCell {
                 if let indexPath = tableView.indexPathForCell(cell) {
-                    chatVC.conversation = conversations[indexPath.row]
+                    let conversation = conversations[indexPath.row]
+                    conversation.post = post
+                    chatVC.conversation = conversation
                 }
         }
     }

@@ -19,6 +19,9 @@ class Conversation: PFObject, PFSubclassing {
     @NSManaged var readUsers: [String]
     @NSManaged var post: Post
     @NSManaged var messages: PFRelation
+    @NSManaged var lastMessage: Message?
+    
+    var toUser: User?
     
     func markRead(callback: PFBooleanResultBlock) {
         if let currentUser = User.currentUser(), userObjectId = currentUser.objectId {
@@ -40,8 +43,10 @@ class Conversation: PFObject, PFSubclassing {
     
     func getMessages(lastCreatedAt: NSDate?, maxResultPerRequest: Int, callback: MessageResultBlock) {
         let query = messages.query()
+        query.selectKeys(["user", "text"])
         query.includeKey("user")
         query.limit = maxResultPerRequest
+        
         if let lastCreatedAt = lastCreatedAt {
             query.whereKey("createdAt", greaterThan: lastCreatedAt)
         }
@@ -60,6 +65,7 @@ class Conversation: PFObject, PFSubclassing {
     
     func getEarlierMessages(createdAt: NSDate?, callback: MessageResultBlock) {
         let query = messages.query()
+        query.selectKeys(["user", "text"])
         query.includeKey("user")
         query.limit = 5
         if let createdAt = createdAt {
@@ -96,6 +102,7 @@ class Conversation: PFObject, PFSubclassing {
                     message.sendPushNotification(userId, postId: self.post.objectId!, text: text)
                 }
                 self.readUsers = [currentUser.objectId!]
+                self.lastMessage = message
                 self.saveInBackgroundWithBlock(callback)
             }
         }
@@ -107,6 +114,7 @@ class Conversation: PFObject, PFSubclassing {
         }
         if let query = Conversation.query() {
             let userIds = [fromUser.objectId!, toUser.objectId!]
+            query.selectKeys(["post", "userIds", "readUsers"])
             query.includeKey("post")
             query.whereKey("post", equalTo: post)
             query.whereKey("userIds", containsAllObjectsInArray: userIds)
@@ -150,9 +158,14 @@ class Conversation: PFObject, PFSubclassing {
     static func getConversations(lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
         if let query = Conversation.query(), currentUser = User.currentUser() {
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
+            query.selectKeys(["post", "userIds", "readUsers", "lastMessage"])
+            query.includeKey("lastMessage")
             query.includeKey("post")
+            query.includeKey("post.user")
             query.whereKey("userIds", equalTo: currentUser.objectId!)
             query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
+//            query.whereKey("messageCount", greaterThan: 0)
+            query.whereKeyExists("lastMessage")
             query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
@@ -160,7 +173,36 @@ class Conversation: PFObject, PFSubclassing {
                     return
                 }
                 if let conversations = pfObjs as? [Conversation] {
-                    callback(conversations: conversations, error: nil)
+                    
+                    var listUserIds = [String]()
+                    for conversation in conversations {
+                        for userId in conversation.userIds where userId != currentUser.objectId! {
+                            if !listUserIds.contains(userId) {
+                                listUserIds.append(userId)
+                            }
+                        }
+                    }
+                    
+                    if let userQuery = User.query() {
+                        userQuery.selectKeys(["fullName", "avatar"])
+                        userQuery.whereKey("objectId", containedIn: listUserIds)
+                        userQuery.cachePolicy = .NetworkElseCache
+                        userQuery.findObjectsInBackgroundWithBlock({ (users, error) -> Void in
+                            guard error == nil else {
+                                callback(conversations: nil, error: error)
+                                return
+                            }
+                            if let users = users as? [User] {
+                                for conversation in conversations {
+                                    for user in users where conversation.userIds.contains(user.objectId!) {
+                                        conversation.toUser = user
+                                    }
+                                }
+                            }
+                            
+                            callback(conversations: conversations, error: nil)
+                        })
+                    }
                 }
             })
         }
@@ -169,7 +211,8 @@ class Conversation: PFObject, PFSubclassing {
     static func getConversationsByPost(post:Post, lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
         if let query = Conversation.query(), currentUser = User.currentUser() {
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
-            query.includeKey("post")
+            query.selectKeys(["userIds", "readUsers", "lastMessage"])
+            query.includeKey("lastMessage")
             query.whereKey("post", equalTo: post)
             query.whereKey("userIds", equalTo: currentUser.objectId!)
             query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
@@ -180,7 +223,36 @@ class Conversation: PFObject, PFSubclassing {
                     return
                 }
                 if let conversations = pfObjs as? [Conversation] {
-                    callback(conversations: conversations, error: nil)
+                    
+                    var listUserIds = [String]()
+                    for conversation in conversations {
+                        for userId in conversation.userIds where userId != currentUser.objectId! {
+                            if !listUserIds.contains(userId) {
+                                listUserIds.append(userId)
+                            }
+                        }
+                    }
+                    
+                    if let userQuery = User.query() {
+                        userQuery.selectKeys(["fullName", "avatar"])
+                        userQuery.whereKey("objectId", containedIn: listUserIds)
+                        userQuery.cachePolicy = .NetworkElseCache
+                        userQuery.findObjectsInBackgroundWithBlock({ (users, error) -> Void in
+                            guard error == nil else {
+                                callback(conversations: nil, error: error)
+                                return
+                            }
+                            if let users = users as? [User] {
+                                for conversation in conversations {
+                                    for user in users where conversation.userIds.contains(user.objectId!) {
+                                        conversation.toUser = user
+                                    }
+                                }
+                            }
+                            
+                            callback(conversations: conversations, error: nil)
+                        })
+                    }
                 }
             })
         }
@@ -190,6 +262,7 @@ class Conversation: PFObject, PFSubclassing {
         if let query = Conversation.query(), currentUser = User.currentUser() {
             query.whereKey("userIds", equalTo: currentUser.objectId!)
             query.whereKey("readUsers", notEqualTo: currentUser.objectId!)
+            query.whereKeyExists("lastMessage")
             query.countObjectsInBackgroundWithBlock(callback)
         }
     }

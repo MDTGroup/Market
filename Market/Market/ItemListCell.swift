@@ -20,7 +20,7 @@ class ItemListCell: UITableViewCell {
     @IBOutlet weak var countMessagesLabel: UILabel!
     @IBOutlet weak var priceBackgroundView: UIView!
     
-    static var dicUserInfo = [String : (name: String, image: UIImage)]()
+    //    static var dicUserInfo = [String : (name: String, image: UIImage)]()
     
     var countMessages: (unread: Int, total: Int)! {
         didSet {
@@ -31,51 +31,47 @@ class ItemListCell: UITableViewCell {
         didSet {
             let post = conversation.post
             
-            if ItemListCell.dicUserInfo[conversation.objectId!] != nil {
-                let tupleData = ItemListCell.dicUserInfo[conversation.objectId!]
-                sellerLabel.text = tupleData!.name
-                avatarImageView.image = tupleData!.image
-                return
-            }
+            //            if ItemListCell.dicUserInfo[conversation.objectId!] != nil {
+            //                let tupleData = ItemListCell.dicUserInfo[conversation.objectId!]
+            //                sellerLabel.text = tupleData!.name
+            //                avatarImageView.image = tupleData!.image
+            //                return
+            //            }
             
             self.sellerLabel.text = ""
-            post.user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
-                if let avatar = post.user.avatar, url = avatar.url {
-//                    self.avatarImageView.setImageWithURL(NSURL(string: url)!)
+            if let avatar = post.user.avatar, url = avatar.url {
+                //                    self.avatarImageView.setImageWithURL(NSURL(string: url)!)
+                
+                self.avatarImageView.alpha = 0.15
+                self.avatarImageView.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: url)!), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
                     
-                    self.avatarImageView.alpha = 0.15
-                    self.avatarImageView.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: url)!), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
-                        
-                        UIView.animateWithDuration(0.5, animations: { () -> Void in
-                            self.avatarImageView.image = image
-                            self.avatarImageView.alpha = 1
-                        })
-                        
-                        self.sellerLabel.alpha = 0.15
-                        UIView.animateWithDuration(0.5, animations: { () -> Void in
-                            self.sellerLabel.alpha = 1
-                        })
-                        
-                        self.sellerLabel.text = post.user.fullName
-                        
-                        let tupleData = (name: self.sellerLabel.text!, image: image)
-                        
-                        ItemListCell.dicUserInfo[self.conversation.objectId!] = tupleData
-                        
-                        }, failure: { (urlRequest, httpURLResponse, error) -> Void in
-                            print(error)
+                    UIView.animateWithDuration(0.5, animations: { () -> Void in
+                        self.avatarImageView.image = image
+                        self.avatarImageView.alpha = 1
                     })
-                }
-                
-                
+                    
+                    self.sellerLabel.alpha = 0.15
+                    UIView.animateWithDuration(0.5, animations: { () -> Void in
+                        self.sellerLabel.alpha = 1
+                    })
+                    
+                    self.sellerLabel.text = post.user.fullName
+                    
+                    //                        let tupleData = (name: self.sellerLabel.text!, image: image)
+                    
+                    //                        ItemListCell.dicUserInfo[self.conversation.objectId!] = tupleData
+                    
+                    }, failure: { (urlRequest, httpURLResponse, error) -> Void in
+                        print(error)
+                })
             }
-
+            
             if post.medias.count > 0 {
                 self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
             }
             
             itemNameLabel.text = post.title
-            timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
+            timeAgoLabel.text = Helper.timeSinceDateToNow(post.createdAt!)
             priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
             
@@ -94,10 +90,10 @@ class ItemListCell: UITableViewCell {
             }
         }
     }
-
+    
     override func awakeFromNib() {
         super.awakeFromNib()
-
+        
         avatarImageView.layer.cornerRadius = 10
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8

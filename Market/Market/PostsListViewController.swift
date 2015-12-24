@@ -119,6 +119,7 @@ class PostsListViewController: UIViewController {
                     }
                 }
                 messageVC.post = post
+                messageVC.title = post.title
                 messageVC.conversations = conversationsByPost
             }
         }

@@ -25,7 +25,7 @@ class ChatViewController: JSQMessagesViewController {
     var isLoading = false
     var isLoadingEarlierMessages = false
     var conversation: Conversation!
-    let maxResultPerRequest = 10
+    let maxResultPerRequest = 5
     
     override func viewDidLoad() {
         super.viewDidLoad()

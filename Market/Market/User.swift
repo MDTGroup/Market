@@ -195,6 +195,7 @@ class User: PFUser {
     //MARK: Notifications
     func getNotifications(lastUpdatedAt: NSDate?, callback: NotificationResultBlock) {
         if let query = Notification.query() {
+            query.selectKeys(["post", "fromUser", "type", "extraInfo"])
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt)
             query.includeKey("post")
             query.includeKey("fromUser")
@@ -209,6 +210,7 @@ class User: PFUser {
                     
                     if let queryForUnread = Notification.query() {
                         QueryUtils.bindQueryParamsForInfiniteLoading(queryForUnread, lastCreatedAt: lastUpdatedAt)
+                        queryForUnread.selectKeys([])
                         queryForUnread.whereKey("toUsers", equalTo: self)
                         queryForUnread.whereKey("readUsers", equalTo: self)
                         

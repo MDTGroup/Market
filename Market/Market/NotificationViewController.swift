@@ -31,6 +31,11 @@ class NotificationViewController: UIViewController {
         loadNewestData()
     }
     
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        MBProgressHUD.hideHUDForView(self.view, animated: true)
+    }
+    
     func initControls() {
         tableView.delegate = self
         tableView.dataSource = self
