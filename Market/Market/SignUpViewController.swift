@@ -138,8 +138,7 @@ class SignUpViewController: UIViewController {
     func gotoHome() {
 
         view.endEditing(true)
-//        performSegueWithIdentifier("homeSegue", sender: self)
-        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+       let storyboard = UIStoryboard(name: "Home", bundle: nil)
         
         let vc = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.home)
         UIApplication.sharedApplication().delegate!.window!!.rootViewController = vc
@@ -157,16 +156,13 @@ extension SignUpViewController : UITextFieldDelegate {
         emailField.returnKeyType = UIReturnKeyType.Next
         
         if textField == fullnameField {
-            textField.resignFirstResponder()
             passwordField.becomeFirstResponder()
         }
         if textField == passwordField {
-            textField.resignFirstResponder()
             emailField.becomeFirstResponder()
         }
         if textField == emailField {
-            textField.resignFirstResponder()
-            fullnameField.becomeFirstResponder()
+           fullnameField.becomeFirstResponder()
         }
         
         return true

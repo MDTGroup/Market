@@ -271,15 +271,12 @@ extension ProfileViewController : UITextFieldDelegate {
         
         
         if textField == fullnameField {
-            textField.resignFirstResponder()
             phoneField.becomeFirstResponder()
         }
         if textField == phoneField {
-            textField.resignFirstResponder()
             addressField.becomeFirstResponder()
         }
         if textField == addressField {
-            textField.resignFirstResponder()
             fullnameField.becomeFirstResponder()
         }
         

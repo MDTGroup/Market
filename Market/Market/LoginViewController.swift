@@ -15,6 +15,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
+    
+    
     var spinner: UIActivityIndicatorView!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,8 +38,9 @@ class LoginViewController: UIViewController {
         self.view.addGestureRecognizer(tap)
         
         //Declare delegate to use textFieldShouldReturn
-        usernameField.delegate = self
-        passwordField.delegate = self
+        self.usernameField.delegate = self
+        self.passwordField.delegate = self
+
         
     }
     
@@ -61,21 +64,28 @@ class LoginViewController: UIViewController {
     
     func keyboardWillShow(sender: NSNotification) {
         let userInfo: [NSObject : AnyObject] = sender.userInfo!
+       
         
         let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
         let offset: CGSize = userInfo[UIKeyboardFrameEndUserInfoKey]!.CGRectValue.size
+        
         
         if keyboardSize.height == offset.height {
             if self.view.frame.origin.y == 0 {
                 UIView.animateWithDuration(0.1, animations: { () -> Void in
                     self.view.frame.origin.y -= keyboardSize.height/2
+                   
                 })
             }
+
         } else {
             UIView.animateWithDuration(0.1, animations: { () -> Void in
                 self.view.frame.origin.y += keyboardSize.height/2 - offset.height
+               
             })
         }
+       
+        
         print("Keyboard will show and new position y of View",self.view.frame.origin.y)
         
     }
@@ -154,15 +164,17 @@ class LoginViewController: UIViewController {
 }
 extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
+        
         usernameField.returnKeyType = UIReturnKeyType.Next
         passwordField.returnKeyType = UIReturnKeyType.Next
         
         if textField == usernameField {
-            textField.resignFirstResponder()
+           // textField.resignFirstResponder()
             passwordField.becomeFirstResponder()
+          
         }
         if textField == passwordField {
-            textField.resignFirstResponder()
+            //textField.resignFirstResponder()
             usernameField.becomeFirstResponder()
         }
         
