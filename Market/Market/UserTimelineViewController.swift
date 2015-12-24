@@ -8,12 +8,15 @@
 
 import UIKit
 import MBProgressHUD
+import Haneke
 
 class UserTimelineViewController: UIViewController {
   
-  var user: User!
+    var user: User!
   var posts = [Post]()
   var isCurrentUser = false
+    
+    static let homeSB = UIStoryboard(name: "Home", bundle: nil)
   
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var userLabel: UILabel!
@@ -37,7 +40,7 @@ class UserTimelineViewController: UIViewController {
   var noMoreResultLabel = UILabel()
   var selectedPostIndex: Int!
   var iFollowThisUser = false
-  var dataToLoad: Int = 0 // 0: user's posts, 1: user's saved posts
+  var dataToLoad = 0 // 0: user's posts, 1: user's saved posts
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -78,7 +81,6 @@ class UserTimelineViewController: UIViewController {
   
   func loadNewestData() {
     posts = []
-    print("pull to refresh")
     loadData(NSDate())
   }
   
@@ -167,7 +169,7 @@ class UserTimelineViewController: UIViewController {
         })
       }
     }
-    print("loading \(user.fullName)")
+
     segmentControl.hidden = !isCurrentUser
     editProfileButton.hidden = !isCurrentUser
     backButton.hidden = isCurrentUser
@@ -178,30 +180,35 @@ class UserTimelineViewController: UIViewController {
     editProfileButton.layer.cornerRadius = 3
     
     // Load following (this user follows people)
-    followingCountLabel.text = ""
-    user.getFollowings { (users, error) -> Void in
-      if users != nil {
-        self.followingCountLabel.text = "\((users?.count)!)"
-      } else {
-        self.followingCountLabel.text = "0"
-      }
+    followingCountLabel.text = " "
+    user.getNumFollowings { (numFollowing, error) -> Void in
+        guard error == nil else {
+            print(error)
+            return
+        }
+        self.followingCountLabel.text = "\(numFollowing)"
     }
     
     // Load follower (who follows this user)
-    followerCountLabel.text = ""
-    user.getFollowers { (users, error) -> Void in
-      if users != nil {
-        self.followerCountLabel.text = "\((users?.count)!)"
-      } else {
-        self.followerCountLabel.text = "0"
-      }
+    followerCountLabel.text = " "
+    user.getNumFollowers { (numFollower, error) -> Void in
+        guard error == nil else {
+            print(error)
+            return
+        }
+        self.followerCountLabel.text = "\(numFollower)"
     }
     
     userLabel.text = user.fullName
-    avatarImageView.setImageWithURL(NSURL(string: user.avatar!.url!)!)
+    if let avatar = user.avatar {
+      avatarImageView.hnk_setImageFromURL(NSURL(string: avatar.url!)!)
+      bigAvatarImageView.hnk_setImageFromURL(NSURL(string: avatar.url!)!)
+    } else {
+      avatarImageView.image = UIImage(named: "profile_blank")
+      bigAvatarImageView.image = UIImage(named: "profile_blank")
+    }
     avatarImageView.layer.cornerRadius = 40
     avatarImageView.clipsToBounds = true
-    bigAvatarImageView.setImageWithURL(NSURL(string: user.avatar!.url!)!)
     bigAvatarImageView.clipsToBounds = true
   }
   
@@ -284,7 +291,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         loadDataSince(cell.item.updatedAt!)
       }
     }
-
+    
     return cell
   }
   
@@ -347,3 +354,9 @@ extension UserTimelineViewController: PostViewControllerDelegate {
   }
 }
 
+// MARK: Show view from anywhere
+extension UserTimelineViewController {
+    static var instantiateViewController: UserTimelineViewController {
+        return homeSB.instantiateViewControllerWithIdentifier(StoryboardID.userTimeline) as! UserTimelineViewController
+    }
+}

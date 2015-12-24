@@ -11,7 +11,7 @@ import Parse
 
 enum NotificationType: String {
     case SavedPost = "notificationsForSavedPosts"
-    case Followers = "notificationsForFollowers"
+    case Following = "notificationsForFollowers"
     case Keywords = "notificationsForKeywords"
 }
 
@@ -20,6 +20,9 @@ class Notification: PFObject, PFSubclassing {
     @NSManaged var toUsers: PFRelation
     @NSManaged var fromUser: User
     @NSManaged var type: Int
+    @NSManaged var readUsers: PFRelation
+    
+    var isRead = false
     
     static func parseClassName() -> String {
         return "Notification"
@@ -33,6 +36,28 @@ class Notification: PFObject, PFSubclassing {
             }
             
             callback(true, nil)
+        }
+    }
+    
+    static func countUnread(callback: PFIntegerResultBlock) {
+        if let query = Notification.query(), currentUser = User.currentUser() {
+            query.whereKey("toUsers", equalTo: currentUser)
+            query.whereKey("readUsers", notEqualTo: currentUser)
+            query.countObjectsInBackgroundWithBlock(callback)
+        }
+    }
+    
+    func markRead() {
+        if isRead == false {
+            self.isRead = true
+            var params = [String : AnyObject]()
+            params["id"] = objectId!
+            PFCloud.callFunctionInBackground("notification_markRead", withParameters: params) { (result, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    return
+                }
+            }
         }
     }
 }

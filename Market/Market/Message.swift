@@ -16,4 +16,12 @@ class Message: PFObject, PFSubclassing {
     @NSManaged var conversation: Conversation
     @NSManaged var user: User
     @NSManaged var text: String
+    
+    func sendPushNotification(targetUserId: String, postId: String, text: String) {
+        var params = [String : AnyObject]()
+        params["targetUserId"] = targetUserId
+        params["text"] = text
+        params["postId"] = postId
+        PFCloud.callFunctionInBackground("messageNotification", withParameters: params)
+    }
 }

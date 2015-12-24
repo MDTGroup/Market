@@ -334,6 +334,7 @@ class PostViewController: UIViewController {
       post.sold = false
       post.isDeleted = false
       post.voteCounter = 0
+        post.vote = Vote()
       post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
         print(post)
         self.delegate?.postViewController?(self, didUploadNewPost: post)

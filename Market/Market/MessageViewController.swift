@@ -19,25 +19,60 @@ class MessageViewController: UIViewController {
     var isEndOfFeed = false
     var noMoreResultLabel = UILabel()
     
-    var conversations: [Conversation]!
+    var conversations = [Conversation]()
+    var post: Post!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
+        initControls()
+        
+        if conversations.count > 0 {
+            title =  conversations[0].post.title
+        }
+        
+        let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        hud.labelText = "Loading messages..."
+        
+        if conversations.count == 0 || PostsListViewController.needToRefresh == false {
+            loadNewestData()
+        } else {
+            isLoadingNextPage = true
+            self.noMoreResultLabel.hidden = !self.isEndOfFeed
+            self.refreshControl.endRefreshing()
+            self.loadingView.stopAnimating()
+            MBProgressHUD.hideHUDForView(self.view, animated: true)
+        }   
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if PostsListViewController.needToRefresh {
+            loadNewestData()
+            PostsListViewController.needToRefresh = false
+        }
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        MBProgressHUD.hideHUDForView(view, animated: true)
+        
+    }
+    
+    func initControls() {
         tableView.dataSource = self
         tableView.delegate = self
         
         // Refresh control
         refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
-        tableView.addSubview(refreshControl)
+        tableView.insertSubview(refreshControl, atIndex: 0)
         
         // Add the activity Indicator for table footer for infinity load
         let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
         loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         loadingView.center = tableFooterView.center
         loadingView.hidesWhenStopped = true
-        tableFooterView.addSubview(loadingView)
+        tableFooterView.insertSubview(loadingView, atIndex: 0)
         
         
         // Initialize the noMoreResult
@@ -49,13 +84,6 @@ class MessageViewController: UIViewController {
         noMoreResultLabel.hidden = true
         tableFooterView.addSubview(noMoreResultLabel)
         tableView.tableFooterView = tableFooterView
-        
-        //        let postVC: PostViewController = tabBarController?.viewControllers![1] as! PostViewController
-        //        postVC.delegate = self
-        
-        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        loadNewestData()
-        
     }
     
     func loadNewestData() {
@@ -64,7 +92,10 @@ class MessageViewController: UIViewController {
     }
     
     func loadData(lastUpdatedAt: NSDate?) {
-        Conversation.getConversations(lastUpdatedAt) { (conversations, error) -> Void in
+        if post == nil {
+            return
+        }
+        Conversation.getConversationsByPost(post, lastUpdatedAt: lastUpdatedAt) { (conversations, error) -> Void in
             guard error == nil else {
                 print(error)
                 self.isEndOfFeed = true
@@ -73,9 +104,14 @@ class MessageViewController: UIViewController {
             if let conversations = conversations {
                 if conversations.count == 0 {
                     self.isEndOfFeed = true
+                } else {
+                    self.conversations.appendContentsOf(conversations)
+                    self.tableView.reloadData()
                 }
-                self.conversations.appendContentsOf(conversations)
-                self.tableView.reloadData()
+            }
+            
+            if self.conversations.count > 0 {
+                self.title =  self.conversations[0].post.title
             }
             
             self.noMoreResultLabel.hidden = !self.isEndOfFeed
@@ -87,11 +123,11 @@ class MessageViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let chatVC = segue.destinationViewController as? ChatViewController,
-        cell = sender as? MessageCell {
-            if let indexPath = tableView.indexPathForCell(cell) {
-                chatVC.conversation = conversations[indexPath.row]
-            }
+        if let chatVC = segue.destinationViewController as? ParentChatViewController,
+            cell = sender as? MessageCell {
+                if let indexPath = tableView.indexPathForCell(cell) {
+                    chatVC.conversation = conversations[indexPath.row]
+                }
         }
     }
 }
@@ -102,24 +138,23 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell1", forIndexPath: indexPath) as! MessageCell
-        cell.conversation = conversations[indexPath.row]
+        let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell", forIndexPath: indexPath) as! MessageCell
         
-        var userName = ""
-        for user in cell.conversation.users {
-            userName += "\(user.fullName) - "
-        }
-        cell.textLabel!.text = userName
+        cell.conversation = conversations[indexPath.row]
         
         // Infinite load if last cell
         if !isLoadingNextPage && !isEndOfFeed {
             if indexPath.row == conversations.count - 1 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadData(conversations[indexPath.row].createdAt!)
+                loadData(conversations[indexPath.row].updatedAt!)
             }
         }
         
         return cell
+    }
+    
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath((indexPath), animated: true)
     }
 }

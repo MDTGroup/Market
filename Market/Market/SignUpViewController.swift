@@ -130,7 +130,14 @@ class SignUpViewController: UIViewController {
     }
     
     func gotoHome() {
-        performSegueWithIdentifier("homeSegue", sender: self)
+
+        view.endEditing(true)
+//        performSegueWithIdentifier("homeSegue", sender: self)
+        let storyboard = UIStoryboard(name: "Home", bundle: nil)
+        
+        let vc = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.home)
+        UIApplication.sharedApplication().delegate!.window!!.rootViewController = vc
+        
     }
     
     @IBAction func onClose(sender: AnyObject) {

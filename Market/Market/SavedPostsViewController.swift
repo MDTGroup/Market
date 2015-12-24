@@ -63,25 +63,27 @@ class SavedPostsViewController: UIViewController {
     }
     
     func loadData(lastUpdatedAt: NSDate?) {
-        User.currentUser()?.getSavedPosts(lastUpdatedAt) { (posts, error) -> Void in
-            if let posts = posts {
-                if posts.count == 0 {
+        if let currentUser = User.currentUser() {
+            currentUser.getSavedPosts(lastUpdatedAt) { (posts, error) -> Void in
+                if let posts = posts {
+                    if posts.count == 0 {
+                        self.isEndOfFeed = true
+                    }
+                    
+                    self.posts.appendContentsOf(posts)
+                    self.tableView.reloadData()
+                    
+                } else {
+                    print(error)
                     self.isEndOfFeed = true
                 }
                 
-                self.posts.appendContentsOf(posts)
-                self.tableView.reloadData()
-                
-            } else {
-                print(error)
-                self.isEndOfFeed = true
+                self.noMoreResultLabel.hidden = !self.isEndOfFeed
+                self.refreshControl.endRefreshing()
+                self.loadingView.stopAnimating()
+                self.isLoadingNextPage = false
+                MBProgressHUD.hideHUDForView(self.view, animated: true)
             }
-            
-            self.noMoreResultLabel.hidden = !self.isEndOfFeed
-            self.refreshControl.endRefreshing()
-            self.loadingView.stopAnimating()
-            self.isLoadingNextPage = false
-            MBProgressHUD.hideHUDForView(self.view, animated: true)
         }
     }
 }
