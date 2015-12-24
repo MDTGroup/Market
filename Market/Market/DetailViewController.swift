@@ -8,7 +8,6 @@
 
 import UIKit
 import AFNetworking
-import Haneke
 
 @objc protocol DetailViewControllerDelegate {
     optional func detailViewController(detailViewController: DetailViewController, newPost: Post)
@@ -43,6 +42,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var voteCountLabel: UILabel!
     @IBOutlet weak var voteLabel: UILabel!
     @IBOutlet var panGesture: UIPanGestureRecognizer!
+    @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
     
     var post: Post!
     var isReadingFullDescription: Bool!
@@ -54,6 +54,7 @@ class DetailViewController: UIViewController {
     var imageOriginalCenter: CGPoint!
     var imageOriginalFrame: CGRect!
     var direction: CGFloat = 1.0
+    var screenWidth: CGFloat!
     
     weak var delegate: DetailViewControllerDelegate?
     
@@ -80,7 +81,7 @@ class DetailViewController: UIViewController {
         buttonsView.layer.borderWidth = 0.5
         buttonsView.layer.borderColor = UIColor.grayColor().CGColor
         dimmingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.0)
-        showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.0, showFull: false)
+        
         tapGesture = UITapGestureRecognizer(target: self, action: "showMore:")
         view.addGestureRecognizer(tapGesture)
         
@@ -117,6 +118,8 @@ class DetailViewController: UIViewController {
         if nImages > 1 {
             var iv: UIImageView!
             tempImageViews = []
+            // Refresh the layout before assign anything
+            view.layoutIfNeeded()
             for i in 0...nImages-1 {
                 iv = UIImageView()
                 iv.frame = imageView.frame
@@ -132,9 +135,16 @@ class DetailViewController: UIViewController {
         }
         
         // Set the buttons width equally
-        let w = UIScreen.mainScreen().bounds.width
-        voteButtonWidth.constant = w / 3
-        chatButtonWidth.constant = w / 3
+        screenWidth = UIScreen.mainScreen().bounds.width
+        voteButtonWidth.constant = screenWidth / 3
+        chatButtonWidth.constant = screenWidth / 3
+        
+        // Create shadow for text for easy reading
+        descriptionText.layer.shadowColor = UIColor.blackColor().CGColor
+        descriptionText.layer.shadowOffset = CGSizeMake(1.0, 1.0)
+        descriptionText.layer.shadowOpacity = 1.0
+        descriptionText.layer.shadowRadius = 1.0
+        showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.0, showFull: false)
         
         // Set the images scroll indicator
         setImageScroll(1)
@@ -221,7 +231,7 @@ class DetailViewController: UIViewController {
             imageOriginalCenter = imageView.center
             imageOriginalFrame = imageView.frame
             direction = point.y > imageView.frame.height/2 ? -0.15 : 0.15
-            print("image view frame", imageView.frame)
+            //print("image view frame", imageView.frame)
             
         } else if sender.state == .Changed {
             imageView.center = CGPoint(x: imageOriginalCenter.x + translation.x, y: imageOriginalCenter.y + translation.y)
@@ -229,7 +239,7 @@ class DetailViewController: UIViewController {
             
         } else if sender.state == .Ended {
             print(translation.y)
-            if translation.y > 150 {
+            if translation.y > 100 {
                 dismissViewControllerAnimated(true, completion: nil)
             } else {
                 // If only 1 image then return it to original position
@@ -296,6 +306,26 @@ class DetailViewController: UIViewController {
         }
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let nextVC = segue.destinationViewController as! FullImageViewController
+        let data = sender as! UIImage
+        nextVC.image = data
+    }
+    
+    @IBAction func onZoomImage(sender: UIPinchGestureRecognizer) {
+        if sender.state == .Began {
+            
+        } else if sender.state == .Changed {
+            
+        } else if sender.state == .Ended {
+            
+        }
+    }
+    
+    @IBAction func onDoubleTap(sender: UITapGestureRecognizer) {
+        performSegueWithIdentifier("fullImageSegue", sender: imageView.image)
+    }
+    
     func showDescription(y: CGFloat, bgAlpha: CGFloat, showFull: Bool) {
         let dimmingHeight = UIScreen.mainScreen().bounds.height - y - 40
         if showFull {
@@ -304,7 +334,8 @@ class DetailViewController: UIViewController {
         }
         
         // The size of the textView to fit its content
-        let newSize = self.descriptionText.sizeThatFits(CGSize(width: self.descriptionText.frame.width, height: CGFloat.max))
+        let newSize = descriptionText.sizeThatFits(CGSize(width: screenWidth - 20, height: CGFloat.max))
+        //print(newSize, descriptionText.text)
         
         textHeight.constant = min(dimmingHeight - 8, newSize.height)
         descTextGap.constant = showFull ? 25 : 5

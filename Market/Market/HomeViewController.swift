@@ -202,7 +202,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
             if indexPath.section >= posts.count - 2 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadDataSince(cell.item.createdAt!)
+                loadDataSince(posts[posts.count-1].updatedAt!)
             }
         }
         
