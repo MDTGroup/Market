@@ -329,32 +329,14 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="MARKET" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g9p-K8-uUI">
-                                <rect key="frame" x="69" y="192" width="183" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="eTX-Fi-QGb"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="33"/>
-                                <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shopping never easier" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wiv-AF-be3">
-                                <rect key="frame" x="69" y="214" width="183" height="21"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="qQK-BK-Dva"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
-                                <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fEL-fm-8ZI">
-                                <rect key="frame" x="55" y="269" width="210" height="30"/>
+                                <rect key="frame" x="20" y="269" width="280" height="30"/>
                                 <color key="textColor" red="0.63320707070707072" green="0.63320707070707072" blue="0.63320707070707072" alpha="1" colorSpace="calibratedRGB"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6m3-Gn-nQ9">
-                                <rect key="frame" x="96" y="339" width="128" height="30"/>
+                                <rect key="frame" x="20" y="324" width="280" height="30"/>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="Reset Password">
@@ -374,23 +356,39 @@
                                     <action selector="onClose:" destination="whM-IW-ITt" eventType="touchUpInside" id="djy-yc-F57"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon-Original" translatesAutoresizingMaskIntoConstraints="NO" id="t5s-Ea-Mwa">
+                                <rect key="frame" x="115" y="132" width="90" height="90"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="90" id="cjc-Dr-048"/>
+                                    <constraint firstAttribute="height" constant="90" id="xA8-pb-Fbf"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shopping never easier" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wiv-AF-be3">
+                                <rect key="frame" x="69" y="231" width="183" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="wgu-DT-3dX"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="11"/>
+                                <color key="textColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="wiv-AF-be3" secondAttribute="trailing" constant="68" id="12Q-GB-Bbq"/>
                             <constraint firstItem="fEL-fm-8ZI" firstAttribute="centerY" secondItem="iTk-Eh-DFU" secondAttribute="centerY" id="9az-IN-uRe"/>
+                            <constraint firstAttribute="trailing" secondItem="wiv-AF-be3" secondAttribute="trailing" constant="68" id="B4O-n5-Epm"/>
                             <constraint firstItem="Dup-Yj-sTd" firstAttribute="top" secondItem="xo2-di-CUl" secondAttribute="bottom" constant="8" id="Cea-g9-5Fm"/>
-                            <constraint firstAttribute="trailing" secondItem="6m3-Gn-nQ9" secondAttribute="trailing" constant="96" id="IUJ-KV-LwD"/>
+                            <constraint firstItem="t5s-Ea-Mwa" firstAttribute="centerX" secondItem="iTk-Eh-DFU" secondAttribute="centerX" id="DnF-r3-fOG"/>
+                            <constraint firstAttribute="trailing" secondItem="6m3-Gn-nQ9" secondAttribute="trailing" constant="20" id="IUJ-KV-LwD"/>
+                            <constraint firstItem="wiv-AF-be3" firstAttribute="centerX" secondItem="iTk-Eh-DFU" secondAttribute="centerX" id="IZP-cm-tvR"/>
+                            <constraint firstItem="fEL-fm-8ZI" firstAttribute="top" secondItem="wiv-AF-be3" secondAttribute="bottom" constant="17" id="RIY-jb-bRg"/>
                             <constraint firstAttribute="trailing" secondItem="Dup-Yj-sTd" secondAttribute="trailing" id="T8n-pF-bYj"/>
-                            <constraint firstItem="6m3-Gn-nQ9" firstAttribute="leading" secondItem="iTk-Eh-DFU" secondAttribute="leading" constant="96" id="UPz-Zn-Ywa"/>
-                            <constraint firstItem="fEL-fm-8ZI" firstAttribute="top" secondItem="g9p-K8-uUI" secondAttribute="bottom" constant="56" id="VWI-Gf-40f"/>
-                            <constraint firstAttribute="trailing" secondItem="fEL-fm-8ZI" secondAttribute="trailing" constant="55" id="XuP-Yt-WWU"/>
-                            <constraint firstItem="6m3-Gn-nQ9" firstAttribute="top" secondItem="fEL-fm-8ZI" secondAttribute="bottom" constant="40" id="a4X-55-OCT"/>
-                            <constraint firstAttribute="trailing" secondItem="g9p-K8-uUI" secondAttribute="trailing" constant="68" id="cZb-Pp-4od"/>
-                            <constraint firstItem="g9p-K8-uUI" firstAttribute="leading" secondItem="iTk-Eh-DFU" secondAttribute="leading" constant="69" id="naK-R2-3jD"/>
-                            <constraint firstItem="wiv-AF-be3" firstAttribute="top" secondItem="g9p-K8-uUI" secondAttribute="bottom" constant="1" id="stI-YD-0NC"/>
-                            <constraint firstItem="fEL-fm-8ZI" firstAttribute="leading" secondItem="iTk-Eh-DFU" secondAttribute="leading" constant="55" id="tss-MB-0Pf"/>
-                            <constraint firstItem="wiv-AF-be3" firstAttribute="leading" secondItem="iTk-Eh-DFU" secondAttribute="leading" constant="69" id="twv-YD-9QD"/>
+                            <constraint firstItem="6m3-Gn-nQ9" firstAttribute="leading" secondItem="iTk-Eh-DFU" secondAttribute="leading" constant="20" id="UPz-Zn-Ywa"/>
+                            <constraint firstAttribute="trailing" secondItem="fEL-fm-8ZI" secondAttribute="trailing" constant="20" id="XuP-Yt-WWU"/>
+                            <constraint firstItem="6m3-Gn-nQ9" firstAttribute="top" secondItem="fEL-fm-8ZI" secondAttribute="bottom" constant="25" id="a4X-55-OCT"/>
+                            <constraint firstItem="wiv-AF-be3" firstAttribute="top" secondItem="t5s-Ea-Mwa" secondAttribute="bottom" constant="9" id="mes-S9-JGR"/>
+                            <constraint firstItem="wiv-AF-be3" firstAttribute="leading" secondItem="iTk-Eh-DFU" secondAttribute="leading" constant="69" id="tLr-h9-ei4"/>
+                            <constraint firstItem="fEL-fm-8ZI" firstAttribute="leading" secondItem="iTk-Eh-DFU" secondAttribute="leading" constant="20" id="tss-MB-0Pf"/>
                         </constraints>
                     </view>
                     <connections>
