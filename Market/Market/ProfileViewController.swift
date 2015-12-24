@@ -26,14 +26,8 @@ class ProfileViewController: UIViewController {
    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        
-        
-        // Do any additional setup after loading the view.
-//        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWasShow:"), name:UIKeyboardWillShowNotification, object: nil)
-//    
-        //cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
-        
+    
+        //Load data
         if let currentUser = User.currentUser() {
             //load avatar
             if let imageFile = User.currentUser()!.objectForKey("avatar") as? PFFile {
@@ -61,7 +55,13 @@ class ProfileViewController: UIViewController {
             //Looks for single or multiple taps.
             let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
             self.view.addGestureRecognizer(tap)
+            
         }
+        
+        //Declare delegate to use textFieldShouldReturn
+        fullnameField.delegate = self
+        phoneField.delegate = self
+        addressField.delegate = self
    }
   
   
@@ -253,5 +253,33 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         imagePicker.delegate = self
         imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
         self.presentViewController(imagePicker, animated: true, completion: nil)
+    }
+    
+    @IBAction func tapAvatar(sender: AnyObject) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        self.presentViewController(imagePicker, animated: true, completion: nil)
+    }
+}
+
+extension ProfileViewController : UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        fullnameField.returnKeyType = UIReturnKeyType.Next
+        phoneField.returnKeyType = UIReturnKeyType.Next
+        addressField.returnKeyType = UIReturnKeyType.Next
+        
+        
+        if textField == fullnameField {
+            phoneField.becomeFirstResponder()
+        }
+        if textField == phoneField {
+            addressField.becomeFirstResponder()
+        }
+        if textField == addressField {
+            fullnameField.becomeFirstResponder()
+        }
+        
+        return true
     }
 }

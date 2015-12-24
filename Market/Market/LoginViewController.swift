@@ -15,6 +15,8 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var usernameField: UITextField!
     @IBOutlet weak var passwordField: UITextField!
     
+    
+    
     var spinner: UIActivityIndicatorView!
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,9 +36,15 @@ class LoginViewController: UIViewController {
         //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         self.view.addGestureRecognizer(tap)
+        
+        //Declare delegate to use textFieldShouldReturn
+        self.usernameField.delegate = self
+        self.passwordField.delegate = self
 
+        
     }
     
+
     //Calls this function when the tap is recognized.
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
@@ -56,21 +64,28 @@ class LoginViewController: UIViewController {
     
     func keyboardWillShow(sender: NSNotification) {
         let userInfo: [NSObject : AnyObject] = sender.userInfo!
+       
         
         let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
         let offset: CGSize = userInfo[UIKeyboardFrameEndUserInfoKey]!.CGRectValue.size
+        
         
         if keyboardSize.height == offset.height {
             if self.view.frame.origin.y == 0 {
                 UIView.animateWithDuration(0.1, animations: { () -> Void in
                     self.view.frame.origin.y -= keyboardSize.height/2
+                   
                 })
             }
+
         } else {
             UIView.animateWithDuration(0.1, animations: { () -> Void in
                 self.view.frame.origin.y += keyboardSize.height/2 - offset.height
+               
             })
         }
+       
+        
         print("Keyboard will show and new position y of View",self.view.frame.origin.y)
         
     }
@@ -145,5 +160,24 @@ class LoginViewController: UIViewController {
     
     @IBAction func onClose(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+extension LoginViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        
+        usernameField.returnKeyType = UIReturnKeyType.Next
+        passwordField.returnKeyType = UIReturnKeyType.Next
+        
+        if textField == usernameField {
+           // textField.resignFirstResponder()
+            passwordField.becomeFirstResponder()
+          
+        }
+        if textField == passwordField {
+            //textField.resignFirstResponder()
+            usernameField.becomeFirstResponder()
+        }
+        
+        return true
     }
 }
