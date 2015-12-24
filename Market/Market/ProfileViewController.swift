@@ -254,4 +254,11 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
         self.presentViewController(imagePicker, animated: true, completion: nil)
     }
+    
+    @IBAction func tapAvatar(sender: AnyObject) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+        self.presentViewController(imagePicker, animated: true, completion: nil)
+    }
 }
