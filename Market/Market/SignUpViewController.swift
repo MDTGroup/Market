@@ -33,9 +33,15 @@ class SignUpViewController: UIViewController {
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         self.view.addGestureRecognizer(tap)
         
+        
+        //Declare delegate to use textFieldShouldReturn
+        fullnameField.delegate = self
+        passwordField.delegate = self
+        emailField.delegate = self
 
     }
-    //Calls this function when the tap is recognized.
+    
+ //Calls this function when the tap is recognized.
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         self.view.endEditing(true)
@@ -142,5 +148,27 @@ class SignUpViewController: UIViewController {
     
     @IBAction func onClose(sender: AnyObject) {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+extension SignUpViewController : UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        fullnameField.returnKeyType = UIReturnKeyType.Next
+        passwordField.returnKeyType = UIReturnKeyType.Next
+        emailField.returnKeyType = UIReturnKeyType.Next
+        
+        if textField == fullnameField {
+            textField.resignFirstResponder()
+            passwordField.becomeFirstResponder()
+        }
+        if textField == passwordField {
+            textField.resignFirstResponder()
+            emailField.becomeFirstResponder()
+        }
+        if textField == emailField {
+            textField.resignFirstResponder()
+            fullnameField.becomeFirstResponder()
+        }
+        
+        return true
     }
 }
