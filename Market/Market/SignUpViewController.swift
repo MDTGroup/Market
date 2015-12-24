@@ -90,17 +90,23 @@ class SignUpViewController: UIViewController {
         
         // Validate the text fields
         if fullName.characters.count < 5 {
-            //            let alert = UIAlertView(title: "Invalid", message: "Fullname must be greater than 5 characters", delegate: self, cancelButtonTitle: "OK")
-            //            alert.show()
+         
+            let alertVC = UIAlertController(title: "Invalid!", message: "Fullname must be greater than 5 characters", preferredStyle: UIAlertControllerStyle.Alert)
+            let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+            alertVC.addAction(alertAction)
+            self.presentViewController(alertVC, animated: true, completion: nil)
         } else if password.characters.count < 1 {
-            //} else if count(password) < 8 {
-            //            let alert = UIAlertView(title: "Invalid", message: "Password must be greater than 1 characters", delegate: self, cancelButtonTitle: "OK")
-            //            alert.show()
-        } else if email.characters.count < 8 {
-            //} else if count(email) < 8 {
-            //            let alert = UIAlertView(title: "Invalid", message: "Please enter a valid email address", delegate: self, cancelButtonTitle: "OK")
-            //            alert.show()
             
+            let alertVC = UIAlertController(title: "Invalid!", message: "Password must be greater than 1 characters", preferredStyle: UIAlertControllerStyle.Alert)
+            let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+            alertVC.addAction(alertAction)
+            self.presentViewController(alertVC, animated: true, completion: nil)
+        } else if email.characters.count < 8 {
+            
+            let alertVC = UIAlertController(title: "Invalid!", message: "Please enter a valid email address", preferredStyle: UIAlertControllerStyle.Alert)
+            let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+            alertVC.addAction(alertAction)
+            self.presentViewController(alertVC, animated: true, completion: nil)
         } else {
             // Run a spinner to show a task in progress
             spinner.startAnimating()
@@ -114,9 +120,11 @@ class SignUpViewController: UIViewController {
                 
                 self.spinner.stopAnimating()
                 if ((error) != nil) {
-                    //                    let alert = UIAlertView(title: "Error", message: "\(error)", delegate: self, cancelButtonTitle: "OK")
-                    //                    alert.show()
-                    
+                
+                    let alertVC = UIAlertController(title: "Error!", message: "\(error)", preferredStyle: UIAlertControllerStyle.Alert)
+                    let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
+                    alertVC.addAction(alertAction)
+                    self.presentViewController(alertVC, animated: true, completion: nil)
                 } else {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         self.gotoHome()
@@ -143,18 +151,24 @@ class SignUpViewController: UIViewController {
 
 extension SignUpViewController : UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        fullnameField.returnKeyType = UIReturnKeyType.Next
-        passwordField.returnKeyType = UIReturnKeyType.Next
-        emailField.returnKeyType = UIReturnKeyType.Next
-        
-        if textField == fullnameField {
+      if textField == fullnameField {
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
             passwordField.becomeFirstResponder()
         }
         if textField == passwordField {
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
             emailField.becomeFirstResponder()
         }
+
         if textField == emailField {
-            fullnameField.becomeFirstResponder()
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
+           signUpTap(textField)
         }
         
         return true
