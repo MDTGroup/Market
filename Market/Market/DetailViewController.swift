@@ -54,6 +54,7 @@ class DetailViewController: UIViewController {
     var imageOriginalCenter: CGPoint!
     var imageOriginalFrame: CGRect!
     var direction: CGFloat = 1.0
+    var screenWidth: CGFloat!
     
     weak var delegate: DetailViewControllerDelegate?
     
@@ -80,7 +81,7 @@ class DetailViewController: UIViewController {
         buttonsView.layer.borderWidth = 0.5
         buttonsView.layer.borderColor = UIColor.grayColor().CGColor
         dimmingView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.0)
-        showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.0, showFull: false)
+        
         tapGesture = UITapGestureRecognizer(target: self, action: "showMore:")
         view.addGestureRecognizer(tapGesture)
         
@@ -132,9 +133,16 @@ class DetailViewController: UIViewController {
         }
         
         // Set the buttons width equally
-        let w = UIScreen.mainScreen().bounds.width
-        voteButtonWidth.constant = w / 3
-        chatButtonWidth.constant = w / 3
+        screenWidth = UIScreen.mainScreen().bounds.width
+        voteButtonWidth.constant = screenWidth / 3
+        chatButtonWidth.constant = screenWidth / 3
+        
+        // Create shadow for text for easy reading
+        descriptionText.layer.shadowColor = UIColor.blackColor().CGColor
+        descriptionText.layer.shadowOffset = CGSizeMake(1.0, 1.0)
+        descriptionText.layer.shadowOpacity = 1.0
+        descriptionText.layer.shadowRadius = 1.0
+        showDescription(UIScreen.mainScreen().bounds.height - 140, bgAlpha: 0.0, showFull: false)
         
         // Set the images scroll indicator
         setImageScroll(1)
@@ -221,7 +229,7 @@ class DetailViewController: UIViewController {
             imageOriginalCenter = imageView.center
             imageOriginalFrame = imageView.frame
             direction = point.y > imageView.frame.height/2 ? -0.15 : 0.15
-            print("image view frame", imageView.frame)
+            //print("image view frame", imageView.frame)
             
         } else if sender.state == .Changed {
             imageView.center = CGPoint(x: imageOriginalCenter.x + translation.x, y: imageOriginalCenter.y + translation.y)
@@ -304,7 +312,8 @@ class DetailViewController: UIViewController {
         }
         
         // The size of the textView to fit its content
-        let newSize = self.descriptionText.sizeThatFits(CGSize(width: self.descriptionText.frame.width, height: CGFloat.max))
+        let newSize = descriptionText.sizeThatFits(CGSize(width: screenWidth - 20, height: CGFloat.max))
+        print(newSize, descriptionText.text)
         
         textHeight.constant = min(dimmingHeight - 8, newSize.height)
         descTextGap.constant = showFull ? 25 : 5

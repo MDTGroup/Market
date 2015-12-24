@@ -211,6 +211,7 @@
                                             <outlet property="avatarImageView" destination="yy4-Gj-6Dd" id="SEq-Dp-rQ9"/>
                                             <outlet property="avatarToItemImage" destination="1UT-PG-HkD" id="mTw-wR-ZAY"/>
                                             <outlet property="buttonsView" destination="Vau-k2-isg" id="fgh-Ik-KYo"/>
+                                            <outlet property="buttonsViewHeight" destination="m1k-Sa-eMs" id="9rd-Az-LgN"/>
                                             <outlet property="chatButton" destination="qoF-UO-HcD" id="Vls-RW-V29"/>
                                             <outlet property="chatButtonWidth" destination="o0E-U5-ay1" id="beo-zo-Lkl"/>
                                             <outlet property="descriptionLabel" destination="tDz-HM-ic9" id="W74-KE-Je4"/>
