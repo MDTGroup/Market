@@ -8,7 +8,6 @@
 
 import UIKit
 import AFNetworking
-import Haneke
 
 @objc protocol DetailViewControllerDelegate {
     optional func detailViewController(detailViewController: DetailViewController, newPost: Post)
@@ -43,6 +42,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var voteCountLabel: UILabel!
     @IBOutlet weak var voteLabel: UILabel!
     @IBOutlet var panGesture: UIPanGestureRecognizer!
+    @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
     
     var post: Post!
     var isReadingFullDescription: Bool!
@@ -118,6 +118,8 @@ class DetailViewController: UIViewController {
         if nImages > 1 {
             var iv: UIImageView!
             tempImageViews = []
+            // Refresh the layout before assign anything
+            view.layoutIfNeeded()
             for i in 0...nImages-1 {
                 iv = UIImageView()
                 iv.frame = imageView.frame
@@ -237,7 +239,7 @@ class DetailViewController: UIViewController {
             
         } else if sender.state == .Ended {
             print(translation.y)
-            if translation.y > 150 {
+            if translation.y > 100 {
                 dismissViewControllerAnimated(true, completion: nil)
             } else {
                 // If only 1 image then return it to original position
@@ -304,6 +306,26 @@ class DetailViewController: UIViewController {
         }
     }
     
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let nextVC = segue.destinationViewController as! FullImageViewController
+        let data = sender as! UIImage
+        nextVC.image = data
+    }
+    
+    @IBAction func onZoomImage(sender: UIPinchGestureRecognizer) {
+        if sender.state == .Began {
+            
+        } else if sender.state == .Changed {
+            
+        } else if sender.state == .Ended {
+            
+        }
+    }
+    
+    @IBAction func onDoubleTap(sender: UITapGestureRecognizer) {
+        performSegueWithIdentifier("fullImageSegue", sender: imageView.image)
+    }
+    
     func showDescription(y: CGFloat, bgAlpha: CGFloat, showFull: Bool) {
         let dimmingHeight = UIScreen.mainScreen().bounds.height - y - 40
         if showFull {
@@ -313,7 +335,7 @@ class DetailViewController: UIViewController {
         
         // The size of the textView to fit its content
         let newSize = descriptionText.sizeThatFits(CGSize(width: screenWidth - 20, height: CGFloat.max))
-        print(newSize, descriptionText.text)
+        //print(newSize, descriptionText.text)
         
         textHeight.constant = min(dimmingHeight - 8, newSize.height)
         descTextGap.constant = showFull ? 25 : 5

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18083C721C2C0D16001F5F48 /* FullImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18083C711C2C0D16001F5F48 /* FullImageViewController.swift */; };
 		1866EBF81C26865B0009A1C0 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1866EBF71C26865B0009A1C0 /* Helper.swift */; };
 		18DEFF3F1C1BD79400511E88 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18DEFF3D1C1BD79400511E88 /* Home.storyboard */; };
 		18DEFF411C1BE4EC00511E88 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18DEFF401C1BE4EC00511E88 /* Settings.storyboard */; };
@@ -64,6 +65,7 @@
 
 /* Begin PBXFileReference section */
 		16F9798A0C1DF9D526E69107 /* Pods_Market.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Market.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		18083C711C2C0D16001F5F48 /* FullImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullImageViewController.swift; sourceTree = "<group>"; };
 		1866EBF71C26865B0009A1C0 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		18DEFF3E1C1BD79400511E88 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Home.storyboard; sourceTree = "<group>"; };
 		18DEFF401C1BE4EC00511E88 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
@@ -167,6 +169,7 @@
 				BA5062B01C1E850500E67EE7 /* FollowingViewController.swift */,
 				BAF769171C1EA804006870CA /* KeywordsViewController.swift */,
 				44EB6E191C250F4A0044992A /* SearchViewController.swift */,
+				18083C711C2C0D16001F5F48 /* FullImageViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -446,6 +449,7 @@
 				44F328591C0F815C00BF1CDF /* ViewController.swift in Sources */,
 				18E098AC1C1C11BF00A1F217 /* UserTimelineViewController.swift in Sources */,
 				4483EF681C1B370B002C98DA /* Follow.swift in Sources */,
+				18083C721C2C0D16001F5F48 /* FullImageViewController.swift in Sources */,
 				44F5BEC11C1BD5A9006317E0 /* PostViewController.swift in Sources */,
 				44E3B1DC1C1DE203003B9908 /* SavedPostsViewController.swift in Sources */,
 				4483EF771C1B41DF002C98DA /* SettingsTableViewController.swift in Sources */,

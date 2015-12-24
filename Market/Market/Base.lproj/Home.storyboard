@@ -621,14 +621,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BDo-wM-PIS">
-                                <rect key="frame" x="0.0" y="75" width="375" height="533"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                <gestureRecognizers/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="5tJ-ot-WPT" appends="YES" id="Oon-xH-Gb2"/>
-                                </connections>
-                            </imageView>
                             <view alpha="0.75" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="XEL-Je-kAP">
                                 <rect key="frame" x="0.0" y="453" width="375" height="155"/>
                                 <subviews>
@@ -805,6 +797,16 @@
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="BDo-wM-PIS">
+                                <rect key="frame" x="0.0" y="75" width="375" height="533"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                <gestureRecognizers/>
+                                <connections>
+                                    <outletCollection property="gestureRecognizers" destination="5tJ-ot-WPT" appends="YES" id="Oon-xH-Gb2"/>
+                                    <outletCollection property="gestureRecognizers" destination="wIV-x5-lLE" appends="YES" id="gik-tK-cx2"/>
+                                    <outletCollection property="gestureRecognizers" destination="fgv-B9-vkE" appends="YES" id="1ik-En-IpM"/>
+                                </connections>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -842,6 +844,7 @@
                         <outlet property="imageView" destination="BDo-wM-PIS" id="AHQ-0j-fms"/>
                         <outlet property="itemNameLabel" destination="4PH-zu-OB4" id="quP-yK-Xp1"/>
                         <outlet property="panGesture" destination="5tJ-ot-WPT" id="tzI-1a-8k6"/>
+                        <outlet property="pinchGesture" destination="wIV-x5-lLE" id="c3v-b2-q6s"/>
                         <outlet property="saveButton" destination="LAZ-RZ-MCh" id="wOd-3V-WV3"/>
                         <outlet property="scrollCircle1" destination="War-Jk-Wxe" id="Hi4-Gg-Nk3"/>
                         <outlet property="scrollCircle2" destination="sK6-qR-HC8" id="NCa-M8-ssS"/>
@@ -853,6 +856,7 @@
                         <outlet property="voteButtonWidth" destination="aBt-a0-CZc" id="UhV-FF-2Zi"/>
                         <outlet property="voteCountLabel" destination="5rz-mE-2ge" id="NIU-hg-lep"/>
                         <outlet property="voteLabel" destination="7Gk-53-Yd0" id="mRi-Gw-ec9"/>
+                        <segue destination="KhQ-33-yfa" kind="modal" identifier="fullImageSegue" id="vqC-u8-g7D"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Q2T-9Y-lpv" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -861,8 +865,42 @@
                         <action selector="onPanImage:" destination="nif-7J-xtZ" id="SfD-FL-37R"/>
                     </connections>
                 </panGestureRecognizer>
+                <pinchGestureRecognizer id="wIV-x5-lLE">
+                    <connections>
+                        <action selector="onZoomImage:" destination="nif-7J-xtZ" id="E9h-08-9j1"/>
+                    </connections>
+                </pinchGestureRecognizer>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="fgv-B9-vkE">
+                    <connections>
+                        <action selector="onDoubleTap:" destination="nif-7J-xtZ" id="Vgv-jz-cdn"/>
+                    </connections>
+                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="902.5" y="-405.5"/>
+        </scene>
+        <!--Full Image View Controller-->
+        <scene sceneID="opO-im-zaL">
+            <objects>
+                <viewController id="KhQ-33-yfa" customClass="FullImageViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="cZ6-Td-0eO"/>
+                        <viewControllerLayoutGuide type="bottom" id="V3Z-Tr-foG"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="IRc-fU-4vc">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ftt-MG-gdd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <tapGestureRecognizer numberOfTapsRequired="2" id="ki6-YY-Utb">
+                    <connections>
+                        <action selector="onDoubleTap:" destination="KhQ-33-yfa" id="Tw9-Mj-pUZ"/>
+                    </connections>
+                </tapGestureRecognizer>
+            </objects>
+            <point key="canvasLocation" x="1332.5" y="-405.5"/>
         </scene>
         <!--Me-->
         <scene sceneID="p9u-3L-KLk">
