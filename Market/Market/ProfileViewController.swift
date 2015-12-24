@@ -284,19 +284,25 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 
 extension ProfileViewController : UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        fullnameField.returnKeyType = UIReturnKeyType.Next
-        phoneField.returnKeyType = UIReturnKeyType.Next
-        addressField.returnKeyType = UIReturnKeyType.Next
-        
-        
+       
         if textField == fullnameField {
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
             phoneField.becomeFirstResponder()
         }
         if textField == phoneField {
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
             addressField.becomeFirstResponder()
         }
+
         if textField == addressField {
-            fullnameField.becomeFirstResponder()
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
+            onUpdate(textField)
         }
         
         return true
