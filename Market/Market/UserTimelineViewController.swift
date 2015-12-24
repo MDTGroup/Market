@@ -180,7 +180,7 @@ class UserTimelineViewController: UIViewController {
     editProfileButton.layer.cornerRadius = 3
     
     // Load following (this user follows people)
-    followingCountLabel.text = " "
+    followingCountLabel.text = ".."
     user.getNumFollowings { (numFollowing, error) -> Void in
         guard error == nil else {
             print(error)
@@ -190,7 +190,7 @@ class UserTimelineViewController: UIViewController {
     }
     
     // Load follower (who follows this user)
-    followerCountLabel.text = " "
+    followerCountLabel.text = ".."
     user.getNumFollowers { (numFollower, error) -> Void in
         guard error == nil else {
             print(error)

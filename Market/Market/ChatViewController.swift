@@ -39,12 +39,13 @@ class ChatViewController: JSQMessagesViewController {
         
         isLoading = false
         isLoadingEarlierMessages = false
+        loadMessages()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.showLoadEarlierMessagesHeader = false
-        timer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1.15, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "onPushNotificationMessage:", name: TabBarController.newMessage, object: nil)
         conversation.markRead { (success, error) -> Void in
             TabBarController.instance.onRefreshMessageBadge(nil)
@@ -260,13 +261,11 @@ extension ChatViewController {
                 }
                 self.automaticallyScrollsToMostRecentMessage = true
                 
-                if let messages = messages {
+                if let messages = messages where messages.count > 0 {
                     self.addMessages(messages)
-                    if messages.count > 0 {
-                        self.finishReceivingMessage()
-                        self.scrollToBottomAnimated(false)
-                        self.showLoadEarlierMessagesHeader = messages.count >= self.maxResultPerRequest
-                    }
+                    self.finishReceivingMessage()
+                    self.scrollToBottomAnimated(false)
+                    self.showLoadEarlierMessagesHeader = messages.count >= self.maxResultPerRequest
                 }
                 
                 self.isLoading = false

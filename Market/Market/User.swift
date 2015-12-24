@@ -199,6 +199,7 @@ class User: PFUser {
             query.includeKey("post")
             query.includeKey("fromUser")
             query.whereKey("toUsers", equalTo: self)
+            query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(notifications: nil, error: error)

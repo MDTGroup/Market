@@ -322,62 +322,119 @@ class PostViewController: UIViewController {
     post.descriptionText = descriptionText.text
     post.location = currentGeoPoint
     
-    post.vote = Vote()
-    
     return post
   }
   
-  func newPost() {
-    if let post = preparePost() {
-      showProgressBar()
-      // Set these initial values only for new post
-      post.sold = false
-      post.isDeleted = false
-      post.voteCounter = 0
-        post.vote = Vote()
-      post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
-        print(post)
-        self.delegate?.postViewController?(self, didUploadNewPost: post)
-        self.tabBarController!.selectedIndex = 0
-        
-        }) { (post: Post, percent: Float) -> Void in
-          print(percent)
-          self.progressBar.setProgress(percent, animated: true)
-      }
-    }
-  }
-  
-  func updatePost() {
-    print("updating post")
-    if let newPost = preparePost() {
-      showProgressBar()
-      let post = Post(withoutDataWithObjectId: (editingPost?.objectId)!)
-      post.fetchInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
-        print(fetchedPFObj)
-        if let fetchedPost = fetchedPFObj as? Post {
-          fetchedPost.title = newPost.title
-          fetchedPost.descriptionText = newPost.descriptionText
-          fetchedPost.price = newPost.price
-          fetchedPost.condition = newPost.condition
-          if self.isMediaChanged {
-            fetchedPost.medias = newPost.medias
-          }
-          fetchedPost.sold = newPost.sold
-          
-          fetchedPost.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
-            self.delegate?.postViewController?(self, didUploadNewPost: post)
-            self.dismissViewControllerAnimated(true, completion: nil)
-            }) { (post: Post, percent: Float) -> Void in
-              print(percent)
-              self.progressBar.setProgress(percent, animated: true)
-          }
-        } else {
-          print("Not able to update post :(")
+    func newPost() {
+        if let post = preparePost() {
+            showProgressBar()
+            // Set these initial values only for new post
+            post.sold = false
+            post.isDeleted = false
+            post.voteCounter = 0
+            post.vote = Vote()
+            post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
+                self.delegate?.postViewController?(self, didUploadNewPost: post)
+                self.tabBarController!.selectedIndex = 0
+                self.sendNotificationForNewPost(post)
+                }) { (post: Post, percent: Float) -> Void in
+                    self.progressBar.setProgress(percent, animated: true)
+            }
         }
-      }
-      
     }
-  }
+    
+    func updatePost() {
+        if let newPost = preparePost(), postBeforeUpdating = editingPost {
+            showProgressBar()
+            postBeforeUpdating.fetchIfNeededInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
+                if let fetchedPost = fetchedPFObj as? Post {
+                    
+                    var changeDescription = ""
+                    if fetchedPost.title != newPost.title {
+                        fetchedPost.title = newPost.title
+                        changeDescription += "title"
+                    }
+                    
+                    if fetchedPost.descriptionText != newPost.descriptionText {
+                        fetchedPost.descriptionText = newPost.descriptionText
+                        changeDescription += "description"
+                    }
+                    
+                    if fetchedPost.price != newPost.price {
+                        fetchedPost.price = newPost.price
+                        changeDescription += "price"
+                    }
+                    
+                    if fetchedPost.condition != newPost.condition {
+                        fetchedPost.condition = newPost.condition
+                        changeDescription += "condition"
+                    }
+                    
+                    if fetchedPost.sold != newPost.sold {
+                        fetchedPost.sold = newPost.sold
+                        changeDescription += "sold"
+                    }
+                    
+                    if fetchedPost.location != newPost.location {
+                        fetchedPost.location = newPost.location
+                        changeDescription += "location"
+                    }
+                    
+                    if self.isMediaChanged {
+                        fetchedPost.medias = newPost.medias
+                        changeDescription += "media"
+                    }
+                    
+                    
+                    fetchedPost.saveWithCallbackProgressAndFinish({ (updatedPost: Post) -> Void in
+                        self.delegate?.postViewController?(self, didUploadNewPost: updatedPost)
+                        self.dismissViewControllerAnimated(true, completion: nil)
+                        self.sendNotificationForUpdatedPost(updatedPost, changeDescription: changeDescription)
+                        }) { (post: Post, percent: Float) -> Void in
+                            self.progressBar.setProgress(percent, animated: true)
+                    }
+                } else {
+                    print("Not able to update post :(")
+                }
+            }
+        }
+    }
+    
+    func sendNotificationForNewPost(post: Post) {
+        var params = [String : AnyObject]()
+        params["postId"] = post.objectId!
+        Notification.sendNotifications(NotificationType.Following, params: params, callback: { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        })
+        
+        params["postId"] = post.objectId!
+        params["title"] = post.title
+        params["description"] = post.descriptionText
+        Notification.sendNotifications(NotificationType.Keywords, params: params) { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        }
+    }
+    
+    func sendNotificationForUpdatedPost(post: Post, changeDescription: String) {
+        if changeDescription.isEmpty {
+            return
+        }
+        var params = [String : AnyObject]()
+        params["postId"] = post.objectId!
+        params["extraInfo"] = changeDescription
+        Notification.sendNotifications(NotificationType.SavedPost, params: params, callback: { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        })
+    }
   
   func showProgressBar() {
     view.endEditing(true)

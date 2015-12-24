@@ -46,6 +46,7 @@ class Conversation: PFObject, PFSubclassing {
             query.whereKey("createdAt", greaterThan: lastCreatedAt)
         }
         query.orderByDescending("createdAt")
+        query.cachePolicy = .NetworkElseCache
         query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
             guard error == nil else {
                 callback(messages: nil, error: error)
@@ -152,6 +153,7 @@ class Conversation: PFObject, PFSubclassing {
             query.includeKey("post")
             query.whereKey("userIds", equalTo: currentUser.objectId!)
             query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
+            query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(conversations: nil, error: error)
@@ -171,6 +173,7 @@ class Conversation: PFObject, PFSubclassing {
             query.whereKey("post", equalTo: post)
             query.whereKey("userIds", equalTo: currentUser.objectId!)
             query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
+            query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(conversations: nil, error: error)

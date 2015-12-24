@@ -67,7 +67,6 @@ class PostsListViewController: UIViewController {
         
         // Initialize the noMoreResult
         noMoreResultLabel.frame = tableFooterView.frame
-        noMoreResultLabel.text = "No more result"
         noMoreResultLabel.textAlignment = NSTextAlignment.Center
         noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
         noMoreResultLabel.textColor = UIColor.grayColor()
@@ -100,6 +99,8 @@ class PostsListViewController: UIViewController {
             }
             
             self.noMoreResultLabel.hidden = !self.isEndOfFeed
+            self.noMoreResultLabel.text = (self.isEndOfFeed && self.conversations.count > 0) ? "No more result" : "No messages"
+
             self.refreshControl.endRefreshing()
             self.loadingView.stopAnimating()
             self.isLoadingNextPage = false

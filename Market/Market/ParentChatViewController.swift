@@ -21,6 +21,7 @@ class ParentChatViewController: UIViewController {
     @IBOutlet weak var postView: UIView!
     @IBOutlet weak var profileView: UIView!
     @IBOutlet weak var postContentView: UIView!
+    @IBOutlet weak var priceBackgroundView: UIView!
     
     var tapGesture: UITapGestureRecognizer!
     
@@ -31,8 +32,8 @@ class ParentChatViewController: UIViewController {
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
-        priceLabel.layer.cornerRadius = 5
-        priceLabel.clipsToBounds = true
+        priceBackgroundView.layer.cornerRadius = 5
+        priceBackgroundView.clipsToBounds = true
         
         let tapPostGesture = UITapGestureRecognizer(target: self, action: "onTapPost:")
         postView.addGestureRecognizer(tapPostGesture)

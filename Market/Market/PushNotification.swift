@@ -13,6 +13,9 @@ class PushNotification {
     static func handlePayload(application: UIApplication, userInfo: [NSObject : AnyObject]) {
         if let postId = userInfo["postId"] as? String {
             if application.applicationState == .Inactive {
+                let rootViewController = application.delegate?.window??.rootViewController
+                let hud = MBProgressHUD.showHUDAddedTo(rootViewController?.view, animated: true)
+                hud.labelText = "Loading post..."
                 let post = Post(withoutDataWithObjectId: postId)
                 post.fetchInBackgroundWithBlock({ (result, error) -> Void in
                     guard error == nil else {
@@ -22,7 +25,8 @@ class PushNotification {
                     if let result = result as? Post {
                         let vc = DetailViewController.instantiateViewController
                         vc.post = result
-                        application.delegate?.window??.rootViewController?.presentViewController(vc, animated: true, completion: nil)
+                        hud.hide(true)
+                        rootViewController?.presentViewController(vc, animated: true, completion: nil)
                     }
                 })
             } else {

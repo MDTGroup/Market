@@ -18,6 +18,9 @@ class ItemListCell: UITableViewCell {
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var newTagImageView: UIImageView!
     @IBOutlet weak var countMessagesLabel: UILabel!
+    @IBOutlet weak var priceBackgroundView: UIView!
+    
+    static var dicUserInfo = [String : (name: String, image: UIImage)]()
     
     var countMessages: (unread: Int, total: Int)! {
         didSet {
@@ -28,12 +31,43 @@ class ItemListCell: UITableViewCell {
         didSet {
             let post = conversation.post
             
+            if ItemListCell.dicUserInfo[conversation.objectId!] != nil {
+                let tupleData = ItemListCell.dicUserInfo[conversation.objectId!]
+                sellerLabel.text = tupleData!.name
+                avatarImageView.image = tupleData!.image
+                return
+            }
+            
             self.sellerLabel.text = ""
             post.user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
                 if let avatar = post.user.avatar, url = avatar.url {
-                    self.avatarImageView.setImageWithURL(NSURL(string: url)!)
+//                    self.avatarImageView.setImageWithURL(NSURL(string: url)!)
+                    
+                    self.avatarImageView.alpha = 0.15
+                    self.avatarImageView.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: url)!), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+                        
+                        UIView.animateWithDuration(0.5, animations: { () -> Void in
+                            self.avatarImageView.image = image
+                            self.avatarImageView.alpha = 1
+                        })
+                        
+                        self.sellerLabel.alpha = 0.15
+                        UIView.animateWithDuration(0.5, animations: { () -> Void in
+                            self.sellerLabel.alpha = 1
+                        })
+                        
+                        self.sellerLabel.text = post.user.fullName
+                        
+                        let tupleData = (name: self.sellerLabel.text!, image: image)
+                        
+                        ItemListCell.dicUserInfo[self.conversation.objectId!] = tupleData
+                        
+                        }, failure: { (urlRequest, httpURLResponse, error) -> Void in
+                            print(error)
+                    })
                 }
-                self.sellerLabel.text = post.user.fullName
+                
+                
             }
 
             if post.medias.count > 0 {
@@ -68,7 +102,7 @@ class ItemListCell: UITableViewCell {
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
-        priceLabel.layer.cornerRadius = 5
-        priceLabel.clipsToBounds = true
+        priceBackgroundView.layer.cornerRadius = 5
+        priceBackgroundView.clipsToBounds = true
     }
 }

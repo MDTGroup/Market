@@ -82,6 +82,8 @@ class NotificationViewController: UIViewController {
                     MBProgressHUD.hideHUDForView(self.view, animated: true)
 
                     self.noMoreResultLabel.hidden = !self.isEndOfFeed
+                    self.noMoreResultLabel.text = (self.isEndOfFeed && self.notifications.count > 0) ? "No more result" : "No notifications"
+                    
                     self.refreshControl.endRefreshing()
                     self.loadingView.stopAnimating()
                 }

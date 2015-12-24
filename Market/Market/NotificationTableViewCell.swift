@@ -18,14 +18,15 @@ class NotificationTableViewCell: UITableViewCell {
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var timeAgoLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var priceBackgroundView: UIView!
     @IBOutlet weak var sellerLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var newTagImageView: UIImageView!
-    @IBOutlet weak var type: UILabel!
+    @IBOutlet weak var typeLabel: UILabel!
+    @IBOutlet weak var typeBackgroundView: UIView!
     
     var notification: Notification! {
         didSet {
-            self.backgroundColor = UIColor.whiteColor()
             let post = notification.post
             self.sellerLabel.text = ""
             notification.fromUser.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
@@ -50,17 +51,17 @@ class NotificationTableViewCell: UITableViewCell {
             itemNameLabel.text = post.title
             timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
             priceLabel.text = post.price.formatCurrency()
-            newTagImageView.hidden = (post.condition > 0)
+//            newTagImageView.hidden = post.condition > 0
             
             switch notification.type {
             case 1:
-                type.text = "SavedPost"
+                typeLabel.text = "Updated"
             case 2:
-                type.text = "Following"
+                typeLabel.text = "Following"
             case 3:
-                type.text = "Keywords"
+                typeLabel.text = "Keywords"
             default:
-                type.text = "???"
+                typeLabel.text = "???"
             }
             
             if notification.isRead {
@@ -84,9 +85,9 @@ class NotificationTableViewCell: UITableViewCell {
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
-        priceLabel.layer.cornerRadius = 5
-        priceLabel.clipsToBounds = true
-        type.layer.cornerRadius = 5
-        type.clipsToBounds = true
+        priceBackgroundView.layer.cornerRadius = 5
+        priceBackgroundView.clipsToBounds = true
+        typeBackgroundView.layer.cornerRadius = 5
+        typeBackgroundView.clipsToBounds = true
     }
 }
