@@ -251,7 +251,7 @@
             </objects>
             <point key="canvasLocation" x="1269" y="1034"/>
         </scene>
-        <!--Change Password View Controller-->
+        <!--Change password-->
         <scene sceneID="x9s-eo-RRg">
             <objects>
                 <viewController id="M1N-bK-DPy" customClass="ChangePasswordViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
@@ -263,32 +263,71 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="oldPassword" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IHe-rF-kRW">
-                                <rect key="frame" x="112" y="113" width="188" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="currentPassword" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="IHe-rF-kRW">
+                                <rect key="frame" x="20" y="252" width="280" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="280" id="Sc8-7A-w4N"/>
+                                    <constraint firstAttribute="height" constant="30" id="pep-X0-D0O"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="newPassword" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hDs-6V-l0b">
-                                <rect key="frame" x="112" y="163" width="188" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="newPassword" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="hDs-6V-l0b">
+                                <rect key="frame" x="20" y="290" width="280" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="0UQ-EZ-09f"/>
+                                    <constraint firstAttribute="width" constant="280" id="mUh-e7-5xG"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="retypeNewPassword" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4hd-1F-mPi">
-                                <rect key="frame" x="112" y="213" width="188" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="retypeNewPassword" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4hd-1F-mPi">
+                                <rect key="frame" x="20" y="328" width="280" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="O5v-Ow-YNg"/>
+                                    <constraint firstAttribute="width" constant="280" id="haj-qT-kch"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ckl-2V-SLP">
-                                <rect key="frame" x="181" y="287" width="51" height="30"/>
-                                <state key="normal" title="Update"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ckl-2V-SLP">
+                                <rect key="frame" x="20" y="372" width="280" height="30"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="280" id="CWx-Lf-utt"/>
+                                    <constraint firstAttribute="height" constant="30" id="WWT-hZ-aey"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Update">
+                                    <color key="titleColor" red="0.95160590280000001" green="0.95160590280000001" blue="0.95160590280000001" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
                                 <connections>
                                     <action selector="updatePasswordBtn:" destination="M1N-bK-DPy" eventType="touchUpInside" id="8yl-pe-g5P"/>
                                 </connections>
                             </button>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_blank" translatesAutoresizingMaskIntoConstraints="NO" id="t98-HI-zte">
+                                <rect key="frame" x="115" y="164" width="80" height="80"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="80" id="DEw-wW-Qp7"/>
+                                    <constraint firstAttribute="width" constant="80" id="fQk-ni-M9f"/>
+                                </constraints>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="IHe-rF-kRW" firstAttribute="centerX" secondItem="tIO-rr-zBX" secondAttribute="centerX" id="BF2-oK-iFW"/>
+                            <constraint firstItem="hDs-6V-l0b" firstAttribute="top" secondItem="IHe-rF-kRW" secondAttribute="bottom" constant="8" id="BqB-5X-S0C"/>
+                            <constraint firstItem="ckl-2V-SLP" firstAttribute="centerX" secondItem="tIO-rr-zBX" secondAttribute="centerX" id="Ibk-JL-tiO"/>
+                            <constraint firstItem="hDs-6V-l0b" firstAttribute="centerY" secondItem="tIO-rr-zBX" secondAttribute="centerY" constant="21" id="Lxg-DM-2C4"/>
+                            <constraint firstItem="hDs-6V-l0b" firstAttribute="centerX" secondItem="tIO-rr-zBX" secondAttribute="centerX" id="SgW-lT-YJp"/>
+                            <constraint firstItem="4hd-1F-mPi" firstAttribute="top" secondItem="hDs-6V-l0b" secondAttribute="bottom" constant="8" id="jtI-in-3hO"/>
+                            <constraint firstItem="t98-HI-zte" firstAttribute="centerX" secondItem="tIO-rr-zBX" secondAttribute="centerX" constant="-5" id="n7W-hj-hkW"/>
+                            <constraint firstItem="IHe-rF-kRW" firstAttribute="top" secondItem="t98-HI-zte" secondAttribute="bottom" constant="8" id="o0m-ww-1r2"/>
+                            <constraint firstItem="4hd-1F-mPi" firstAttribute="centerX" secondItem="tIO-rr-zBX" secondAttribute="centerX" id="qBQ-gY-eNk"/>
+                            <constraint firstItem="ckl-2V-SLP" firstAttribute="top" secondItem="4hd-1F-mPi" secondAttribute="bottom" constant="14" id="yuZ-Kd-LHM"/>
+                        </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="c4e-RJ-yz0"/>
+                    <navigationItem key="navigationItem" title="Change password" id="c4e-RJ-yz0"/>
                     <connections>
                         <outlet property="currentPassword" destination="IHe-rF-kRW" id="IZW-yL-oEc"/>
                         <outlet property="newPassword" destination="hDs-6V-l0b" id="8cr-A4-oF5"/>
