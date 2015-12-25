@@ -25,7 +25,6 @@ class FollowingTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         imgField.layer.cornerRadius = imgField.frame.size.width/2
         imgField.clipsToBounds = true
-        
     }
     
     @IBAction func onUnFollowingTap(sender: AnyObject) {

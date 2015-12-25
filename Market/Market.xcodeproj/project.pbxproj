@@ -154,7 +154,6 @@
 			children = (
 				44EB1A2F1C24A9F600905312 /* Messages */,
 				44EB1A281C246E3500905312 /* NotificationViewController.swift */,
-				BAF769191C1EA983006870CA /* KeywordsTableViewCell.swift */,
 				44E3B1DA1C1DE203003B9908 /* SavedPostsViewController.swift */,
 				44F5BEB61C1BD5A9006317E0 /* DetailViewController.swift */,
 				44F5BEB71C1BD5A9006317E0 /* HomeViewController.swift */,
@@ -246,6 +245,7 @@
 				BA5062AC1C1E7D1800E67EE7 /* FollowingTableViewCell.swift */,
 				44F9693A1C2734C50078E7E8 /* SearchTableViewCell.swift */,
 				44EEF4E51C29EAE700F457C6 /* TabBarController.swift */,
+				BAF769191C1EA983006870CA /* KeywordsTableViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";

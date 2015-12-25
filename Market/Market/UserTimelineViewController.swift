@@ -14,6 +14,7 @@ class UserTimelineViewController: UIViewController {
     var user: User!
     var posts = [Post]()
     var queryArray = [User]()
+    var keyWords = User.currentUser()?.keywords
     var isCurrentUser = false
     
     static let homeSB = UIStoryboard(name: "Home", bundle: nil)
@@ -28,10 +29,13 @@ class UserTimelineViewController: UIViewController {
     @IBOutlet weak var editProfileButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var followButton: UIButton!
+    @IBOutlet weak var keywordText: UITextField!
     
+    @IBOutlet weak var keywordView: UIView!
     @IBOutlet weak var segmentControl: UISegmentedControl!
     @IBOutlet weak var segmentPreGap: NSLayoutConstraint!
     @IBOutlet weak var segmentHeight: NSLayoutConstraint!
+    @IBOutlet weak var keywordViewHeight: NSLayoutConstraint!
     
     var refreshControl = UIRefreshControl()
     var loadingView: UIActivityIndicatorView!
@@ -127,7 +131,39 @@ class UserTimelineViewController: UIViewController {
     @IBAction func onCategoryChanged(sender: UISegmentedControl) {
         isEndOfFeed = false
         dataToLoad = sender.selectedSegmentIndex
+        keywordView.hidden = (dataToLoad != 3)
+        keywordViewHeight.constant = dataToLoad != 3 ? 0 : 44
+        UIView.animateWithDuration(0.3, animations: { () -> Void in
+            self.view.layoutIfNeeded()
+        })
         refreshData()
+    }
+    
+    @IBAction func onKeywordAdd(sender: UIButton) {
+        var addedString = ((keywordText?.text)!).lowercaseString
+        addedString = addedString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        if addedString.characters.count == 0 {
+            return
+        }
+        User.currentUser()?.addKeyword(addedString, callback: { (success, error: NSError?) -> Void in
+            if error != nil {
+                if error?.code == 0 {
+                    let alertController = UIAlertController(title: "Adding keyword", message: "The keyword existed", preferredStyle: .Alert)
+                    
+                    let ackAction = UIAlertAction(title: "OK", style: .Cancel) { (action) in
+                        
+                    }
+                    alertController.addAction(ackAction)
+                    self.presentViewController(alertController, animated: true, completion: nil)
+                }
+                print(error)
+                return
+            } else {
+                self.keywordText.text = ""
+                self.keywordText.resignFirstResponder()
+                self.tableView.reloadData()
+            }
+        })
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -139,6 +175,9 @@ class UserTimelineViewController: UIViewController {
         }
     }
     
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        view.endEditing(true)
+    }
 }
 
 // MARK: - Data fetching
@@ -151,6 +190,9 @@ extension UserTimelineViewController {
         case 2:
             MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             loadFollowing()
+        case 3:
+            refreshControl.endRefreshing()
+            tableView.reloadData()
         default: return
         }
     }
@@ -218,15 +260,17 @@ extension UserTimelineViewController {
     }
     
     func refreshProfile() {
+        keywordView.hidden = true
+        keywordViewHeight.constant = 0
         if user == nil {
             user = User.currentUser()
             isCurrentUser = true
-            segmentPreGap.constant = 15
+            segmentPreGap.constant = 10
             segmentHeight.constant = 28
         } else {
             if user.objectId == User.currentUser()?.objectId {
                 isCurrentUser = true
-                segmentPreGap.constant = 15
+                segmentPreGap.constant = 10
                 segmentHeight.constant = 28
                 // Reload if any change in current user's profile
                 user = User.currentUser()
@@ -299,16 +343,35 @@ extension UserTimelineViewController {
                 self.queryArray = users
                 self.tableView.reloadData()
             }
+            self.noMoreResultLabel.hidden = false
         })
     }
     
 }
 
-extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource, FollowingTableViewCellDelegate {
+extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource, FollowingTableViewCellDelegate, KeywordsTableViewCellDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch dataToLoad {
         case 0, 1: return posts.count
         case 2: return queryArray.count
+        case 3:
+            if let currentUser = User.currentUser() {
+                return currentUser.keywords.count
+            }
+            return 0
+        default: return 0
+        }
+    }
+    
+    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        view.endEditing(true)
+    }
+    
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        switch dataToLoad {
+        case 0, 1: return 60
+        case 2: return 56
+        case 3: return 40
         default: return 0
         }
     }
@@ -331,7 +394,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 if indexPath.row >= posts.count - 2 {
                     loadingView.startAnimating()
                     isLoadingNextPage = true
-                    loadDataSince(posts[posts.count-1].updatedAt!)
+                    loadDataSince(posts[posts.count-1].createdAt!)
                 }
             }
             
@@ -358,6 +421,15 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
             cell.targetUser = self.queryArray[indexPath.row]
             cell.delegate = self
             
+            // TODO: Infinite load if last cell
+            // How to load next 20?
+            
+            return cell
+            
+        case 3:
+            let cell = tableView.dequeueReusableCellWithIdentifier("KeywordsCell", forIndexPath: indexPath) as! KeywordsTableViewCell
+            cell.keywordLabel.text = User.currentUser()?.keywords[indexPath.row]
+            cell.delegate = self
             return cell
             
         default:
@@ -420,6 +492,14 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         if value {
             if let id = tableView.indexPathForCell(followingTableViewCell) {
                 queryArray.removeAtIndex(id.row)
+                tableView.deleteRowsAtIndexPaths([id], withRowAnimation: .Bottom)
+            }
+        }
+    }
+    
+    func keywordsTableViewCell(keywordsTableViewCell: KeywordsTableViewCell, didDelete value: Bool) {
+        if value {
+            if let id = tableView.indexPathForCell(keywordsTableViewCell) {
                 tableView.deleteRowsAtIndexPaths([id], withRowAnimation: .Bottom)
             }
         }

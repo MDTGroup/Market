@@ -146,6 +146,8 @@ class ItemCell: UITableViewCell {
         avatarImageView.addGestureRecognizer(avatarTapGesture)
         //sellerLabel.addGestureRecognizer(sellerTapGesture)
         
+        priceLabel.textColor = MyColors.themeColor
+        
         // Set the gradientView
         let gradientLayer = CAGradientLayer()
         gradientLayer.frame = gradientView.bounds

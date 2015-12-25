@@ -10,7 +10,7 @@ import UIKit
 import Parse
 
 class SettingsTableViewController: UITableViewController {
-
+    
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var imagePickerView: UIImageView!
     
@@ -27,23 +27,23 @@ class SettingsTableViewController: UITableViewController {
         super.viewDidLoad()
         initControls()
     }
-  
-  override func viewWillAppear(animated: Bool) {
-    // The avatar, name may chang during edit profile, when go back, need to reload
-    if let currentUser = User.currentUser() {
-      self.fullnameLabel.text = currentUser.fullName
-      
-      //load avatar
-      if let imageFile = currentUser.avatar {
-        imageFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
-          self.imagePickerView.image = UIImage(data: data!)
+    
+    override func viewWillAppear(animated: Bool) {
+        // The avatar, name may chang during edit profile, when go back, need to reload
+        if let currentUser = User.currentUser() {
+            self.fullnameLabel.text = currentUser.fullName
+            
+            //load avatar
+            if let imageFile = currentUser.avatar {
+                imageFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
+                    self.imagePickerView.image = UIImage(data: data!)
+                }
+            } else {
+                print("User has not profile picture")
+            }
         }
-      } else {
-        print("User has not profile picture")
-      }
     }
-  }
-  
+    
     func initControls() {
         self.imagePickerView.layer.cornerRadius = self.imagePickerView.frame.size.width / 2
         self.imagePickerView.clipsToBounds = true
@@ -58,7 +58,7 @@ class SettingsTableViewController: UITableViewController {
         if self.switchStateSaved == true  {
             self.switchStateSaved = false
         } else {
-             self.switchStateSaved  = true
+            self.switchStateSaved  = true
         }
         self.switchCellSaved.on = self.switchStateSaved
         print("Switch saved da duoc nhan", self.switchStateSaved)
@@ -73,7 +73,7 @@ class SettingsTableViewController: UITableViewController {
         }
         self.switchCellFollowing.on = self.switchStateFollowing
         print("Switch Following  da duoc nhan", self.switchStateFollowing)
-
+        
     }
     
     @IBAction func onChangeSwitchKeyword(sender: AnyObject) {
@@ -85,7 +85,7 @@ class SettingsTableViewController: UITableViewController {
         self.switchCellKeyword.on = self.switchStateKeyword
         print("Switch Keyword  da duoc nhan", self.switchStateKeyword)
         
-
+        
     }
     
     @IBAction func onLogout(sender: AnyObject) {
@@ -95,7 +95,7 @@ class SettingsTableViewController: UITableViewController {
         self.presentViewController(viewController, animated: true, completion: nil)
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-    }
+    //    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    //        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    //    }
 }
