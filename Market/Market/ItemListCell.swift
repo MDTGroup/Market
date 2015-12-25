@@ -40,30 +40,30 @@ class ItemListCell: UITableViewCell {
             
             self.sellerLabel.text = ""
             if let avatar = post.user.avatar, url = avatar.url {
-                //                    self.avatarImageView.setImageWithURL(NSURL(string: url)!)
-                
-                self.avatarImageView.alpha = 0.15
-                self.avatarImageView.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: url)!), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
-                    
-                    UIView.animateWithDuration(0.5, animations: { () -> Void in
-                        self.avatarImageView.image = image
-                        self.avatarImageView.alpha = 1
-                    })
-                    
-                    self.sellerLabel.alpha = 0.15
-                    UIView.animateWithDuration(0.5, animations: { () -> Void in
-                        self.sellerLabel.alpha = 1
-                    })
-                    
-                    self.sellerLabel.text = post.user.fullName
-                    
-                    //                        let tupleData = (name: self.sellerLabel.text!, image: image)
-                    
-                    //                        ItemListCell.dicUserInfo[self.conversation.objectId!] = tupleData
-                    
-                    }, failure: { (urlRequest, httpURLResponse, error) -> Void in
-                        print(error)
-                })
+                self.avatarImageView.setImageWithURL(NSURL(string: url)!)
+                self.sellerLabel.text = post.user.fullName
+//                self.avatarImageView.alpha = 0.15
+//                self.avatarImageView.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: url)!), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+//                    
+//                    UIView.animateWithDuration(0.5, animations: { () -> Void in
+//                        self.avatarImageView.image = image
+//                        self.avatarImageView.alpha = 1
+//                    })
+//                    
+//                    self.sellerLabel.alpha = 0.15
+//                    UIView.animateWithDuration(0.5, animations: { () -> Void in
+//                        self.sellerLabel.alpha = 1
+//                    })
+//                    
+//                    self.sellerLabel.text = post.user.fullName
+//                    
+//                    //                        let tupleData = (name: self.sellerLabel.text!, image: image)
+//                    
+//                    //                        ItemListCell.dicUserInfo[self.conversation.objectId!] = tupleData
+//                    
+//                    }, failure: { (urlRequest, httpURLResponse, error) -> Void in
+//                        print(error)
+//                })
             }
             
             if post.medias.count > 0 {

@@ -13,14 +13,12 @@ import Parse
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    let storyboard = UIStoryboard(name: "Home", bundle: nil)
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         setupForParse(application, launchOptions: launchOptions)
         setupPushNotifications(application, launchOptions: launchOptions)
         if User.currentUser() != nil {
-            let vc = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.home)
-            window?.rootViewController = vc
+            HomeViewController.gotoHome()
         }
         return true
     }
@@ -148,6 +146,7 @@ extension AppDelegate {
 
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         PushNotification.handlePayload(application, userInfo: userInfo)
+        completionHandler(UIBackgroundFetchResult.NewData)
         if application.applicationState == UIApplicationState.Inactive {
              PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
         }

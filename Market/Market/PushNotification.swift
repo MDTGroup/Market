@@ -46,6 +46,7 @@ class PushNotification {
                     if let post = post as? Post {
                         let fromUser = User(withoutDataWithObjectId: fromUserId)
                         let toUser = User(withoutDataWithObjectId: toUserId)
+                       
                         ParentChatViewController.show(post, fromUser: fromUser, toUser: toUser)
                     }
                 })

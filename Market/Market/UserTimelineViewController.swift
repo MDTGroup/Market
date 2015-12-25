@@ -15,8 +15,6 @@ class UserTimelineViewController: UIViewController {
     var posts = [Post]()
     var isCurrentUser = false
     
-    static let homeSB = UIStoryboard(name: "Home", bundle: nil)
-    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
@@ -89,7 +87,6 @@ class UserTimelineViewController: UIViewController {
     
     func loadData(byThisDate: NSDate) {
         if dataToLoad == 0 {
-            print("loading user's posts")
             user.getPosts(byThisDate, callback: { (posts, error) -> Void in
                 if let posts = posts {
                     if posts.count == 0 {
@@ -363,6 +360,6 @@ extension UserTimelineViewController: PostViewControllerDelegate {
 // MARK: Show view from anywhere
 extension UserTimelineViewController {
     static var instantiateViewController: UserTimelineViewController {
-        return homeSB.instantiateViewControllerWithIdentifier(StoryboardID.userTimeline) as! UserTimelineViewController
+        return HomeViewController.storyboard.instantiateViewControllerWithIdentifier(StoryboardID.userTimeline) as! UserTimelineViewController
     }
 }

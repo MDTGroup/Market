@@ -8,6 +8,7 @@
 
 import UIKit
 import MBProgressHUD
+import Parse
 
 class ParentChatViewController: UIViewController {
 
@@ -66,16 +67,6 @@ class ParentChatViewController: UIViewController {
         
         initControls()
         loadPost()
-        
-        if let currentUser = User.currentUser() {
-            for userId in conversation.userIds where userId != currentUser.objectId! {
-                let user = User(withoutDataWithObjectId: userId)
-                user.fetchIfNeededInBackgroundWithBlock({ (result, error) -> Void in
-                    self.title = user.fullName
-                })
-                break
-            }
-        }
     }
     
     func loadPost() {
@@ -117,6 +108,7 @@ class ParentChatViewController: UIViewController {
                     if let messageVC = vc as? MessageViewController {
                         messageVC.title = conversation.post.title
                         messageVC.post = conversation.post
+                        
                         break
                     }
                 }
@@ -128,7 +120,7 @@ class ParentChatViewController: UIViewController {
 extension ParentChatViewController {
     static func show(post: Post, fromUser: User, toUser: User) {
         if fromUser.objectId == toUser.objectId {
-            print("Cannot chat your self")
+            print("Cannot chat yourself")
             return
         }
         
@@ -156,12 +148,12 @@ extension ParentChatViewController {
                         tabBarController.selectedIndex = 1
                         messageVC.post = conversation.post
                         parentChatVC.conversation = conversation
-                        parentChatVC.conversation.post.fetchIfNeededInBackgroundWithBlock({ (post, error) -> Void in
-                            
+                        PFObject.fetchAllIfNeededInBackground([fromUser, toUser, parentChatVC.conversation.post], block: { (users, error) -> Void in
                             guard error == nil else {
                                 print(error)
                                 return
                             }
+                            parentChatVC.title = toUser.fullName
                             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                 hud.hide(true)
                                 if let navController = tabBarController.selectedViewController as? UINavigationController {

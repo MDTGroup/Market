@@ -58,7 +58,6 @@ class DetailViewController: UIViewController {
     
     weak var delegate: DetailViewControllerDelegate?
     
-    static let homeSB = UIStoryboard(name: "Home", bundle: nil)
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -456,6 +455,6 @@ extension DetailViewController {
 // MARK: Show view from anywhere
 extension DetailViewController {
     static var instantiateViewController: DetailViewController {
-        return homeSB.instantiateViewControllerWithIdentifier(StoryboardID.postDetail) as! DetailViewController
+        return HomeViewController.storyboard.instantiateViewControllerWithIdentifier(StoryboardID.postDetail) as! DetailViewController
     }
 }

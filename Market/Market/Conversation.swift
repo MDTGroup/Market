@@ -28,7 +28,6 @@ class Conversation: PFObject, PFSubclassing {
     func markRead(callback: PFBooleanResultBlock) {
         if let currentUser = User.currentUser(), userObjectId = currentUser.objectId {
             if !readUsers.contains(userObjectId) {
-                readUsers.append(userObjectId)
                 var params = [String : AnyObject]()
                 params["id"] = objectId!
                 PFCloud.callFunctionInBackground("conversation_markRead", withParameters: params) { (result, error) -> Void in
@@ -45,7 +44,7 @@ class Conversation: PFObject, PFSubclassing {
     
     func getMessages(lastCreatedAt: NSDate?, maxResultPerRequest: Int, callback: MessageResultBlock) {
         let query = messages.query()
-        query.selectKeys(["user", "text"])
+        query.selectKeys(["user", "text", "photo", "video", "location"])
         query.includeKey("user")
         query.limit = maxResultPerRequest
         
@@ -67,7 +66,7 @@ class Conversation: PFObject, PFSubclassing {
     
     func getEarlierMessages(createdAt: NSDate?, callback: MessageResultBlock) {
         let query = messages.query()
-        query.selectKeys(["user", "text"])
+        query.selectKeys(["user", "text", "photo", "video", "location"])
         query.includeKey("user")
         query.limit = 5
         if let createdAt = createdAt {
@@ -85,13 +84,16 @@ class Conversation: PFObject, PFSubclassing {
         }
     }
     
-    func addMessage(currentUser: User, text: String, callback: PFBooleanResultBlock) {
+    func addMessage(currentUser: User, text: String, videoFile: PFFile?, photoFile: PFFile?, location: PFGeoPoint?, callback: PFBooleanResultBlock) {
         if text.isEmpty {
             return
         }
         let message = Message()
         message.user = currentUser
         message.text = text
+        message.video = videoFile
+        message.photo = photoFile
+        message.location = location
         message.conversation = self
         message.saveInBackgroundWithBlock { (success, error) -> Void in
             guard error == nil else {
@@ -101,7 +103,7 @@ class Conversation: PFObject, PFSubclassing {
             if success {
                 self.messages.addObject(message)
                 for userId in self.userIds where userId !=  currentUser.objectId {
-                    message.sendPushNotification(userId, postId: self.post.objectId!, text: text)
+                    message.sendPushNotification(userId, postId: self.post.objectId!, text: text, video: videoFile, photo: photoFile, location: location)
                 }
                 self.readUsers = [currentUser.objectId!]
                 self.lastMessage = message

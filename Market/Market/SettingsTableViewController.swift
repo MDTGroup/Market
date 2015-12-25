@@ -107,9 +107,7 @@ class SettingsTableViewController: UITableViewController {
                 return
             }
             hud.hide(true)
-            UIApplication.sharedApplication().applicationIconBadgeNumber = 0
-            let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier(StoryboardID.main)
-            UIApplication.sharedApplication().delegate!.window!!.rootViewController = vc
+            ViewController.gotoMain()
         })
     }
     

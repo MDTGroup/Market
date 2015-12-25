@@ -7,12 +7,12 @@
 //
 
 import UIKit
-import MBProgressHUD
 
 class PostsListViewController: UIViewController {
     static var needToRefresh = false
     @IBOutlet weak var tableView: UITableView!
     
+    var timer = NSTimer()
     var refreshControl = UIRefreshControl()
     var loadingView: UIActivityIndicatorView!
     var isLoadingNextPage = false
@@ -27,10 +27,14 @@ class PostsListViewController: UIViewController {
         super.viewDidLoad()
         
         initControls()
-        
-        let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        hud.labelText = "Loading posts..."
 
+        refreshControl.hidden = false
+        refreshControl.beginRefreshing()
+        
+        let strToBold = "Posts"
+        let message = "Loading \(strToBold)..."
+        refreshControl.attributedTitle = message.bold(strToBold)
+        
         if PostsListViewController.needToRefresh == false {
             loadNewestData()
         }
@@ -42,11 +46,13 @@ class PostsListViewController: UIViewController {
             loadNewestData()
             PostsListViewController.needToRefresh = false
         }
+        timer = NSTimer.scheduledTimerWithTimeInterval(3.5, target: self, selector: "refreshData", userInfo: nil, repeats: true)
+        refreshData()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        MBProgressHUD.hideHUDForView(self.view, animated: true)
+        timer.invalidate()
     }
     
     func initControls() {
@@ -66,9 +72,9 @@ class PostsListViewController: UIViewController {
         
         
         // Initialize the noMoreResult
+        noMoreResultLabel.font = UIFont.systemFontOfSize(12.0)
         noMoreResultLabel.frame = tableFooterView.frame
         noMoreResultLabel.textAlignment = NSTextAlignment.Center
-        noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
         noMoreResultLabel.textColor = UIColor.grayColor()
         noMoreResultLabel.hidden = true
         tableFooterView.addSubview(noMoreResultLabel)
@@ -77,7 +83,6 @@ class PostsListViewController: UIViewController {
     
     func loadNewestData() {
         conversations = []
-        countMessages.removeAll()
         loadData(nil)
     }
     
@@ -104,7 +109,6 @@ class PostsListViewController: UIViewController {
             self.refreshControl.endRefreshing()
             self.loadingView.stopAnimating()
             self.isLoadingNextPage = false
-            MBProgressHUD.hideHUDForView(self.view, animated: true)
         }
     }
     
@@ -129,6 +133,7 @@ class PostsListViewController: UIViewController {
         var posts = [String]()
         var newConversations = [Conversation]()
         let currentUserId = User.currentUser()!.objectId!
+        countMessages.removeAll()
         for conversation in conversations.reverse() {
             let id = conversation.post.objectId!
             if countMessages[id] == nil {
@@ -148,7 +153,43 @@ class PostsListViewController: UIViewController {
             posts.append(conversation.post.objectId!)
             newConversations.append(conversation)
         }
-        filteredConversationsByPost = newConversations.reverse()
+        filteredConversationsByPost = newConversations.sort { (a, b) -> Bool in
+            return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
+        }
+    }
+    
+    
+    func refreshData() {
+        if filteredConversationsByPost.count == 0 {
+            return
+        }
+        Conversation.getConversations(nil) { (newConversations, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+            if let newConversations = newConversations {
+                if newConversations.count == 0 {
+                    return
+                } else {
+                    for newConversation in newConversations {
+                        var found = false
+                        for (index, conversation) in self.conversations.enumerate() {
+                            if newConversation.objectId == conversation.objectId {
+                                self.conversations[index] = newConversation
+                                found = true
+                                break
+                            }
+                        }
+                        if !found {
+                            self.conversations.append(newConversation)
+                        }
+                    }
+                    self.filterDuplicatePost()
+                    self.tableView.reloadData()
+                }
+            }
+        }
     }
 }
 
@@ -166,7 +207,6 @@ extension PostsListViewController: UITableViewDelegate, UITableViewDataSource {
         }
         cell.conversation = conversation
         
-        // Infinite load if last cell
         if !isLoadingNextPage && !isEndOfFeed {
             if indexPath.row == filteredConversationsByPost.count - 1 {
                 loadingView.startAnimating()
