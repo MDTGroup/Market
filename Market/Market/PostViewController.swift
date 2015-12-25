@@ -23,6 +23,8 @@ class PostViewController: UIViewController {
     @IBOutlet weak var removeButton2: UIButton!
     @IBOutlet weak var removeButton3: UIButton!
     
+    @IBOutlet weak var instructionView: UIImageView!
+    
     @IBOutlet weak var imageHeight: NSLayoutConstraint!
     @IBOutlet weak var imageWidth: NSLayoutConstraint!
     @IBOutlet weak var descTextHeight: NSLayoutConstraint!
@@ -39,7 +41,6 @@ class PostViewController: UIViewController {
     @IBOutlet weak var backButton: UIBarButtonItem!
     @IBOutlet weak var draftButton: UIButton!
     @IBOutlet weak var quickPostButton: UIButton!
-    
     
     @IBOutlet weak var progressBarLength: NSLayoutConstraint!
     @IBOutlet weak var progressBarLeft: NSLayoutConstraint!
@@ -59,6 +60,7 @@ class PostViewController: UIViewController {
     var editingPost: Post?
     var isUpdating = false
     var isMediaChanged = false
+    var tapGestureOnInstruction: UIGestureRecognizer!
     
     weak var delegate: PostViewControllerDelegate?
     
@@ -85,11 +87,11 @@ class PostViewController: UIViewController {
             title = "Update the item"
             isUpdating = true
             loadPostToUpdate()
-            navBar.rightBarButtonItem = UIBarButtonItem(title: "Update", style: UIBarButtonItemStyle.Plain, target: self, action: "updatePost")
+            navBar.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "check"), style: .Plain, target: self, action: "updatePost")
         } else {
             title = "Post new item"
             isUpdating = false
-            navBar.rightBarButtonItem = UIBarButtonItem(title: "Post", style: UIBarButtonItemStyle.Plain, target: self, action: "newPost")
+            navBar.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "check"), style: .Plain, target: self, action: "newPost")
         }
         //discardButton.hidden = isUpdating
         //draftButton.hidden = isUpdating
@@ -109,6 +111,16 @@ class PostViewController: UIViewController {
         progressBarLeft.constant = 70
         progressBarLength.constant = UIScreen.mainScreen().bounds.width - 70 - 25
         quickPostLeft.constant = (UIScreen.mainScreen().bounds.width - 50) / 2
+        
+        // Show the instruction
+        imageView2.hidden = !isUpdating
+        imageView3.hidden = !isUpdating
+        conditionSegment.hidden = !isUpdating
+        instructionView.hidden = isUpdating
+        if !isUpdating {
+            tapGestureOnInstruction = UITapGestureRecognizer(target: self, action: "hideInstruction")
+            instructionView.addGestureRecognizer(tapGestureOnInstruction)
+        }
         
         // Add observer to detect when the keyboard will be shown/hide
         NSNotificationCenter.defaultCenter().addObserver(self,
@@ -139,12 +151,32 @@ class PostViewController: UIViewController {
         }
     }
     
+    func hideInstruction() {
+        UIView.animateWithDuration(0.1, animations: { () -> Void in
+            self.instructionView.center.x -= 5
+            }) { (finished) -> Void in
+                self.imageView2.alpha = 0
+                self.imageView3.alpha = 0
+                self.conditionSegment.alpha = 0
+                self.imageView2.hidden = false
+                self.imageView3.hidden = false
+                self.conditionSegment.hidden = false
+                
+                UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    self.instructionView.center.x += UIScreen.mainScreen().bounds.width
+                    self.imageView2.alpha = 1
+                    self.imageView3.alpha = 1
+                    self.conditionSegment.alpha = 1
+                })
+        }
+    }
+    
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         view.endEditing(true)
     }
     
     func loadPostToUpdate() {
-        priceLabel.text = "\((editingPost?.price)!)"
+        priceLabel.text = "\(Int((editingPost?.price)!))"
         titleLabel.text = editingPost?.title
         descriptionText.text = editingPost?.descriptionText
         descPlaceHolder.hidden = true

@@ -170,7 +170,7 @@ class UserTimelineViewController: UIViewController {
         if let navController = segue.destinationViewController as? UINavigationController {
             if let postVC = navController.topViewController as? PostViewController {
                 postVC.delegate = self
-                postVC.editingPost = sender as? Post
+                postVC.editingPost = (sender as! Post)
             }
         }
     }

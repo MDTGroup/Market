@@ -153,8 +153,9 @@ class ItemCell: UITableViewCell {
         gradientLayer.frame = gradientView.bounds
         let color1 = UIColor.clearColor().CGColor as CGColorRef
         let color2 = MyColors.bgColor.CGColor as CGColorRef
-        gradientLayer.colors = [color1, color2]
-        gradientLayer.locations = [0.0, 0.5]
+        let color3 = UIColor.blackColor().CGColor as CGColorRef
+        gradientLayer.colors = [color1, color2, color3]
+        gradientLayer.locations = [0.0, 0.5, 0.75]
         
         gradientView.layer.insertSublayer(gradientLayer, atIndex: 0)
     }
