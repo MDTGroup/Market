@@ -73,11 +73,11 @@
                                             <segue destination="Isu-Xo-m5H" kind="push" id="GfS-Ac-c7d"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="wKK-bQ-6e0">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" id="wKK-bQ-6e0">
                                         <rect key="frame" x="0.0" y="267.5" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wKK-bQ-6e0" id="yvY-kp-dPv">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="287" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Change password" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="udv-72-Ix7">
@@ -86,27 +86,11 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ysy-hE-Ppw">
-                                                    <rect key="frame" x="176" y="4" width="46" height="30"/>
-                                                    <state key="normal" title="Button"/>
-                                                    <connections>
-                                                        <segue destination="M1N-bK-DPy" kind="push" id="1Rx-70-E60"/>
-                                                    </connections>
-                                                </button>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mcn-ca-M1S">
-                                                    <rect key="frame" x="230" y="5" width="53" height="30"/>
-                                                    <state key="normal" title="Change"/>
-                                                    <connections>
-                                                        <action selector="onChangePwd:" destination="icx-xC-ESp" eventType="touchUpInside" id="Fo6-g4-H5q"/>
-                                                    </connections>
-                                                </button>
                                             </subviews>
-                                            <constraints>
-                                                <constraint firstItem="Mcn-ca-M1S" firstAttribute="top" secondItem="yvY-kp-dPv" secondAttribute="top" constant="5" id="AJT-Sm-FoQ"/>
-                                                <constraint firstAttribute="trailing" secondItem="Mcn-ca-M1S" secondAttribute="trailing" constant="37" id="CK5-6m-KrQ"/>
-                                                <constraint firstAttribute="bottom" secondItem="Mcn-ca-M1S" secondAttribute="bottom" constant="8.5" id="Ows-W8-ouU"/>
-                                            </constraints>
                                         </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="M1N-bK-DPy" kind="push" id="3wI-Ex-xTI"/>
+                                        </connections>
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
@@ -265,7 +249,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xUO-dR-p2K" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1415" y="1045"/>
+            <point key="canvasLocation" x="1269" y="1034"/>
         </scene>
         <!--Change Password View Controller-->
         <scene sceneID="x9s-eo-RRg">
@@ -313,7 +297,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nrc-98-oH8" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1802" y="1674"/>
+            <point key="canvasLocation" x="2158" y="626"/>
         </scene>
         <!--Main-->
         <scene sceneID="AmW-fe-105">
@@ -321,7 +305,7 @@
                 <viewControllerPlaceholder storyboardName="Main" id="s6N-xD-Q60" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="unS-x1-xnr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="834" y="1474"/>
+            <point key="canvasLocation" x="1669.5" y="1696"/>
         </scene>
         <!--Saved posts-->
         <scene sceneID="swO-g2-d81">
@@ -489,7 +473,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vco-Cq-Vj0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1088" y="1833"/>
+            <point key="canvasLocation" x="1808" y="1293"/>
         </scene>
         <!--Keywords-->
         <scene sceneID="drt-Ap-hma">
@@ -558,7 +542,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OgC-47-puv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1459" y="1823"/>
+            <point key="canvasLocation" x="2497" y="1481"/>
         </scene>
         <!--Following-->
         <scene sceneID="mc5-dL-r7o">
@@ -640,7 +624,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cUM-9d-Wy0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1892" y="1034"/>
+            <point key="canvasLocation" x="2152" y="1358"/>
         </scene>
         <!--Profile-->
         <scene sceneID="tHn-CC-iYt">
@@ -754,7 +738,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="1892" y="237"/>
+            <point key="canvasLocation" x="1808" y="469"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="mwb-4Q-aPr">
