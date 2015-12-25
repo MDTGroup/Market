@@ -207,8 +207,11 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CC7-pC-dGh">
-                                                    <rect key="frame" x="128" y="5" width="65" height="34"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                                    <rect key="frame" x="124" y="1" width="73" height="34"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="73" id="n96-8R-mtz"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
                                                     <state key="normal" title="Log Out">
                                                         <color key="titleColor" red="1" green="0.089457787570000002" blue="0.091688592299999996" alpha="1" colorSpace="calibratedRGB"/>
                                                     </state>
@@ -219,7 +222,7 @@
                                                 </button>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="CC7-pC-dGh" firstAttribute="centerY" secondItem="mW9-wJ-DFZ" secondAttribute="centerY" id="1na-WJ-cIU"/>
+                                                <constraint firstItem="CC7-pC-dGh" firstAttribute="centerY" secondItem="mW9-wJ-DFZ" secondAttribute="centerY" constant="-3.75" id="1na-WJ-cIU"/>
                                                 <constraint firstItem="CC7-pC-dGh" firstAttribute="centerX" secondItem="mW9-wJ-DFZ" secondAttribute="centerX" id="BJE-u5-kHr"/>
                                             </constraints>
                                         </tableViewCellContentView>
