@@ -24,7 +24,7 @@ class SettingsTableViewController: UITableViewController {
     var switchStateFollowing = true
     var switchStateKeyword = true
     
-    //Change pwd
+    //Loading
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
     
     override func viewDidLoad() {
@@ -126,10 +126,6 @@ class SettingsTableViewController: UITableViewController {
         
         self.presentViewController(titlePrompt, animated: true, completion: nil)
     }
-//    @IBAction func resetPasswordPressed(sender: AnyObject) {
-//        
-//        
-//    }
     
     func resetPassword(email : String){
         
@@ -177,8 +173,7 @@ class SettingsTableViewController: UITableViewController {
         activityIndicator.stopAnimating()
         UIApplication.sharedApplication().endIgnoringInteractionEvents()
     }
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
     }
 }
