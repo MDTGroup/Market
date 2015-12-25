@@ -15,19 +15,82 @@ class ChangePasswordViewController: UIViewController {
     @IBOutlet weak var newPassword: UITextField!
     @IBOutlet weak var retypeNewPassword: UITextField!
     
+    //avatar
+    @IBOutlet weak var imagePickerView: UIImageView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        //Making the avatar into round shape
+        self.initControls()
+        
         //Looks for single or multiple taps.
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
         self.view.addGestureRecognizer(tap)
+        
+        // Add observer to detect when the keyboard will be shown
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
+        
+        //Declare delegate to use textFieldShouldReturn
+        self.currentPassword.delegate = self
+        self.newPassword.delegate = self
+        self.retypeNewPassword.delegate = self 
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        // The avatar, name may chang during edit profile, when go back, need to reload
+        if let currentUser = User.currentUser() {
+           //load avatar
+            if let imageFile = currentUser.avatar {
+                imageFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
+                    self.imagePickerView.image = UIImage(data: data!)
+                }
+            } else {
+                print("User has not profile picture")
+            }
+        }
+    }
+    func initControls() {
+        self.imagePickerView.layer.cornerRadius = self.imagePickerView.frame.size.width / 2
+        self.imagePickerView.clipsToBounds = true
+    }
+    
+    /*MARK: Fix bug when keyboard slides up*/
+    override func viewWillDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: self.view.window)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: self.view.window)
+    }
+    
+    func keyboardWillShow(sender: NSNotification) {
+        let userInfo: [NSObject : AnyObject] = sender.userInfo!
+        
+        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
+        let offset: CGSize = userInfo[UIKeyboardFrameEndUserInfoKey]!.CGRectValue.size
+        
+        if keyboardSize.height == offset.height {
+            if self.view.frame.origin.y == 0 {
+                UIView.animateWithDuration(0.1, animations: { () -> Void in
+                    self.view.frame.origin.y -= keyboardSize.height/2
+                })
+            }
+        } else {
+            UIView.animateWithDuration(0.1, animations: { () -> Void in
+                self.view.frame.origin.y += keyboardSize.height/2 - offset.height
+            })
+        }
+        print("Keyboard will show and new position y of View",self.view.frame.origin.y)
+        
+    }
+    func keyboardWillHide(sender: NSNotification) {
+        let userInfo: [NSObject : AnyObject] = sender.userInfo!
+        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
+        self.view.frame.origin.y += keyboardSize.height/2
+        print("Keyboard will hide")
+        
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
     //Calls this function when the tap is recognized.
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
@@ -114,4 +177,30 @@ class ChangePasswordViewController: UIViewController {
     }
     */
 
+}
+extension ChangePasswordViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if textField == currentPassword {
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
+            newPassword.becomeFirstResponder()
+            
+        }
+        if textField == newPassword {
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
+            retypeNewPassword.becomeFirstResponder()
+            
+        }
+        if textField == retypeNewPassword {
+            if let text = textField.text where text.isEmpty {
+                return false
+            }
+            self.updatePasswordBtn(textField)
+        }
+        
+        return true
+    }
 }

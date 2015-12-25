@@ -330,6 +330,7 @@
                     <navigationItem key="navigationItem" title="Change password" id="c4e-RJ-yz0"/>
                     <connections>
                         <outlet property="currentPassword" destination="IHe-rF-kRW" id="IZW-yL-oEc"/>
+                        <outlet property="imagePickerView" destination="t98-HI-zte" id="WG3-dS-wtp"/>
                         <outlet property="newPassword" destination="hDs-6V-l0b" id="8cr-A4-oF5"/>
                         <outlet property="retypeNewPassword" destination="4hd-1F-mPi" id="uHA-Oq-9Qc"/>
                     </connections>
