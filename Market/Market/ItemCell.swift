@@ -77,7 +77,7 @@ class ItemCell: UITableViewCell {
                 //loadingView.startAnimating()
                 //itemImageView.addSubview(loadingView)
                 itemImageView.alpha = 0.0
-                //itemImageView.image = UIImage(named: "camera")
+                itemImageView.image = nil
                 UIView.animateWithDuration(0.3, animations: {
                     self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
                     self.itemImageView.alpha = 1.0

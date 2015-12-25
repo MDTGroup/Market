@@ -50,6 +50,7 @@ class DetailViewController: UIViewController {
     var selectedImage = 1
     var nImages: Int = 1
     var tempImageViews = [UIImageView]()
+    @IBOutlet weak var priceLabel: UILabel!
     
     var imageOriginalCenter: CGPoint!
     var imageOriginalFrame: CGRect!
@@ -66,6 +67,7 @@ class DetailViewController: UIViewController {
         itemNameLabel.text = post.title
         descriptionText.text = post.descriptionText
         descriptionText.selectable = false
+        priceLabel.text = post.price.formatVND()
         
         let formatter = NSDateFormatter()
         formatter.timeStyle = NSDateFormatterStyle.ShortStyle

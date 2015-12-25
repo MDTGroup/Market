@@ -582,7 +582,7 @@
                                 <rect key="frame" x="-4" y="20" width="383" height="55"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="iPhone 10" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4PH-zu-OB4">
-                                        <rect key="frame" x="10" y="8" width="72" height="18"/>
+                                        <rect key="frame" x="10" y="8" width="71.5" height="18"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
@@ -622,21 +622,55 @@
                                             <constraint firstAttribute="height" constant="8" id="lRg-cw-Mmo"/>
                                         </constraints>
                                     </imageView>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="priceTag" translatesAutoresizingMaskIntoConstraints="NO" id="NcQ-Ud-5WL">
+                                        <rect key="frame" x="10" y="27" width="25" height="25"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="25" id="7vw-cv-Gjy"/>
+                                            <constraint firstAttribute="height" constant="25" id="mRA-bN-Psz"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="18.000 VND" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="88W-kR-OGU">
+                                        <rect key="frame" x="40" y="31" width="88" height="18"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <color key="textColor" red="0.19215686274509802" green="0.6470588235294118" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="marker" translatesAutoresizingMaskIntoConstraints="NO" id="fnF-iU-rnc">
+                                        <rect key="frame" x="350" y="27" width="25" height="25"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="25" id="15F-zY-ZHb"/>
+                                            <constraint firstAttribute="height" constant="25" id="hbc-5s-seN"/>
+                                        </constraints>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TP.HCM" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mif-h4-dFX">
+                                        <rect key="frame" x="293" y="31" width="56" height="18"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.19215686269999999" green="0.64705882349999999" blue="0.52549019610000003" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
+                                    <constraint firstItem="fnF-iU-rnc" firstAttribute="leading" secondItem="mif-h4-dFX" secondAttribute="trailing" constant="1" id="00Q-qc-bFl"/>
                                     <constraint firstItem="sK6-qR-HC8" firstAttribute="leading" secondItem="War-Jk-Wxe" secondAttribute="trailing" constant="10" id="11M-sL-YIY"/>
                                     <constraint firstItem="Tbf-DM-X01" firstAttribute="top" secondItem="EeN-d5-mO7" secondAttribute="top" constant="6" id="2k6-nK-aac"/>
                                     <constraint firstItem="Pwv-uA-s1q" firstAttribute="leading" secondItem="sK6-qR-HC8" secondAttribute="trailing" constant="10" id="C1Q-7u-xyU"/>
                                     <constraint firstItem="Tbf-DM-X01" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4PH-zu-OB4" secondAttribute="trailing" constant="5" id="KkE-Sz-iAz"/>
                                     <constraint firstItem="Pwv-uA-s1q" firstAttribute="top" secondItem="sK6-qR-HC8" secondAttribute="top" id="OBt-im-iYF"/>
+                                    <constraint firstItem="NcQ-Ud-5WL" firstAttribute="leading" secondItem="4PH-zu-OB4" secondAttribute="leading" id="QUR-5h-h19"/>
                                     <constraint firstItem="4PH-zu-OB4" firstAttribute="leading" secondItem="EeN-d5-mO7" secondAttribute="leading" constant="10" id="WWO-MS-XbK"/>
                                     <constraint firstItem="4PH-zu-OB4" firstAttribute="top" secondItem="EeN-d5-mO7" secondAttribute="top" constant="8" id="ap1-g0-KI4"/>
+                                    <constraint firstItem="NcQ-Ud-5WL" firstAttribute="centerY" secondItem="88W-kR-OGU" secondAttribute="centerY" id="dZ6-dc-sNX"/>
                                     <constraint firstAttribute="trailing" secondItem="Tbf-DM-X01" secondAttribute="trailing" constant="8" id="ecO-11-lP3"/>
                                     <constraint firstAttribute="height" constant="55" id="ftB-cN-VCI"/>
+                                    <constraint firstItem="mif-h4-dFX" firstAttribute="bottom" secondItem="88W-kR-OGU" secondAttribute="bottom" id="gql-1k-0hx"/>
                                     <constraint firstItem="sK6-qR-HC8" firstAttribute="centerX" secondItem="EeN-d5-mO7" secondAttribute="centerX" id="hmz-QE-0qA"/>
+                                    <constraint firstItem="88W-kR-OGU" firstAttribute="leading" secondItem="NcQ-Ud-5WL" secondAttribute="trailing" constant="5" id="hwX-TV-caW"/>
+                                    <constraint firstAttribute="trailing" secondItem="fnF-iU-rnc" secondAttribute="trailing" constant="8" id="i4i-6x-jiS"/>
+                                    <constraint firstItem="fnF-iU-rnc" firstAttribute="bottom" secondItem="NcQ-Ud-5WL" secondAttribute="bottom" id="jOC-bz-Lgp"/>
                                     <constraint firstItem="sK6-qR-HC8" firstAttribute="top" secondItem="4PH-zu-OB4" secondAttribute="bottom" constant="10" id="qL4-dz-nmH"/>
                                     <constraint firstItem="War-Jk-Wxe" firstAttribute="top" secondItem="sK6-qR-HC8" secondAttribute="top" id="rcO-Sa-vkM"/>
+                                    <constraint firstItem="88W-kR-OGU" firstAttribute="top" secondItem="4PH-zu-OB4" secondAttribute="bottom" constant="5" id="tm9-XO-HHA"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nck-fO-fE6">
@@ -701,7 +735,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Votes" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7Gk-53-Yd0">
-                                <rect key="frame" x="27" y="609" width="35" height="16"/>
+                                <rect key="frame" x="27" y="609" width="34.5" height="16"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                 <color key="textColor" red="0.90196079019999997" green="0.90196079019999997" blue="0.90196079019999997" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
@@ -744,6 +778,7 @@
                         <outlet property="itemNameLabel" destination="4PH-zu-OB4" id="quP-yK-Xp1"/>
                         <outlet property="panGesture" destination="5tJ-ot-WPT" id="tzI-1a-8k6"/>
                         <outlet property="pinchGesture" destination="wIV-x5-lLE" id="c3v-b2-q6s"/>
+                        <outlet property="priceLabel" destination="88W-kR-OGU" id="q5e-3V-rp3"/>
                         <outlet property="saveButton" destination="LAZ-RZ-MCh" id="wOd-3V-WV3"/>
                         <outlet property="scrollCircle1" destination="War-Jk-Wxe" id="Hi4-Gg-Nk3"/>
                         <outlet property="scrollCircle2" destination="sK6-qR-HC8" id="NCa-M8-ssS"/>
@@ -1244,6 +1279,7 @@
         <image name="camera" width="50" height="50"/>
         <image name="cancel" width="25" height="25"/>
         <image name="chat_white" width="25" height="25"/>
+        <image name="marker" width="25" height="25"/>
         <image name="me" width="25" height="25"/>
         <image name="message" width="25" height="25"/>
         <image name="new_tag" width="75" height="74"/>
@@ -1252,6 +1288,7 @@
         <image name="noti" width="25" height="25"/>
         <image name="ok" width="50" height="50"/>
         <image name="plus" width="50" height="50"/>
+        <image name="priceTag" width="25" height="25"/>
         <image name="profile_blank" width="70" height="70"/>
         <image name="remove" width="32" height="32"/>
         <image name="save_white" width="23" height="23"/>
