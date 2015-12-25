@@ -22,6 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
         UITabBar.appearance().tintColor = MyColors.themeColor
         UITabBar.appearance().barTintColor = MyColors.bgColor
+        UITabBar.appearance().shadowImage = UIImage()
+        UITabBar.appearance().backgroundImage = UIImage()
         
         setupForParse(application, launchOptions: launchOptions)
         setupPushNotifications(application, launchOptions: launchOptions)

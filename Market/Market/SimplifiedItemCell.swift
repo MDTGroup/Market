@@ -69,7 +69,7 @@ class SimplifiedItemCell: UITableViewCell {
         itemImageView.clipsToBounds = true
         priceLabel.layer.cornerRadius = 5
         priceLabel.clipsToBounds = true
-        avatarImageView.layer.cornerRadius = 16
+        avatarImageView.layer.cornerRadius = 15
         avatarImageView.clipsToBounds = true
     }
     

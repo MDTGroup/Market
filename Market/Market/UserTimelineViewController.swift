@@ -13,6 +13,7 @@ class UserTimelineViewController: UIViewController {
     
     var user: User!
     var posts = [Post]()
+    var queryArray = [User]()
     var isCurrentUser = false
     
     static let homeSB = UIStoryboard(name: "Home", bundle: nil)
@@ -39,7 +40,7 @@ class UserTimelineViewController: UIViewController {
     var noMoreResultLabel = UILabel()
     var selectedPostIndex: Int!
     var iFollowThisUser = false
-    var dataToLoad = 0 // 0: user's posts, 1: user's saved posts
+    var dataToLoad = 0 // 0: user's posts, 1: user's saved posts, 2: following, 3: keywords
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,7 +52,7 @@ class UserTimelineViewController: UIViewController {
         tableView.delegate = self
         
         // Refresh control
-        refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: Selector("refreshData"), forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshControl)
         
         // Add the activity Indicator for table footer for infinity load
@@ -76,6 +77,82 @@ class UserTimelineViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         refreshProfile()
+    }
+    
+    @IBAction func onBack(sender: UIButton) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func setFollowersCounter(count: Int, followed: Bool) {
+        followerCountLabel.text = "\(count)"
+        if followed {
+            followButton.setTitle("Unfollow", forState: .Normal)
+        } else {
+            followButton.setTitle("Follow", forState: .Normal)
+        }
+    }
+    
+    @IBAction func onFollow(sender: UIButton) {
+        if iFollowThisUser {
+            let count = Int(followerCountLabel.text!)! - 1
+            setFollowersCounter(count, followed: false)
+            
+            Follow.unfollow(user, callback: { (success, error: NSError?) -> Void in
+                if success {
+                    print("UnFollowing successfully \(self.user.fullName)")
+                    self.iFollowThisUser = false
+                } else {
+                    print("Can not unfollow \(self.user.fullName)", error)
+                    self.setFollowersCounter(count + 1, followed: false)
+                }
+            })
+            
+        } else {
+            let count = Int(followerCountLabel.text!)! + 1
+            setFollowersCounter(count, followed: true)
+            
+            Follow.follow(user, callback: { (success, error: NSError?) -> Void in
+                if success {
+                    print("Follow successfully \(self.user.fullName)")
+                    self.iFollowThisUser = true
+                } else {
+                    print("Can't follow \(self.user.fullName)", error)
+                    self.followButton.setTitle("Follow", forState: .Normal)
+                    self.setFollowersCounter(count - 1, followed: true)
+                }
+            })
+        }
+    }
+    
+    @IBAction func onCategoryChanged(sender: UISegmentedControl) {
+        isEndOfFeed = false
+        dataToLoad = sender.selectedSegmentIndex
+        refreshData()
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if let navController = segue.destinationViewController as? UINavigationController {
+            if let postVC = navController.topViewController as? PostViewController {
+                postVC.delegate = self
+                postVC.editingPost = sender as? Post
+            }
+        }
+    }
+    
+}
+
+// MARK: - Data fetching
+extension UserTimelineViewController {
+    func refreshData() {
+        switch dataToLoad {
+        case 0, 1:
+            MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loadNewestData()
+        case 2:
+            MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            loadFollowing()
+        default: return
+        }
     }
     
     func loadNewestData() {
@@ -138,7 +215,6 @@ class UserTimelineViewController: UIViewController {
                 MBProgressHUD.hideHUDForView(self.view, animated: true)
             })
         }
-        
     }
     
     func refreshProfile() {
@@ -211,97 +287,89 @@ class UserTimelineViewController: UIViewController {
         bigAvatarImageView.clipsToBounds = true
     }
     
-    @IBAction func onBack(sender: UIButton) {
-        dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func setFollowersCounter(count: Int, followed: Bool) {
-        followerCountLabel.text = "\(count)"
-        if followed {
-            followButton.setTitle("Unfollow", forState: .Normal)
-        } else {
-            followButton.setTitle("Follow", forState: .Normal)
-        }
-    }
-    
-    @IBAction func onFollow(sender: UIButton) {
-        if iFollowThisUser {
-            let count = Int(followerCountLabel.text!)! - 1
-            setFollowersCounter(count, followed: false)
-            
-            Follow.unfollow(user, callback: { (success, error: NSError?) -> Void in
-                if success {
-                    print("UnFollowing successfully \(self.user.fullName)")
-                    self.iFollowThisUser = false
-                } else {
-                    print("Can not unfollow \(self.user.fullName)", error)
-                    self.setFollowersCounter(count + 1, followed: false)
-                }
-            })
-            
-        } else {
-            let count = Int(followerCountLabel.text!)! + 1
-            setFollowersCounter(count, followed: true)
-            
-            Follow.follow(user, callback: { (success, error: NSError?) -> Void in
-                if success {
-                    print("Follow successfully \(self.user.fullName)")
-                    self.iFollowThisUser = true
-                } else {
-                    print("Can't follow \(self.user.fullName)", error)
-                    self.followButton.setTitle("Follow", forState: .Normal)
-                    self.setFollowersCounter(count - 1, followed: true)
-                }
-            })
-        }
-    }
-    
-    @IBAction func onCategoryChanged(sender: UISegmentedControl) {
-        isEndOfFeed = false
-        dataToLoad = sender.selectedSegmentIndex
-        loadNewestData()
-    }
-    
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if let navController = segue.destinationViewController as? UINavigationController {
-            if let postVC = navController.topViewController as? PostViewController {
-                postVC.delegate = self
-                postVC.editingPost = sender as? Post
+    // Load list of people I'm following
+    func loadFollowing() {
+        User.currentUser()?.getFollowings({ (users, error) -> Void in
+            MBProgressHUD.hideHUDForView(self.view, animated: true)
+            guard error == nil else {
+                print(error)
+                return
             }
-        }
+            if let users = users {
+                self.queryArray = users
+                self.tableView.reloadData()
+            }
+        })
     }
+    
 }
 
-// MARK: - Table View
-extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource {
+extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource, FollowingTableViewCellDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count
+        switch dataToLoad {
+        case 0, 1: return posts.count
+        case 2: return queryArray.count
+        default: return 0
+        }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("simplifiedItemCell", forIndexPath: indexPath) as! SimplifiedItemCell
-        
-        // Dont know why but sometime it jumps to here
-        // before data is reloaded (posts.count = 0) but indexPath.section = 4
-        if posts.count == 0 {
-            print("the myth")
-            return cell
-        }
-        cell.item = posts[indexPath.row]
-        
-        // Infinite load if last cell
-        if !isLoadingNextPage && !isEndOfFeed {
-            if indexPath.row >= posts.count - 2 {
-                loadingView.startAnimating()
-                isLoadingNextPage = true
-                loadDataSince(posts[posts.count-1].updatedAt!)
+        switch dataToLoad {
+        case 0, 1:
+            let cell = tableView.dequeueReusableCellWithIdentifier("simplifiedItemCell", forIndexPath: indexPath) as! SimplifiedItemCell
+            
+            // Dont know why but sometime it jumps to here
+            // before data is reloaded (posts.count = 0) but indexPath.section = 4
+            if posts.count == 0 {
+                print("the myth")
+                return cell
             }
+            cell.item = posts[indexPath.row]
+            
+            // Infinite load if last cell
+            if !isLoadingNextPage && !isEndOfFeed {
+                if indexPath.row >= posts.count - 2 {
+                    loadingView.startAnimating()
+                    isLoadingNextPage = true
+                    loadDataSince(posts[posts.count-1].updatedAt!)
+                }
+            }
+            
+            return cell
+            
+        case 2:
+            let cell = tableView.dequeueReusableCellWithIdentifier("FollowingCell", forIndexPath: indexPath) as! FollowingTableViewCell
+            
+            if posts.count == 0 {
+                print("the myth")
+                return cell
+            }
+            
+            let fullname = self.queryArray[indexPath.row].fullName
+            cell.fullnameLabel.text = fullname
+            if let avatarFile = self.queryArray[indexPath.row].avatar {
+                avatarFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
+                    cell.imgField.image = UIImage(data: data!)
+                }
+            } else {
+                cell.imgField.image = UIImage(named: "profile_blank")
+            }
+            
+            cell.targetUser = self.queryArray[indexPath.row]
+            cell.delegate = self
+            
+            return cell
+            
+        default:
+            return UITableViewCell()
         }
-        
-        return cell
     }
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
+        if dataToLoad > 1 {
+            return []
+        }
+        
         // If this is my post then allow these actions
         if isCurrentUser {
             let post = posts[indexPath.row]
@@ -347,6 +415,15 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         return []
     }
     
+    func followingTableViewCell(followingTableViewCell: FollowingTableViewCell, didUnfollow value: Bool) {
+        // Did unfollow this user, remove from the tableView
+        if value {
+            if let id = tableView.indexPathForCell(followingTableViewCell) {
+                queryArray.removeAtIndex(id.row)
+                tableView.deleteRowsAtIndexPaths([id], withRowAnimation: .Bottom)
+            }
+        }
+    }
 }
 
 extension UserTimelineViewController: PostViewControllerDelegate {
