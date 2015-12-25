@@ -11,11 +11,18 @@ import Parse
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
     var window: UIWindow?
     let storyboard = UIStoryboard(name: "Home", bundle: nil)
-
+    
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        // Customize UI
+        UINavigationBar.appearance().barTintColor = MyColors.navigationTintColor
+        UINavigationBar.appearance().tintColor = UIColor.whiteColor()
+        UINavigationBar.appearance().titleTextAttributes = [NSForegroundColorAttributeName: UIColor.whiteColor()]
+        UITabBar.appearance().tintColor = MyColors.themeColor
+        UITabBar.appearance().barTintColor = MyColors.bgColor
+        
         setupForParse(application, launchOptions: launchOptions)
         setupPushNotifications(application, launchOptions: launchOptions)
         if User.currentUser() != nil {
@@ -24,30 +31,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         return true
     }
-
+    
     func applicationWillResignActive(application: UIApplication) {
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
     }
-
+    
     func applicationDidEnterBackground(application: UIApplication) {
         // Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later.
         // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
     }
-
+    
     func applicationWillEnterForeground(application: UIApplication) {
         // Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
     }
-
+    
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
-
+    
     func applicationWillTerminate(application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
     }
-
-
+    
+    
 }
 
 //MARK: Set up PARSE
@@ -56,7 +63,7 @@ extension AppDelegate {
         setupKey()
         setupSubclass()
         setupACL()
-//        setupPushNotifications(application, launchOptions: launchOptions)
+        //        setupPushNotifications(application, launchOptions: launchOptions)
         
         
     }
@@ -98,18 +105,18 @@ extension AppDelegate {
         UIApplication.sharedApplication().registerUserNotificationSettings(settings)
         UIApplication.sharedApplication().registerForRemoteNotifications()
     }
-
+    
     func setupPushNotifications(application: UIApplication, launchOptions: [NSObject: AnyObject]?) {
         
         if let launchOptions = launchOptions, notificationPayload = launchOptions[UIApplicationLaunchOptionsRemoteNotificationKey] as? [NSObject : AnyObject]  {
             PushNotification.handlePayload(application, userInfo: notificationPayload)
         }
-
+        
         if application.applicationState != UIApplicationState.Background {
             // Track an app open here if we launch with a push, unless
             // "content_available" was used to trigger a background push (introduced in iOS 7).
             // In that case, we skip tracking here to avoid double counting the app-open.
-
+            
             let preBackgroundPush = !application.respondsToSelector("backgroundRefreshStatus")
             let oldPushHandlerOnly = !self.respondsToSelector("application:didReceiveRemoteNotification:fetchCompletionHandler:")
             var noPushPayload = false;
@@ -123,13 +130,13 @@ extension AppDelegate {
         
         AppDelegate.registerRemoteNotification()
     }
-
+    
     func application(application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: NSData) {
         let installation = PFInstallation.currentInstallation()
         installation.setDeviceTokenFromData(deviceToken)
         installation.saveInBackground()
     }
-
+    
     func application(application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: NSError) {
         if error.code == 3010 {
             print("Push notifications are not supported in the iOS Simulator.\n")
@@ -137,7 +144,7 @@ extension AppDelegate {
             print("application:didFailToRegisterForRemoteNotificationsWithError: %@\n", error)
         }
     }
-
+    
     // Notifications - Analytics
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject]) {
         PFPush.handlePush(userInfo)
@@ -145,11 +152,11 @@ extension AppDelegate {
             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
         }
     }
-
+    
     func application(application: UIApplication, didReceiveRemoteNotification userInfo: [NSObject : AnyObject], fetchCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         PushNotification.handlePayload(application, userInfo: userInfo)
         if application.applicationState == UIApplicationState.Inactive {
-             PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
+            PFAnalytics.trackAppOpenedWithRemoteNotificationPayload(userInfo)
         }
     }
 }

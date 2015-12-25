@@ -335,7 +335,7 @@ class DetailViewController: UIViewController {
         
         // The size of the textView to fit its content
         let newSize = descriptionText.sizeThatFits(CGSize(width: screenWidth - 20, height: CGFloat.max))
-        //print(newSize, descriptionText.text)
+        print(newSize)
         
         textHeight.constant = min(dimmingHeight - 8, newSize.height)
         descTextGap.constant = showFull ? 25 : 5

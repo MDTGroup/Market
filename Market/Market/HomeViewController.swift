@@ -32,8 +32,8 @@ class HomeViewController: UIViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.rowHeight = UITableViewAutomaticDimension
-        tableView.estimatedRowHeight = 200
+        //tableView.rowHeight = UITableViewAutomaticDimension
+        //tableView.estimatedRowHeight = 200
         
         // Refresh control
         refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
@@ -41,7 +41,7 @@ class HomeViewController: UIViewController {
         
         // Add the activity Indicator for table footer for infinity load
         let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
-        loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
         loadingView.center = tableFooterView.center
         loadingView.hidesWhenStopped = true
         tableFooterView.addSubview(loadingView)
@@ -179,9 +179,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
         return 1
     }
     
-    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 8.0
-    }
+    //    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+    //        return 8.0
+    //    }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         //let cell = tableView.dequeueReusableCellWithIdentifier("itemCell", forIndexPath: indexPath) as! ItemCell

@@ -34,4 +34,16 @@ extension Double {
         }
         return formattedMoney
     }
+    
+    func formatVND() -> String {
+        // 1 234 457 890
+        var remain = Int(self)
+        var formattedMoney = "\(remain % 1000)"
+        remain /= 1000
+        while remain > 0 {
+            formattedMoney = "\(remain % 1000)." + formattedMoney
+            remain /= 1000
+        }
+        return formattedMoney + " VND"
+    }
 }
