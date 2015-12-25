@@ -10,35 +10,35 @@ import Foundation
 import UIKit
 
 class Helper {
-  
-  static func timeSinceDateToNow(d: NSDate) -> String {
-    let elapsedTime = NSDate().timeIntervalSinceDate(d)
-    var timeSinceCreated = ""
-    if elapsedTime < 60 {
-      timeSinceCreated = String(Int(elapsedTime)) + "s"
-    } else if elapsedTime < 3600 {
-      timeSinceCreated = String(Int(elapsedTime / 60)) + "m"
-    } else if elapsedTime < 24*3600 {
-      timeSinceCreated = String(Int(elapsedTime / 60 / 60)) + "h"
-    } else {
-      timeSinceCreated = String(Int(elapsedTime / 60 / 60 / 24)) + "d"
-    }
-    return timeSinceCreated
-  }
-  
-  static func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
-    if image.size.width <= newWidth {
-      return image
+    
+    static func timeSinceDateToNow(d: NSDate) -> String {
+        let elapsedTime = NSDate().timeIntervalSinceDate(d)
+        var timeSinceCreated = ""
+        if elapsedTime < 60 {
+            timeSinceCreated = String(Int(elapsedTime)) + "s"
+        } else if elapsedTime < 3600 {
+            timeSinceCreated = String(Int(elapsedTime / 60)) + "m"
+        } else if elapsedTime < 24*3600 {
+            timeSinceCreated = String(Int(elapsedTime / 60 / 60)) + "h"
+        } else {
+            timeSinceCreated = String(Int(elapsedTime / 60 / 60 / 24)) + "d"
+        }
+        return timeSinceCreated
     }
     
-    let scale = newWidth / image.size.width
-    let newHeight = image.size.height * scale
-    UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight))
-    image.drawInRect(CGRectMake(0, 0, newWidth, newHeight))
-    let newImage = UIGraphicsGetImageFromCurrentImageContext()
-    UIGraphicsEndImageContext()
+    static func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
+        if image.size.width <= newWidth {
+            return image
+        }
+        
+        let scale = newWidth / image.size.width
+        let newHeight = image.size.height * scale
+        UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight))
+        image.drawInRect(CGRectMake(0, 0, newWidth, newHeight))
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
     
-    return newImage
-  }
-
 }

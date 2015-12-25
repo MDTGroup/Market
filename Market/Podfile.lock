@@ -15,28 +15,28 @@ PODS:
   - AFNetworking/UIKit (3.0.1):
     - AFNetworking/NSURLSession
   - Bolts/Tasks (1.5.0)
-  - HanekeSwift (0.10.0)
   - JSQMessagesViewController (7.2.0):
     - JSQSystemSoundPlayer (~> 2.0.1)
   - JSQSystemSoundPlayer (2.0.1)
   - MBProgressHUD (0.9.1)
   - Parse (1.10.0):
     - Bolts/Tasks (~> 1.5)
+  - SWTableViewCell (0.3.7)
 
 DEPENDENCIES:
   - AFNetworking
-  - HanekeSwift
   - JSQMessagesViewController
   - MBProgressHUD (~> 0.9.1)
   - Parse
+  - SWTableViewCell (~> 0.3.7)
 
 SPEC CHECKSUMS:
   AFNetworking: 20d8749e03e45f1e5c046ad0b647e0b07bcdd91f
   Bolts: 722ab9a4f8b50fc4ed1b9998a5a7a2b3f16d80b4
-  HanekeSwift: d6f5bdf9dbdbbc09d59623b2c1d533e46463dd4d
   JSQMessagesViewController: 73cab48aa92fc2d512f3b6724f3425cc47a19eb5
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   Parse: 90b2544822200f84b18bfacc4e8b0a3a6c3584a2
+  SWTableViewCell: 2a94aadc9d47b2b611fa064566bf57948b95b579
 
 COCOAPODS: 0.39.0

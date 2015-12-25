@@ -23,6 +23,9 @@ class MyColors {
     
     static let themeColor = UIColor(red: 49/255, green: 165/255, blue: 134/255, alpha: 1)
     static let bgColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
+    static let yellow = UIColor(red:241.0/255.0, green:196.0/255.0, blue:15.0/255.0, alpha:1.0)
+    static let green = UIColor(red: 49/255, green: 165/255, blue: 134/255, alpha: 1)
     // green 31A586
+    // yellow #f1c40f
     // black 
 }

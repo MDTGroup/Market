@@ -8,6 +8,7 @@
 
 import UIKit
 import MBProgressHUD
+import SWTableViewCell
 
 class UserTimelineViewController: UIViewController {
     
@@ -389,6 +390,25 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
             }
             cell.item = posts[indexPath.row]
             
+            if dataToLoad == 0 {
+                // Add utility buttons
+                let leftUtilityButtons = NSMutableArray()
+                //let rightUtilityButtons = NSMutableArray()
+                
+                //rightUtilityButtons.sw_addUtilityButtonWithColor(MyColors.bluesky, icon: UIImage(named: "edit25"))
+                //rightUtilityButtons.sw_addUtilityButtonWithColor(MyColors.carrot, icon: UIImage(named: "trash25"))
+                
+                if cell.item.sold {
+                    leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.green, title: "Avail")
+                } else {
+                    leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.yellow, title: "Sold")
+                }
+                
+                cell.leftUtilityButtons = leftUtilityButtons as [AnyObject]
+                //cell.rightUtilityButtons = rightUtilityButtons as [AnyObject]
+                cell.delegate = self
+            }
+            
             // Infinite load if last cell
             if !isLoadingNextPage && !isEndOfFeed {
                 if indexPath.row >= posts.count - 2 {
@@ -514,6 +534,56 @@ extension UserTimelineViewController: PostViewControllerDelegate {
         
         tableView.reloadRowsAtIndexPaths([rowToReload], withRowAnimation: UITableViewRowAnimation.Automatic)
         //tableView.reloadData()
+    }
+}
+
+// MARK: - SWTableView
+extension UserTimelineViewController: SWTableViewCellDelegate {
+    func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerLeftUtilityButtonWithIndex index: Int) {
+        // Update item as sold
+        //        let alertController = UIAlertController(title: "Market", message: "Ok, sold!", preferredStyle: .Alert)
+        //        let okAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+        //        alertController.addAction(okAction)
+        //        self.presentViewController(alertController, animated: true, completion: nil)
+        
+        let id = tableView.indexPathForCell(cell)
+        let post = posts[id!.row]
+        
+        if let newCell = cell as? SimplifiedItemCell {
+            if newCell.priceLabel.text != "SOLD" {
+                Post.sold(post.objectId!, isSold: true, completion: { (finished, error) -> Void in
+                    if finished {
+                        newCell.priceLabel.text = "SOLD"
+                        newCell.priceLabel.backgroundColor = MyColors.carrot
+                        
+                        // Change button to "AVAIL"
+                        let leftUtilityButtons = NSMutableArray()
+                        leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.green, title: "Avail")
+                        
+                        newCell.leftUtilityButtons = leftUtilityButtons as [AnyObject]
+                    } else {
+                        print("failed to sell post, error = \(error)")
+                    }
+                })
+                
+            } else {
+                Post.sold(post.objectId!, isSold: false, completion: { (finished, error) -> Void in
+                    if finished {
+                        newCell.priceLabel.text = self.posts[id!.row].price.formatCurrency()
+                        newCell.priceLabel.backgroundColor = MyColors.bluesky
+                        
+                        // Change button to "Sold"
+                        let leftUtilityButtons = NSMutableArray()
+                        leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.yellow, title: "Sold")
+                        newCell.leftUtilityButtons = leftUtilityButtons as [AnyObject]
+                    } else {
+                        print("failed to set post avail, error = \(error)")
+                    }
+                })
+            }
+            
+        }
+        cell.hideUtilityButtonsAnimated(true)
     }
 }
 
