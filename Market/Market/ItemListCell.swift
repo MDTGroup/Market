@@ -17,11 +17,14 @@ class ItemListCell: UITableViewCell {
     @IBOutlet weak var sellerLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var newTagImageView: UIImageView!
-    @IBOutlet weak var countMessagesLabel: UILabel!
+    @IBOutlet weak var badgeView: UIView!
+    @IBOutlet weak var badgeLabel: UILabel!
     
     var countMessages: (unread: Int, total: Int)! {
         didSet {
-            countMessagesLabel.text = "\(countMessages.unread)/\(countMessages.total)"
+            badgeView.hidden = countMessages.unread == 0
+            badgeLabel.text = "\(countMessages.unread)"
+            //countMessagesLabel.text = "\(countMessages.unread)/\(countMessages.total)"
         }
     }
     var conversation: Conversation! {
@@ -47,13 +50,11 @@ class ItemListCell: UITableViewCell {
                 itemNameLabel.font = UIFont.systemFontOfSize(14)
                 timeAgoLabel.font = UIFont.systemFontOfSize(12)
                 sellerLabel.font = UIFont.systemFontOfSize(12)
-                countMessagesLabel.font = UIFont.systemFontOfSize(12)
                 backgroundColor = UIColor.whiteColor()
             } else {
                 itemNameLabel.font = UIFont.boldSystemFontOfSize(14)
                 timeAgoLabel.font = UIFont.boldSystemFontOfSize(12)
                 sellerLabel.font = UIFont.boldSystemFontOfSize(12)
-                countMessagesLabel.font = UIFont.boldSystemFontOfSize(12)
                 backgroundColor = MyColors.highlightForNotification
             }
         }
@@ -65,5 +66,7 @@ class ItemListCell: UITableViewCell {
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
+        badgeView.layer.cornerRadius = 8
+        badgeView.clipsToBounds = true
     }
 }
