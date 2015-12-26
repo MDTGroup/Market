@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import SWTableViewCell
 
-class SimplifiedItemCell: UITableViewCell {
+class SimplifiedItemCell: SWTableViewCell {
     
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemNameLabel: UILabel!
@@ -57,8 +58,15 @@ class SimplifiedItemCell: UITableViewCell {
             //      formatter.dateStyle = NSDateFormatterStyle.MediumStyle
             //      postAtLabel.text = "@ \(formatter.stringFromDate(post.updatedAt!))"
             postAtLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
-            priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
+            
+            if post.sold {
+                priceLabel.text = "SOLD"
+                priceLabel.backgroundColor = MyColors.carrot
+            } else {
+                priceLabel.text = post.price.formatCurrency()
+                priceLabel.backgroundColor = MyColors.bluesky
+            }
         }
     }
     
@@ -69,7 +77,7 @@ class SimplifiedItemCell: UITableViewCell {
         itemImageView.clipsToBounds = true
         priceLabel.layer.cornerRadius = 5
         priceLabel.clipsToBounds = true
-        avatarImageView.layer.cornerRadius = 16
+        avatarImageView.layer.cornerRadius = 15
         avatarImageView.clipsToBounds = true
     }
     

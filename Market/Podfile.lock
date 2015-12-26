@@ -21,12 +21,14 @@ PODS:
   - MBProgressHUD (0.9.1)
   - Parse (1.10.0):
     - Bolts/Tasks (~> 1.5)
+  - SWTableViewCell (0.3.7)
 
 DEPENDENCIES:
   - AFNetworking
   - JSQMessagesViewController
   - MBProgressHUD (~> 0.9.1)
   - Parse
+  - SWTableViewCell (~> 0.3.7)
 
 SPEC CHECKSUMS:
   AFNetworking: 20d8749e03e45f1e5c046ad0b647e0b07bcdd91f
@@ -35,5 +37,6 @@ SPEC CHECKSUMS:
   JSQSystemSoundPlayer: c5850e77a4363ffd374cd851154b9af93264ed8d
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   Parse: 90b2544822200f84b18bfacc4e8b0a3a6c3584a2
+  SWTableViewCell: 2a94aadc9d47b2b611fa064566bf57948b95b579
 
 COCOAPODS: 0.39.0

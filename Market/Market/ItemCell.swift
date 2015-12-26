@@ -32,6 +32,7 @@ class ItemCell: UITableViewCell {
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var chatButton: UIButton!
     @IBOutlet weak var newTagImageView: UIImageView!
+    @IBOutlet weak var gradientView: UIView!
     
     @IBOutlet weak var buttonsViewHeight: NSLayoutConstraint!
     @IBOutlet weak var gap2Columns: NSLayoutConstraint!
@@ -50,7 +51,7 @@ class ItemCell: UITableViewCell {
         didSet {
             let post = item
             // Set seller
-            sellerLabel.text = post.user.fullName
+            //sellerLabel.text = post.user.fullName
             if let avatar = post.user.avatar {
                 //        avatarImageView.alpha = 0.0
                 //        avatarImageView.image = nil
@@ -75,14 +76,16 @@ class ItemCell: UITableViewCell {
                 //loadingView.startAnimating()
                 //itemImageView.addSubview(loadingView)
                 itemImageView.alpha = 0.0
-                itemImageView.image = UIImage(named: "camera")
-                UIView.animateWithDuration(0.3, animations: {
-                    self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-                    self.itemImageView.alpha = 1.0
-                    }, completion: { (finished) -> Void in
-                        //self.loadingView.stopAnimating()
-                        //self.loadingView.removeFromSuperview()
-                })
+                itemImageView.image = nil
+                self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
+                self.itemImageView.alpha = 1.0
+                //                UIView.animateWithDuration(0.3, animations: {
+                //                    self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
+                //                    self.itemImageView.alpha = 1.0
+                //                    }, completion: { (finished) -> Void in
+                //                        //self.loadingView.stopAnimating()
+                //                        //self.loadingView.removeFromSuperview()
+                //                })
                 
                 // Set it nil first to prevent it reuses image from other cell when new post
                 //itemImageView.image = UIImage(named: "camera")
@@ -92,19 +95,20 @@ class ItemCell: UITableViewCell {
             }
             
             itemNameLabel.text = post.title
-            descriptionLabel.text = post.descriptionText
+            //descriptionLabel.text = post.descriptionText
             
             // The size of the descText to fit its content
-            let newSize = descriptionLabel.sizeThatFits(CGSize(width: descriptionLabel.frame.width, height: CGFloat.max))
-            avatarToItemImage.constant = newSize.height > 40 ? 5 : -13
+            //            let newSize = descriptionLabel.sizeThatFits(CGSize(width: descriptionLabel.frame.width, height: CGFloat.max))
+            //            print(newSize.height)
+            //            avatarToItemImage.constant = newSize.height > 40 ? 5 : -13
             
-            //timeAgoLabel.text = Helper.timeSinceDateToNow(post.createdAt!)
-            let formatter = NSDateFormatter()
-            formatter.timeStyle = NSDateFormatterStyle.ShortStyle
-            formatter.dateStyle = NSDateFormatterStyle.ShortStyle
-            timeAgoLabel.text = "Posted on \(formatter.stringFromDate(post.createdAt!))"
+            timeAgoLabel.text = Helper.timeSinceDateToNow(post.createdAt!)
+            //            let formatter = NSDateFormatter()
+            //            formatter.timeStyle = NSDateFormatterStyle.ShortStyle
+            //            formatter.dateStyle = NSDateFormatterStyle.ShortStyle
+            //            timeAgoLabel.text = "Posted on \(formatter.stringFromDate(post.updatedAt!))"
             
-            priceLabel.text = post.price.formatCurrency()
+            priceLabel.text = post.price.formatVND()
             newTagImageView.hidden = (post.condition > 0)
             
             if post.iSaveIt == nil {
@@ -130,32 +134,31 @@ class ItemCell: UITableViewCell {
         super.awakeFromNib()
         // Initialization code
         avatarImageView.layer.cornerRadius = 18
+        avatarImageView.layer.borderWidth = 2
+        avatarImageView.layer.borderColor = MyColors.themeColor.CGColor
         avatarImageView.clipsToBounds = true
-        //    itemImageView.layer.cornerRadius = 8
-        //    itemImageView.clipsToBounds = true
-        priceLabel.layer.cornerRadius = 5
-        priceLabel.clipsToBounds = true
-        imageContainer.layer.cornerRadius = 8
-        imageContainer.clipsToBounds = true
+        //itemImageView.layer.cornerRadius = 8
+        itemImageView.clipsToBounds = true
+        //priceLabel.layer.cornerRadius = 5
+        //priceLabel.clipsToBounds = true
         
         avatarTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
-        sellerTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
+        //sellerTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
         avatarImageView.addGestureRecognizer(avatarTapGesture)
-        sellerLabel.addGestureRecognizer(sellerTapGesture)
+        //sellerLabel.addGestureRecognizer(sellerTapGesture)
         
-        let screenWidth = UIScreen.mainScreen().bounds.width
-        gap2Columns.constant = screenWidth > 330 ? 10 : 8
+        priceLabel.textColor = MyColors.themeColor
         
-        buttonsViewHeight.constant = 0
-        buttonsView.hidden = true
+        // Set the gradientView
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.frame = gradientView.bounds
+        let color1 = UIColor.clearColor().CGColor as CGColorRef
+        let color2 = MyColors.bgColor.CGColor as CGColorRef
+        let color3 = UIColor.blackColor().CGColor as CGColorRef
+        gradientLayer.colors = [color1, color2, color3]
+        gradientLayer.locations = [0.0, 0.5, 0.75]
         
-        // Set the buttons width equally
-        //        voteButtonWidth.constant = screenWidth / 3
-        //        chatButtonWidth.constant = screenWidth / 3
-        //        buttonsView.layer.borderWidth = 0.5
-        //        buttonsView.layer.borderColor = UIColor.grayColor().CGColor
-        //        buttonsView.backgroundColor = UIColor.whiteColor()
-        
+        gradientView.layer.insertSublayer(gradientLayer, atIndex: 0)
     }
     
     override func setSelected(selected: Bool, animated: Bool) {

@@ -22,13 +22,13 @@ class Post: PFObject, PFSubclassing {
     @NSManaged var price: Double
     @NSManaged var condition: Int
     @NSManaged var descriptionText: String?
+    @NSManaged var location: PFGeoPoint?
+    @NSManaged var locationName: String?
     @NSManaged var sold: Bool
     @NSManaged var user: User
     @NSManaged var vote: Vote
     @NSManaged var voteCounter:Int
     @NSManaged var isDeleted: Bool
-    @NSManaged var location: PFGeoPoint?
-    @NSManaged var locationName: String?
     
     private var uploadedFiles = [PFFile]()
     private var progressFiles = [PFFile: Int]()
@@ -174,18 +174,18 @@ extension Post {
 // MARK: Save
 extension Post {
     func save(enable: Bool, callback: PFBooleanResultBlock) {
-        if let currentUser = User.currentUser() {
-            if currentUser.objectId == self.objectId {
-                callback(false, NSError(domain: "You cannot saved your post", code: 0, userInfo: nil))
-                return
-            }
-            if enable {
-                currentUser.savedPosts.addObject(self)
-            } else {
-                currentUser.savedPosts.removeObject(self)
-            }
-            currentUser.saveInBackgroundWithBlock(callback)
+        guard User.currentUser() != nil else {
+            print("Current user is nil")
+            return
         }
+        let currentUser = User.currentUser()!
+        if enable {
+            currentUser.savedPosts.addObject(self)
+        } else {
+            currentUser.savedPosts.removeObject(self)
+        }
+        
+        currentUser.saveInBackgroundWithBlock(callback)
     }
 }
 
@@ -198,6 +198,29 @@ extension Post {
             if let postFetched = fetchedPFObj as? Post {
                 //print("post ", postFetched)
                 postFetched.isDeleted = true
+                
+                postFetched.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
+                    //print(post)
+                    completion(true, nil)
+                    }) { (post: Post, percent: Float) -> Void in
+                        print(percent)
+                }
+            } else {
+                completion(false, error)
+            }
+        }
+    }
+}
+
+// MARK: Sold
+extension Post {
+    static func sold(postId: String, isSold: Bool, completion: PFBooleanResultBlock) {
+        let post = Post(withoutDataWithObjectId: postId)
+        post.fetchInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
+            print(fetchedPFObj)
+            if let postFetched = fetchedPFObj as? Post {
+                //print("post ", postFetched)
+                postFetched.sold = isSold
                 
                 postFetched.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
                     //print(post)

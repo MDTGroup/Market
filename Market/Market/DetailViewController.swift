@@ -50,6 +50,7 @@ class DetailViewController: UIViewController {
     var selectedImage = 1
     var nImages: Int = 1
     var tempImageViews = [UIImageView]()
+    @IBOutlet weak var priceLabel: UILabel!
     
     var imageOriginalCenter: CGPoint!
     var imageOriginalFrame: CGRect!
@@ -65,6 +66,7 @@ class DetailViewController: UIViewController {
         itemNameLabel.text = post.title
         descriptionText.text = post.descriptionText
         descriptionText.selectable = false
+        priceLabel.text = post.price.formatVND()
         
         let formatter = NSDateFormatter()
         formatter.timeStyle = NSDateFormatterStyle.ShortStyle
@@ -165,6 +167,10 @@ class DetailViewController: UIViewController {
         } else {
             setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
         }
+        // If this is my post then not allow to vote
+        if post.user.objectId == User.currentUser()?.objectId {
+            voteButton.enabled = false
+        }
         
         // Indicate network status
         //    if Helper.hasConnectivity() {
@@ -203,7 +209,7 @@ class DetailViewController: UIViewController {
     func showMore(gesture: UITapGestureRecognizer) {
         if gesture.state == UIGestureRecognizerState.Ended {
             let tapLocation = gesture.locationInView(self.view)
-            if tapLocation.y >= dimmingView.frame.origin.y {
+            if (tapLocation.y >= dimmingView.frame.origin.y) && (tapLocation.y <= buttonsView.frame.origin.y) {
                 if !isReadingFullDescription {
                     isReadingFullDescription = true
                     //descTextGap.constant = 25
@@ -333,7 +339,7 @@ class DetailViewController: UIViewController {
         
         // The size of the textView to fit its content
         let newSize = descriptionText.sizeThatFits(CGSize(width: screenWidth - 20, height: CGFloat.max))
-        //print(newSize, descriptionText.text)
+        print(newSize)
         
         textHeight.constant = min(dimmingHeight - 8, newSize.height)
         descTextGap.constant = showFull ? 25 : 5

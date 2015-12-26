@@ -34,4 +34,22 @@ extension Double {
         }
         return formattedMoney
     }
+    
+    func formatVND() -> String {
+        // 1 234 457 890
+        let formatter = NSNumberFormatter()
+        formatter.minimumIntegerDigits = 3
+        
+        var remain = Int(self)
+        var formattedMoney = formatter.stringFromNumber(remain % 1000)!
+        remain /= 1000
+        while remain > 1000 {
+            formattedMoney = formatter.stringFromNumber(remain % 1000)! + "." + formattedMoney
+            remain /= 1000
+        }
+        if remain > 0 {
+            formattedMoney = "\(remain)." + formattedMoney
+        }
+        return formattedMoney + " VND"
+    }
 }

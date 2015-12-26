@@ -16,8 +16,16 @@ class MyColors {
     static let greenOfRetweetCount = UIColor(red: 19/255, green: 196/255, blue: 115/255, alpha: 1)
     static let redOfFavCount = UIColor(red: 226/255, green: 22/255, blue: 62/255, alpha: 1)
     
-    static let navigationTintColor = bluesky
+    static let navigationTintColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
     static let selectedCellColor = UIColor(red: 1, green: 230/255, blue: 230/255, alpha: 1)
     static let tableColor = UIColor(red: 245/255, green: 245/255, blue: 245/255, alpha: 1)
     static let highlightForNotification = UIColor(red: 224/255, green: 243/255, blue: 255/255, alpha: 1)
+    
+    static let themeColor = UIColor(red: 49/255, green: 165/255, blue: 134/255, alpha: 1)
+    static let bgColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
+    static let yellow = UIColor(red:241.0/255.0, green:196.0/255.0, blue:15.0/255.0, alpha:1.0)
+    static let green = UIColor(red: 49/255, green: 165/255, blue: 134/255, alpha: 1)
+    // green 31A586
+    // yellow #f1c40f
+    // black 
 }
