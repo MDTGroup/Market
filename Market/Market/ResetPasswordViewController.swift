@@ -33,7 +33,7 @@ class ResetPasswordViewController: UIViewController {
                 hud.hide(true)
                 guard error == nil else {
                     if let message = error?.userInfo["error"] as? String {
-                        self.showAlert("Reset password", message: message) { (alertAction) -> Void in }
+                        AlertControl.show(self, title: "Reset password", message: message, handler: nil)
                     }
                     print(error)
                     self.emailField.becomeFirstResponder()
@@ -41,7 +41,7 @@ class ResetPasswordViewController: UIViewController {
                 }
                 if success {
                     let message = "An email containing information on how to reset your password has been sent to \(email)."
-                    self.showAlert("Reset password", message: message) { (alertAction) -> Void in
+                    AlertControl.show(self, title: "Reset password", message: message) { (alertAction) -> Void in
                         dispatch_async(dispatch_get_main_queue(), { () -> Void in
                             self.view.endEditing(true)
                             self.onClose(self.emailField)
@@ -49,16 +49,10 @@ class ResetPasswordViewController: UIViewController {
                     }
                 } else {
                     self.emailField.becomeFirstResponder()
-                    self.showAlert("Reset password", message: "Cannot reset password. Please try again!") { (alertAction) -> Void in }
+                    AlertControl.show(self, title: "Reset password", message: "Cannot reset password. Please try again!", handler: nil)
                 }
             }
         }
-    }
-    
-    func showAlert(title: String, message: String, handler: (alertACtion: UIAlertAction) -> Void) {
-        let alert = UIAlertController (title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: handler))
-        self.presentViewController(alert, animated: true, completion: nil)
     }
     
     @IBAction func onClose(sender: AnyObject) {

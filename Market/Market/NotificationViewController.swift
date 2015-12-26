@@ -80,18 +80,34 @@ class NotificationViewController: UIViewController {
     
     func loadData(lastUpdatedAt: NSDate?) {
         if let currentUser = User.currentUser() {
-            currentUser.getNotifications(lastUpdatedAt, callback: { (notifications, error) -> Void in
+            currentUser.getNotifications(lastUpdatedAt, callback: { (newNotifications, error) -> Void in
                 guard error == nil else {
                     print(error)
                     self.isEndOfFeed = true
                     return
                 }
                 
-                if let notifications = notifications {
-                    if notifications.count == 0 {
+                if let newNotifications = newNotifications {
+                    if newNotifications.count == 0 {
                         self.isEndOfFeed = true
                     } else {
-                        self.notifications.appendContentsOf(notifications)
+                        if self.notifications.count == 0 {
+                            self.notifications.appendContentsOf(newNotifications)
+                        } else {
+                            for newNotification in newNotifications {
+                                var found = false
+                                for (index, notification) in self.notifications.enumerate() {
+                                    if newNotification.objectId == notification.objectId {
+                                        self.notifications[index] = newNotification
+                                        found = true
+                                        break
+                                    }
+                                }
+                                if !found {
+                                    self.notifications.append(newNotification)
+                                }
+                            }
+                        }
                         self.tableView.reloadData()
                     }
                     

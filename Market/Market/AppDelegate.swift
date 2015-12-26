@@ -28,8 +28,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         setupForParse(application, launchOptions: launchOptions)
         setupPushNotifications(application, launchOptions: launchOptions)
-        if User.currentUser() != nil {
-            HomeViewController.gotoHome()
+        if let currentUser = User.currentUser() {
+            currentUser.fetchIfNeededInBackgroundWithBlock({ (user, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    User.logOut()
+                    ViewController.gotoMain()
+                    return
+                }
+                HomeViewController.gotoHome()
+            })
         }
         return true
     }

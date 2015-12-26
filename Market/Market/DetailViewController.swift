@@ -478,7 +478,9 @@ class DetailViewController: UIViewController {
     }
     
     @IBAction func onMessage(sender: UIButton) {
-        ParentChatViewController.show(post, fromUser: User.currentUser()!, toUser: post.user)
+        dismissViewControllerAnimated(false) { () -> Void in
+            ParentChatViewController.show(self.post, fromUser: User.currentUser()!, toUser: self.post.user)
+        }
     }
 }
 

@@ -148,13 +148,7 @@ class UserTimelineViewController: UIViewController {
         User.currentUser()?.addKeyword(addedString, callback: { (success, error: NSError?) -> Void in
             if error != nil {
                 if error?.code == 0 {
-                    let alertController = UIAlertController(title: "Adding keyword", message: "The keyword existed", preferredStyle: .Alert)
-                    
-                    let ackAction = UIAlertAction(title: "OK", style: .Cancel) { (action) in
-                        
-                    }
-                    alertController.addAction(ackAction)
-                    self.presentViewController(alertController, animated: true, completion: nil)
+                    AlertControl.show(self, title: "Adding keyword", message: "The keyword existed", handler: nil)
                 }
                 print(error)
                 return
@@ -506,13 +500,13 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func followingTableViewCell(followingTableViewCell: FollowingTableViewCell, didUnfollow value: Bool) {
-        // Did unfollow this user, remove from the tableView
-        if value {
-            if let id = tableView.indexPathForCell(followingTableViewCell) {
-                queryArray.removeAtIndex(id.row)
-                tableView.deleteRowsAtIndexPaths([id], withRowAnimation: .Bottom)
-            }
-        }
+//        // Did unfollow this user, remove from the tableView
+//        if value {
+//            if let id = tableView.indexPathForCell(followingTableViewCell) {
+//                queryArray.removeAtIndex(id.row)
+//                tableView.deleteRowsAtIndexPaths([id], withRowAnimation: .Bottom)
+//            }
+//        }
     }
     
     func keywordsTableViewCell(keywordsTableViewCell: KeywordsTableViewCell, didDelete value: Bool) {

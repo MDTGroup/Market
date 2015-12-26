@@ -8,8 +8,7 @@
 
 import UIKit
 import Parse
-
-
+import MBProgressHUD
 
 class ProfileViewController: UIViewController {
     
@@ -23,19 +22,17 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var addressField: UITextField!
     @IBOutlet weak var emailField: UITextField!
     
-   
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        
         //Load data
         if let currentUser = User.currentUser() {
             //load avatar
             if let imageFile = User.currentUser()!.objectForKey("avatar") as? PFFile {
                 imageFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
-                        self.imagePickerView.image = UIImage(data: data!)
+                    self.imagePickerView.image = UIImage(data: data!)
                 }
-            } else {
-                print("User has not profile picture")
             }
             
             //load other information
@@ -43,222 +40,104 @@ class ProfileViewController: UIViewController {
             self.phoneField.text = currentUser.phone
             self.addressField.text = currentUser.address
             self.emailField.text = currentUser.email
-            
-            
-            
-           // Add observer to detect when the keyboard will be shown
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name: UIKeyboardWillShowNotification, object: nil)
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillHide:"), name: UIKeyboardWillHideNotification, object: nil)
-            
-           
-            
-            //Looks for single or multiple taps.
-            let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
-            self.view.addGestureRecognizer(tap)
-            
         }
         
         //Declare delegate to use textFieldShouldReturn
         fullnameField.delegate = self
         phoneField.delegate = self
         addressField.delegate = self
-   }
-  
-  
-   //Calls this function when the tap is recognized.
-    func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
-        self.view.endEditing(true)
-        print("The keyboard is dismissed")
-        
     }
     
     
-    /*MARK: Fix bug when keyboard slides up*/
-//    func keyboardWillShow(notification: NSNotification) {
-//       if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-//          self.view.frame.origin.y -= keyboardSize.height/2
-//            
-//        }
-//    }
-    //Remove observers before you leave the view  to prevent unnecessary messages from being transmitted.
+    
     override func viewWillDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: self.view.window)
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: self.view.window)
+        super.viewWillDisappear(animated)
+        view.endEditing(true)
     }
     
-    func keyboardWillShow(sender: NSNotification) {
-        let userInfo: [NSObject : AnyObject] = sender.userInfo!
-        
-        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
-        let offset: CGSize = userInfo[UIKeyboardFrameEndUserInfoKey]!.CGRectValue.size
-        
-        if keyboardSize.height == offset.height {
-            if self.view.frame.origin.y == 0 {
-                UIView.animateWithDuration(0.1, animations: { () -> Void in
-                    self.view.frame.origin.y -= keyboardSize.height/2
-                })
-            }
-        } else {
-            UIView.animateWithDuration(0.1, animations: { () -> Void in
-                self.view.frame.origin.y += keyboardSize.height/2 - offset.height
-            })
-        }
-        print("Keyboard will show and new position y of View",self.view.frame.origin.y)
-        
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        imagePickerView.layer.cornerRadius = self.imagePickerView.frame.size.width / 2
+        imagePickerView.clipsToBounds = true
     }
-    func keyboardWillHide(sender: NSNotification) {
-        let userInfo: [NSObject : AnyObject] = sender.userInfo!
-        let keyboardSize: CGSize = userInfo[UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
-        self.view.frame.origin.y += keyboardSize.height/2
-        print("Keyboard will hide")
-
-    }
-   
-//    func keyboardWillHide(notification: NSNotification) {
-//        if let keyboardSize = (notification.userInfo?[UIKeyboardFrameBeginUserInfoKey] as? NSValue)?.CGRectValue() {
-//            self.view.frame.origin.y += keyboardSize.height/2
-//            print("Keyboard will hide")
-//        }
-//    }
     
-
     @IBAction func onDone(sender: AnyObject) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        view.endEditing(true)
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func onLogOut(sender: AnyObject) {
+        let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+        hud.labelText = "Logging out..."
         User.logOutInBackgroundWithBlock({ (error) -> Void in
             guard error == nil else {
                 print(error)
+                if error?.code == PFErrorCode.ErrorInvalidSessionToken.rawValue {
+                    self.dismissViewControllerAnimated(false, completion: { () -> Void in
+                        ViewController.gotoMain()
+                    })
+                    return
+                }
                 return
             }
-           
-           ViewController.gotoMain()
+            hud.hide(true)
+            self.dismissViewControllerAnimated(false, completion: { () -> Void in
+                ViewController.gotoMain()
+            })
         })
     }
-
-    //Making the avatar into round shape
-    override func viewWillAppear(animated: Bool) {
-        //Set imagePickerView from square to round shape
-        self.imagePickerView.layer.cornerRadius = self.imagePickerView.frame.size.width / 2
-        self.imagePickerView.clipsToBounds = true
-       
-    }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    func resizeImage(image: UIImage, newWidth: CGFloat) -> UIImage {
-        
-        let scale = newWidth / image.size.width
-        let newHeight = image.size.height * scale
-        UIGraphicsBeginImageContext(CGSizeMake(newWidth, newHeight))
-        image.drawInRect(CGRectMake(0, 0, newWidth, newHeight))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        
-        return newImage
-    }
-    
-    @IBAction func onUpdate(sender: AnyObject) {
-        let fullname = self.fullnameField.text
-        let phone = self.phoneField.text
-        let address = self.addressField.text
-        let email = self.emailField.text
-        let finalEmail = email!.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+    func onUpdate() {
+        let fullName = self.fullnameField.text!
+        let phone = self.phoneField.text!
+        let address = self.addressField.text!
+        let email = self.emailField.text!
         
         // Validate the text fields
-        if fullname?.characters.count < 5 {
-
-            let alertVC = UIAlertController(title: "Invalid!", message: "Fullname must be greater than 5 characters", preferredStyle: UIAlertControllerStyle.Alert)
-            let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-            alertVC.addAction(alertAction)
-            self.presentViewController(alertVC, animated: true, completion: nil)
-        } else if phone?.characters.count < 1 {
-            
-            let alertVC = UIAlertController(title: "Invalid!", message: "Phone must be greater than 1 characters", preferredStyle: UIAlertControllerStyle.Alert)
-            let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-            alertVC.addAction(alertAction)
-            self.presentViewController(alertVC, animated: true, completion: nil)
-        } else if email?.characters.count < 8 {
-
-            let alertVC = UIAlertController(title: "Invalid!", message: "Please enter a valid email address", preferredStyle: UIAlertControllerStyle.Alert)
-            let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-            alertVC.addAction(alertAction)
-            self.presentViewController(alertVC, animated: true, completion: nil)
-        } else if address?.characters.count < 1 {
-
-            let alertVC = UIAlertController(title: "Invalid!", message: "Address must be greater than 1 characters", preferredStyle: UIAlertControllerStyle.Alert)
-            let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-            alertVC.addAction(alertAction)
-            self.presentViewController(alertVC, animated: true, completion: nil)
+        if fullName.characters.count < 2 {
+            AlertControl.show(self, title: "Invalid!", message: "Full name must be greater than a character", handler: nil)
+        } else if email.characters.count < 1 && email.isEmail() == false {
+            AlertControl.show(self, title: "Invalid!", message: "Please enter a valid email address", handler: nil)
         } else {
-            // Run a spinner to show a task in progress
-            let spinner: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(0, 0, 150, 150)) as UIActivityIndicatorView
-            spinner.startAnimating()
-            
             if let currentUser = User.currentUser() {
-                //get the data from photos and save it to currentUser
                 let image = imagePickerView.image
-                let thumbnails = resizeImage(image!, newWidth: 150)
-                //let imageFile = PFFile(name: "img1.png", data: UIImagePNGRepresentation(image!)!)!
-                //let imageFile = PFFile(data: UIImagePNGRepresentation(image!)!)
-                //let imageFile = PFFile(data: UIImagePNGRepresentation(thumbnails)!)
+                let thumbnails = Helper.resizeImage(image!, newWidth: 150)
                 let imageFile = PFFile(data: UIImageJPEGRepresentation(thumbnails, 0.4)!)
                 currentUser.avatar = imageFile
                 
-                
                 //Saving othet information to currentUser
-                currentUser.fullName = fullname!
+                currentUser.fullName = fullName
                 currentUser.phone = phone
                 currentUser.address = address
-                currentUser.username = finalEmail
-                currentUser.email = finalEmail
-            
-            
-            
+                currentUser.username = email
+                currentUser.email = email
+                
                 //call the method to save currentUser to database
-                currentUser.saveInBackgroundWithBlock ({
-                (succeed, error) -> Void in
-
-               // Stop the spinner
-                spinner.stopAnimating()
-                if ((error) != nil) {
-
-                    let alertVC = UIAlertController(title: "Error", message: "\(error)", preferredStyle: UIAlertControllerStyle.Alert)
-                    let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-                    alertVC.addAction(alertAction)
-                    self.presentViewController(alertVC, animated: true, completion: nil)
-
-                    
-                } else {
-
-                    let alertVC = UIAlertController(title: "Success", message: "Update profile", preferredStyle: UIAlertControllerStyle.Alert)
-                    let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-                    alertVC.addAction(alertAction)
-                    self.presentViewController(alertVC, animated: true, completion: nil)
+                currentUser.saveInBackgroundWithBlock ({ (succeed, error) -> Void in
+                    guard error == nil else {
+                        if let message = error?.userInfo["error"] as? String {
+                            AlertControl.show(self, title: "Error", message: message, handler: nil)
+                        }
+                        print(error)
+                        return
+                    }
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.navigationController?.popViewControllerAnimated(true)
+                        self.view.endEditing(true)
+                        AlertControl.show(self, title: "Update profile", message: "Update profile successfully!", handler: nil)
                     })
-                    
-                }
-            })
+                })
             }
         }
-
     }
 }
 
 
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-            // User selected an image
-            if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-           self.imagePickerView.image = image
-
+        // User selected an image
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            self.imagePickerView.image = image
+            
         }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -280,7 +159,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
         self.presentViewController(imagePicker, animated: true, completion: nil)
     }
-
+    
     
     @IBAction func onUpload(sender: UIButton) {
         let imagePicker = UIImagePickerController()
@@ -300,26 +179,8 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 
 extension ProfileViewController : UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-       
-        if textField == fullnameField {
-            if let text = textField.text where text.isEmpty {
-                return false
-            }
-            phoneField.becomeFirstResponder()
-        }
-        if textField == phoneField {
-            if let text = textField.text where text.isEmpty {
-                return false
-            }
-            addressField.becomeFirstResponder()
-        }
-
-        if textField == addressField {
-            if let text = textField.text where text.isEmpty {
-                return false
-            }
-            onUpdate(textField)
-        }
+        
+        onUpdate()
         
         return true
     }

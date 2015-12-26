@@ -330,42 +330,26 @@ class PostViewController: UIViewController {
         // Input validation
         if images.count == 0 {
             // Allow post without image?
-            let alertController = UIAlertController(title: "Market", message: "Please add image", preferredStyle: .Alert)
-            
-            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-            alertController.addAction(okAction)
-            presentViewController(alertController, animated: true, completion: nil)
+            AlertControl.show(self, title: "Market", message: "Please add image", handler: nil)
             return nil
         }
         
-        if priceLabel.text! == "" {
-            let alertController = UIAlertController(title: "Market", message: "Please enter the price", preferredStyle: .Alert)
-            
-            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-            alertController.addAction(okAction)
-            presentViewController(alertController, animated: true, completion: { () -> Void in
+        if priceLabel.text!.isEmpty {
+            AlertControl.show(self, title: "Market", message: "Please enter the price", handler: { (alertAction) -> Void in
                 self.priceLabel.becomeFirstResponder()
             })
             return nil
         }
         
-        if titleLabel.text! == "" {
-            let alertController = UIAlertController(title: "Market", message: "Please enter the title", preferredStyle: .Alert)
-            
-            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-            alertController.addAction(okAction)
-            presentViewController(alertController, animated: true, completion: { () -> Void in
+        if titleLabel.text!.isEmpty {
+            AlertControl.show(self, title: "Market", message: "Please enter the title", handler: { (alertAction) -> Void in
                 self.titleLabel.becomeFirstResponder()
             })
             return nil
         }
         
-        if descriptionText.text! == "" {
-            let alertController = UIAlertController(title: "Market", message: "Please enter the description", preferredStyle: .Alert)
-            
-            let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil)
-            alertController.addAction(okAction)
-            presentViewController(alertController, animated: true, completion: { () -> Void in
+        if descriptionText.text!.isEmpty {
+            AlertControl.show(self, title: "Market", message: "Please enter the description", handler: { (alertAction) -> Void in
                 self.descriptionText.becomeFirstResponder()
             })
             return nil
@@ -535,10 +519,7 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
         
         if mediaType == kUTTypeMovie {
             if videoPosition >= 0 {
-                let alertController = UIAlertController(title: "Market", message: "You can't post more than 1 video", preferredStyle: .Alert)
-                let okAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
-                alertController.addAction(okAction)
-                self.presentViewController(alertController, animated: true, completion: nil)
+                AlertControl.show(self, title: "Market", message: "You can't post more than 1 video", handler: nil)
             } else {
                 isMediaChanged = true
                 videoPosition = selectedImageIndex

@@ -122,6 +122,11 @@ class HomeViewController: UIViewController {
                 self.tableView.reloadData()
                 
             } else {
+                if error?.code == PFErrorCode.ErrorInvalidSessionToken.rawValue {
+                    User.logOut()
+                    ViewController.gotoMain()
+                    return
+                }
                 print(error)
                 self.isEndOfFeed = true
             }

@@ -22,7 +22,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     var avatars = Dictionary<String, JSQMessagesAvatarImage>()
     var users = [User]()
     
-    var outgoingBubbleImage = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(MyColors.bluesky)
+    var outgoingBubbleImage = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(MyColors.green)
     var incomingBubbleImage = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
     var blankAvatarImage = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "profile_blank"), diameter: 30)
     var isLoading = false

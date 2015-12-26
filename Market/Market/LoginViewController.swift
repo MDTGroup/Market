@@ -46,17 +46,14 @@ class LoginViewController: UIViewController {
                     hud.hide(true)
                     if  user != nil {
                         self.view.endEditing(true)
-                        HomeViewController.gotoHome()
+                        self.dismissViewControllerAnimated(false, completion: { () -> Void in
+                            HomeViewController.gotoHome()
+                        })
                     } else {
-                        
-                        let alertVC = UIAlertController(title: "Login error!", message: "Login failed! Please try again!", preferredStyle: UIAlertControllerStyle.Alert)
-                        let alertAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (alertAction) -> Void in
+                        AlertControl.show(self, title: "Login error!", message: "Login failed! Please try again!", handler: { (alertVC) -> Void in
                             self.passwordField.text = ""
                             self.passwordField.becomeFirstResponder()
-                            })
-                        alertVC.addAction(alertAction)
-                        self.presentViewController(alertVC, animated: true, completion: nil)
-                        
+                        })
                     }
                 })
             })

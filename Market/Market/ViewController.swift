@@ -12,6 +12,7 @@ class ViewController: UIViewController {
     static func gotoMain() {
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
         let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier(StoryboardID.main)
-        UIApplication.sharedApplication().delegate!.window!!.rootViewController = vc
+        let window = UIApplication.sharedApplication().delegate!.window!!
+        window.rootViewController = vc
     }
 }

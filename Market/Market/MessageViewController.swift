@@ -97,17 +97,34 @@ class MessageViewController: UIViewController {
         if post == nil {
             return
         }
-        Conversation.getConversationsByPost(post, lastUpdatedAt: lastUpdatedAt) { (conversations, error) -> Void in
+        Conversation.getConversationsByPost(post, lastUpdatedAt: lastUpdatedAt) { (newConversations, error) -> Void in
             guard error == nil else {
                 print(error)
                 self.isEndOfFeed = true
                 return
             }
-            if let conversations = conversations {
-                if conversations.count == 0 {
+            if let newConversations = newConversations {
+                if newConversations.count == 0 {
                     self.isEndOfFeed = true
                 } else {
-                    self.conversations.appendContentsOf(conversations)
+                    if self.conversations.count == 0 {
+                        self.conversations.appendContentsOf(newConversations)
+                    } else {
+                        for newConversation in newConversations {
+                            var found = false
+                            for (index, conversation) in self.conversations.enumerate() {
+                                if newConversation.objectId == conversation.objectId {
+                                    self.conversations[index] = newConversation
+                                    found = true
+                                    break
+                                }
+                            }
+                            if !found {
+                                self.conversations.append(newConversation)
+                            }
+                        }
+                    }
+                    
                     self.tableView.reloadData()
                 }
             }

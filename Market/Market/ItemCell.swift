@@ -187,74 +187,74 @@ class ItemCell: UITableViewCell {
         voteCountLabel.hidden = !(count > 0)
     }
     
-    @IBAction func onVoteChanged(sender: UIButton) {
-        if sender.imageView?.image == UIImage(named: "thumb_on") {
-            // Un-vote it
-            let count = Int(self.voteCountLabel.text!)! - 1
-            setVoteCountLabel(count, voted: false)
-            
-            item.vote(false) { (successful: Bool, error: NSError?) -> Void in
-                if successful {
-                    print("unvoted")
-                    self.item.iVoteIt = false
-                    self.delegate?.itemCell?(self, didChangeVote: true, voteCount: count)
-                } else {
-                    print("failed to unvote")
-                    self.setVoteCountLabel(count + 1, voted: true)
-                }
-            }
-            
-        } else {
-            // Vote it
-            let count = Int(self.voteCountLabel.text!)! + 1
-            setVoteCountLabel(count, voted: true)
-            item.vote(true) { (successful: Bool, error: NSError?) -> Void in
-                if successful {
-                    print("voted")
-                    self.item.iVoteIt = true
-                    self.delegate?.itemCell?(self, didChangeVote: true, voteCount: count)
-                } else {
-                    print("failed to vote")
-                    self.setVoteCountLabel(count - 1, voted: false)
-                }
-            }
-        }
-    }
-    
-    @IBAction func onSaveChanged(sender: UIButton) {
-        if sender.imageView?.image == UIImage(named: "save_on") {
-            // Un-save it
-            setSaveLabel(false)
-            item.save(false) { (successful: Bool, error: NSError?) -> Void in
-                if successful {
-                    print("unsaved")
-                    self.item.iSaveIt = false
-                    self.delegate?.itemCell?(self, didChangeSave: false)
-                } else {
-                    print("failed to unsave")
-                    self.setSaveLabel(true)
-                }
-            }
-            
-        } else {
-            // Save it
-            setSaveLabel(true)
-            item.save(true) { (successful: Bool, error: NSError?) -> Void in
-                if successful {
-                    print("saved")
-                    self.item.iSaveIt = true
-                    self.delegate?.itemCell?(self, didChangeSave: true)
-                } else {
-                    print("failed to save")
-                    self.setSaveLabel(false)
-                }
-            }
-        }
-    }
-    
-    @IBAction func onMessage(sender: UIButton) {
-        ParentChatViewController.show(item, fromUser: User.currentUser()!, toUser: item.user)
-    }
+//    @IBAction func onVoteChanged(sender: UIButton) {
+//        if sender.imageView?.image == UIImage(named: "thumb_on") {
+//            // Un-vote it
+//            let count = Int(self.voteCountLabel.text!)! - 1
+//            setVoteCountLabel(count, voted: false)
+//            
+//            item.vote(false) { (successful: Bool, error: NSError?) -> Void in
+//                if successful {
+//                    print("unvoted")
+//                    self.item.iVoteIt = false
+//                    self.delegate?.itemCell?(self, didChangeVote: true, voteCount: count)
+//                } else {
+//                    print("failed to unvote")
+//                    self.setVoteCountLabel(count + 1, voted: true)
+//                }
+//            }
+//            
+//        } else {
+//            // Vote it
+//            let count = Int(self.voteCountLabel.text!)! + 1
+//            setVoteCountLabel(count, voted: true)
+//            item.vote(true) { (successful: Bool, error: NSError?) -> Void in
+//                if successful {
+//                    print("voted")
+//                    self.item.iVoteIt = true
+//                    self.delegate?.itemCell?(self, didChangeVote: true, voteCount: count)
+//                } else {
+//                    print("failed to vote")
+//                    self.setVoteCountLabel(count - 1, voted: false)
+//                }
+//            }
+//        }
+//    }
+//    
+//    @IBAction func onSaveChanged(sender: UIButton) {
+//        if sender.imageView?.image == UIImage(named: "save_on") {
+//            // Un-save it
+//            setSaveLabel(false)
+//            item.save(false) { (successful: Bool, error: NSError?) -> Void in
+//                if successful {
+//                    print("unsaved")
+//                    self.item.iSaveIt = false
+//                    self.delegate?.itemCell?(self, didChangeSave: false)
+//                } else {
+//                    print("failed to unsave")
+//                    self.setSaveLabel(true)
+//                }
+//            }
+//            
+//        } else {
+//            // Save it
+//            setSaveLabel(true)
+//            item.save(true) { (successful: Bool, error: NSError?) -> Void in
+//                if successful {
+//                    print("saved")
+//                    self.item.iSaveIt = true
+//                    self.delegate?.itemCell?(self, didChangeSave: true)
+//                } else {
+//                    print("failed to save")
+//                    self.setSaveLabel(false)
+//                }
+//            }
+//        }
+//    }
+//    
+//    @IBAction func onMessage(sender: UIButton) {
+//        ParentChatViewController.show(item, fromUser: User.currentUser()!, toUser: item.user)
+//    }
     
     func tapOnProfile(gesture: UITapGestureRecognizer) {
         self.delegate?.itemCell?(self, tapOnProfile: true)
