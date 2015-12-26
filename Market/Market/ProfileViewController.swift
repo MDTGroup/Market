@@ -123,6 +123,9 @@ class ProfileViewController: UIViewController {
 //    }
     
 
+    @IBAction func onDone(sender: AnyObject) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
 
     //Making the avatar into round shape
     override func viewWillAppear(animated: Bool) {
@@ -238,6 +241,7 @@ class ProfileViewController: UIViewController {
     }
 }
 
+
 extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
             // User selected an image
@@ -281,6 +285,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         self.presentViewController(imagePicker, animated: true, completion: nil)
     }
 }
+
 
 extension ProfileViewController : UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
