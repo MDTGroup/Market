@@ -8,6 +8,8 @@
 
 import UIKit
 import Parse
+import MobileCoreServices
+import AVFoundation
 
 @objc protocol PostViewControllerDelegate {
     optional func postViewController(postViewController: PostViewController, didUploadNewPost post: Post)
@@ -167,6 +169,8 @@ class PostViewController: UIViewController {
                     self.imageView2.alpha = 1
                     self.imageView3.alpha = 1
                     self.conditionSegment.alpha = 1
+                    }, completion: { (finished) -> Void in
+                        self.instructionView.hidden = true
                 })
         }
     }
@@ -460,10 +464,30 @@ class PostViewController: UIViewController {
 // MARK: - Image Picker
 extension PostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        // User selected an image
-        isMediaChanged = true
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            setImageToSelectedImageView(image)
+        let mediaType = info[UIImagePickerControllerMediaType] as! NSString
+        
+        if mediaType == kUTTypeMovie {
+            // Get the thumbnail of video
+            let url = info[UIImagePickerControllerMediaURL] as? String
+            print(url)
+            // crash next line
+            let asset = AVURLAsset(URL: NSURL(fileURLWithPath: url!), options: nil)
+            let imgGenerator = AVAssetImageGenerator(asset: asset)
+            do {
+                let cgImage = try imgGenerator.copyCGImageAtTime(CMTimeMake(0, 1), actualTime: nil)
+                let image = UIImage(CGImage: cgImage)
+                setImageToSelectedImageView(image)
+                print("capture thumbnail from video")
+            } catch {
+                print("ehh, something's wrong")
+            }
+            
+        } else {
+            // User selected an image
+            isMediaChanged = true
+            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+                setImageToSelectedImageView(image)
+            }
         }
         self.dismissViewControllerAnimated(true, completion: nil)
     }
@@ -477,6 +501,8 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = source
+        //imagePicker.allowsEditing = true
+        imagePicker.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
         self.presentViewController(imagePicker, animated: true, completion: nil)
     }
     

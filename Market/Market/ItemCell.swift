@@ -78,13 +78,15 @@ class ItemCell: UITableViewCell {
                 //itemImageView.addSubview(loadingView)
                 itemImageView.alpha = 0.0
                 itemImageView.image = nil
-                UIView.animateWithDuration(0.3, animations: {
-                    self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-                    self.itemImageView.alpha = 1.0
-                    }, completion: { (finished) -> Void in
-                        //self.loadingView.stopAnimating()
-                        //self.loadingView.removeFromSuperview()
-                })
+                self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
+                self.itemImageView.alpha = 1.0
+                //                UIView.animateWithDuration(0.3, animations: {
+                //                    self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
+                //                    self.itemImageView.alpha = 1.0
+                //                    }, completion: { (finished) -> Void in
+                //                        //self.loadingView.stopAnimating()
+                //                        //self.loadingView.removeFromSuperview()
+                //                })
                 
                 // Set it nil first to prevent it reuses image from other cell when new post
                 //itemImageView.image = UIImage(named: "camera")

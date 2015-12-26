@@ -168,6 +168,10 @@ class DetailViewController: UIViewController {
         } else {
             setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
         }
+        // If this is my post then not allow to vote
+        if post.user.objectId == User.currentUser()?.objectId {
+            voteButton.enabled = false
+        }
         
         // Indicate network status
         //    if Helper.hasConnectivity() {
@@ -206,7 +210,7 @@ class DetailViewController: UIViewController {
     func showMore(gesture: UITapGestureRecognizer) {
         if gesture.state == UIGestureRecognizerState.Ended {
             let tapLocation = gesture.locationInView(self.view)
-            if tapLocation.y >= dimmingView.frame.origin.y {
+            if (tapLocation.y >= dimmingView.frame.origin.y) && (tapLocation.y <= buttonsView.frame.origin.y) {
                 if !isReadingFullDescription {
                     isReadingFullDescription = true
                     //descTextGap.constant = 25
