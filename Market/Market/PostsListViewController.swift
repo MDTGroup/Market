@@ -53,6 +53,7 @@ class PostsListViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         timer.invalidate()
+        refreshControl.endRefreshing()
     }
     
     func initControls() {

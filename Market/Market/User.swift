@@ -155,6 +155,7 @@ class User: PFUser {
     
     func getSavedPosts(lastUpdatedAt:NSDate?, callback: PostResultBlock) {
         let query = savedPosts.query()
+        query.includeKey("user")
         QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt)
         query.cachePolicy = .NetworkElseCache
         query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in

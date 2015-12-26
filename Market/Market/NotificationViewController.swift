@@ -39,6 +39,7 @@ class NotificationViewController: UIViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         timer.invalidate()
+        refreshControl.endRefreshing()
     }
     
     override func viewWillAppear(animated: Bool) {
