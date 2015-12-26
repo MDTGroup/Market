@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		18083C721C2C0D16001F5F48 /* FullImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18083C711C2C0D16001F5F48 /* FullImageViewController.swift */; };
 		1866EBF81C26865B0009A1C0 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1866EBF71C26865B0009A1C0 /* Helper.swift */; };
+		18BBF2E81C2EFBF3004C6030 /* VideoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18BBF2E71C2EFBF3004C6030 /* VideoViewController.swift */; };
 		18DEFF3F1C1BD79400511E88 /* Home.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18DEFF3D1C1BD79400511E88 /* Home.storyboard */; };
 		18DEFF411C1BE4EC00511E88 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18DEFF401C1BE4EC00511E88 /* Settings.storyboard */; };
 		18E098AA1C1C112700A1F217 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E098A91C1C112700A1F217 /* ProfileViewController.swift */; };
@@ -70,6 +71,7 @@
 		16F9798A0C1DF9D526E69107 /* Pods_Market.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Market.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		18083C711C2C0D16001F5F48 /* FullImageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FullImageViewController.swift; sourceTree = "<group>"; };
 		1866EBF71C26865B0009A1C0 /* Helper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		18BBF2E71C2EFBF3004C6030 /* VideoViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideoViewController.swift; sourceTree = "<group>"; };
 		18DEFF3E1C1BD79400511E88 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Home.storyboard; sourceTree = "<group>"; };
 		18DEFF401C1BE4EC00511E88 /* Settings.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Settings.storyboard; sourceTree = "<group>"; };
 		18E098A91C1C112700A1F217 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				BAF769171C1EA804006870CA /* KeywordsViewController.swift */,
 				44EB6E191C250F4A0044992A /* SearchViewController.swift */,
 				18083C711C2C0D16001F5F48 /* FullImageViewController.swift */,
+				18BBF2E71C2EFBF3004C6030 /* VideoViewController.swift */,
 			);
 			name = "View Controllers";
 			sourceTree = "<group>";
@@ -489,6 +492,7 @@
 				44FBCB041C1D35AE00722DE2 /* Message.swift in Sources */,
 				BA5062AD1C1E7D1800E67EE7 /* FollowingTableViewCell.swift in Sources */,
 				443359B91C27D92F006B55F9 /* ParentChatViewController.swift in Sources */,
+				18BBF2E81C2EFBF3004C6030 /* VideoViewController.swift in Sources */,
 				4401D0F41C21311C004A9BD9 /* SimplifiedItemCell.swift in Sources */,
 				44EB6E1C1C25217D0044992A /* DoubleExtension.swift in Sources */,
 				443810361C206EEB00CCD266 /* Notification.swift in Sources */,

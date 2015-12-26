@@ -333,7 +333,7 @@ extension UserTimelineViewController {
     // Load list of people I'm following
     func loadFollowing() {
         User.currentUser()?.getFollowings({ (users, error) -> Void in
-            MBProgressHUD.hideHUDForView(self.view, animated: true)
+            MBProgressHUD.hideHUDForView(self.tableView, animated: true)
             guard error == nil else {
                 print(error)
                 return

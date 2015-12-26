@@ -8,6 +8,8 @@
 
 import UIKit
 import AFNetworking
+import AVKit
+import AVFoundation
 
 @objc protocol DetailViewControllerDelegate {
     optional func detailViewController(detailViewController: DetailViewController, newPost: Post)
@@ -27,6 +29,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var descriptionText: UITextView!
     @IBOutlet weak var textHeight: NSLayoutConstraint!
     @IBOutlet weak var descTextGap: NSLayoutConstraint!
+    @IBOutlet weak var buttonsViewHeight: NSLayoutConstraint!
     
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var sellerLabel: UILabel!
@@ -34,10 +37,12 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var cancelButton: UIButton!
+    @IBOutlet weak var priceLabel: UILabel!
     
     @IBOutlet weak var scrollCircle1: UIImageView!
     @IBOutlet weak var scrollCircle2: UIImageView!
     @IBOutlet weak var scrollCircle3: UIImageView!
+    @IBOutlet weak var closeButton: UIButton!
     
     @IBOutlet weak var voteCountLabel: UILabel!
     @IBOutlet weak var voteLabel: UILabel!
@@ -50,7 +55,11 @@ class DetailViewController: UIViewController {
     var selectedImage = 1
     var nImages: Int = 1
     var tempImageViews = [UIImageView]()
-    @IBOutlet weak var priceLabel: UILabel!
+    var videoPosition: Int = -1
+    var player: AVPlayer?
+    var playerController: AVPlayerViewController?
+    var videoUrl: NSURL?
+    var playButton: UIButton!
     
     var imageOriginalCenter: CGPoint!
     var imageOriginalFrame: CGRect!
@@ -104,6 +113,8 @@ class DetailViewController: UIViewController {
         
         avatarImageView.layer.cornerRadius = 18
         avatarImageView.clipsToBounds = true
+        closeButton.layer.cornerRadius = 12
+        closeButton.clipsToBounds = true
         
         // Exclude the thumbnail
         nImages = post.medias.count / 2
@@ -117,21 +128,33 @@ class DetailViewController: UIViewController {
         // Load images while user still reading 1st page
         if nImages > 1 {
             var iv: UIImageView!
+            var url: String!
             tempImageViews = []
             // Refresh the layout before assign anything
             view.layoutIfNeeded()
             for i in nImages...2*nImages-1 {
                 iv = UIImageView()
                 iv.frame = imageView.frame
-                // Add 20px for the status bar
+                // Add 20px for the status bar, if not show status bar, comment next 2 lines
                 iv.frame.origin.y += 20
+                iv.frame.size.height -= 20
+                
                 print(iv.frame)
                 iv.center.x -= imageView.frame.width
                 iv.contentMode = .ScaleAspectFit
                 iv.clipsToBounds = true
                 
                 tempImageViews.append(iv)
-                tempImageViews[i-nImages].setImageWithURL(NSURL(string: post.medias[i].url!)!)
+                url = post.medias[i].url!
+                
+                if (url?.rangeOfString("video.mov") != nil) {
+                    tempImageViews[i-nImages].setImageWithURL(NSURL(string: post.medias[i-nImages].url!)!)
+                    videoPosition = i - nImages
+                    videoUrl = NSURL(string: url)
+                } else {
+                    tempImageViews[i-nImages].setImageWithURL(NSURL(string: post.medias[i].url!)!)
+                }
+                
                 print(i, post.medias[i].url!)
                 view.insertSubview(tempImageViews[i-nImages], aboveSubview: imageView)
             }
@@ -169,16 +192,31 @@ class DetailViewController: UIViewController {
         } else {
             setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
         }
-        // If this is my post then not allow to vote
-
+        // If this is my post then not allow to vote/chat/save
+        //buttonsViewHeight.constant = (post.user.objectId == User.currentUser()?.objectId) ? 0 : 40
         buttonsView.hidden = post.user.objectId == User.currentUser()?.objectId
         
+        addPlayButton()
         // Indicate network status
         //    if Helper.hasConnectivity() {
         //      showNoNetwork(invisiblePosition)
         //    } else {
         //      showNoNetwork(visiblePosition)
         //    }
+    }
+    
+    func addPlayButton() {
+        playButton = UIButton(frame: CGRect(x: (imageView.frame.size.width - 50) / 2, y: (imageView.frame.size.height - 50) / 2, width: 50, height: 50))
+        playButton.layer.backgroundColor = UIColor.clearColor().CGColor
+        playButton.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
+        playButton.addTarget(self, action: "showVideoPlayer", forControlEvents: UIControlEvents.TouchUpInside)
+        // If video is at first, show the playButton immediatelly
+        playButton.hidden = videoPosition != 0
+        imageView.addSubview(playButton)
+    }
+    
+    func showVideoPlayer() {
+        performSegueWithIdentifier("videoSegue", sender: self)
     }
     
     func setImageScroll(selected: Int) {
@@ -275,6 +313,8 @@ class DetailViewController: UIViewController {
                                 self.setImageScroll(self.selectedImage)
                                 self.imageView.image = self.tempImageViews[self.selectedImage-1].image
                                 self.tempImageViews[self.selectedImage-1].center.x = -self.imageOriginalCenter.x
+                                
+                                self.playButton.hidden = (self.selectedImage - 1 != self.videoPosition)
                         })
                         
                     } else if translation.x < -80 {
@@ -298,6 +338,8 @@ class DetailViewController: UIViewController {
                                 self.setImageScroll(self.selectedImage)
                                 self.imageView.image = self.tempImageViews[self.selectedImage-1].image
                                 self.tempImageViews[self.selectedImage-1].center.x = self.imageView.frame.width + self.imageOriginalCenter.x
+                                
+                                self.playButton.hidden = (self.selectedImage - 1 != self.videoPosition)
                         })
                         
                     } else {
@@ -312,9 +354,15 @@ class DetailViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let nextVC = segue.destinationViewController as! FullImageViewController
-        let data = sender as! UIImage
-        nextVC.image = data
+        if segue.identifier == "videoSegue" {
+            let nextVC = segue.destinationViewController as! VideoViewController
+            nextVC.videoUrl = videoUrl
+            
+        } else if segue.identifier == "fullImageSegue" {
+            let nextVC = segue.destinationViewController as! FullImageViewController
+            let data = sender as! UIImage
+            nextVC.image = data
+        }
     }
     
     @IBAction func onZoomImage(sender: UIPinchGestureRecognizer) {

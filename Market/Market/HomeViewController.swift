@@ -149,12 +149,16 @@ class HomeViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if (segue.identifier == "detailSegue") {
             if let detailVC = segue.destinationViewController as? DetailViewController {
-                detailVC.post = sender as? Post
-                detailVC.delegate = self
+                if let data = sender as? Post {
+                    detailVC.post = data
+                    detailVC.delegate = self
+                }
             }
         } else if (segue.identifier == "userTimelineSegue") {
             if let userTimelineVC = segue.destinationViewController as? UserTimelineViewController {
-                userTimelineVC.user = sender as? User
+                if let data = sender as? User {
+                    userTimelineVC.user = data
+                }
             }
         }
     }
