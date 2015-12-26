@@ -63,19 +63,8 @@ class SavedItemCell: UITableViewCell {
             }
             itemNameLabel.text = post.title
             descriptionLabel.text = post.descriptionText
-            
-            let elapsedTime = NSDate().timeIntervalSinceDate(post.createdAt!)
-            var timeSinceCreated = ""
-            if elapsedTime < 60 {
-                timeSinceCreated = String(Int(elapsedTime)) + "s"
-            } else if elapsedTime < 3600 {
-                timeSinceCreated = String(Int(elapsedTime / 60)) + "m"
-            } else if elapsedTime < 24*3600 {
-                timeSinceCreated = String(Int(elapsedTime / 60 / 60)) + "h"
-            } else {
-                timeSinceCreated = String(Int(elapsedTime / 60 / 60 / 24)) + "d"
-            }
-            timeAgoLabel.text = timeSinceCreated
+
+            timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
             
             priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
@@ -86,7 +75,7 @@ class SavedItemCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        avatarImageView.layer.cornerRadius = 18
+        avatarImageView.layer.cornerRadius = 10
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true

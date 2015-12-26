@@ -31,15 +31,11 @@ class User: PFUser {
     
     func getPosts(lastUpdated:NSDate?, callback: PostResultBlock) {
         if let query = Post.query() {
-            query.limit = 20
             query.selectKeys(["title", "descriptionText", "price", "user", "medias", "location", "condition", "sold", "voteCounter"])
-            if let lastUpdated = lastUpdated {
-                query.whereKey("updatedAt", lessThan: lastUpdated)
-            }
             query.includeKey("user")
             query.whereKey("isDeleted", equalTo: false)
             query.whereKey("user", equalTo: self)
-            query.orderByDescending("updatedAt")
+            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdated)
             query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObj: [PFObject]?, error: NSError?) -> Void in
                 guard error == nil else {

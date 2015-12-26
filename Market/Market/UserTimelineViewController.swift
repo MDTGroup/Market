@@ -199,14 +199,14 @@ extension UserTimelineViewController {
     
     func loadNewestData() {
         posts = []
-        loadData(NSDate())
+        loadData(nil)
     }
     
     func loadDataSince(lastUpdatedAt: NSDate) {
         loadData(lastUpdatedAt)
     }
     
-    func loadData(byThisDate: NSDate) {
+    func loadData(byThisDate: NSDate?) {
         if dataToLoad == 0 {
             user.getPosts(byThisDate, callback: { (posts, error) -> Void in
                 if let posts = posts {
