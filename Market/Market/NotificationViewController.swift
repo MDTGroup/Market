@@ -94,13 +94,13 @@ class NotificationViewController: UIViewController {
                         self.notifications.appendContentsOf(notifications)
                         self.tableView.reloadData()
                     }
-                    self.isLoadingNextPage = false
                     
                     self.noMoreResultLabel.hidden = !self.isEndOfFeed
                     self.noMoreResultLabel.text = (self.isEndOfFeed && self.notifications.count > 0) ? "No more result" : "No notifications"
                     
                     self.refreshControl.endRefreshing()
                     self.loadingView.stopAnimating()
+                    self.isLoadingNextPage = false
                 }
             })
         }
@@ -153,7 +153,7 @@ extension NotificationViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("NotificationTableViewCell", forIndexPath: indexPath) as! NotificationTableViewCell
         cell.notification = notifications[indexPath.row]
-        // Infinite load if last cell
+        
         if !isLoadingNextPage && !isEndOfFeed {
             if indexPath.row == notifications.count - 1 {
                 loadingView.startAnimating()

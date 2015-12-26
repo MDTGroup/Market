@@ -33,6 +33,7 @@ class TabBarController: NSObject {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "onRefreshMessageBadge:", name: TabBarController.newMessage, object: nil)
         
         messageTab.image = UIImage(named: "message")
+        messageTab.imageInsets = UIEdgeInsets(top: 4, left: 0, bottom: -4, right: 0)
         messageTab.title = "Messages"
         
         notificationTab.image = UIImage(named: "noti")

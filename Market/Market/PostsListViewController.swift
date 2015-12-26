@@ -78,7 +78,7 @@ class PostsListViewController: UIViewController {
         noMoreResultLabel.textAlignment = NSTextAlignment.Center
         noMoreResultLabel.textColor = UIColor.grayColor()
         noMoreResultLabel.hidden = true
-        tableFooterView.addSubview(noMoreResultLabel)
+        tableFooterView.insertSubview(noMoreResultLabel, atIndex: 0)
         tableView.tableFooterView = tableFooterView
     }
     

@@ -18,8 +18,6 @@ class NotificationTableViewCell: UITableViewCell {
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var timeAgoLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
-    @IBOutlet weak var priceBackgroundView: UIView!
-//    @IBOutlet weak var sellerLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var newTagImageView: UIImageView!
     @IBOutlet weak var typeLabel: UILabel!
@@ -28,31 +26,19 @@ class NotificationTableViewCell: UITableViewCell {
     var notification: Notification! {
         didSet {
             let post = notification.post
-//            self.sellerLabel.text = ""
             notification.fromUser.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
                 if let avatar = self.notification.fromUser.avatar {
                     self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
-//                    self.avatarImageView.alpha = 0.0
-//                    UIView.animateWithDuration(0.3, animations: {
-//                        self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
-//                        self.avatarImageView.alpha = 1.0
-//                        }, completion: nil)
                 }
-//                self.sellerLabel.text = self.notification.fromUser.fullName
             }
             
             if post.medias.count > 0 {
                 self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-//                itemImageView.alpha = 0.0
-//                UIView.animateWithDuration(0.3, animations: {
-//                    self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-//                    self.itemImageView.alpha = 1.0
-//                    }, completion: nil)
             }
             
             itemNameLabel.text = post.title
             timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
-            priceLabel.text = post.price.formatCurrency()
+            priceLabel.text = post.price.formatVND()
             newTagImageView.hidden = post.condition > 0
             
             switch notification.type {
@@ -69,12 +55,12 @@ class NotificationTableViewCell: UITableViewCell {
             if notification.isRead {
                 itemNameLabel.font = UIFont.systemFontOfSize(14)
                 timeAgoLabel.font = UIFont.systemFontOfSize(12)
-//                sellerLabel.font = UIFont.systemFontOfSize(12)
+                priceLabel.font = UIFont.systemFontOfSize(12)
                 backgroundColor = UIColor.whiteColor()
             } else {
                 itemNameLabel.font = UIFont.boldSystemFontOfSize(14)
                 timeAgoLabel.font = UIFont.boldSystemFontOfSize(12)
-//                sellerLabel.font = UIFont.boldSystemFontOfSize(12)
+                priceLabel.font = UIFont.boldSystemFontOfSize(12)
                 backgroundColor = MyColors.highlightForNotification
             }
         }
@@ -87,8 +73,6 @@ class NotificationTableViewCell: UITableViewCell {
         avatarImageView.clipsToBounds = true
         itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
-        priceBackgroundView.layer.cornerRadius = 5
-        priceBackgroundView.clipsToBounds = true
         typeBackgroundView.layer.cornerRadius = 5
         typeBackgroundView.clipsToBounds = true
     }
