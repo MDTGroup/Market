@@ -8,7 +8,6 @@
 
 import UIKit
 import AFNetworking
-import Haneke
 
 @objc protocol ItemCellDelegate {
     optional func itemCell(itemCell: ItemCell, didChangeVote value: Bool, voteCount: Int)

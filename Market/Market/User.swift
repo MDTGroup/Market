@@ -17,9 +17,13 @@ class User: PFUser {
     @NSManaged var phone: String?
     @NSManaged var role: PFRole
     @NSManaged var config: PFConfig
-    @NSManaged var savedPosts: PFRelation
-    @NSManaged var votedPosts: PFRelation
     @NSManaged var keywords: [String]
+    var savedPosts: PFRelation! {
+        return relationForKey("savedPosts")
+    }
+    var votedPosts: PFRelation! {
+        return relationForKey("votedPosts")
+    }
     
     // Reset to nil to make it get data from server
     var numFollowing: Int32?
@@ -28,6 +32,7 @@ class User: PFUser {
     func getPosts(lastUpdated:NSDate?, callback: PostResultBlock) {
         if let query = Post.query() {
             query.limit = 20
+            query.selectKeys(["title", "descriptionText", "price", "user", "medias", "location", "condition", "sold", "voteCounter"])
             if let lastUpdated = lastUpdated {
                 query.whereKey("updatedAt", lessThan: lastUpdated)
             }
@@ -148,6 +153,7 @@ class User: PFUser {
     func getSavedPosts(lastUpdatedAt:NSDate?, callback: PostResultBlock) {
         let query = savedPosts.query()
         query.includeKey("user")
+        query.cachePolicy = .NetworkElseCache
         QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt)
         query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
             guard error == nil else {
@@ -195,10 +201,12 @@ class User: PFUser {
     //MARK: Notifications
     func getNotifications(lastUpdatedAt: NSDate?, callback: NotificationResultBlock) {
         if let query = Notification.query() {
-            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt)
+            query.selectKeys(["post", "fromUser", "type", "extraInfo"])
+            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt, maxResult: 12)
             query.includeKey("post")
             query.includeKey("fromUser")
             query.whereKey("toUsers", equalTo: self)
+            query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(notifications: nil, error: error)
@@ -208,6 +216,7 @@ class User: PFUser {
                     
                     if let queryForUnread = Notification.query() {
                         QueryUtils.bindQueryParamsForInfiniteLoading(queryForUnread, lastCreatedAt: lastUpdatedAt)
+                        queryForUnread.selectKeys([])
                         queryForUnread.whereKey("toUsers", equalTo: self)
                         queryForUnread.whereKey("readUsers", equalTo: self)
                         

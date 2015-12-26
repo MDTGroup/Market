@@ -18,8 +18,6 @@ class UserTimelineViewController: UIViewController {
     var keyWords = User.currentUser()?.keywords
     var isCurrentUser = false
     
-    static let homeSB = UIStoryboard(name: "Home", bundle: nil)
-    
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var userLabel: UILabel!
     @IBOutlet weak var avatarImageView: UIImageView!
@@ -76,7 +74,7 @@ class UserTimelineViewController: UIViewController {
         tableFooterView.addSubview(noMoreResultLabel)
         tableView.tableFooterView = tableFooterView
         
-        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        MBProgressHUD.showHUDAddedTo(tableView, animated: true)
         loadNewestData()
     }
     
@@ -209,7 +207,6 @@ extension UserTimelineViewController {
     
     func loadData(byThisDate: NSDate) {
         if dataToLoad == 0 {
-            print("loading user's posts")
             user.getPosts(byThisDate, callback: { (posts, error) -> Void in
                 if let posts = posts {
                     if posts.count == 0 {
@@ -230,7 +227,7 @@ extension UserTimelineViewController {
                 self.refreshControl.endRefreshing()
                 self.loadingView.stopAnimating()
                 self.isLoadingNextPage = false
-                MBProgressHUD.hideHUDForView(self.view, animated: true)
+                MBProgressHUD.hideHUDForView(self.tableView, animated: true)
             })
             
         } else {
@@ -255,7 +252,7 @@ extension UserTimelineViewController {
                 self.refreshControl.endRefreshing()
                 self.loadingView.stopAnimating()
                 self.isLoadingNextPage = false
-                MBProgressHUD.hideHUDForView(self.view, animated: true)
+                MBProgressHUD.hideHUDForView(self.tableView, animated: true)
             })
         }
     }
@@ -590,6 +587,6 @@ extension UserTimelineViewController: SWTableViewCellDelegate {
 // MARK: Show view from anywhere
 extension UserTimelineViewController {
     static var instantiateViewController: UserTimelineViewController {
-        return homeSB.instantiateViewControllerWithIdentifier(StoryboardID.userTimeline) as! UserTimelineViewController
+        return HomeViewController.storyboard.instantiateViewControllerWithIdentifier(StoryboardID.userTimeline) as! UserTimelineViewController
     }
 }

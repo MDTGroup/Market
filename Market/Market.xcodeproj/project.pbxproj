@@ -14,6 +14,7 @@
 		18E098AA1C1C112700A1F217 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E098A91C1C112700A1F217 /* ProfileViewController.swift */; };
 		18E098AC1C1C11BF00A1F217 /* UserTimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18E098AB1C1C11BF00A1F217 /* UserTimelineViewController.swift */; };
 		4401D0F41C21311C004A9BD9 /* SimplifiedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4401D0F31C21311C004A9BD9 /* SimplifiedItemCell.swift */; };
+		441D28161C2D5237004A7C1F /* Camera.swift in Sources */ = {isa = PBXBuildFile; fileRef = 441D28151C2D5237004A7C1F /* Camera.swift */; };
 		443359B91C27D92F006B55F9 /* ParentChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443359B81C27D92F006B55F9 /* ParentChatViewController.swift */; };
 		443810361C206EEB00CCD266 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443810351C206EEB00CCD266 /* Notification.swift */; };
 		4483EF671C1B370B002C98DA /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF641C1B370B002C98DA /* Post.swift */; };
@@ -39,6 +40,8 @@
 		44EB6E1C1C25217D0044992A /* DoubleExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB6E1B1C25217D0044992A /* DoubleExtension.swift */; };
 		44EB6E1E1C2535CF0044992A /* StoryboardID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EB6E1D1C2535CF0044992A /* StoryboardID.swift */; };
 		44EB6E201C2538E50044992A /* Notification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44EB6E1F1C2538E50044992A /* Notification.storyboard */; };
+		44ECB2591C2D901D008291ED /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ECB2581C2D901D008291ED /* StringExtension.swift */; };
+		44ECB25B1C2DCD53008291ED /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ECB25A1C2DCD53008291ED /* ChangePasswordViewController.swift */; };
 		44EEF4E21C29D26000F457C6 /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EEF4E11C29D26000F457C6 /* PushNotification.swift */; };
 		44EEF4E61C29EAE700F457C6 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EEF4E51C29EAE700F457C6 /* TabBarController.swift */; };
 		44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F328561C0F815C00BF1CDF /* AppDelegate.swift */; };
@@ -72,6 +75,7 @@
 		18E098A91C1C112700A1F217 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		18E098AB1C1C11BF00A1F217 /* UserTimelineViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserTimelineViewController.swift; sourceTree = "<group>"; };
 		4401D0F31C21311C004A9BD9 /* SimplifiedItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimplifiedItemCell.swift; sourceTree = "<group>"; };
+		441D28151C2D5237004A7C1F /* Camera.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Camera.swift; sourceTree = "<group>"; };
 		443359B81C27D92F006B55F9 /* ParentChatViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentChatViewController.swift; sourceTree = "<group>"; };
 		443810351C206EEB00CCD266 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		4483EF641C1B370B002C98DA /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -97,6 +101,8 @@
 		44EB6E1B1C25217D0044992A /* DoubleExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoubleExtension.swift; sourceTree = "<group>"; };
 		44EB6E1D1C2535CF0044992A /* StoryboardID.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StoryboardID.swift; sourceTree = "<group>"; };
 		44EB6E1F1C2538E50044992A /* Notification.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Notification.storyboard; sourceTree = "<group>"; };
+		44ECB2581C2D901D008291ED /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
+		44ECB25A1C2DCD53008291ED /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
 		44EEF4E11C29D26000F457C6 /* PushNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
 		44EEF4E51C29EAE700F457C6 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		44F328531C0F815C00BF1CDF /* Market.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Market.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -152,17 +158,15 @@
 		4483EF781C1B41E3002C98DA /* View Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				44ECB25C1C2DCD5A008291ED /* Main/Login/Signup/Reset */,
 				44EB1A2F1C24A9F600905312 /* Messages */,
 				44EB1A281C246E3500905312 /* NotificationViewController.swift */,
 				44E3B1DA1C1DE203003B9908 /* SavedPostsViewController.swift */,
 				44F5BEB61C1BD5A9006317E0 /* DetailViewController.swift */,
 				44F5BEB71C1BD5A9006317E0 /* HomeViewController.swift */,
 				44F5BEBB1C1BD5A9006317E0 /* PostViewController.swift */,
-				44F328581C0F815C00BF1CDF /* ViewController.swift */,
-				4483EF6E1C1B41DF002C98DA /* LoginViewController.swift */,
-				4483EF6F1C1B41DF002C98DA /* SignUpViewController.swift */,
-				4483EF701C1B41DF002C98DA /* ResetPasswordViewController.swift */,
 				4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */,
+				44ECB25A1C2DCD53008291ED /* ChangePasswordViewController.swift */,
 				18E098A91C1C112700A1F217 /* ProfileViewController.swift */,
 				18E098AB1C1C11BF00A1F217 /* UserTimelineViewController.swift */,
 				BA5062B01C1E850500E67EE7 /* FollowingViewController.swift */,
@@ -182,6 +186,17 @@
 				443359B81C27D92F006B55F9 /* ParentChatViewController.swift */,
 			);
 			name = Messages;
+			sourceTree = "<group>";
+		};
+		44ECB25C1C2DCD5A008291ED /* Main/Login/Signup/Reset */ = {
+			isa = PBXGroup;
+			children = (
+				44F328581C0F815C00BF1CDF /* ViewController.swift */,
+				4483EF6E1C1B41DF002C98DA /* LoginViewController.swift */,
+				4483EF6F1C1B41DF002C98DA /* SignUpViewController.swift */,
+				4483EF701C1B41DF002C98DA /* ResetPasswordViewController.swift */,
+			);
+			name = Main/Login/Signup/Reset;
 			sourceTree = "<group>";
 		};
 		44EEF4E01C29D24B00F457C6 /* PushNotification */ = {
@@ -272,9 +287,11 @@
 		44FBCB081C1D399100722DE2 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				441D28151C2D5237004A7C1F /* Camera.swift */,
 				1866EBF71C26865B0009A1C0 /* Helper.swift */,
 				44FBCB091C1D399A00722DE2 /* QueryUtils.swift */,
 				44EB6E1B1C25217D0044992A /* DoubleExtension.swift */,
+				44ECB2581C2D901D008291ED /* StringExtension.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -434,9 +451,11 @@
 				4483EF741C1B41DF002C98DA /* SignUpViewController.swift in Sources */,
 				4483EF671C1B370B002C98DA /* Post.swift in Sources */,
 				44AEE3731C2339DD004B5E2E /* MessageViewController.swift in Sources */,
+				44ECB2591C2D901D008291ED /* StringExtension.swift in Sources */,
 				44F5BEBF1C1BD5A9006317E0 /* ItemCell.swift in Sources */,
 				4483EF751C1B41DF002C98DA /* ResetPasswordViewController.swift in Sources */,
 				44EEF4E21C29D26000F457C6 /* PushNotification.swift in Sources */,
+				44ECB25B1C2DCD53008291ED /* ChangePasswordViewController.swift in Sources */,
 				1866EBF81C26865B0009A1C0 /* Helper.swift in Sources */,
 				44AEE3751C2339DD004B5E2E /* MessageCell.swift in Sources */,
 				44EB1A291C246E3500905312 /* PostsListViewController.swift in Sources */,
@@ -447,6 +466,7 @@
 				44EB1A2E1C246E3D00905312 /* ItemListCell.swift in Sources */,
 				44EB1A2A1C246E3500905312 /* NotificationViewController.swift in Sources */,
 				44F328591C0F815C00BF1CDF /* ViewController.swift in Sources */,
+				441D28161C2D5237004A7C1F /* Camera.swift in Sources */,
 				18E098AC1C1C11BF00A1F217 /* UserTimelineViewController.swift in Sources */,
 				4483EF681C1B370B002C98DA /* Follow.swift in Sources */,
 				18083C721C2C0D16001F5F48 /* FullImageViewController.swift in Sources */,

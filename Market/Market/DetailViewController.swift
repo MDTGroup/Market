@@ -59,7 +59,6 @@ class DetailViewController: UIViewController {
     
     weak var delegate: DetailViewControllerDelegate?
     
-    static let homeSB = UIStoryboard(name: "Home", bundle: nil)
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -96,7 +95,7 @@ class DetailViewController: UIViewController {
             if let user = pfObj as? User {
                 self.sellerLabel.text = user.fullName
                 if let avatar = user.avatar {
-                    self.avatarImageView.hnk_setImageFromURL(NSURL(string: avatar.url!)!)
+                    self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
                 } else {
                     self.avatarImageView.image = UIImage(named: "profile_blank")
                 }
@@ -244,7 +243,6 @@ class DetailViewController: UIViewController {
             imageView.transform = CGAffineTransformMakeRotation((direction * translation.x * CGFloat(M_PI)) / 180.0)
             
         } else if sender.state == .Ended {
-            print(translation.y)
             if translation.y > 100 {
                 dismissViewControllerAnimated(true, completion: nil)
             } else {
@@ -463,6 +461,6 @@ extension DetailViewController {
 // MARK: Show view from anywhere
 extension DetailViewController {
     static var instantiateViewController: DetailViewController {
-        return homeSB.instantiateViewControllerWithIdentifier(StoryboardID.postDetail) as! DetailViewController
+        return HomeViewController.storyboard.instantiateViewControllerWithIdentifier(StoryboardID.postDetail) as! DetailViewController
     }
 }
