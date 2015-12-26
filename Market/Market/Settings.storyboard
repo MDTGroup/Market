@@ -760,6 +760,7 @@
                                     <color key="titleColor" red="1" green="0.089457787570000002" blue="0.091688592299999996" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <connections>
+                                    <action selector="onLogOut:" destination="Isu-Xo-m5H" eventType="touchUpInside" id="h8z-LL-H75"/>
                                     <action selector="onLogout:" destination="icx-xC-ESp" eventType="touchUpInside" id="Tqe-Jh-tHP"/>
                                 </connections>
                             </button>

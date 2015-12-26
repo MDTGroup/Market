@@ -126,6 +126,17 @@ class ProfileViewController: UIViewController {
     @IBAction func onDone(sender: AnyObject) {
         self.dismissViewControllerAnimated(true, completion: nil)
     }
+    
+    @IBAction func onLogOut(sender: AnyObject) {
+        User.logOutInBackgroundWithBlock({ (error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+           
+           ViewController.gotoMain()
+        })
+    }
 
     //Making the avatar into round shape
     override func viewWillAppear(animated: Bool) {
