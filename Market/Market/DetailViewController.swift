@@ -168,9 +168,8 @@ class DetailViewController: UIViewController {
             setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
         }
         // If this is my post then not allow to vote
-        if post.user.objectId == User.currentUser()?.objectId {
-            voteButton.enabled = false
-        }
+
+        buttonsView.hidden = post.user.objectId == User.currentUser()?.objectId
         
         // Indicate network status
         //    if Helper.hasConnectivity() {
@@ -437,7 +436,7 @@ extension DetailViewController {
     func setSaveLabel(saved: Bool) {
         if saved {
             saveButton.setImage(UIImage(named: "save_on"), forState: .Normal)
-            saveButton.setTitleColor(MyColors.bluesky, forState: .Normal)
+            saveButton.setTitleColor(MyColors.green, forState: .Normal)
         } else {
             saveButton.setImage(UIImage(named: "save_white"), forState: .Normal)
             saveButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)
@@ -447,7 +446,7 @@ extension DetailViewController {
     func setVoteCountLabel(count: Int, voted: Bool) {
         if voted {
             voteButton.setImage(UIImage(named: "thumb_on"), forState: .Normal)
-            voteButton.setTitleColor(MyColors.bluesky, forState: .Normal)
+            voteButton.setTitleColor(MyColors.green, forState: .Normal)
         } else {
             voteButton.setImage(UIImage(named: "thumb_white"), forState: .Normal)
             voteButton.setTitleColor(UIColor.whiteColor(), forState: .Normal)

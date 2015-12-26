@@ -693,7 +693,8 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="110" id="aBt-a0-CZc"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <inset key="imageEdgeInsets" minX="-10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" title="Vote" image="thumb_white">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -706,7 +707,8 @@
                                         <constraints>
                                             <constraint firstAttribute="width" constant="120" id="fCS-Q8-OqI"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <inset key="imageEdgeInsets" minX="-10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" title=" Chat" image="chat_white">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -716,7 +718,8 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LAZ-RZ-MCh">
                                         <rect key="frame" x="110" y="0.0" width="147" height="40"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                        <inset key="imageEdgeInsets" minX="-10" minY="0.0" maxX="0.0" maxY="0.0"/>
                                         <state key="normal" title="Save" image="save_white">
                                             <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
@@ -1291,7 +1294,7 @@
         <image name="bag@50w" width="22" height="27"/>
         <image name="camera" width="50" height="50"/>
         <image name="cancel" width="25" height="25"/>
-        <image name="chat_white" width="25" height="25"/>
+        <image name="chat_white" width="12" height="12"/>
         <image name="instruction" width="298" height="197"/>
         <image name="marker" width="25" height="25"/>
         <image name="me" width="25" height="25"/>
@@ -1304,8 +1307,8 @@
         <image name="priceTag" width="25" height="25"/>
         <image name="profile_blank" width="70" height="70"/>
         <image name="remove" width="32" height="32"/>
-        <image name="save_white" width="23" height="23"/>
-        <image name="thumb_white" width="25" height="25"/>
+        <image name="save_white" width="13" height="13"/>
+        <image name="thumb_white" width="12" height="12"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="ld4-w7-eAL"/>
