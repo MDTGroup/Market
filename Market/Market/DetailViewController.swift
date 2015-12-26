@@ -105,15 +105,14 @@ class DetailViewController: UIViewController {
         avatarImageView.layer.cornerRadius = 18
         avatarImageView.clipsToBounds = true
         
-        // Load the thumbnail first for user to see while waiting for loading the full image
-        imageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-        imageView.setImageWithURL(NSURL(string: post.medias[1].url!)!)
-        
         // Exclude the thumbnail
-        nImages = post.medias.count - 1
+        nImages = post.medias.count / 2
         scrollCircle1.hidden = nImages < 2
         scrollCircle2.hidden = nImages < 2
         scrollCircle3.hidden = nImages < 3
+        // Load the thumbnail first for user to see while waiting for loading the full image
+        imageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
+        imageView.setImageWithURL(NSURL(string: post.medias[nImages].url!)!)
         
         // Load images while user still reading 1st page
         if nImages > 1 {
@@ -121,17 +120,20 @@ class DetailViewController: UIViewController {
             tempImageViews = []
             // Refresh the layout before assign anything
             view.layoutIfNeeded()
-            for i in 0...nImages-1 {
+            for i in nImages...2*nImages-1 {
                 iv = UIImageView()
                 iv.frame = imageView.frame
+                // Add 20px for the status bar
+                iv.frame.origin.y += 20
+                print(iv.frame)
                 iv.center.x -= imageView.frame.width
                 iv.contentMode = .ScaleAspectFit
                 iv.clipsToBounds = true
                 
                 tempImageViews.append(iv)
-                tempImageViews[i].setImageWithURL(NSURL(string: post.medias[i+1].url!)!)
-                print(i, post.medias[i+1].url!)
-                view.insertSubview(tempImageViews[i], aboveSubview: imageView)
+                tempImageViews[i-nImages].setImageWithURL(NSURL(string: post.medias[i].url!)!)
+                print(i, post.medias[i].url!)
+                view.insertSubview(tempImageViews[i-nImages], aboveSubview: imageView)
             }
         }
         
@@ -236,7 +238,7 @@ class DetailViewController: UIViewController {
             imageOriginalCenter = imageView.center
             imageOriginalFrame = imageView.frame
             direction = point.y > imageView.frame.height/2 ? -0.15 : 0.15
-            //print("image view frame", imageView.frame)
+            print("image view frame", imageView.frame)
             
         } else if sender.state == .Changed {
             imageView.center = CGPoint(x: imageOriginalCenter.x + translation.x, y: imageOriginalCenter.y + translation.y)
@@ -258,7 +260,7 @@ class DetailViewController: UIViewController {
                         if selectedImage < 1 {
                             selectedImage = nImages
                         }
-                        print("loading image \(selectedImage)")
+                        //print("loading image \(selectedImage)")
                         tempImageViews[selectedImage-1].alpha = 0
                         tempImageViews[selectedImage-1].center.x = -imageOriginalCenter.x
                         

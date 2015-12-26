@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import AVFoundation
 
 class Helper {
     
@@ -41,4 +42,16 @@ class Helper {
         return newImage
     }
     
+    static func compressVideo(inputURL: NSURL, outputURL: NSURL, handler:(session: AVAssetExportSession)-> Post)
+    {
+        let urlAsset = AVURLAsset(URL: inputURL, options: nil)
+        let exportSession = AVAssetExportSession(asset: urlAsset, presetName: AVAssetExportPresetMediumQuality)
+        
+        exportSession!.outputURL = outputURL
+        exportSession!.outputFileType = AVFileTypeQuickTimeMovie
+        exportSession!.shouldOptimizeForNetworkUse = true
+        exportSession!.exportAsynchronouslyWithCompletionHandler { () -> Void in
+            handler(session: exportSession!)
+        }
+    }
 }
