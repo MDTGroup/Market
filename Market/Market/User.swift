@@ -38,10 +38,9 @@ class User: PFUser {
             }
             query.includeKey("user")
             query.whereKey("isDeleted", equalTo: false)
-            query.whereKey("sold", equalTo: false)
-            query.whereKey("isDeleted", equalTo: false)
             query.whereKey("user", equalTo: self)
             query.orderByDescending("updatedAt")
+            query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObj: [PFObject]?, error: NSError?) -> Void in
                 guard error == nil else {
                     callback(posts: nil, error: error)
@@ -63,6 +62,7 @@ class User: PFUser {
             query.selectKeys(["to"])
             query.includeKey("to")
             query.whereKey("from", equalTo: self)
+            query.cachePolicy = .NetworkElseCache
             query.countObjectsInBackgroundWithBlock({ (num, error) -> Void in
                 self.numFollowing = num
                 callback(num, error)
@@ -79,6 +79,7 @@ class User: PFUser {
             query.selectKeys(["from"])
             query.includeKey("from")
             query.whereKey("to", equalTo: self)
+            query.cachePolicy = .NetworkElseCache
             query.countObjectsInBackgroundWithBlock({ (num, error) -> Void in
                 self.numFollower = num
                 callback(num, error)
@@ -92,6 +93,7 @@ class User: PFUser {
             query.selectKeys(["to"])
             query.includeKey("to")
             query.whereKey("from", equalTo: self)
+            query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(users: nil, error: error)
@@ -115,6 +117,7 @@ class User: PFUser {
             query.selectKeys(["from"])
             query.includeKey("from")
             query.whereKey("to", equalTo: self)
+            query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(users: nil, error: error)
@@ -133,28 +136,27 @@ class User: PFUser {
     }
     
     func didIFollowTheUser(callback: PFBooleanResultBlock) {
-        let currentUser = User.currentUser()
-        self.getFollowers({ (followers, error) -> Void in
-            if followers != nil {
-                for follower in followers! {
-                    if follower.objectId == currentUser?.objectId {
-                        callback(true, nil)
-                        return
-                    }
+        if let query = Follow.query(), currentUser = User.currentUser() {
+            query.selectKeys([])
+            query.whereKey("from", equalTo: currentUser)
+            query.whereKey("to", equalTo: self)
+            query.cachePolicy = .NetworkElseCache
+            
+            query.countObjectsInBackgroundWithBlock({ (num, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    callback(false, error)
+                    return
                 }
-                callback(false, nil)
-            } else {
-                print(error)
-                callback(false, error)
-            }
-        })
+                callback(num > 0, nil)
+            })
+        }
     }
     
     func getSavedPosts(lastUpdatedAt:NSDate?, callback: PostResultBlock) {
         let query = savedPosts.query()
-        query.includeKey("user")
-        query.cachePolicy = .NetworkElseCache
         QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt)
+        query.cachePolicy = .NetworkElseCache
         query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
             guard error == nil else {
                 callback(posts: nil, error: error)
@@ -168,7 +170,9 @@ class User: PFUser {
     }
     
     func getVotedPosts(callback: PostResultBlock) {
-        votedPosts.query().findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
+        let query = votedPosts.query()
+        query.cachePolicy = .NetworkElseCache
+        query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
             guard error == nil else {
                 callback(posts: nil, error: error)
                 return
@@ -219,7 +223,7 @@ class User: PFUser {
                         queryForUnread.selectKeys([])
                         queryForUnread.whereKey("toUsers", equalTo: self)
                         queryForUnread.whereKey("readUsers", equalTo: self)
-                        
+                        queryForUnread.cachePolicy = .NetworkElseCache
                         queryForUnread.findObjectsInBackgroundWithBlock({ (notificationsUnread, error) -> Void in
                             guard error == nil else {
                                 callback(notifications: nil, error: error)
