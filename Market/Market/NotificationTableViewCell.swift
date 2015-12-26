@@ -40,15 +40,19 @@ class NotificationTableViewCell: UITableViewCell {
             timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
             priceLabel.text = post.price.formatVND()
             newTagImageView.hidden = post.condition > 0
-            
+            typeBackgroundView.hidden = false
             switch notification.type {
             case 1:
+                typeBackgroundView.backgroundColor = MyColors.greenOfRetweetCount
                 typeLabel.text = "Updated"
             case 2:
+                typeBackgroundView.backgroundColor = MyColors.redOfFavCount
                 typeLabel.text = "Following"
             case 3:
+                typeBackgroundView.backgroundColor = MyColors.bluesky
                 typeLabel.text = "Keywords"
             default:
+                typeBackgroundView.hidden = true
                 typeLabel.text = "???"
             }
             
