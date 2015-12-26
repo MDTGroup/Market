@@ -403,7 +403,17 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 }
                 
                 cell.leftUtilityButtons = leftUtilityButtons as [AnyObject]
-                //cell.rightUtilityButtons = rightUtilityButtons as [AnyObject]
+                cell.rightUtilityButtons = [] //rightUtilityButtons as [AnyObject]
+                cell.delegate = self
+                
+            } else if dataToLoad == 1 {
+                // Add utility buttons
+                let rightUtilityButtons = NSMutableArray()
+                
+                rightUtilityButtons.sw_addUtilityButtonWithColor(MyColors.bluesky, title: "Unsave")
+                
+                cell.leftUtilityButtons = []
+                cell.rightUtilityButtons = rightUtilityButtons as [AnyObject]
                 cell.delegate = self
             }
             
@@ -456,7 +466,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        if dataToLoad > 1 {
+        if dataToLoad >= 1 {
             return []
         }
         
@@ -582,6 +592,21 @@ extension UserTimelineViewController: SWTableViewCellDelegate {
             
         }
         cell.hideUtilityButtonsAnimated(true)
+    }
+    
+    func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerRightUtilityButtonWithIndex index: Int) {
+        // Unsave item
+        let id = tableView.indexPathForCell(cell)
+        let post = posts[id!.row]
+        post.save(false) { (successful: Bool, error: NSError?) -> Void in
+            if successful {
+                print("unsaved")
+                self.posts.removeAtIndex(id!.row)
+                self.tableView.deleteRowsAtIndexPaths([id!], withRowAnimation: .Bottom)
+            } else {
+                print("failed to unsave")
+            }
+        }
     }
 }
 
