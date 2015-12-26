@@ -8,7 +8,6 @@
 
 import UIKit
 import AFNetworking
-import Haneke
 
 @objc protocol ItemCellDelegate {
     optional func itemCell(itemCell: ItemCell, didChangeVote value: Bool, voteCount: Int)
@@ -34,6 +33,7 @@ class ItemCell: UITableViewCell {
     @IBOutlet weak var chatButton: UIButton!
     @IBOutlet weak var newTagImageView: UIImageView!
     
+    @IBOutlet weak var buttonsViewHeight: NSLayoutConstraint!
     @IBOutlet weak var gap2Columns: NSLayoutConstraint!
     @IBOutlet weak var avatarToItemImage: NSLayoutConstraint!
     @IBOutlet weak var voteButtonWidth: NSLayoutConstraint!
@@ -96,14 +96,13 @@ class ItemCell: UITableViewCell {
             
             // The size of the descText to fit its content
             let newSize = descriptionLabel.sizeThatFits(CGSize(width: descriptionLabel.frame.width, height: CGFloat.max))
-            print(newSize.height)
             avatarToItemImage.constant = newSize.height > 40 ? 5 : -13
             
             //timeAgoLabel.text = Helper.timeSinceDateToNow(post.createdAt!)
             let formatter = NSDateFormatter()
             formatter.timeStyle = NSDateFormatterStyle.ShortStyle
             formatter.dateStyle = NSDateFormatterStyle.ShortStyle
-            timeAgoLabel.text = "Posted on \(formatter.stringFromDate(post.updatedAt!))"
+            timeAgoLabel.text = "Posted on \(formatter.stringFromDate(post.createdAt!))"
             
             priceLabel.text = post.price.formatCurrency()
             newTagImageView.hidden = (post.condition > 0)
@@ -111,18 +110,18 @@ class ItemCell: UITableViewCell {
             if post.iSaveIt == nil {
                 post.savedPostCurrentUser({ (saved, error) -> Void in
                     post.iSaveIt = saved
-                    self.setSaveLabel(post.iSaveIt!)
+                    //self.setSaveLabel(post.iSaveIt!)
                 })
             } else {
-                setSaveLabel(post.iSaveIt!)
+                //setSaveLabel(post.iSaveIt!)
             }
             if post.iVoteIt == nil {
                 post.votedPostCurrentUser({ (voted, error) -> Void in
                     post.iVoteIt = voted
-                    self.setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
+                    //self.setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
                 })
             } else {
-                setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
+                //setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
             }
         }
     }
@@ -146,31 +145,17 @@ class ItemCell: UITableViewCell {
         
         let screenWidth = UIScreen.mainScreen().bounds.width
         gap2Columns.constant = screenWidth > 330 ? 10 : 8
-        // Set the buttons width equally
-        voteButtonWidth.constant = screenWidth / 3
-        chatButtonWidth.constant = screenWidth / 3
-        buttonsView.layer.borderWidth = 0.5
-        buttonsView.layer.borderColor = UIColor.grayColor().CGColor
-        buttonsView.backgroundColor = UIColor.whiteColor()
         
-        //        //create the path
-        //        let plusPath = UIBezierPath()
-        //        
-        //        //set the path's line width to the height of the stroke
-        //        plusPath.lineWidth = 0.5
-        //        
-        //        //move the initial point of the path
-        //        //to the start of the horizontal stroke
-        //        plusPath.moveToPoint(CGPoint(x: 10, y:55))
-        //        
-        //        //add a point to the path at the end of the stroke
-        //        plusPath.addLineToPoint(CGPoint(x: 10, y: screenWidth-20))
-        //        
-        //        //set the stroke color
-        //        UIColor.redColor().setStroke()
-        //        
-        //        //draw the stroke
-        //        plusPath.stroke()
+        buttonsViewHeight.constant = 0
+        buttonsView.hidden = true
+        
+        // Set the buttons width equally
+        //        voteButtonWidth.constant = screenWidth / 3
+        //        chatButtonWidth.constant = screenWidth / 3
+        //        buttonsView.layer.borderWidth = 0.5
+        //        buttonsView.layer.borderColor = UIColor.grayColor().CGColor
+        //        buttonsView.backgroundColor = UIColor.whiteColor()
+        
     }
     
     override func setSelected(selected: Bool, animated: Bool) {

@@ -11,26 +11,27 @@ import JSQMessagesViewController
 import Foundation
 import MediaPlayer
 import MBProgressHUD
+import Parse
+import AVKit
+import AVFoundation
 
-class ChatViewController: JSQMessagesViewController {
+class ChatViewController: JSQMessagesViewController, UINavigationControllerDelegate {
     
     var timer = NSTimer()
     var messages = [JSQMessage]()
     var avatars = Dictionary<String, JSQMessagesAvatarImage>()
     var users = [User]()
     
-    var outgoingBubbleImage = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleBlueColor())
+    var outgoingBubbleImage = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(MyColors.bluesky)
     var incomingBubbleImage = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
     var blankAvatarImage = JSQMessagesAvatarImageFactory.avatarImageWithImage(UIImage(named: "profile_blank"), diameter: 30)
     var isLoading = false
     var isLoadingEarlierMessages = false
     var conversation: Conversation!
-    let maxResultPerRequest = 10
+    let maxResultPerRequest = 5
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        inputToolbar?.contentView?.leftBarButtonItem = nil
         
         if let currentUser = User.currentUser() {
             senderId = currentUser.objectId!
@@ -46,15 +47,8 @@ class ChatViewController: JSQMessagesViewController {
         super.viewWillAppear(animated)
         self.showLoadEarlierMessagesHeader = false
         timer = NSTimer.scheduledTimerWithTimeInterval(1.15, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "onPushNotificationMessage:", name: TabBarController.newMessage, object: nil)
         conversation.markRead { (success, error) -> Void in
             TabBarController.instance.onRefreshMessageBadge(nil)
-        }
-    }
-    
-    func onPushNotificationMessage(notification: Notification) {
-        conversation.markRead {
-            (success, error) -> Void in
         }
     }
     
@@ -65,13 +59,31 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
-        sendMessage(text)
+        sendMessage(text, video: nil, photo: nil)
     }
     
-    //    override func didPressAccessoryButton(sender: UIButton!) {
-    //        let action = UIActionSheet(title: nil, delegate: self, cancelButtonTitle: "Cancel", destructiveButtonTitle: nil, otherButtonTitles: "Take photo", "Choose existing photo", "Choose existing video")
-    //        action.showInView(view)
-    //    }
+    override func didPressAccessoryButton(sender: UIButton!) {
+        view.endEditing(true)
+        
+        let alertVC = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let takePhotoAction = UIAlertAction(title: "Take photo", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
+            Camera.shouldStartCamera(self, canEdit: true, frontFacing: false)
+        }
+        let choosePhotoAction = UIAlertAction(title: "Choose photo", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
+            Camera.shouldStartPhotoLibrary(self, canEdit: true)
+        }
+        let chooseVideoAction = UIAlertAction(title: "Choose video", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
+            Camera.shouldStartVideoLibrary(self, canEdit: true)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { (alertAction) -> Void in
+            alertVC.dismissViewControllerAnimated(true, completion: nil)
+        }
+        alertVC.addAction(takePhotoAction)
+        alertVC.addAction(choosePhotoAction)
+        alertVC.addAction(chooseVideoAction)
+        alertVC.addAction(cancelAction)
+        presentViewController(alertVC, animated: true, completion: nil)
+    }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, messageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageData! {
         return messages[indexPath.item]
@@ -151,6 +163,8 @@ class ChatViewController: JSQMessagesViewController {
             cell.textView?.textColor = UIColor.blackColor()
         }
         
+        cell.avatarImageView?.contentMode = .ScaleAspectFill
+        
         return cell
     }
     
@@ -195,14 +209,17 @@ class ChatViewController: JSQMessagesViewController {
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
-        //        let message = messages[indexPath.item]
-        //        if message.isMediaMessage {
-        //            if let mediaItem = message.media as? JSQVideoMediaItem {
-        //                let moviePlayer = MPMoviePlayerViewController(contentURL: mediaItem.fileURL)
-        //                presentMoviePlayerViewControllerAnimated(moviePlayer)
-        //                moviePlayer.moviePlayer.play()
-        //            }
-        //        }
+        let message = messages[indexPath.item]
+        if message.isMediaMessage {
+            if let mediaItem = message.media as? JSQVideoMediaItem {
+                let player = AVPlayer(URL: mediaItem.fileURL)
+                let playerController = AVPlayerViewController()
+                playerController.player = player
+                self.presentViewController(playerController, animated: true) {
+                    player.play()
+                }
+            }
+        }
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapCellAtIndexPath indexPath: NSIndexPath!, touchLocation: CGPoint) {
@@ -216,7 +233,6 @@ extension ChatViewController {
         if !isLoadingEarlierMessages {
             isLoadingEarlierMessages = true
             let firstMessage = messages.first
-            print("firstMessage", firstMessage?.date)
             conversation.getEarlierMessages(firstMessage?.date, callback: { (messages, error) -> Void in
                 guard error == nil else {
                     print(error)
@@ -240,13 +256,44 @@ extension ChatViewController {
         var jsqMessages = [JSQMessage]()
         var users = [User]()
         for message in messages {
-            let jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, text: message.text)
-            jsqMessages.append(jsqMessage)
+            jsqMessages.append(prepareJSQMessage(message))
             users.append(message.user)
         }
         
         self.users.insertContentsOf(users, at: 0)
         self.messages.insertContentsOf(jsqMessages, at: 0)
+    }
+    
+    func prepareJSQMessage(message: Message) -> JSQMessage {
+        let jsqMessage: JSQMessage!
+        if let video = message.video {
+            let videoItem = JSQVideoMediaItem(fileURL: NSURL(string: video.url!)!, isReadyToPlay: true)
+            videoItem.appliesMediaViewMaskAsOutgoing = message.user.objectId! == self.senderId
+            jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, media: videoItem)
+        } else if let photo = message.photo {
+            let photoItem = JSQPhotoMediaItem(image: nil)
+            photoItem.appliesMediaViewMaskAsOutgoing = message.user.objectId! == self.senderId
+            jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, media: photoItem)
+            photo.getDataInBackgroundWithBlock({ (imageData, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    return
+                }
+                if let imageData = imageData {
+                    photoItem.image = UIImage(data: imageData)
+                    self.collectionView!.reloadData()
+                } else {
+                    print("ImageData is nil")
+                }
+            })
+        } else if let location = message.location {
+            let locationItem = JSQLocationMediaItem(location: CLLocation(latitude: location.latitude, longitude: location.longitude))
+            locationItem.appliesMediaViewMaskAsOutgoing = message.user.objectId! == self.senderId
+            jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, media: locationItem)
+        } else {
+            jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, text: message.text)
+        }
+        return jsqMessage
     }
 
     func loadMessages() {
@@ -266,6 +313,11 @@ extension ChatViewController {
                     self.finishReceivingMessage()
                     self.scrollToBottomAnimated(false)
                     self.showLoadEarlierMessagesHeader = messages.count >= self.maxResultPerRequest
+                    if lastMessage != nil {
+                        self.conversation.markRead {
+                            (success, error) -> Void in
+                        }
+                    }
                 }
                 
                 self.isLoading = false
@@ -277,8 +329,7 @@ extension ChatViewController {
         var jsqMessages = [JSQMessage]()
         var users = [User]()
         for message in messages {
-            let jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, text: message.text)
-            jsqMessages.append(jsqMessage)
+            jsqMessages.append(prepareJSQMessage(message))
             users.append(message.user)
         }
         
@@ -286,8 +337,35 @@ extension ChatViewController {
         self.messages.appendContentsOf(jsqMessages)
     }
     
-    func sendMessage(text: String) {
-        conversation.addMessage(User.currentUser()!, text: text) { (success, error) -> Void in
+    func sendMessage(text: String, video: NSURL?, photo: UIImage?) {
+        var message = text
+        var videoFile: PFFile?
+        var photoFile: PFFile?
+        var location: PFGeoPoint?
+        
+        if let video = video {
+            message = "sent a video"
+            videoFile = PFFile(name: "video.mp4", data: NSFileManager.defaultManager().contentsAtPath(video.path!)!)
+            videoFile?.saveInBackgroundWithBlock({ (success, error) -> Void in
+                if error != nil {
+                    print(error)
+                }
+            })
+        }
+        
+        if let photo = photo {
+            message = "sent a photo"
+            photoFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(photo, 0.4)!)
+            photoFile?.saveInBackgroundWithBlock({ (success, error) -> Void in
+                if error != nil {
+                    print(error)
+                }
+            })
+        }
+        
+//        location = PFGeoPoint(latitude: 10.7500, longitude: 106.6667)
+        
+        conversation.addMessage(User.currentUser()!, text: message, videoFile: videoFile, photoFile: photoFile, location: location) { (success, error) -> Void in
             guard error == nil else {
                 print(error)
                 return
@@ -299,27 +377,13 @@ extension ChatViewController {
     }
 }
 
-//extension ChatViewController: UIActionSheetDelegate {
-//    func actionSheet(actionSheet: UIActionSheet, clickedButtonAtIndex buttonIndex: Int) {
-////        if buttonIndex != actionSheet.cancelButtonIndex {
-////            if buttonIndex == 1 {
-////                Camera.shouldStartCamera(self, canEdit: true, frontFacing: true)
-////            } else if buttonIndex == 2 {
-////                Camera.shouldStartPhotoLibrary(self, canEdit: true)
-////            } else if buttonIndex == 3 {
-////                Camera.shouldStartVideoLibrary(self, canEdit: true)
-////            }
-////        }
-//    }
-//}
-//
-//extension ChatViewController: UIImagePickerControllerDelegate {
-//    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-//        let video = info[UIImagePickerControllerMediaURL] as? NSURL
-//        let picture = info[UIImagePickerControllerEditedImage] as? UIImage
-//
-////        self.sendMessage("", video: video, picture: picture)
-//
-//        picker.dismissViewControllerAnimated(true, completion: nil)
-//    }
-//}
+extension ChatViewController: UIImagePickerControllerDelegate {
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        let video = info[UIImagePickerControllerMediaURL] as? NSURL
+        let photo = info[UIImagePickerControllerEditedImage] as? UIImage
+
+        self.sendMessage("", video: video, photo: photo)
+
+        picker.dismissViewControllerAnimated(true, completion: nil)
+    }
+}

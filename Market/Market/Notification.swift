@@ -17,10 +17,15 @@ enum NotificationType: String {
 
 class Notification: PFObject, PFSubclassing {
     @NSManaged var post: Post
-    @NSManaged var toUsers: PFRelation
     @NSManaged var fromUser: User
     @NSManaged var type: Int
-    @NSManaged var readUsers: PFRelation
+    @NSManaged var extraInfo: String
+    var toUsers: PFRelation! {
+        return relationForKey("toUsers")
+    }
+    var readUsers: PFRelation! {
+        return relationForKey("readUsers")
+    }
     
     var isRead = false
     

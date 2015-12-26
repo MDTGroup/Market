@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import MBProgressHUD
 
 class MessageViewController: UIViewController {
 
@@ -22,26 +21,28 @@ class MessageViewController: UIViewController {
     var conversations = [Conversation]()
     var post: Post!
     
+    var timer = NSTimer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         initControls()
         
+        refreshControl.hidden = false
+        refreshControl.beginRefreshing()
+        
+        let strToBold = "Messages"
+        let message = "Loading \(strToBold)..."
+        refreshControl.attributedTitle = message.bold(strToBold)
+        
         if conversations.count > 0 {
-            title =  conversations[0].post.title
-        }
-        
-        let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        hud.labelText = "Loading messages..."
-        
-        if conversations.count == 0 || PostsListViewController.needToRefresh == false {
-            loadNewestData()
-        } else {
             isLoadingNextPage = true
-            self.noMoreResultLabel.hidden = !self.isEndOfFeed
+            self.noMoreResultLabel.text = (self.conversations.count > 0) ? "No more result" : "No messages"
+            self.noMoreResultLabel.hidden = conversations.count > 12
             self.refreshControl.endRefreshing()
             self.loadingView.stopAnimating()
-            MBProgressHUD.hideHUDForView(self.view, animated: true)
+        } else if PostsListViewController.needToRefresh == false {
+            loadNewestData()
         }   
     }
     
@@ -51,12 +52,13 @@ class MessageViewController: UIViewController {
             loadNewestData()
             PostsListViewController.needToRefresh = false
         }
+        timer = NSTimer.scheduledTimerWithTimeInterval(3.5, target: self, selector: "refreshData", userInfo: nil, repeats: true)
+        refreshData()
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
-        MBProgressHUD.hideHUDForView(view, animated: true)
-        
+        timer.invalidate()
     }
     
     func initControls() {
@@ -77,9 +79,8 @@ class MessageViewController: UIViewController {
         
         // Initialize the noMoreResult
         noMoreResultLabel.frame = tableFooterView.frame
-        noMoreResultLabel.text = "No more result"
         noMoreResultLabel.textAlignment = NSTextAlignment.Center
-        noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
+        noMoreResultLabel.font = UIFont.systemFontOfSize(12.0)
         noMoreResultLabel.textColor = UIColor.grayColor()
         noMoreResultLabel.hidden = true
         tableFooterView.addSubview(noMoreResultLabel)
@@ -110,15 +111,49 @@ class MessageViewController: UIViewController {
                 }
             }
             
-            if self.conversations.count > 0 {
-                self.title =  self.conversations[0].post.title
-            }
-            
             self.noMoreResultLabel.hidden = !self.isEndOfFeed
+            self.noMoreResultLabel.text = (self.isEndOfFeed && self.conversations.count > 0) ? "No more result" : "No messages"
+            
             self.refreshControl.endRefreshing()
             self.loadingView.stopAnimating()
             self.isLoadingNextPage = false
-            MBProgressHUD.hideHUDForView(self.view, animated: true)
+        }
+    }
+    
+    func refreshData() {
+        if conversations.count == 0 {
+            return
+        }
+        Conversation.getConversationsByPost(post, lastUpdatedAt: nil) { (newConversations, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+            if let newConversations = newConversations {
+                if newConversations.count == 0 {
+                    return
+                } else {
+                    for newConversation in newConversations {
+                        var found = false
+                        for (index, conversation) in self.conversations.enumerate() {
+                            if newConversation.objectId == conversation.objectId {
+                                self.conversations[index] = newConversation
+                                found = true
+                                break
+                            }
+                        }
+                        if !found {
+                            self.conversations.append(newConversation)
+                        }
+                    }
+                    
+                    self.conversations = self.conversations.sort { (a, b) -> Bool in
+                        return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
+                    }
+                    
+                    self.tableView.reloadData()
+                }
+            }
         }
     }
     
@@ -126,7 +161,12 @@ class MessageViewController: UIViewController {
         if let chatVC = segue.destinationViewController as? ParentChatViewController,
             cell = sender as? MessageCell {
                 if let indexPath = tableView.indexPathForCell(cell) {
-                    chatVC.conversation = conversations[indexPath.row]
+                    let conversation = conversations[indexPath.row]
+                    conversation.post = post
+                    chatVC.conversation = conversation
+                    if let toUser = conversation.toUser {
+                        chatVC.title = toUser.fullName
+                    }
                 }
         }
     }
@@ -138,6 +178,9 @@ extension MessageViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        if conversations.count == 0 {
+            return UITableViewCell()
+        }
         let cell = tableView.dequeueReusableCellWithIdentifier("MessageCell", forIndexPath: indexPath) as! MessageCell
         
         cell.conversation = conversations[indexPath.row]

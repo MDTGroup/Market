@@ -8,6 +8,7 @@
 
 import UIKit
 import MBProgressHUD
+import Parse
 
 class ParentChatViewController: UIViewController {
 
@@ -37,10 +38,15 @@ class ParentChatViewController: UIViewController {
         
         let tapPostGesture = UITapGestureRecognizer(target: self, action: "onTapPost:")
         postView.addGestureRecognizer(tapPostGesture)
-        
-        if let currentUser = User.currentUser() where conversation.post.user.objectId != currentUser.objectId {
-            let tapProfileGesture = UITapGestureRecognizer(target: self, action: "onTapProfile:")
-            profileView.addGestureRecognizer(tapProfileGesture)
+        conversation.post.fetchIfNeededInBackgroundWithBlock { (post, error) -> Void in
+            if let post = post as? Post {
+                post.user.fetchIfNeededInBackgroundWithBlock { (user, error) -> Void in
+                    if let currentUser = User.currentUser(), user = user as? User where user.objectId != currentUser.objectId {
+                        let tapProfileGesture = UITapGestureRecognizer(target: self, action: "onTapProfile:")
+                        self.profileView.addGestureRecognizer(tapProfileGesture)
+                    }
+                }
+            }
         }
     }
     
@@ -61,41 +67,32 @@ class ParentChatViewController: UIViewController {
         
         initControls()
         loadPost()
-        
-        if let navController = navigationController, messageVC = navController.viewControllers[navController.viewControllers.count - 2] as? MessageViewController {
-            messageVC.title = conversation.post.title
-        }
-        
-        if let currentUser = User.currentUser() {
-            for userId in conversation.userIds where userId != currentUser.objectId! {
-                let user = User(withoutDataWithObjectId: userId)
-                user.fetchIfNeededInBackgroundWithBlock({ (result, error) -> Void in
-                    self.title = user.fullName
-                })
-                break
-            }
-        }
     }
     
     func loadPost() {
-        let post = conversation.post
-        
-        self.sellerLabel.text = ""
-        post.user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
-            if let avatar = post.user.avatar, url = avatar.url {
-                self.avatarImageView.setImageWithURL(NSURL(string: url)!)
+        conversation.post.fetchIfNeededInBackgroundWithBlock { (post, error) -> Void in
+            if let post = post as? Post {
+                self.sellerLabel.text = ""
+                post.user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
+                    if let avatar = post.user.avatar, url = avatar.url {
+                        self.avatarImageView.setImageWithURL(NSURL(string: url)!)
+                    }
+                    self.sellerLabel.text = post.user.fullName
+                }
+                
+                if post.medias.count > 0 {
+                    self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
+                }
+                
+                self.itemNameLabel.text = post.title
+                self.timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
+                self.priceLabel.text = post.price.formatCurrency()
+                self.newTagImageView.hidden = post.condition > 0
+                if let navController = self.navigationController, messageVC = navController.viewControllers[navController.viewControllers.count - 2] as? MessageViewController {
+                    messageVC.title = post.title
+                }
             }
-            self.sellerLabel.text = post.user.fullName
         }
-        
-        if post.medias.count > 0 {
-            self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-        }
-        
-        itemNameLabel.text = post.title
-        timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
-        priceLabel.text = post.price.formatCurrency()
-        newTagImageView.hidden = (post.condition > 0)
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -109,7 +106,9 @@ class ParentChatViewController: UIViewController {
             if let navController = navigationController {
                 for vc in navController.viewControllers {
                     if let messageVC = vc as? MessageViewController {
+                        messageVC.title = conversation.post.title
                         messageVC.post = conversation.post
+                        
                         break
                     }
                 }
@@ -121,7 +120,7 @@ class ParentChatViewController: UIViewController {
 extension ParentChatViewController {
     static func show(post: Post, fromUser: User, toUser: User) {
         if fromUser.objectId == toUser.objectId {
-            print("Cannot chat your self")
+            print("Cannot chat yourself")
             return
         }
         
@@ -149,12 +148,12 @@ extension ParentChatViewController {
                         tabBarController.selectedIndex = 1
                         messageVC.post = conversation.post
                         parentChatVC.conversation = conversation
-                        parentChatVC.conversation.post.fetchIfNeededInBackgroundWithBlock({ (post, error) -> Void in
-                            
+                        PFObject.fetchAllIfNeededInBackground([fromUser, toUser, parentChatVC.conversation.post], block: { (users, error) -> Void in
                             guard error == nil else {
                                 print(error)
                                 return
                             }
+                            parentChatVC.title = toUser.fullName
                             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                 hud.hide(true)
                                 if let navController = tabBarController.selectedViewController as? UINavigationController {

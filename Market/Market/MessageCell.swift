@@ -22,31 +22,19 @@ class MessageCell: UITableViewCell {
             self.userFullname.text = ""
             
             if let currentUser = User.currentUser(), userObjectId = currentUser.objectId {
-                for userId in conversation.userIds where userId != currentUser.objectId! {
-                    let user = User(withoutDataWithObjectId: userId)
-                    user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
-                        if let avatar = user.avatar, url = avatar.url {
-                            self.userImage.setImageWithURL(NSURL(string: url)!)
+                if let user = conversation.toUser {
+                    if let avatar = user.avatar, url = avatar.url {
+                        self.userImage.setImageWithURL(NSURL(string: url)!)
+                    }
+                    self.userFullname.text = user.fullName
+                    
+                    if let message = conversation.lastMessage {
+                        var text = message.text
+                        if message.user.objectId == currentUser.objectId {
+                            text = "You: \(text)"
                         }
-                        self.userFullname.text = user.fullName
-                        
-                        let messageQuery = self.conversation.messages.query()
-                        messageQuery.orderByDescending("createdAt")
-                        messageQuery.getFirstObjectInBackgroundWithBlock({ (message, error) -> Void in
-                            guard error == nil else {
-                                print(error)
-                                return
-                            }
-                            
-                            if let message = message as? Message {
-                                var text = message.text
-                                if message.user.objectId == currentUser.objectId {
-                                    text = "You: \(text)"
-                                }
-                                self.lastMessageLabel.text = text
-                                self.timeElapedLabel.text = Helper.timeSinceDateToNow(message.createdAt!)
-                            }
-                        })
+                        self.lastMessageLabel.text = text
+                        self.timeElapedLabel.text = Helper.timeSinceDateToNow(message.createdAt!)
                     }
                 }
                 

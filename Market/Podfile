@@ -4,10 +4,9 @@ platform :ios, '8.0'
 use_frameworks!
 
 target 'Market' do
-  pod 'Parse'
-  pod 'AFNetworking'
-  pod 'MBProgressHUD', '~> 0.9.1'
-  pod 'JSQMessagesViewController'
-  pod 'HanekeSwift'
+    pod 'Parse'
+    pod 'AFNetworking'
+    pod 'MBProgressHUD', '~> 0.9.1'
+    pod 'JSQMessagesViewController'
 end
 

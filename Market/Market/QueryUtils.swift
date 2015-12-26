@@ -10,7 +10,7 @@ import Foundation
 import Parse
 
 class QueryUtils {
-    static func bindQueryParamsForInfiniteLoading(query:PFQuery, lastCreatedAt:NSDate?, maxResult: Int = 20) -> PFQuery {
+    static func bindQueryParamsForInfiniteLoading(query:PFQuery, lastCreatedAt:NSDate?, maxResult: Int = 12) -> PFQuery {
         query.limit = maxResult
         if let lastCreatedAt = lastCreatedAt {
             query.whereKey("createdAt", lessThan: lastCreatedAt)
@@ -19,7 +19,7 @@ class QueryUtils {
         return query
     }
     
-    static func bindQueryParamsForInfiniteLoading(query:PFQuery, lastUpdatedAt:NSDate?, maxResult: Int = 20) -> PFQuery {
+    static func bindQueryParamsForInfiniteLoading(query:PFQuery, lastUpdatedAt:NSDate?, maxResult: Int = 12) -> PFQuery {
         query.limit = maxResult
         if let lastUpdatedAt = lastUpdatedAt {
             query.whereKey("updatedAt", lessThan: lastUpdatedAt)

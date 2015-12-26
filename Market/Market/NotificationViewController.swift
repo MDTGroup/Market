@@ -7,10 +7,9 @@
 //
 
 import UIKit
-import MBProgressHUD
 
 class NotificationViewController: UIViewController {
-
+    
     @IBOutlet weak var tableView: UITableView!
     
     var refreshControl = UIRefreshControl()
@@ -21,14 +20,31 @@ class NotificationViewController: UIViewController {
     
     var notifications = [Notification]()
     
+    var timer = NSTimer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         initControls()
         
-        let hud = MBProgressHUD.showHUDAddedTo(self.view, animated: true)
-        hud.labelText = "Loading notifications..."
+        refreshControl.hidden = false
+        refreshControl.beginRefreshing()
+        
+        let strToBold = "Notifications"
+        let message = "Loading \(strToBold)..."
+        refreshControl.attributedTitle = message.bold(strToBold)
         
         loadNewestData()
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        timer.invalidate()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        timer = NSTimer.scheduledTimerWithTimeInterval(3.5, target: self, selector: "refreshData", userInfo: nil, repeats: true)
+        refreshData()
     }
     
     func initControls() {
@@ -48,9 +64,8 @@ class NotificationViewController: UIViewController {
         
         // Initialize the noMoreResult
         noMoreResultLabel.frame = tableFooterView.frame
-        noMoreResultLabel.text = "No more result"
         noMoreResultLabel.textAlignment = NSTextAlignment.Center
-        noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
+        noMoreResultLabel.font = UIFont.systemFontOfSize(12.0)
         noMoreResultLabel.textColor = UIColor.grayColor()
         noMoreResultLabel.hidden = true
         tableFooterView.insertSubview(noMoreResultLabel, atIndex: 0)
@@ -79,13 +94,50 @@ class NotificationViewController: UIViewController {
                         self.tableView.reloadData()
                     }
                     self.isLoadingNextPage = false
-                    MBProgressHUD.hideHUDForView(self.view, animated: true)
-
+                    
                     self.noMoreResultLabel.hidden = !self.isEndOfFeed
                     self.noMoreResultLabel.text = (self.isEndOfFeed && self.notifications.count > 0) ? "No more result" : "No notifications"
                     
                     self.refreshControl.endRefreshing()
                     self.loadingView.stopAnimating()
+                }
+            })
+        }
+    }
+    
+    func refreshData() {
+        if notifications.count == 0 {
+            return
+        }
+        if let currentUser = User.currentUser() {
+            currentUser.getNotifications(nil, callback: { (notifications, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    return
+                }
+                if let newNotifications = notifications {
+                    if newNotifications.count == 0 {
+                        return
+                    } else {
+                        for newNotification in newNotifications {
+                            var found = false
+                            for (index, notification) in self.notifications.enumerate() {
+                                if newNotification.objectId == notification.objectId {
+                                    self.notifications[index] = newNotification
+                                    found = true
+                                    break
+                                }
+                            }
+                            if !found {
+                                self.notifications.append(newNotification)
+                            }
+                        }
+                        
+                        self.notifications = self.notifications.sort { (a, b) -> Bool in
+                            return a.createdAt!.compare(b.createdAt!).rawValue > 0
+                        }
+                        self.tableView.reloadData()
+                    }
                 }
             })
         }
@@ -119,6 +171,8 @@ extension NotificationViewController: UITableViewDelegate, UITableViewDataSource
         tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .None)
         vc.post = notification.post
         presentViewController(vc, animated: true, completion: nil)
+        
+        TabBarController.instance.onRefreshNotificationBadge(nil)
         
     }
 }
