@@ -111,22 +111,22 @@ class ItemCell: UITableViewCell {
             priceLabel.text = post.price.formatVND()
             newTagImageView.hidden = (post.condition > 0)
             
-            if post.iSaveIt == nil {
-                post.savedPostCurrentUser({ (saved, error) -> Void in
-                    post.iSaveIt = saved
-                    //self.setSaveLabel(post.iSaveIt!)
-                })
-            } else {
-                //setSaveLabel(post.iSaveIt!)
-            }
-            if post.iVoteIt == nil {
-                post.votedPostCurrentUser({ (voted, error) -> Void in
-                    post.iVoteIt = voted
-                    //self.setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
-                })
-            } else {
-                //setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
-            }
+//            if post.iSaveIt == nil {
+//                post.savedPostCurrentUser({ (saved, error) -> Void in
+//                    post.iSaveIt = saved
+//                    //self.setSaveLabel(post.iSaveIt!)
+//                })
+//            } else {
+//                //setSaveLabel(post.iSaveIt!)
+//            }
+//            if post.iVoteIt == nil {
+//                post.votedPostCurrentUser({ (voted, error) -> Void in
+//                    post.iVoteIt = voted
+//                    //self.setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
+//                })
+//            } else {
+//                //setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
+//            }
         }
     }
     
