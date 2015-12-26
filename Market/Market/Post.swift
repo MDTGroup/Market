@@ -22,12 +22,13 @@ class Post: PFObject, PFSubclassing {
     @NSManaged var price: Double
     @NSManaged var condition: Int
     @NSManaged var descriptionText: String?
-    @NSManaged var location: PFGeoPoint?
     @NSManaged var sold: Bool
     @NSManaged var user: User
     @NSManaged var vote: Vote
     @NSManaged var voteCounter:Int
     @NSManaged var isDeleted: Bool
+    @NSManaged var location: PFGeoPoint?
+    @NSManaged var locationName: String?
     
     private var uploadedFiles = [PFFile]()
     private var progressFiles = [PFFile: Int]()
