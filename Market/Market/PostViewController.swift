@@ -63,6 +63,9 @@ class PostViewController: UIViewController {
     var isUpdating = false
     var isMediaChanged = false
     var tapGestureOnInstruction: UIGestureRecognizer!
+    var videoURL: NSURL?
+    var videoPosition: Int = -1 // 0 means yet to set
+    var videoPFFile: PFFile?
     
     weak var delegate: PostViewControllerDelegate?
     
@@ -186,25 +189,57 @@ class PostViewController: UIViewController {
         descPlaceHolder.hidden = true
         conditionSegment.selectedSegmentIndex = (editingPost?.condition)!
         
-        let nImages = editingPost?.medias.count
+        let nImages = (editingPost?.medias.count)! / 2
+        var url = editingPost?.medias[nImages].url!
         
         imageView1.image = UIImage(named: "loading")
-        imageView1.setImageWithURL(NSURL(string: (editingPost?.medias[1].url!)!)!)
+        if (url?.rangeOfString("video.mov") != nil) {
+            // If this is video then use the thumbnail
+            url = editingPost?.medias[0].url!
+            imageView1.setImageWithURL(NSURL(string: url!)!)
+            videoPosition = 0
+            videoPFFile = editingPost?.medias[nImages]
+            print("video at 0")
+        } else {
+            imageView1.setImageWithURL(NSURL(string: url!)!)
+        }
         imageView1.contentMode = .ScaleAspectFill
         removeButton1.hidden = false
         imagesAvail[0] = true
         
-        if nImages > 2 {
-            imageView1.image = UIImage(named: "loading")
-            imageView2.setImageWithURL(NSURL(string: (editingPost?.medias[2].url!)!)!)
+        // Check 2nd image
+        if nImages > 1 {
+            imageView2.image = UIImage(named: "loading")
+            url = editingPost?.medias[nImages+1].url!
+            if (url?.rangeOfString("video.mov") != nil) {
+                // If this is video then use the thumbnail
+                url = editingPost?.medias[1].url!
+                imageView2.setImageWithURL(NSURL(string: url!)!)
+                videoPosition = 1
+                videoPFFile = editingPost?.medias[nImages+1]
+                print("video at 1")
+            } else {
+                imageView2.setImageWithURL(NSURL(string: url!)!)
+            }
             imageView2.contentMode = .ScaleAspectFill
             removeButton2.hidden = false
             imagesAvail[1] = true
         }
         
-        if nImages > 3 {
-            imageView1.image = UIImage(named: "loading")
-            imageView3.setImageWithURL(NSURL(string: (editingPost?.medias[3].url!)!)!)
+        // Check 3rd image
+        if nImages > 2 {
+            imageView3.image = UIImage(named: "loading")
+            url = editingPost?.medias[nImages+2].url!
+            if (url?.rangeOfString("video.mov") != nil) {
+                // If this is video then use the thumbnail
+                url = editingPost?.medias[2].url!
+                imageView3.setImageWithURL(NSURL(string: url!)!)
+                videoPosition = 2
+                videoPFFile = editingPost?.medias[nImages+2]
+                print("video at 2")
+            } else {
+                imageView3.setImageWithURL(NSURL(string: url!)!)
+            }
             imageView3.contentMode = .ScaleAspectFill
             removeButton3.hidden = false
             imagesAvail[2] = true
@@ -229,29 +264,29 @@ class PostViewController: UIViewController {
     
     func setImageToSelectedImageView(image: UIImage) {
         switch selectedImageIndex {
-        case 1:
+        case 0:
             imageView1.image = image
             imageView1.contentMode = .ScaleAspectFill
             removeButton1.hidden = false
-        case 2:
+        case 1:
             imageView2.image = image
             imageView2.contentMode = .ScaleAspectFill
             removeButton2.hidden = false
-        case 3:
+        case 2:
             imageView3.image = image
             imageView3.contentMode = .ScaleAspectFill
             removeButton3.hidden = false
         default: break
         }
-        imagesAvail[selectedImageIndex-1] = true
+        imagesAvail[selectedImageIndex] = true
     }
     
     func tapOnImage(gesture: UITapGestureRecognizer) {
         if let iv = gesture.view as? UIImageView {
             switch iv {
-            case imageView1: selectedImageIndex = 1
-            case imageView2: selectedImageIndex = 2
-            case imageView3: selectedImageIndex = 3
+            case imageView1: selectedImageIndex = 0
+            case imageView2: selectedImageIndex = 1
+            case imageView3: selectedImageIndex = 2
             default: break
             }
         }
@@ -336,21 +371,6 @@ class PostViewController: UIViewController {
             return nil
         }
         
-        // Collect info
-        var image = Helper.resizeImage(images[0], newWidth: 1600)
-        let thumbnails = Helper.resizeImage(image, newWidth: 750)
-        var imageFile = PFFile(name: "img1.jpg", data: UIImageJPEGRepresentation(image, 0.4)!)
-        let thumbnailsFile = PFFile(name: "thumb.jpg", data: UIImageJPEGRepresentation(thumbnails, 0.2)!)
-        post.medias = [thumbnailsFile!, imageFile!]
-        
-        if images.count > 1 {
-            for i in 1...images.count-1 {
-                image = Helper.resizeImage(images[i], newWidth: 1200)
-                imageFile = PFFile(name: "img\(i+1).jpg", data: UIImageJPEGRepresentation(image, 0.4)!)
-                post.medias.append(imageFile!)
-            }
-        }
-        
         post.title = titleLabel.text!
         post.price = Double(priceLabel.text!)!
         post.condition = conditionSegment.selectedSegmentIndex // 0 = new
@@ -359,6 +379,53 @@ class PostViewController: UIViewController {
         post.location = currentGeoPoint
         
         post.vote = Vote()
+        
+        // Media:
+        // 0..nImages-1: thumbnails
+        // nImage..2*nImages-1: images
+        var image: UIImage!
+        var imageFile: PFFile!
+        
+        // Attach thumbnails
+        for i in 0...images.count-1 {
+            image = Helper.resizeImage(images[i], newWidth: 750)
+            imageFile = PFFile(name: "thumb\(i+1).jpg", data: UIImageJPEGRepresentation(image, 0.2)!)
+            post.medias.append(imageFile!)
+        }
+        // Attach image/video
+        for i in 0...images.count-1 {
+            if i == videoPosition {
+                post.medias.append(videoPFFile!)
+            } else {
+                image = Helper.resizeImage(images[i], newWidth: 750)
+                imageFile = PFFile(name: "img\(i+1).jpg", data: UIImageJPEGRepresentation(image, 0.4)!)
+                post.medias.append(imageFile!)
+            }
+        }
+        
+        // TODO: Compress video
+        //        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
+        //        let recordingName = "drm.mov"
+        //        let pathArray = [dirPath, recordingName]
+        //        let filePath = NSURL.fileURLWithPathComponents(pathArray)
+        //        print(filePath)
+        //        
+        //        if videoPosition > 0 {
+        //            Helper.compressVideo(videoURL!, outputURL: filePath!) { (session) -> Post in
+        //                if session.status == .Completed {
+        //                    let data = NSData(contentsOfURL: filePath!)
+        //                    print("File size after compression: \(Double(data!.length / 1024)) kb")
+        //                    let videoFile = PFFile(name: "video.mov", data: NSData(data: data!))
+        //                    post.medias.append(videoFile!)
+        //                    return post
+        //                } else if session.status == .Failed {
+        //                    print("failed to compress video")
+        //                }
+        //                return post
+        //            }
+        //        } else {
+        //            return post
+        //        }
         
         return post
     }
@@ -467,26 +534,39 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
         let mediaType = info[UIImagePickerControllerMediaType] as! NSString
         
         if mediaType == kUTTypeMovie {
-            // Get the thumbnail of video
-            let url = info[UIImagePickerControllerMediaURL] as? String
-            print(url)
-            // crash next line
-            let asset = AVURLAsset(URL: NSURL(fileURLWithPath: url!), options: nil)
-            let imgGenerator = AVAssetImageGenerator(asset: asset)
-            do {
-                let cgImage = try imgGenerator.copyCGImageAtTime(CMTimeMake(0, 1), actualTime: nil)
-                let image = UIImage(CGImage: cgImage)
-                setImageToSelectedImageView(image)
-                print("capture thumbnail from video")
-            } catch {
-                print("ehh, something's wrong")
+            if videoPosition >= 0 {
+                let alertController = UIAlertController(title: "Market", message: "You can't post more than 1 video", preferredStyle: .Alert)
+                let okAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+                alertController.addAction(okAction)
+                self.presentViewController(alertController, animated: true, completion: nil)
+            } else {
+                isMediaChanged = true
+                videoPosition = selectedImageIndex
+                // Get the thumbnail of video
+                videoURL = info[UIImagePickerControllerMediaURL] as? NSURL
+                print(videoURL)
+                let asset = AVAsset(URL: videoURL!)
+                let assetImgGenerate = AVAssetImageGenerator(asset: asset)
+                assetImgGenerate.appliesPreferredTrackTransform = true
+                let time = CMTimeMake(asset.duration.value / 3, asset.duration.timescale)
+                if let cgImage = try? assetImgGenerate.copyCGImageAtTime(time, actualTime: nil) {
+                    let image = UIImage(CGImage: cgImage)
+                    setImageToSelectedImageView(image)
+                }
+                let data = NSData(contentsOfURL: videoURL!)
+                print("File size: \(Double(data!.length / 1024)) kb")
+                videoPFFile = PFFile(name: "video.mov", data: NSData(data: data!))
             }
             
         } else {
             // User selected an image
-            isMediaChanged = true
-            if let image = info[UIImagePickerControllerEditedImage] as? UIImage {
+            if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+                isMediaChanged = true
                 setImageToSelectedImageView(image)
+                if selectedImageIndex == videoPosition {
+                    // User select another image to replace the video
+                    videoPosition = -1
+                }
             }
         }
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -509,9 +589,9 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
     @IBAction func onImageTapped(sender: UITapGestureRecognizer) {
         if let iv = sender.view as? UIImageView {
             switch iv {
-            case imageView1: selectedImageIndex = 1
-            case imageView2: selectedImageIndex = 2
-            case imageView3: selectedImageIndex = 3
+            case imageView1: selectedImageIndex = 0
+            case imageView2: selectedImageIndex = 1
+            case imageView3: selectedImageIndex = 2
             default: break
             }
         }
@@ -522,9 +602,9 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
     @IBAction func onImageDoubleTapped(sender: UITapGestureRecognizer) {
         if let iv = sender.view as? UIImageView {
             switch iv {
-            case imageView1: selectedImageIndex = 1
-            case imageView2: selectedImageIndex = 2
-            case imageView3: selectedImageIndex = 3
+            case imageView1: selectedImageIndex = 0
+            case imageView2: selectedImageIndex = 1
+            case imageView3: selectedImageIndex = 2
             default: break
             }
         }

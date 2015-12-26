@@ -67,7 +67,7 @@ class HomeViewController: UIViewController {
         postVC.delegate = self
         
         loadDataBy = NewsfeedType.Newest
-        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
         loadNewestData()
         
         initTabBar()
@@ -130,11 +130,12 @@ class HomeViewController: UIViewController {
             self.refreshControl.endRefreshing()
             self.loadingView.stopAnimating()
             self.isLoadingNextPage = false
-            MBProgressHUD.hideHUDForView(self.view, animated: true)
+            MBProgressHUD.hideHUDForView(self.tableView, animated: true)
         }
     }
     
     @IBAction func onCategoryChanged(sender: UISegmentedControl) {
+        MBProgressHUD.hideHUDForView(self.tableView, animated: true)
         isEndOfFeed = false
         switch sender.selectedSegmentIndex {
         case 0: loadDataBy = NewsfeedType.Newest

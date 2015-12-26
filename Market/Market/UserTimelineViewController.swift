@@ -128,6 +128,7 @@ class UserTimelineViewController: UIViewController {
     }
     
     @IBAction func onCategoryChanged(sender: UISegmentedControl) {
+        MBProgressHUD.hideHUDForView(self.tableView, animated: true)
         isEndOfFeed = false
         dataToLoad = sender.selectedSegmentIndex
         keywordView.hidden = (dataToLoad != 3)
@@ -184,10 +185,10 @@ extension UserTimelineViewController {
     func refreshData() {
         switch dataToLoad {
         case 0, 1:
-            MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
             loadNewestData()
         case 2:
-            MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+            MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
             loadFollowing()
         case 3:
             refreshControl.endRefreshing()
