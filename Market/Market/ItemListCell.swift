@@ -31,16 +31,17 @@ class ItemListCell: UITableViewCell {
         didSet {
             let post = conversation.post
             
-            self.sellerLabel.text = ""
             if let avatar = post.user.avatar, url = avatar.url {
                 self.avatarImageView.setImageWithURL(NSURL(string: url)!)
-                self.sellerLabel.text = post.user.fullName
+            } else {
+                self.avatarImageView.image = UIImage(named: "profile_blank")
             }
             
             if post.medias.count > 0 {
                 self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
             }
             
+            self.sellerLabel.text = post.user.fullName
             itemNameLabel.text = post.title
             timeAgoLabel.text = Helper.timeSinceDateToNow(conversation.updatedAt!)
             priceLabel.text = post.price.formatVND()

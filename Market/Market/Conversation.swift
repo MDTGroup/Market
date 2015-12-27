@@ -162,7 +162,7 @@ class Conversation: PFObject, PFSubclassing {
     
     static func getConversations(forNetworkOnly: Bool, lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
         if let query = Conversation.query(), currentUser = User.currentUser() {
-            var cachePolicy = PFCachePolicy.CacheElseNetwork
+            var cachePolicy = PFCachePolicy.CacheThenNetwork
             if forNetworkOnly {
                 cachePolicy = .NetworkOnly
             }
@@ -222,6 +222,7 @@ class Conversation: PFObject, PFSubclassing {
     
     static func getConversationsByPost(post:Post, lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
         if let query = Conversation.query(), currentUser = User.currentUser() {
+            let cachePolicy = PFCachePolicy.CacheThenNetwork
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
             query.selectKeys(["userIds", "readUsers", "lastMessage"])
             query.includeKey("lastMessage")
@@ -229,7 +230,7 @@ class Conversation: PFObject, PFSubclassing {
             query.whereKey("userIds", equalTo: currentUser.objectId!)
             query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
             query.whereKeyExists("lastMessage")
-            query.cachePolicy = .CacheElseNetwork
+            query.cachePolicy = cachePolicy
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(conversations: nil, error: error)
@@ -249,7 +250,7 @@ class Conversation: PFObject, PFSubclassing {
                     if let userQuery = User.query() {
                         userQuery.selectKeys(["fullName", "avatar"])
                         userQuery.whereKey("objectId", containedIn: listUserIds)
-                        userQuery.cachePolicy = .CacheElseNetwork
+                        userQuery.cachePolicy = cachePolicy
                         userQuery.findObjectsInBackgroundWithBlock({ (users, error) -> Void in
                             guard error == nil else {
                                 callback(conversations: nil, error: error)

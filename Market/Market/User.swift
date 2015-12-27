@@ -203,12 +203,13 @@ class User: PFUser {
     //MARK: Notifications
     func getNotifications(lastCreatedAt: NSDate?, callback: NotificationResultBlock) {
         if let query = Notification.query() {
+            let cachePolicy = PFCachePolicy.CacheThenNetwork
             query.selectKeys(["post", "fromUser", "type", "extraInfo"])
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastCreatedAt, maxResult: 12)
             query.includeKey("post")
             query.includeKey("fromUser")
             query.whereKey("toUsers", equalTo: self)
-            query.cachePolicy = .CacheElseNetwork
+            query.cachePolicy = cachePolicy
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(notifications: nil, error: error)
@@ -221,7 +222,7 @@ class User: PFUser {
                         queryForUnread.selectKeys([])
                         queryForUnread.whereKey("toUsers", equalTo: self)
                         queryForUnread.whereKey("readUsers", equalTo: self)
-                        queryForUnread.cachePolicy = .CacheElseNetwork
+                        queryForUnread.cachePolicy = cachePolicy
                         queryForUnread.findObjectsInBackgroundWithBlock({ (notificationsUnread, error) -> Void in
                             guard error == nil else {
                                 callback(notifications: nil, error: error)

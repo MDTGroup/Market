@@ -25,6 +25,8 @@ class MessageCell: UITableViewCell {
                 if let user = conversation.toUser {
                     if let avatar = user.avatar, url = avatar.url {
                         self.userImage.setImageWithURL(NSURL(string: url)!)
+                    } else {
+                        self.userImage.image = UIImage(named: "profile_blank")
                     }
                     self.userFullname.text = user.fullName
                     

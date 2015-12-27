@@ -73,6 +73,8 @@ class ParentChatViewController: UIViewController {
                 post.user.fetchIfNeededInBackgroundWithBlock { (result, error) -> Void in
                     if let avatar = post.user.avatar, url = avatar.url {
                         self.avatarImageView.setImageWithURL(NSURL(string: url)!)
+                    } else {
+                        self.avatarImageView.image = UIImage(named: "profile_blank")
                     }
                     self.sellerLabel.text = post.user.fullName
                 }
