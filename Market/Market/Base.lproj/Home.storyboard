@@ -1004,7 +1004,7 @@
                                 <blurEffect style="light"/>
                             </visualEffectView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="57" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="usf-Rc-hqR">
-                                <rect key="frame" x="0.0" y="212" width="375" height="455"/>
+                                <rect key="frame" x="0.0" y="208" width="375" height="459"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="simplifiedItemCell" rowHeight="57" id="Oay-19-G7w" customClass="SimplifiedItemCell" customModule="Market" customModuleProvider="target">
@@ -1192,7 +1192,7 @@
                                 </prototypes>
                             </tableView>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="HZI-Oz-QMY">
-                                <rect key="frame" x="8" y="130" width="359" height="29"/>
+                                <rect key="frame" x="8" y="128" width="359" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="28" id="Tp1-dP-kVB"/>
                                 </constraints>
@@ -1208,7 +1208,7 @@
                                 </connections>
                             </segmentedControl>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="e5e-eU-eND">
-                                <rect key="frame" x="0.0" y="166" width="375" height="44"/>
+                                <rect key="frame" x="0.0" y="164" width="375" height="44"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="va6-X1-xP0">
                                         <rect key="frame" x="327" y="2" width="40" height="40"/>
@@ -1222,15 +1222,15 @@
                                         </connections>
                                     </button>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Add a keyword to receive notification" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="MVH-iV-Icb">
-                                        <rect key="frame" x="8" y="7" width="309" height="30"/>
+                                        <rect key="frame" x="8" y="7" width="311" height="30"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="MVH-iV-Icb" firstAttribute="centerY" secondItem="e5e-eU-eND" secondAttribute="centerY" id="1iY-HO-JRq"/>
-                                    <constraint firstItem="va6-X1-xP0" firstAttribute="leading" secondItem="MVH-iV-Icb" secondAttribute="trailing" constant="10" id="Zl1-DU-HWb"/>
+                                    <constraint firstItem="va6-X1-xP0" firstAttribute="leading" secondItem="MVH-iV-Icb" secondAttribute="trailing" constant="8" id="Zl1-DU-HWb"/>
                                     <constraint firstAttribute="height" constant="44" id="fRQ-LD-n2b"/>
                                     <constraint firstItem="MVH-iV-Icb" firstAttribute="leading" secondItem="e5e-eU-eND" secondAttribute="leading" constant="8" id="gQj-wT-8yR"/>
                                     <constraint firstItem="va6-X1-xP0" firstAttribute="centerY" secondItem="e5e-eU-eND" secondAttribute="centerY" id="m7y-8i-FRu"/>
@@ -1243,7 +1243,7 @@
                             <constraint firstItem="HZI-Oz-QMY" firstAttribute="leading" secondItem="HR7-6L-dcG" secondAttribute="leading" constant="8" id="1md-0H-NQl"/>
                             <constraint firstItem="e5e-eU-eND" firstAttribute="top" secondItem="HZI-Oz-QMY" secondAttribute="bottom" constant="8" id="28f-Rc-bJB"/>
                             <constraint firstItem="e5e-eU-eND" firstAttribute="leading" secondItem="HR7-6L-dcG" secondAttribute="leading" id="2N4-d4-0E6"/>
-                            <constraint firstItem="HZI-Oz-QMY" firstAttribute="top" secondItem="lNJ-hh-gzQ" secondAttribute="bottom" constant="10" id="DaO-9O-fOg"/>
+                            <constraint firstItem="HZI-Oz-QMY" firstAttribute="top" secondItem="lNJ-hh-gzQ" secondAttribute="bottom" constant="8" id="DaO-9O-fOg"/>
                             <constraint firstItem="Yl4-yy-IZu" firstAttribute="top" secondItem="usf-Rc-hqR" secondAttribute="bottom" id="EAw-sc-Yen"/>
                             <constraint firstAttribute="trailing" secondItem="e5e-eU-eND" secondAttribute="trailing" id="EXH-b6-RyE"/>
                             <constraint firstAttribute="trailing" secondItem="HZI-Oz-QMY" secondAttribute="trailing" constant="8" id="MYI-ZL-Mvb"/>
@@ -1254,7 +1254,7 @@
                             <constraint firstItem="usf-Rc-hqR" firstAttribute="leading" secondItem="HR7-6L-dcG" secondAttribute="leading" id="j5W-j5-jSm"/>
                             <constraint firstItem="B0S-51-qjp" firstAttribute="leading" secondItem="HR7-6L-dcG" secondAttribute="leading" id="o5f-pU-BYE"/>
                             <constraint firstItem="lNJ-hh-gzQ" firstAttribute="top" secondItem="NGu-UH-vAV" secondAttribute="bottom" constant="-20" id="oqx-M1-p6o"/>
-                            <constraint firstItem="usf-Rc-hqR" firstAttribute="top" secondItem="e5e-eU-eND" secondAttribute="bottom" constant="2" id="qqu-oj-hNo"/>
+                            <constraint firstItem="usf-Rc-hqR" firstAttribute="top" secondItem="e5e-eU-eND" secondAttribute="bottom" id="qqu-oj-hNo"/>
                             <constraint firstItem="B0S-51-qjp" firstAttribute="top" secondItem="NGu-UH-vAV" secondAttribute="bottom" id="z1U-Mj-kPH"/>
                         </constraints>
                     </view>

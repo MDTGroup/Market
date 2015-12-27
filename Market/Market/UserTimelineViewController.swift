@@ -15,7 +15,7 @@ class UserTimelineViewController: UIViewController {
     let postLimit = 12
     var user: User!
     var posts = [Post]()
-    var queryArray = [User]()
+    var followingUsers = [User]()
     var isCurrentUser = false
     
     @IBOutlet weak var tableView: UITableView!
@@ -62,9 +62,14 @@ class UserTimelineViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         
+        keywordText.delegate = self
+        
         // Refresh control
         refreshControl.addTarget(self, action: Selector("pullToRefresh"), forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshControl)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: "tapOnView:")
+        view.addGestureRecognizer(tapGesture)
         
         // Add the activity Indicator for table footer for infinity load
         let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
@@ -84,6 +89,10 @@ class UserTimelineViewController: UIViewController {
         
         MBProgressHUD.showHUDAddedTo(tableView, animated: true)
         loadNewestData()
+    }
+    
+    func tapOnView(gesture: UITapGestureRecognizer) {
+        view.endEditing(true)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -136,6 +145,7 @@ class UserTimelineViewController: UIViewController {
     }
     
     @IBAction func onCategoryChanged(sender: UISegmentedControl) {
+        view.endEditing(true)
         MBProgressHUD.hideHUDForView(self.tableView, animated: true)
         isEndOfFeed = false
         dataToLoad = DataToLoad(rawValue: sender.selectedSegmentIndex)!
@@ -147,9 +157,10 @@ class UserTimelineViewController: UIViewController {
         refreshData(false)
     }
     
-    @IBAction func onKeywordAdd(sender: UIButton) {
-        var addedString = ((keywordText?.text)!).lowercaseString
+    @IBAction func onKeywordAdd(sender: UIButton?) {
+        var addedString = ((keywordText.text)!).lowercaseString
         addedString = addedString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        keywordText.resignFirstResponder()
         if addedString.characters.count == 0 {
             return
         }
@@ -350,7 +361,7 @@ extension UserTimelineViewController {
                 return
             }
             if let users = users {
-                self.queryArray = users
+                self.followingUsers = users
                 self.tableView.reloadData()
             }
             self.noMoreResultLabel.hidden = false
@@ -365,7 +376,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         case .UsersPosts, .UsersSavedPosts:
             return posts.count
         case .Following:
-            return queryArray.count
+            return followingUsers.count
         case .Keywords:
             if let currentUser = User.currentUser() {
                 return currentUser.keywords.count
@@ -461,9 +472,13 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 return cell
             }
             
-            let fullname = self.queryArray[indexPath.row].fullName
+            if indexPath.row >= followingUsers.count {
+                return UITableViewCell()
+            }
+            
+            let fullname = followingUsers[indexPath.row].fullName
             cell.fullnameLabel.text = fullname
-            if let avatarFile = self.queryArray[indexPath.row].avatar {
+            if let avatarFile = followingUsers[indexPath.row].avatar {
                 avatarFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
                     cell.imgField.image = UIImage(data: data!)
                 }
@@ -471,7 +486,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 cell.imgField.image = UIImage(named: "profile_blank")
             }
             
-            cell.targetUser = self.queryArray[indexPath.row]
+            cell.targetUser = followingUsers[indexPath.row]
             
             // TODO: Infinite load if last cell
             // How to load next 20?
@@ -483,9 +498,6 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
             cell.keywordLabel.text = User.currentUser()?.keywords[indexPath.row]
             cell.delegate = self
             return cell
-            
-        default:
-            return UITableViewCell()
         }
     }
     
@@ -559,12 +571,18 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
 }
 
 extension UserTimelineViewController: KeywordsTableViewCellDelegate {
-    func keywordsTableViewCell(keywordsTableViewCell: KeywordsTableViewCell, didDelete value: Bool) {
-        if value {
-            if let id = tableView.indexPathForCell(keywordsTableViewCell) {
-                tableView.deleteRowsAtIndexPaths([id], withRowAnimation: .Bottom)
-            }
-        }
+    func keywordsTableViewCell(keywordsTableViewCell: KeywordsTableViewCell, keyword value: String) {
+        AlertControl.showWithCancel(self, title: "Delete keyword", message: "Are you sure to delete keyword: \"\(value)\"", okHandler: { (okAction) -> Void in
+            User.currentUser()?.removeKeyword(value, callback: { (success, error: NSError?) -> Void in
+                guard error == nil else {
+                    print(error)
+                    return
+                }
+                if let id = self.tableView.indexPathForCell(keywordsTableViewCell) {
+                    self.tableView.deleteRowsAtIndexPaths([id], withRowAnimation: .Bottom)
+                }
+            })
+            }, cancelHandler: nil)
     }
 }
 
@@ -637,6 +655,18 @@ extension UserTimelineViewController: SWTableViewCellDelegate {
                 print("failed to unsave")
             }
         }
+    }
+}
+
+extension UserTimelineViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(textField: UITextField) -> Bool {
+        if textField == keywordText {
+            if textField.text!.isEmpty {
+                return false
+            }
+            onKeywordAdd(nil)
+        }
+        return true
     }
 }
 

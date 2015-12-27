@@ -189,6 +189,7 @@ class User: PFUser {
         }
         keywords.append(keyword)
         saveInBackgroundWithBlock(callback)
+        fetchInBackground()
     }
     
     func removeKeyword(keyword: String, callback: PFBooleanResultBlock) {

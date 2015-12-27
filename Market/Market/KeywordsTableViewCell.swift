@@ -8,15 +8,15 @@
 
 import UIKit
 
-@objc protocol KeywordsTableViewCellDelegate {
-    optional func keywordsTableViewCell(keywordsTableViewCell: KeywordsTableViewCell, didDelete value: Bool)
+protocol KeywordsTableViewCellDelegate {
+    func keywordsTableViewCell(keywordsTableViewCell: KeywordsTableViewCell, keyword value: String)
 }
 
 class KeywordsTableViewCell: UITableViewCell {
     
     @IBOutlet weak var keywordLabel: UILabel!
     @IBOutlet weak var deleteButton: UIButton!
-    weak var delegate: KeywordsTableViewCellDelegate?
+    var delegate: KeywordsTableViewCellDelegate?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -24,20 +24,6 @@ class KeywordsTableViewCell: UITableViewCell {
     }
     
     @IBAction func onDeleteTap(sender: AnyObject) {
-        print("Button delete is clicked")
-        User.currentUser()?.removeKeyword(keywordLabel.text!, callback: { (success, error: NSError?) -> Void in
-            guard error == nil else {
-                print(error)
-                return
-            }
-            self.delegate?.keywordsTableViewCell!(self, didDelete: true)
-        })
+       self.delegate?.keywordsTableViewCell(self, keyword: keywordLabel.text!)
     }
-    
-    override func setSelected(selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-        
-        // Configure the view for the selected state
-    }
-    
 }
