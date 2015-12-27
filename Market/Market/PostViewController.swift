@@ -25,7 +25,9 @@ class PostViewController: UIViewController {
     @IBOutlet weak var removeButton2: UIButton!
     @IBOutlet weak var removeButton3: UIButton!
     
-    @IBOutlet weak var instructionView: UIImageView!
+    @IBOutlet weak var videoImage1: UIImageView!
+    @IBOutlet weak var videoImage2: UIImageView!
+    @IBOutlet weak var videoImage3: UIImageView!
     
     @IBOutlet weak var imageHeight: NSLayoutConstraint!
     @IBOutlet weak var imageWidth: NSLayoutConstraint!
@@ -42,19 +44,14 @@ class PostViewController: UIViewController {
     @IBOutlet weak var navBar: UINavigationItem!
     @IBOutlet weak var backButton: UIBarButtonItem!
     @IBOutlet weak var draftButton: UIButton!
-    @IBOutlet weak var quickPostButton: UIButton!
+    @IBOutlet weak var okImageView: UIImageView!
     
     @IBOutlet weak var progressBarLength: NSLayoutConstraint!
     @IBOutlet weak var progressBarLeft: NSLayoutConstraint!
-    @IBOutlet weak var quickPostLeft: NSLayoutConstraint!
     
     @IBOutlet var iv1SingleTap: UITapGestureRecognizer!
     @IBOutlet var iv2SingleTap: UITapGestureRecognizer!
     @IBOutlet var iv3SingleTap: UITapGestureRecognizer!
-    
-    @IBOutlet var iv1DoubleTap: UITapGestureRecognizer!
-    @IBOutlet var iv2DoubleTap: UITapGestureRecognizer!
-    @IBOutlet var iv3DoubleTap: UITapGestureRecognizer!
     
     var currentGeoPoint: PFGeoPoint?
     var selectedImageIndex: Int = 0
@@ -77,10 +74,6 @@ class PostViewController: UIViewController {
         let screenWidth = UIScreen.mainScreen().bounds.width
         imageWidth.constant = screenWidth > 350 ? 100: 90
         imageHeight.constant = imageWidth.constant
-        
-        iv1SingleTap.requireGestureRecognizerToFail(iv1DoubleTap)
-        iv2SingleTap.requireGestureRecognizerToFail(iv2DoubleTap)
-        iv3SingleTap.requireGestureRecognizerToFail(iv3DoubleTap)
         
         initImageFrame(imageView1)
         initImageFrame(imageView2)
@@ -113,19 +106,7 @@ class PostViewController: UIViewController {
         progressBar.layer.cornerRadius = 4
         progressBar.clipsToBounds = true
         progressBar.alpha = 0
-        progressBarLeft.constant = 70
-        progressBarLength.constant = UIScreen.mainScreen().bounds.width - 70 - 25
-        quickPostLeft.constant = (UIScreen.mainScreen().bounds.width - 50) / 2
-        
-        // Show the instruction
-        imageView2.hidden = !isUpdating
-        imageView3.hidden = !isUpdating
-        conditionSegment.hidden = !isUpdating
-        instructionView.hidden = isUpdating
-        if !isUpdating {
-            tapGestureOnInstruction = UITapGestureRecognizer(target: self, action: "hideInstruction")
-            instructionView.addGestureRecognizer(tapGestureOnInstruction)
-        }
+        okImageView.alpha = 0
         
         // Add observer to detect when the keyboard will be shown/hide
         NSNotificationCenter.defaultCenter().addObserver(self,
@@ -150,33 +131,33 @@ class PostViewController: UIViewController {
     }
     
     func keyboardHide(notification: NSNotification) {
-        descTextHeight.constant = quickPostButton.frame.origin.y - descriptionText.frame.origin.y - 10
+        descTextHeight.constant = okImageView.frame.origin.y - descriptionText.frame.origin.y - 10
         UIView.animateWithDuration(0.3) { () -> Void in
             self.view.layoutIfNeeded()
         }
     }
     
-    func hideInstruction() {
-        UIView.animateWithDuration(0.1, animations: { () -> Void in
-            self.instructionView.center.x -= 5
-            }) { (finished) -> Void in
-                self.imageView2.alpha = 0
-                self.imageView3.alpha = 0
-                self.conditionSegment.alpha = 0
-                self.imageView2.hidden = false
-                self.imageView3.hidden = false
-                self.conditionSegment.hidden = false
-                
-                UIView.animateWithDuration(0.5, animations: { () -> Void in
-                    self.instructionView.center.x += UIScreen.mainScreen().bounds.width
-                    self.imageView2.alpha = 1
-                    self.imageView3.alpha = 1
-                    self.conditionSegment.alpha = 1
-                    }, completion: { (finished) -> Void in
-                        self.instructionView.hidden = true
-                })
-        }
-    }
+    //    func hideInstruction() {
+    //        UIView.animateWithDuration(0.1, animations: { () -> Void in
+    //            self.instructionView.center.x -= 5
+    //            }) { (finished) -> Void in
+    //                self.imageView2.alpha = 0
+    //                self.imageView3.alpha = 0
+    //                self.conditionSegment.alpha = 0
+    //                self.imageView2.hidden = false
+    //                self.imageView3.hidden = false
+    //                self.conditionSegment.hidden = false
+    //                
+    //                UIView.animateWithDuration(0.5, animations: { () -> Void in
+    //                    self.instructionView.center.x += UIScreen.mainScreen().bounds.width
+    //                    self.imageView2.alpha = 1
+    //                    self.imageView3.alpha = 1
+    //                    self.conditionSegment.alpha = 1
+    //                    }, completion: { (finished) -> Void in
+    //                        self.instructionView.hidden = true
+    //                })
+    //        }
+    //    }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         view.endEditing(true)
@@ -199,6 +180,7 @@ class PostViewController: UIViewController {
             imageView1.setImageWithURL(NSURL(string: url!)!)
             videoPosition = 0
             videoPFFile = editingPost?.medias[nImages]
+            videoImage1.hidden = false
             print("video at 0")
         } else {
             imageView1.setImageWithURL(NSURL(string: url!)!)
@@ -217,6 +199,7 @@ class PostViewController: UIViewController {
                 imageView2.setImageWithURL(NSURL(string: url!)!)
                 videoPosition = 1
                 videoPFFile = editingPost?.medias[nImages+1]
+                videoImage2.hidden = false
                 print("video at 1")
             } else {
                 imageView2.setImageWithURL(NSURL(string: url!)!)
@@ -236,6 +219,7 @@ class PostViewController: UIViewController {
                 imageView3.setImageWithURL(NSURL(string: url!)!)
                 videoPosition = 2
                 videoPFFile = editingPost?.medias[nImages+2]
+                videoImage3.hidden = false
                 print("video at 2")
             } else {
                 imageView3.setImageWithURL(NSURL(string: url!)!)
@@ -247,7 +231,7 @@ class PostViewController: UIViewController {
     }
     
     func initImageFrame(iv: UIImageView) {
-        iv.layer.borderColor = MyColors.bluesky.CGColor
+        iv.layer.borderColor = MyColors.green.CGColor
         iv.layer.borderWidth = 0.5
         iv.layer.cornerRadius = 8
         iv.clipsToBounds = true
@@ -255,27 +239,36 @@ class PostViewController: UIViewController {
         iv.contentMode = .Center
         
         switch iv {
-        case imageView1: removeButton1.hidden = true
-        case imageView2: removeButton2.hidden = true
-        case imageView3: removeButton3.hidden = true
+        case imageView1:
+            removeButton1.hidden = true
+            videoImage1.hidden = true
+        case imageView2:
+            removeButton2.hidden = true
+            videoImage2.hidden = true
+        case imageView3:
+            removeButton3.hidden = true
+            videoImage3.hidden = true
         default: break
         }
     }
     
-    func setImageToSelectedImageView(image: UIImage) {
+    func setImageToSelectedImageView(image: UIImage, isVideo: Bool) {
         switch selectedImageIndex {
         case 0:
             imageView1.image = image
             imageView1.contentMode = .ScaleAspectFill
             removeButton1.hidden = false
+            videoImage1.hidden = !isVideo
         case 1:
             imageView2.image = image
             imageView2.contentMode = .ScaleAspectFill
             removeButton2.hidden = false
+            videoImage3.hidden = !isVideo
         case 2:
             imageView3.image = image
             imageView3.contentMode = .ScaleAspectFill
             removeButton3.hidden = false
+            videoImage3.hidden = !isVideo
         default: break
         }
         imagesAvail[selectedImageIndex] = true
@@ -438,8 +431,8 @@ class PostViewController: UIViewController {
         descriptionText.text = ""
         titleLabel.text = ""
         progressBar.setProgress(0, animated: false)
-        progressBar.hidden = true
-        quickPostButton.hidden = true
+        progressBar.alpha = 0
+        okImageView.alpha = 0
     }
     
     func newPost() {
@@ -452,9 +445,17 @@ class PostViewController: UIViewController {
             post.vote = Vote()
             post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
                 print(post)
-                // Clear the page
-                self.delegate?.postViewController?(self, didUploadNewPost: post)
-                self.tabBarController!.selectedIndex = 0
+                
+                self.okImageView.transform = CGAffineTransformMakeScale(0.01, 0.01)
+                
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    self.okImageView.transform = CGAffineTransformMakeScale(1, 1)
+                    self.okImageView.alpha = 1
+                    }, completion: { (finished) -> Void in
+                        self.resetPostPage()
+                        self.delegate?.postViewController?(self, didUploadNewPost: post)
+                        self.tabBarController!.selectedIndex = 0
+                })
                 
                 }) { (post: Post, percent: Float) -> Void in
                     print(percent)
@@ -481,8 +482,17 @@ class PostViewController: UIViewController {
                     fetchedPost.sold = newPost.sold
                     
                     fetchedPost.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
-                        self.delegate?.postViewController?(self, didUploadNewPost: post)
-                        self.dismissViewControllerAnimated(true, completion: nil)
+                        self.okImageView.transform = CGAffineTransformMakeScale(0.01, 0.01)
+                        
+                        UIView.animateWithDuration(0.3, animations: { () -> Void in
+                            self.okImageView.transform = CGAffineTransformMakeScale(1, 1)
+                            self.okImageView.alpha = 1
+                            }, completion: { (finished) -> Void in
+                                self.resetPostPage()
+                                self.delegate?.postViewController?(self, didUploadNewPost: post)
+                                self.dismissViewControllerAnimated(true, completion: nil)
+                        })
+                        
                         }) { (post: Post, percent: Float) -> Void in
                             print(percent)
                             self.progressBar.setProgress(percent, animated: true)
@@ -497,7 +507,6 @@ class PostViewController: UIViewController {
     
     func showProgressBar() {
         view.endEditing(true)
-        self.quickPostLeft.constant = 25
         
         UIView.animateWithDuration(0.3) { () -> Void in
             self.view.layoutIfNeeded()
@@ -505,30 +514,31 @@ class PostViewController: UIViewController {
         }
     }
     
-    @IBAction func onQuickPost(sender: UIButton) {
-        if isUpdating {
-            updatePost()
-        } else {
-            newPost()
-        }
-    }
-    
     @IBAction func onRemoveImage1(sender: UIButton) {
         isMediaChanged = true
         initImageFrame(imageView1)
         imagesAvail[0] = false
+        if videoPosition == 0 {
+            videoPosition = -1
+        }
     }
     
     @IBAction func onRemoveImage2(sender: UIButton) {
         isMediaChanged = true
         initImageFrame(imageView2)
         imagesAvail[1] = false
+        if videoPosition == 1 {
+            videoPosition = -1
+        }
     }
     
     @IBAction func onRemoveImage3(sender: UIButton) {
         isMediaChanged = true
         initImageFrame(imageView3)
         imagesAvail[2] = false
+        if videoPosition == 2 {
+            videoPosition = -1
+        }
     }
     
     @IBAction func onDismiss(sender: UIBarButtonItem) {
@@ -564,7 +574,7 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
                 let time = CMTimeMake(asset.duration.value / 3, asset.duration.timescale)
                 if let cgImage = try? assetImgGenerate.copyCGImageAtTime(time, actualTime: nil) {
                     let image = UIImage(CGImage: cgImage)
-                    setImageToSelectedImageView(image)
+                    setImageToSelectedImageView(image, isVideo: true)
                 }
                 let data = NSData(contentsOfURL: videoURL!)
                 print("File size: \(Double(data!.length / 1024)) kb")
@@ -575,7 +585,7 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
             // User selected an image
             if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
                 isMediaChanged = true
-                setImageToSelectedImageView(image)
+                setImageToSelectedImageView(image, isVideo: false)
                 if selectedImageIndex == videoPosition {
                     // User select another image to replace the video
                     videoPosition = -1
@@ -590,12 +600,17 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func loadImageFrom(source: UIImagePickerControllerSourceType) {
+    func loadImageFrom(source: UIImagePickerControllerSourceType, pickVideo: Bool) {
         let imagePicker = UIImagePickerController()
         imagePicker.delegate = self
         imagePicker.sourceType = source
         //imagePicker.allowsEditing = true
-        imagePicker.mediaTypes = [kUTTypeImage as String, kUTTypeMovie as String]
+        if pickVideo {
+            imagePicker.mediaTypes = [kUTTypeMovie as String]
+        } else {
+            imagePicker.mediaTypes = [kUTTypeMovie as String]
+        }
+        
         self.presentViewController(imagePicker, animated: true, completion: nil)
     }
     
@@ -609,24 +624,51 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
             }
         }
         
-        loadImageFrom(UIImagePickerControllerSourceType.PhotoLibrary)
+        showActionSheets()
     }
     
-    @IBAction func onImageDoubleTapped(sender: UITapGestureRecognizer) {
-        if let iv = sender.view as? UIImageView {
-            switch iv {
-            case imageView1: selectedImageIndex = 0
-            case imageView2: selectedImageIndex = 1
-            case imageView3: selectedImageIndex = 2
-            default: break
-            }
-        }
-        print("take pic for img \(selectedImageIndex)")
+    func showActionSheets() {
         
-        if UIImagePickerController.availableCaptureModesForCameraDevice(.Rear) != nil {
-            loadImageFrom(UIImagePickerControllerSourceType.Camera)
+        let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        
+        // Pick photo from library
+        let pickPhotoAction = UIAlertAction(title: "Choose photo from library", style: .Default, handler: {
+            (alert: UIAlertAction!) -> Void in
+            self.loadImageFrom(UIImagePickerControllerSourceType.PhotoLibrary, pickVideo: false)
+            print("Select photo")
+        })
+        optionMenu.addAction(pickPhotoAction)
+        
+        // Pick video from library if hasn't picked any, or user want to modify this video
+        if (videoPosition < 0) || (videoPosition == selectedImageIndex) {
+            let pickVideoAction = UIAlertAction(title: "Choose video from library", style: .Default, handler: {
+                (alert: UIAlertAction!) -> Void in
+                self.loadImageFrom(UIImagePickerControllerSourceType.PhotoLibrary, pickVideo: true)
+                print("Select video")
+            })
+            optionMenu.addAction(pickVideoAction)
         }
+        
+        // Take picture from camera if camera is avail
+        if UIImagePickerController.availableCaptureModesForCameraDevice(.Rear) != nil {
+            let takePhotoAction = UIAlertAction(title: "Take photo from camera", style: .Default, handler: {
+                (alert: UIAlertAction!) -> Void in
+                print("Take pic")
+                self.loadImageFrom(UIImagePickerControllerSourceType.Camera, pickVideo: false)
+            })
+            optionMenu.addAction(takePhotoAction)
+        }
+        
+        // Cancel action
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: {
+            (alert: UIAlertAction!) -> Void in
+            print("Cancelled")
+        })
+        optionMenu.addAction(cancelAction)
+        
+        self.presentViewController(optionMenu, animated: true, completion: nil)
     }
+    
 }
 
 // MARK: - DescTextPlaceHolder
