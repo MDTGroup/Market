@@ -40,15 +40,16 @@ extension Double {
         let formatter = NSNumberFormatter()
         formatter.minimumIntegerDigits = 3
         
-        var remain = Int(self)
-        var formattedMoney = formatter.stringFromNumber(remain % 1000)!
-        remain /= 1000
+        // For iP5 and before (32bit) use Int will crash
+        var remain = self
+        var formattedMoney = formatter.stringFromNumber(Int(remain % 1000))!
+        remain = floor(remain / 1000)
         while remain > 1000 {
-            formattedMoney = formatter.stringFromNumber(remain % 1000)! + "." + formattedMoney
-            remain /= 1000
+            formattedMoney = formatter.stringFromNumber(Int(remain % 1000))! + "." + formattedMoney
+            remain = floor(remain / 1000)
         }
         if remain > 0 {
-            formattedMoney = "\(remain)." + formattedMoney
+            formattedMoney = "\(Int(remain))." + formattedMoney
         }
         return formattedMoney + " VND"
     }

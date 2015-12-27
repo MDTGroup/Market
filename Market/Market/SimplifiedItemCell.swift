@@ -49,7 +49,7 @@ class SimplifiedItemCell: SWTableViewCell {
             } else {
                 priceLabel.text = post.price.formatVND()
                 priceLabel.backgroundColor = UIColor.whiteColor()
-                priceLabel.textColor = UIColor.blackColor()
+                priceLabel.textColor = MyColors.green
             }
         }
     }

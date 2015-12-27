@@ -364,6 +364,9 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         view.endEditing(true)
+        
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! SimplifiedItemCell
+        cell.hideUtilityButtonsAnimated(true)
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -562,6 +565,7 @@ extension UserTimelineViewController: SWTableViewCellDelegate {
                 Post.sold(post.objectId!, isSold: true, completion: { (finished, error) -> Void in
                     if finished {
                         newCell.priceLabel.text = "SOLD"
+                        newCell.priceLabel.textColor = UIColor.whiteColor()
                         newCell.priceLabel.backgroundColor = MyColors.carrot
                         
                         // Change button to "AVAIL"
@@ -577,8 +581,9 @@ extension UserTimelineViewController: SWTableViewCellDelegate {
             } else {
                 Post.sold(post.objectId!, isSold: false, completion: { (finished, error) -> Void in
                     if finished {
-                        newCell.priceLabel.text = self.posts[id!.row].price.formatCurrency()
-                        newCell.priceLabel.backgroundColor = MyColors.bluesky
+                        newCell.priceLabel.text = self.posts[id!.row].price.formatVND()
+                        newCell.priceLabel.textColor = MyColors.green
+                        newCell.priceLabel.backgroundColor = UIColor.whiteColor()
                         
                         // Change button to "Sold"
                         let leftUtilityButtons = NSMutableArray()
