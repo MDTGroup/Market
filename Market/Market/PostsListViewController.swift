@@ -126,6 +126,9 @@ class PostsListViewController: UIViewController {
         } else if let chatVC = segue.destinationViewController as? ParentChatViewController {
             if let conversation = sender as?  Conversation {
                 chatVC.conversation = conversation
+                if let toUser = conversation.toUser {
+                    chatVC.title = toUser.fullName
+                }
             }
         }
     }

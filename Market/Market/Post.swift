@@ -239,18 +239,16 @@ extension Post {
 extension Post {
     func savedPostCurrentUser(callback:PFBooleanResultBlock) {
         if let currentUser = User.currentUser() {
-            if let sp = currentUser.savedPosts {
-                let query = sp.query()
-                query.whereKey("objectId", equalTo: objectId!)
-                query.countObjectsInBackgroundWithBlock({ (numResult, error) -> Void in
-                    guard error == nil else {
-                        print(error)
-                        callback(false, error)
-                        return
-                    }
-                    callback(numResult > 0, nil)
-                })
-            }
+            let query = currentUser.savedPosts.query()
+            query.whereKey("objectId", equalTo: objectId!)
+            query.countObjectsInBackgroundWithBlock({ (numResult, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    callback(false, error)
+                    return
+                }
+                callback(numResult > 0, nil)
+            })
         }
     }
     
