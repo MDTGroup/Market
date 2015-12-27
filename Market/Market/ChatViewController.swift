@@ -67,28 +67,64 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     }
     
     override func didPressSendButton(button: UIButton!, withMessageText text: String!, senderId: String!, senderDisplayName: String!, date: NSDate!) {
-        sendMessage(text, video: nil, photo: nil)
+        sendMessage(text, video: nil, photo: nil, location: nil)
     }
     
     override func didPressAccessoryButton(sender: UIButton!) {
         view.endEditing(true)
         
         let alertVC = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        
+        if let currentUser = User.currentUser() {
+            if let address = currentUser.address where !address.isEmpty {
+                let shareAddressAction = UIAlertAction(title: "Share address", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
+                    self.sendMessage(address, video: nil, photo: nil, location: nil)
+                }
+                alertVC.addAction(shareAddressAction)
+            }
+            
+            if let phoneNumber = currentUser.phone where !phoneNumber.isEmpty {
+                let shareAddressAction = UIAlertAction(title: "Share phone number", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
+                    self.sendMessage(phoneNumber, video: nil, photo: nil, location: nil)
+                }
+                alertVC.addAction(shareAddressAction)
+            }
+        }
+
+        let shareCurrentLocation = UIAlertAction(title: "Share current location", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
+            PFGeoPoint.geoPointForCurrentLocationInBackground({ (currentGeoPoint, error) -> Void in
+                guard error == nil else {
+                    if let message = error?.userInfo["error"] as? String {
+                        AlertControl.show(self, title: "Share current location", message: message, handler: nil)
+                    }
+                    print(error)
+                    return
+                }
+                if  let currentGeoPoint = currentGeoPoint {
+                    self.sendMessage("", video: nil, photo: nil, location: currentGeoPoint)
+                }
+            })
+        }
+        alertVC.addAction(shareCurrentLocation)
+        
         let takePhotoAction = UIAlertAction(title: "Take photo", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
             Camera.shouldStartCamera(self, canEdit: true, frontFacing: false)
         }
+        alertVC.addAction(takePhotoAction)
+        
         let choosePhotoAction = UIAlertAction(title: "Choose photo", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
             Camera.shouldStartPhotoLibrary(self, canEdit: true)
         }
+        alertVC.addAction(choosePhotoAction)
+        
         let chooseVideoAction = UIAlertAction(title: "Choose video", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
             Camera.shouldStartVideoLibrary(self, canEdit: true)
         }
+        alertVC.addAction(chooseVideoAction)
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { (alertAction) -> Void in
             alertVC.dismissViewControllerAnimated(true, completion: nil)
         }
-        alertVC.addAction(takePhotoAction)
-        alertVC.addAction(choosePhotoAction)
-        alertVC.addAction(chooseVideoAction)
         alertVC.addAction(cancelAction)
         presentViewController(alertVC, animated: true, completion: nil)
     }
@@ -356,33 +392,34 @@ extension ChatViewController {
         self.messages.appendContentsOf(jsqMessages)
     }
     
-    func sendMessage(text: String, video: NSURL?, photo: UIImage?) {
+    func sendMessage(text: String, video: NSURL?, photo: UIImage?, location: PFGeoPoint?) {
         var message = text
         var videoFile: PFFile?
         var photoFile: PFFile?
-        var location: PFGeoPoint?
         
         if let video = video {
-            message = "sent a video"
+            message = "sent a video."
             videoFile = PFFile(name: "video.mp4", data: NSFileManager.defaultManager().contentsAtPath(video.path!)!)
-            videoFile?.saveInBackgroundWithBlock({ (success, error) -> Void in
-                if error != nil {
-                    print(error)
-                }
-            })
+//            videoFile?.saveInBackgroundWithBlock({ (success, error) -> Void in
+//                if error != nil {
+//                    print(error)
+//                }
+//            })
         }
         
         if let photo = photo {
-            message = "sent a photo"
+            message = "sent a photo."
             photoFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(photo, 0.4)!)
-            photoFile?.saveInBackgroundWithBlock({ (success, error) -> Void in
-                if error != nil {
-                    print(error)
-                }
-            })
+//            photoFile?.saveInBackgroundWithBlock({ (success, error) -> Void in
+//                if error != nil {
+//                    print(error)
+//                }
+//            })
         }
         
-//        location = PFGeoPoint(latitude: 10.7500, longitude: 106.6667)
+        if location != nil {
+            message = "send their location."
+        }
         
         conversation.addMessage(User.currentUser()!, text: message, videoFile: videoFile, photoFile: photoFile, location: location) { (success, error) -> Void in
             guard error == nil else {
@@ -399,9 +436,13 @@ extension ChatViewController {
 extension ChatViewController: UIImagePickerControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         let video = info[UIImagePickerControllerMediaURL] as? NSURL
-        let photo = info[UIImagePickerControllerEditedImage] as? UIImage
-
-        self.sendMessage("", video: video, photo: photo)
+        
+        var photoAfterCompress: UIImage?
+        if let photo = info[UIImagePickerControllerEditedImage] as? UIImage {
+            let newWidth = photo.size.width > 400 ? 400 : photo.size.width
+            photoAfterCompress = Helper.resizeImage(photo, newWidth: newWidth)
+        }
+        self.sendMessage("", video: video, photo: photoAfterCompress, location: nil)
 
         picker.dismissViewControllerAnimated(true, completion: nil)
     }

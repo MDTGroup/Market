@@ -124,6 +124,7 @@ class ProfileViewController: UIViewController {
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         self.view.endEditing(true)
                         AlertControl.show(self, title: "Update profile", message: "Update profile successfully!", handler: nil)
+                        currentUser.fetchIfNeededInBackground()
                     })
                 })
             }
