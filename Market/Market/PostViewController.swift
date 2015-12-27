@@ -430,6 +430,18 @@ class PostViewController: UIViewController {
         return post
     }
     
+    func resetPostPage() {
+        initImageFrame(imageView1)
+        initImageFrame(imageView2)
+        initImageFrame(imageView3)
+        priceLabel.text = ""
+        descriptionText.text = ""
+        titleLabel.text = ""
+        progressBar.setProgress(0, animated: false)
+        progressBar.hidden = true
+        quickPostButton.hidden = true
+    }
+    
     func newPost() {
         if let post = preparePost() {
             showProgressBar()
@@ -440,6 +452,7 @@ class PostViewController: UIViewController {
             post.vote = Vote()
             post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
                 print(post)
+                // Clear the page
                 self.delegate?.postViewController?(self, didUploadNewPost: post)
                 self.tabBarController!.selectedIndex = 0
                 

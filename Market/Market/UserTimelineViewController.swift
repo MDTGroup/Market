@@ -12,6 +12,7 @@ import SWTableViewCell
 
 class UserTimelineViewController: UIViewController {
     
+    let postLimit = 12
     var user: User!
     var posts = [Post]()
     var queryArray = [User]()
@@ -210,7 +211,7 @@ extension UserTimelineViewController {
         if dataToLoad == 0 {
             user.getPosts(byThisDate, callback: { (posts, error) -> Void in
                 if let posts = posts {
-                    if posts.count == 0 {
+                    if posts.count < self.postLimit {
                         self.isEndOfFeed = true
                     }
                     
@@ -235,7 +236,7 @@ extension UserTimelineViewController {
             print("loading user's saved posts")
             user.getSavedPosts(byThisDate, callback: { (posts, error) -> Void in
                 if let posts = posts {
-                    if posts.count == 0 {
+                    if posts.count < self.postLimit {
                         self.isEndOfFeed = true
                     }
                     
