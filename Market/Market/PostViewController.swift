@@ -433,6 +433,9 @@ class PostViewController: UIViewController {
                 self.okImageView.transform = CGAffineTransformMakeScale(0.01, 0.01)
                 
                 UIView.animateWithDuration(0.3, animations: { () -> Void in
+                    // MARK: Send Notifications
+                    self.sendNotificationForNewPost(post)
+
                     self.okImageView.transform = CGAffineTransformMakeScale(1, 1)
                     self.okImageView.alpha = 1
                     }, completion: { (finished) -> Void in
@@ -456,16 +459,48 @@ class PostViewController: UIViewController {
             post.fetchInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
                 print(fetchedPFObj)
                 if let fetchedPost = fetchedPFObj as? Post {
-                    fetchedPost.title = newPost.title
-                    fetchedPost.descriptionText = newPost.descriptionText
-                    fetchedPost.price = newPost.price
-                    fetchedPost.condition = newPost.condition
+                    
+                    var changeDescription = ""
+                    if fetchedPost.title != newPost.title {
+                        fetchedPost.title = newPost.title
+                        changeDescription += "title"
+                    }
+                    
+                    if fetchedPost.descriptionText != newPost.descriptionText {
+                        fetchedPost.descriptionText = newPost.descriptionText
+                        changeDescription += "description"
+                    }
+                    
+                    if fetchedPost.price != newPost.price {
+                        fetchedPost.price = newPost.price
+                        changeDescription += "price"
+                    }
+                    
+                    if fetchedPost.condition != newPost.condition {
+                        fetchedPost.condition = newPost.condition
+                        changeDescription += "condition"
+                    }
+                    
+                    if fetchedPost.sold != newPost.sold {
+                        fetchedPost.sold = newPost.sold
+                        changeDescription += "sold"
+                    }
+                    
+                    if fetchedPost.location != newPost.location {
+                        fetchedPost.location = newPost.location
+                        changeDescription += "location"
+                    }
+                    
                     if self.isMediaChanged {
                         fetchedPost.medias = newPost.medias
+                        changeDescription += "media"
                     }
-                    fetchedPost.sold = newPost.sold
                     
                     fetchedPost.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
+                        
+                        // MARK: Send Notifications
+                        self.sendNotificationForUpdatedPost(post, changeDescription: changeDescription)
+                        
                         self.okImageView.transform = CGAffineTransformMakeScale(0.01, 0.01)
                         
                         UIView.animateWithDuration(0.3, animations: { () -> Void in
@@ -533,6 +568,40 @@ class PostViewController: UIViewController {
         }
     }
     
+    func sendNotificationForNewPost(post: Post) {
+        var params = [String : AnyObject]()
+        params["postId"] = post.objectId!
+        Notification.sendNotifications(NotificationType.Following, params: params, callback: { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        })
+        params["postId"] = post.objectId!
+        params["title"] = post.title
+        params["description"] = post.descriptionText
+        Notification.sendNotifications(NotificationType.Keywords, params: params) { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        }
+    }
+    
+    func sendNotificationForUpdatedPost(post: Post, changeDescription: String) {
+        if changeDescription.isEmpty {
+            return
+        }
+        var params = [String : AnyObject]()
+        params["postId"] = post.objectId!
+        params["extraInfo"] = changeDescription
+        Notification.sendNotifications(NotificationType.SavedPost, params: params, callback: { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        })
+    }
 }
 
 // MARK: - Image Picker

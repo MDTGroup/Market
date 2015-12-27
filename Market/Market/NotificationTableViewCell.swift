@@ -46,7 +46,7 @@ class NotificationTableViewCell: UITableViewCell {
                 typeBackgroundView.backgroundColor = MyColors.greenOfRetweetCount
                 typeLabel.text = "Updated"
             case 2:
-                typeBackgroundView.backgroundColor = MyColors.redOfFavCount
+                typeBackgroundView.backgroundColor = MyColors.purple
                 typeLabel.text = "Following"
             case 3:
                 typeBackgroundView.backgroundColor = MyColors.bluesky
