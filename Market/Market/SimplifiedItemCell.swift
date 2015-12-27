@@ -18,18 +18,19 @@ class SimplifiedItemCell: SWTableViewCell {
     @IBOutlet weak var newTagImageView: UIImageView!
     @IBOutlet weak var avatarImageView: UIImageView!
     @IBOutlet weak var sellerLabel: UILabel!
+    @IBOutlet weak var soldView: UIView!
+    
+    var profileId: String?
     
     var item: Post! {
         didSet {
             let post = item
             sellerLabel.text = post.user.fullName
             if let avatar = post.user.avatar {
-                avatarImageView.alpha = 0.0
                 avatarImageView.image = nil
-                UIView.animateWithDuration(0.3, animations: {
-                    self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
-                    self.avatarImageView.alpha = 1.0
-                })
+                avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+            } else {
+                avatarImageView.image = UIImage(named: "profile_blank")
             }
             if post.medias.count > 0 {
                 itemImageView.alpha = 0.0
@@ -42,14 +43,14 @@ class SimplifiedItemCell: SWTableViewCell {
             postAtLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
             newTagImageView.hidden = (post.condition > 0)
             
-            if post.sold {
-                priceLabel.text = "SOLD"
-                priceLabel.backgroundColor = MyColors.carrot
-                priceLabel.textColor = UIColor.whiteColor()
+            soldView.hidden = !post.sold
+            
+            if let profileId = profileId where profileId == post.user.objectId {
+                avatarImageView.hidden =  true
+                sellerLabel.hidden = true
             } else {
-                priceLabel.text = post.price.formatVND()
-                priceLabel.backgroundColor = UIColor.whiteColor()
-                priceLabel.textColor = MyColors.green
+                avatarImageView.hidden =  false
+                sellerLabel.hidden = false
             }
         }
     }
@@ -59,8 +60,8 @@ class SimplifiedItemCell: SWTableViewCell {
         // Initialization code
         itemImageView.layer.cornerRadius = 5
         itemImageView.clipsToBounds = true
-        priceLabel.layer.cornerRadius = 5
-        priceLabel.clipsToBounds = true
+        soldView.layer.cornerRadius = 5
+        soldView.clipsToBounds = true
         avatarImageView.layer.cornerRadius = 10
         avatarImageView.clipsToBounds = true
     }

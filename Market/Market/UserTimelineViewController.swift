@@ -56,7 +56,7 @@ class UserTimelineViewController: UIViewController {
         tableView.delegate = self
         
         // Refresh control
-        refreshControl.addTarget(self, action: Selector("refreshData"), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: Selector("pullToRefresh"), forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshControl)
         
         // Add the activity Indicator for table footer for infinity load
@@ -137,7 +137,7 @@ class UserTimelineViewController: UIViewController {
         UIView.animateWithDuration(0.3, animations: { () -> Void in
             self.view.layoutIfNeeded()
         })
-        refreshData()
+        refreshData(false)
     }
     
     @IBAction func onKeywordAdd(sender: UIButton) {
@@ -177,13 +177,22 @@ class UserTimelineViewController: UIViewController {
 
 // MARK: - Data fetching
 extension UserTimelineViewController {
-    func refreshData() {
+    
+    func pullToRefresh() {
+        refreshData(true)
+    }
+    
+    func refreshData(isPullToRefresh: Bool) {
         switch dataToLoad {
         case 0, 1:
-            MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
+            if !isPullToRefresh {
+                MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
+            }
             loadNewestData()
         case 2:
-            MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
+            if !isPullToRefresh {
+                MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
+            }
             loadFollowing()
         case 3:
             refreshControl.endRefreshing()
@@ -384,6 +393,11 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 print("the myth")
                 return cell
             }
+            if let user = user where dataToLoad == 0 {
+                cell.profileId = user.objectId
+            } else {
+                cell.profileId = nil
+            }
             cell.item = posts[indexPath.row]
             
             if dataToLoad == 0 {
@@ -394,10 +408,12 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 //rightUtilityButtons.sw_addUtilityButtonWithColor(MyColors.bluesky, icon: UIImage(named: "edit25"))
                 //rightUtilityButtons.sw_addUtilityButtonWithColor(MyColors.carrot, icon: UIImage(named: "trash25"))
                 
-                if cell.item.sold {
-                    leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.green, title: "Avail")
-                } else {
-                    leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.yellow, title: "Sold")
+                if user.objectId == User.currentUser()?.objectId {
+                    if cell.item.sold {
+                        leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.green, title: "Avail")
+                    } else {
+                        leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.yellow, title: "Sold")
+                    }
                 }
                 
                 cell.leftUtilityButtons = leftUtilityButtons as [AnyObject]
