@@ -589,7 +589,7 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
         if pickVideo {
             imagePicker.mediaTypes = [kUTTypeMovie as String]
         } else {
-            imagePicker.mediaTypes = [kUTTypeMovie as String]
+            imagePicker.mediaTypes = [kUTTypeImage as String]
         }
         
         self.presentViewController(imagePicker, animated: true, completion: nil)
