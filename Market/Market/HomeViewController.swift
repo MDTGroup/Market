@@ -23,7 +23,7 @@ class HomeViewController: UIViewController {
     var selectedPostIndex: Int!
     
     var posts = [Post]()
-    var loadDataBy = NewsfeedType.Newest
+    var loadDataBy = NewsfeedType.Following
     
     static let storyboard = UIStoryboard(name: "Home", bundle: nil)
     
@@ -39,19 +39,17 @@ class HomeViewController: UIViewController {
         
         tableView.dataSource = self
         tableView.delegate = self
-        //tableView.rowHeight = UITableViewAutomaticDimension
-        //tableView.estimatedRowHeight = 200
         
         // Refresh control
         refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
-        tableView.addSubview(refreshControl)
+        tableView.insertSubview(refreshControl, atIndex: 0)
         
         // Add the activity Indicator for table footer for infinity load
         let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
-        loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
+        loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         loadingView.center = tableFooterView.center
         loadingView.hidesWhenStopped = true
-        tableFooterView.addSubview(loadingView)
+        tableFooterView.insertSubview(loadingView, atIndex: 0)
         // Initialize the noMoreResult
         noMoreResultLabel.frame = tableFooterView.frame
         noMoreResultLabel.text = "No more result"
@@ -59,7 +57,7 @@ class HomeViewController: UIViewController {
         noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
         noMoreResultLabel.textColor = UIColor.grayColor()
         noMoreResultLabel.hidden = true
-        tableFooterView.addSubview(noMoreResultLabel)
+        tableFooterView.insertSubview(noMoreResultLabel, atIndex: 0)
         tableView.tableFooterView = tableFooterView
         
         let navController = tabBarController?.viewControllers![2] as! UINavigationController
@@ -143,10 +141,14 @@ class HomeViewController: UIViewController {
         MBProgressHUD.hideHUDForView(self.tableView, animated: true)
         isEndOfFeed = false
         switch sender.selectedSegmentIndex {
-        case 0: loadDataBy = NewsfeedType.Newest
-        case 1: loadDataBy = NewsfeedType.Following
-        case 2: loadDataBy = NewsfeedType.UsersVote
-        default: loadDataBy = NewsfeedType.Newest
+        case 0:
+            loadDataBy = NewsfeedType.Newest
+        case 1:
+            loadDataBy = NewsfeedType.Following
+        case 2:
+            loadDataBy = NewsfeedType.UsersVote
+        default:
+            loadDataBy = NewsfeedType.Newest
         }
         loadNewestData()
     }
@@ -170,13 +172,6 @@ class HomeViewController: UIViewController {
     
 }
 
-extension NSDate {
-    func dayBefore(nDays: Int) -> NSDate {
-        let oneDay:Double = 60 * 60 * 24
-        return self.dateByAddingTimeInterval(-oneDay * Double(nDays))
-    }
-}
-
 extension HomeViewController: DetailViewControllerDelegate {
     func detailViewController(detailViewController: DetailViewController, newPost: Post) {
         print("Newfeeds got signal from detail page")
@@ -188,35 +183,23 @@ extension HomeViewController: DetailViewControllerDelegate {
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCellDelegate {
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    //    func tableView(tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-    //        return 8.0
-    //    }
-    
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        //let cell = tableView.dequeueReusableCellWithIdentifier("itemCell", forIndexPath: indexPath) as! ItemCell
-        
-        let cell = tableView.dequeueReusableCellWithIdentifier("itemCell") as! ItemCell
-        
-        // Dont know why but sometime it jumps to here
-        // before data is reloaded (posts.count = 0) but indexPath.section = 4
         if posts.count == 0 {
-            print("the myth")
-            return cell
+            return UITableViewCell()
         }
-        cell.item = posts[indexPath.section]
+        let cell = tableView.dequeueReusableCellWithIdentifier("itemCell") as! ItemCell
+
+        cell.item = posts[indexPath.row]
         cell.delegate = self
         
         // Infinite load if about to reach last cell
         if !isLoadingNextPage && !isEndOfFeed {
-            if indexPath.section >= posts.count - 2 {
+            if indexPath.row >= posts.count - 2 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
                 loadDataSince(posts[posts.count-1].updatedAt!)
@@ -229,14 +212,14 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     func itemCell(itemCell: ItemCell, didChangeSave value: Bool) {
         let indexPath = tableView.indexPathForCell(itemCell)!
         print("Newfeeds: save changed to \(value)")
-        posts[indexPath.section].iSaveIt = value
+        posts[indexPath.row].iSaveIt = value
     }
     
     func itemCell(itemCell: ItemCell, didChangeVote value: Bool, voteCount: Int) {
         let indexPath = tableView.indexPathForCell(itemCell)!
         print("Newfeeds: vote changed to \(value)")
-        posts[indexPath.section].iVoteIt = value
-        posts[indexPath.section].voteCounter = voteCount
+        posts[indexPath.row].iVoteIt = value
+        posts[indexPath.row].voteCounter = voteCount
     }
     
     func itemCell(itemCell: ItemCell, tapOnProfile value: Bool) {
@@ -250,8 +233,8 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        selectedPostIndex = indexPath.section
-        let item = posts[indexPath.section]
+        selectedPostIndex = indexPath.row
+        let item = posts[indexPath.row]
         performSegueWithIdentifier("detailSegue", sender: item)
     }
     

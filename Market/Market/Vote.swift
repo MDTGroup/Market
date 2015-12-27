@@ -11,9 +11,7 @@ import Parse
 class Vote: PFObject, PFSubclassing {
     
     @NSManaged var voteCounter: Int
-    var voteUsers: PFRelation! {
-        return relationForKey("voteUsers")
-    }
+    @NSManaged var voteUsers: PFRelation
     
     static func parseClassName() -> String {
         return "Votes"

@@ -19,9 +19,7 @@ class Conversation: PFObject, PFSubclassing {
     @NSManaged var readUsers: [String]
     @NSManaged var post: Post
     @NSManaged var lastMessage: Message?
-    var messages: PFRelation! {
-        return relationForKey("messages")
-    }
+    @NSManaged var messages: PFRelation
     
     var toUser: User?
     

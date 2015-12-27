@@ -20,12 +20,8 @@ class Notification: PFObject, PFSubclassing {
     @NSManaged var fromUser: User
     @NSManaged var type: Int
     @NSManaged var extraInfo: String
-    var toUsers: PFRelation! {
-        return relationForKey("toUsers")
-    }
-    var readUsers: PFRelation! {
-        return relationForKey("readUsers")
-    }
+    @NSManaged var toUsers: PFRelation
+    @NSManaged var readUsers: PFRelation
     
     var isRead = false
     

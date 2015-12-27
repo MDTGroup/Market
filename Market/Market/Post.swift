@@ -254,18 +254,16 @@ extension Post {
     
     func votedPostCurrentUser(callback:PFBooleanResultBlock) {
         if let currentUser = User.currentUser() {
-            if let vp = currentUser.votedPosts {
-                let query = vp.query()
-                query.whereKey("objectId", equalTo: objectId!)
-                query.countObjectsInBackgroundWithBlock({ (numResult, error) -> Void in
-                    guard error == nil else {
-                        print(error)
-                        callback(false, error)
-                        return
-                    }
-                    callback(numResult > 0, nil)
-                })
-            }
+            let query = currentUser.votedPosts.query()
+            query.whereKey("objectId", equalTo: objectId!)
+            query.countObjectsInBackgroundWithBlock({ (numResult, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    callback(false, error)
+                    return
+                }
+                callback(numResult > 0, nil)
+            })
         }
     }
 }

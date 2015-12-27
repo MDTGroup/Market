@@ -48,6 +48,7 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var voteLabel: UILabel!
     @IBOutlet var panGesture: UIPanGestureRecognizer!
     @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
+    @IBOutlet weak var titleView: UIView!
     
     var post: Post!
     var isReadingFullDescription: Bool!
@@ -76,6 +77,9 @@ class DetailViewController: UIViewController {
         descriptionText.text = post.descriptionText
         descriptionText.selectable = false
         priceLabel.text = post.price.formatVND()
+        
+        let titleTapGesture = UITapGestureRecognizer(target: self, action: "onTapTitle:")
+        titleView.addGestureRecognizer(titleTapGesture)
         
         let formatter = NSDateFormatter()
         formatter.timeStyle = NSDateFormatterStyle.ShortStyle
@@ -115,6 +119,12 @@ class DetailViewController: UIViewController {
         avatarImageView.clipsToBounds = true
         closeButton.layer.cornerRadius = 12
         closeButton.clipsToBounds = true
+        
+        let avatarTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
+        let sellerTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
+        avatarImageView.addGestureRecognizer(avatarTapGesture)
+        sellerLabel.addGestureRecognizer(sellerTapGesture)
+
         
         // Exclude the thumbnail
         nImages = post.medias.count / 2
@@ -204,6 +214,19 @@ class DetailViewController: UIViewController {
         //    } else {
         //      showNoNetwork(visiblePosition)
         //    }
+    }
+    
+    func onTapTitle(gesture: UITapGestureRecognizer) {
+        onCancel(nil)
+        
+    }
+    
+    func tapOnProfile(gesture: UITapGestureRecognizer) {
+        if let currentUser = User.currentUser() where currentUser.objectId != post.user.objectId {
+            let profileVC = UserTimelineViewController.instantiateViewController
+            profileVC.user = post.user
+            presentViewController(profileVC, animated: true, completion: nil)
+        }
     }
     
     func addPlayButton() {
@@ -410,7 +433,7 @@ class DetailViewController: UIViewController {
         }
     }
     
-    @IBAction func onCancel(sender: UIButton) {
+    @IBAction func onCancel(sender: UIButton?) {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
