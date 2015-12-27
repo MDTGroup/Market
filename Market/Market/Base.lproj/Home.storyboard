@@ -321,14 +321,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2it-Cy-Gzl">
-                                <rect key="frame" x="289" y="243" width="74" height="30"/>
+                                <rect key="frame" x="0.0" y="0.0" width="70" height="30"/>
                                 <state key="normal" title="Save draft"/>
                             </button>
                             <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" misplaced="YES" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="0WO-P0-b87">
-                                <rect key="frame" x="60" y="613" width="254" height="8"/>
+                                <rect key="frame" x="56" y="613" width="263" height="8"/>
                                 <color key="tintColor" red="0.19215686274509802" green="0.6470588235294118" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="8" id="9xZ-gX-pSj"/>
+                                    <constraint firstAttribute="height" constant="8" id="NAw-zV-iLx"/>
                                 </constraints>
                             </progressView>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ok" translatesAutoresizingMaskIntoConstraints="NO" id="oL6-CG-r7o">
@@ -369,9 +369,9 @@
                             <constraint firstItem="q6d-kV-Gly" firstAttribute="trailing" secondItem="QL4-ep-Xye" secondAttribute="trailing" id="78w-vz-10b"/>
                             <constraint firstItem="2k0-O0-UtR" firstAttribute="centerX" secondItem="woC-3L-CrH" secondAttribute="centerX" id="8BH-xH-9lC"/>
                             <constraint firstItem="EkA-e2-m5n" firstAttribute="leading" secondItem="2k0-O0-UtR" secondAttribute="leading" id="8Yj-mH-X27"/>
-                            <constraint firstItem="2zF-Yx-PlX" firstAttribute="top" secondItem="0WO-P0-b87" secondAttribute="bottom" constant="46" id="EJ5-eu-PH5"/>
                             <constraint firstItem="nsk-ie-2qk" firstAttribute="trailing" secondItem="QL4-ep-Xye" secondAttribute="trailing" constant="5" id="Fhu-IW-KlA"/>
                             <constraint firstItem="2k0-O0-UtR" firstAttribute="top" secondItem="VqO-L7-xDr" secondAttribute="top" id="FpM-98-KRS"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="0WO-P0-b87" secondAttribute="trailing" constant="40" id="IQ9-l8-MRa"/>
                             <constraint firstItem="EkA-e2-m5n" firstAttribute="trailing" secondItem="QL4-ep-Xye" secondAttribute="trailing" id="Jhv-ka-MKo"/>
                             <constraint firstItem="dNx-Bd-FFR" firstAttribute="top" secondItem="TKx-BP-wEx" secondAttribute="top" constant="-8" id="LlV-aN-Ckc"/>
                             <constraint firstItem="K9b-La-vnz" firstAttribute="top" secondItem="VqO-L7-xDr" secondAttribute="bottom" constant="15" id="LqT-Ap-8gn"/>
@@ -383,6 +383,7 @@
                             <constraint firstItem="FBh-Qv-exP" firstAttribute="leading" secondItem="VqO-L7-xDr" secondAttribute="leading" constant="3" id="T52-fh-cn7"/>
                             <constraint firstItem="nsk-ie-2qk" firstAttribute="top" secondItem="QL4-ep-Xye" secondAttribute="top" constant="-5" id="Tik-v5-F9M"/>
                             <constraint firstItem="xcB-kb-mbO" firstAttribute="trailing" secondItem="2k0-O0-UtR" secondAttribute="trailing" constant="5" id="UuJ-ZI-bsM"/>
+                            <constraint firstItem="0WO-P0-b87" firstAttribute="leading" secondItem="woC-3L-CrH" secondAttribute="leadingMargin" constant="40" id="Vjd-30-GXC"/>
                             <constraint firstItem="dNx-Bd-FFR" firstAttribute="top" secondItem="q6d-kV-Gly" secondAttribute="bottom" constant="8" id="VnT-Zd-iy8"/>
                             <constraint firstItem="K9b-La-vnz" firstAttribute="width" secondItem="VqO-L7-xDr" secondAttribute="width" id="Wc9-Pm-xZV"/>
                             <constraint firstItem="2k0-O0-UtR" firstAttribute="width" secondItem="VqO-L7-xDr" secondAttribute="width" id="Wfl-KB-2sK"/>
@@ -391,18 +392,17 @@
                             <constraint firstItem="q6d-kV-Gly" firstAttribute="leading" secondItem="VqO-L7-xDr" secondAttribute="leading" id="b6c-Ya-kWF"/>
                             <constraint firstItem="VqO-L7-xDr" firstAttribute="top" secondItem="Udj-DA-9u2" secondAttribute="bottom" constant="15" id="cC9-Wy-lQv"/>
                             <constraint firstItem="2k0-O0-UtR" firstAttribute="height" secondItem="VqO-L7-xDr" secondAttribute="height" id="fib-gA-Jct"/>
-                            <constraint firstItem="0WO-P0-b87" firstAttribute="leading" secondItem="woC-3L-CrH" secondAttribute="leading" constant="60" id="gKg-ug-UKP"/>
                             <constraint firstItem="dNx-Bd-FFR" firstAttribute="leading" secondItem="TKx-BP-wEx" secondAttribute="leading" constant="-8" id="gbc-by-a0i"/>
                             <constraint firstItem="6FM-EI-36r" firstAttribute="trailing" secondItem="VqO-L7-xDr" secondAttribute="trailing" constant="5" id="gtI-OA-67S"/>
                             <constraint firstItem="EkA-e2-m5n" firstAttribute="bottom" secondItem="K9b-La-vnz" secondAttribute="bottom" id="iBe-zs-gKB"/>
                             <constraint firstItem="K9b-La-vnz" firstAttribute="height" secondItem="EkA-e2-m5n" secondAttribute="height" id="j0K-AY-ICC"/>
-                            <constraint firstItem="0WO-P0-b87" firstAttribute="centerX" secondItem="woC-3L-CrH" secondAttribute="centerX" id="jWZ-O5-D1A"/>
                             <constraint firstItem="dNx-Bd-FFR" firstAttribute="trailing" secondItem="q6d-kV-Gly" secondAttribute="trailing" id="jeK-rk-NGV"/>
                             <constraint firstItem="ZxJ-RA-Gs1" firstAttribute="bottom" secondItem="2k0-O0-UtR" secondAttribute="bottom" id="kfr-8q-mg9"/>
                             <constraint firstItem="6FM-EI-36r" firstAttribute="top" secondItem="VqO-L7-xDr" secondAttribute="top" constant="-5" id="nce-SJ-Ud9"/>
                             <constraint firstItem="iVx-Am-5tb" firstAttribute="bottom" secondItem="QL4-ep-Xye" secondAttribute="bottom" id="q3P-w0-F99"/>
                             <constraint firstItem="K9b-La-vnz" firstAttribute="leading" secondItem="VqO-L7-xDr" secondAttribute="leading" id="rSV-VM-gZ5"/>
                             <constraint firstItem="iVx-Am-5tb" firstAttribute="leading" secondItem="QL4-ep-Xye" secondAttribute="leading" constant="3" id="y6r-y4-5wg"/>
+                            <constraint firstItem="2zF-Yx-PlX" firstAttribute="top" secondItem="0WO-P0-b87" secondAttribute="bottom" constant="46" id="yaK-Hl-ej4"/>
                             <constraint firstAttribute="trailing" secondItem="oL6-CG-r7o" secondAttribute="trailing" constant="25" id="z4d-BG-YFf"/>
                         </constraints>
                     </view>
@@ -433,7 +433,6 @@
                         <outlet property="okImageView" destination="oL6-CG-r7o" id="cue-eG-fKR"/>
                         <outlet property="priceLabel" destination="K9b-La-vnz" id="hVf-sG-rbC"/>
                         <outlet property="progressBar" destination="0WO-P0-b87" id="Hj2-2v-ufc"/>
-                        <outlet property="progressBarLeft" destination="gKg-ug-UKP" id="fcJ-Xb-3BK"/>
                         <outlet property="removeButton1" destination="6FM-EI-36r" id="Dhd-wH-Qhi"/>
                         <outlet property="removeButton2" destination="xcB-kb-mbO" id="obB-6G-HUc"/>
                         <outlet property="removeButton3" destination="nsk-ie-2qk" id="nE4-lR-Nrh"/>
@@ -1128,11 +1127,12 @@
                                                     </constraints>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zb3-iJ-LcO">
-                                                    <rect key="frame" x="303" y="14" width="57" height="29"/>
-                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                                    <rect key="frame" x="276" y="14" width="84" height="29"/>
+                                                    <color key="backgroundColor" red="0.19215686269999999" green="0.64705882349999999" blue="0.52549019610000003" alpha="1" colorSpace="calibratedRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <state key="normal" title="Unfollow">
-                                                        <color key="titleColor" red="0.19215686269999999" green="0.64705882349999999" blue="0.52549019610000003" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <inset key="contentEdgeInsets" minX="10" minY="6" maxX="10" maxY="6"/>
+                                                    <state key="normal" title=" Unfollow ">
+                                                        <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <connections>
                                                         <action selector="onUnFollowingTap:" destination="BtC-2Z-w5E" eventType="touchUpInside" id="vNb-qB-I4f"/>

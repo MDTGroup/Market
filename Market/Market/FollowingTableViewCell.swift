@@ -19,6 +19,11 @@ class FollowingTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         imgField.layer.cornerRadius = imgField.frame.size.width/2
         imgField.clipsToBounds = true
+        
+        unfollowingButton.layer.cornerRadius = 8
+        unfollowingButton.layer.masksToBounds = true
+        unfollowingButton.layer.borderWidth = 1
+        unfollowingButton.layer.borderColor = MyColors.green.CGColor
     }
     
     @IBAction func onUnFollowingTap(sender: AnyObject) {
