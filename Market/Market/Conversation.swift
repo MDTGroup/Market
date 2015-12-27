@@ -73,6 +73,7 @@ class Conversation: PFObject, PFSubclassing {
             query.whereKey("createdAt", lessThan: createdAt)
         }
         query.orderByDescending("createdAt")
+        query.cachePolicy = .NetworkElseCache
         query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
             guard error == nil else {
                 callback(messages: nil, error: error)
@@ -159,8 +160,13 @@ class Conversation: PFObject, PFSubclassing {
         }
     }
     
-    static func getConversations(lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
+    static func getConversations(forNetworkOnly: Bool, lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
         if let query = Conversation.query(), currentUser = User.currentUser() {
+            var cachePolicy = PFCachePolicy.CacheElseNetwork
+            if forNetworkOnly {
+                cachePolicy = .NetworkOnly
+            }
+            
             query.selectKeys(["post", "userIds", "readUsers", "lastMessage"])
             query.includeKey("lastMessage")
             query.includeKey("post")
@@ -172,7 +178,7 @@ class Conversation: PFObject, PFSubclassing {
                 query.whereKey("updatedAt", greaterThan: lastUpdatedAt)
             }
             query.orderByDescending("updatedAt")
-            query.cachePolicy = .NetworkElseCache
+            query.cachePolicy = cachePolicy
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(conversations: nil, error: error)
@@ -192,7 +198,7 @@ class Conversation: PFObject, PFSubclassing {
                     if let userQuery = User.query() {
                         userQuery.selectKeys(["fullName", "avatar"])
                         userQuery.whereKey("objectId", containedIn: listUserIds)
-                        userQuery.cachePolicy = .NetworkElseCache
+                        userQuery.cachePolicy = cachePolicy
                         userQuery.findObjectsInBackgroundWithBlock({ (users, error) -> Void in
                             guard error == nil else {
                                 callback(conversations: nil, error: error)
@@ -223,7 +229,7 @@ class Conversation: PFObject, PFSubclassing {
             query.whereKey("userIds", equalTo: currentUser.objectId!)
             query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
             query.whereKeyExists("lastMessage")
-            query.cachePolicy = .NetworkElseCache
+            query.cachePolicy = .CacheElseNetwork
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(conversations: nil, error: error)
@@ -243,7 +249,7 @@ class Conversation: PFObject, PFSubclassing {
                     if let userQuery = User.query() {
                         userQuery.selectKeys(["fullName", "avatar"])
                         userQuery.whereKey("objectId", containedIn: listUserIds)
-                        userQuery.cachePolicy = .NetworkElseCache
+                        userQuery.cachePolicy = .CacheElseNetwork
                         userQuery.findObjectsInBackgroundWithBlock({ (users, error) -> Void in
                             guard error == nil else {
                                 callback(conversations: nil, error: error)
@@ -277,7 +283,7 @@ class Conversation: PFObject, PFSubclassing {
                 query.whereKey("updatedAt", greaterThan: lastUpdatedAt)
             }
             query.orderByDescending("updatedAt")
-            query.cachePolicy = .NetworkElseCache
+            query.cachePolicy = .NetworkOnly
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(conversations: nil, error: error)
@@ -297,7 +303,7 @@ class Conversation: PFObject, PFSubclassing {
                     if let userQuery = User.query() {
                         userQuery.selectKeys(["fullName", "avatar"])
                         userQuery.whereKey("objectId", containedIn: listUserIds)
-                        userQuery.cachePolicy = .NetworkElseCache
+                        userQuery.cachePolicy = .NetworkOnly
                         userQuery.findObjectsInBackgroundWithBlock({ (users, error) -> Void in
                             guard error == nil else {
                                 callback(conversations: nil, error: error)

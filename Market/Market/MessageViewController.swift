@@ -33,7 +33,8 @@ class MessageViewController: UIViewController {
             self.noMoreResultLabel.hidden = conversations.count > 12
             self.loadingView.stopAnimating()
         } else {
-            loadNewestData()
+            conversations = []
+            loadData(nil)
         }
     }
     
@@ -70,11 +71,6 @@ class MessageViewController: UIViewController {
         noMoreResultLabel.hidden = true
         tableFooterView.addSubview(noMoreResultLabel)
         tableView.tableFooterView = tableFooterView
-    }
-    
-    func loadNewestData() {
-        conversations = []
-        loadData(nil)
     }
     
     func loadData(lastUpdatedAt: NSDate?) {
@@ -152,6 +148,10 @@ class MessageViewController: UIViewController {
                     }
                     self.conversations = self.conversations.sort { (a, b) -> Bool in
                         return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
+                    }
+                    
+                    if UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {
+                        TabBarController.instance.onRefreshMessageBadge(nil)
                     }
                     
                     self.tableView.reloadData()

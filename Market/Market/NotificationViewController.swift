@@ -129,6 +129,7 @@ class NotificationViewController: UIViewController {
                     if newNotifications.count == 0 {
                         return
                     } else {
+                        var hasNewItem = false
                         for newNotification in newNotifications {
                             var found = false
                             for (index, notification) in self.notifications.enumerate() {
@@ -141,7 +142,13 @@ class NotificationViewController: UIViewController {
                             }
                             if !found {
                                 self.notifications.insert(newNotification, atIndex: 0)
+                                hasNewItem = true
                             }
+                        }
+                        
+                        
+                        if hasNewItem && UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {
+                            TabBarController.instance.onRefreshNotificationBadge(nil)
                         }
                         
                         self.notifications = self.notifications.sort { (a, b) -> Bool in

@@ -13,11 +13,11 @@ import Parse
 class TabBarController: NSObject {
     static let instance = TabBarController()
     
-    var newsFeedTab: UITabBarItem!
-    var messageTab: UITabBarItem!
-    var notificationTab: UITabBarItem!
-    var numUnreadNotification = 0
-    var numUnreadMessage = 0
+    private var newsFeedTab: UITabBarItem!
+    private var messageTab: UITabBarItem!
+    private var notificationTab: UITabBarItem!
+    private var numUnreadNotification = 0
+    private var numUnreadMessage = 0
     static let newNotification = "newNotification"
     static let newMessage = "newMessage"
     

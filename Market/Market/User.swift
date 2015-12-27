@@ -208,7 +208,7 @@ class User: PFUser {
             query.includeKey("post")
             query.includeKey("fromUser")
             query.whereKey("toUsers", equalTo: self)
-            query.cachePolicy = .NetworkElseCache
+            query.cachePolicy = .CacheElseNetwork
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(notifications: nil, error: error)
@@ -221,7 +221,7 @@ class User: PFUser {
                         queryForUnread.selectKeys([])
                         queryForUnread.whereKey("toUsers", equalTo: self)
                         queryForUnread.whereKey("readUsers", equalTo: self)
-                        queryForUnread.cachePolicy = .NetworkElseCache
+                        queryForUnread.cachePolicy = .CacheElseNetwork
                         queryForUnread.findObjectsInBackgroundWithBlock({ (notificationsUnread, error) -> Void in
                             guard error == nil else {
                                 callback(notifications: nil, error: error)
@@ -255,7 +255,7 @@ class User: PFUser {
                 query.whereKey("createdAt", greaterThan: lastCreatedAt)
             }
             query.orderByDescending("createdAt")
-            query.cachePolicy = .NetworkElseCache
+            query.cachePolicy = .NetworkOnly
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
                     callback(notifications: nil, error: error)
@@ -267,7 +267,7 @@ class User: PFUser {
                         queryForUnread.selectKeys([])
                         queryForUnread.whereKey("toUsers", equalTo: self)
                         queryForUnread.whereKey("readUsers", equalTo: self)
-                        queryForUnread.cachePolicy = .NetworkElseCache
+                        queryForUnread.cachePolicy = .NetworkOnly
                         queryForUnread.findObjectsInBackgroundWithBlock({ (notificationsUnread, error) -> Void in
                             guard error == nil else {
                                 callback(notifications: nil, error: error)

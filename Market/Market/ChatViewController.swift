@@ -38,14 +38,22 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
             senderDisplayName = currentUser.fullName
         }
         
+        if let sendButton = inputToolbar?.contentView?.rightBarButtonItem {
+            sendButton.setTitleColor(MyColors.green, forState: UIControlState.Normal)
+            sendButton.setTitleColor(UIColor.darkGrayColor(), forState: UIControlState.Highlighted)
+        }
+        
+        
         isLoading = false
         isLoadingEarlierMessages = false
+        
         loadMessages()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         self.showLoadEarlierMessagesHeader = false
+        
         timer = NSTimer.scheduledTimerWithTimeInterval(1.15, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
         conversation.markRead { (success, error) -> Void in
             TabBarController.instance.onRefreshMessageBadge(nil)
@@ -224,6 +232,17 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapCellAtIndexPath indexPath: NSIndexPath!, touchLocation: CGPoint) {
         print("didTapCellAtIndexPath")
+    }
+    
+    
+    override func collectionView(collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, atIndexPath indexPath: NSIndexPath) -> UICollectionReusableView {
+        let collectionReusableView = super.collectionView(collectionView, viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath)
+        if let collectionReusableView = collectionReusableView as? JSQMessagesLoadEarlierHeaderView,
+            button = collectionReusableView.loadButton {
+            button.tintColor = MyColors.green
+            button.titleLabel?.textColor = MyColors.green
+        }
+        return collectionReusableView
     }
 }
 

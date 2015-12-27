@@ -29,7 +29,7 @@ class PostsListViewController: UIViewController {
         let message = "Loading \(strToBold)..."
         refreshControl.attributedTitle = message.bold(strToBold)
         
-        loadData(nil)
+        loadData(false, lastUpdatedAt: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -63,8 +63,8 @@ class PostsListViewController: UIViewController {
         tableFooterView.insertSubview(noMessageLabel, atIndex: 0)
     }
     
-    func loadData(lastUpdatedAt: NSDate?) {
-        Conversation.getConversations(lastUpdatedAt) { (newConversations, error) -> Void in
+    func loadData(forNetworkOnly: Bool, lastUpdatedAt: NSDate?) {
+        Conversation.getConversations(forNetworkOnly, lastUpdatedAt: lastUpdatedAt) { (newConversations, error) -> Void in
             guard error == nil else {
                 print(error)
                 return
@@ -95,6 +95,10 @@ class PostsListViewController: UIViewController {
                     }
                     self.filterDuplicatePost()
                     self.tableView.reloadData()
+                    
+                    if forNetworkOnly && UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {
+                        TabBarController.instance.onRefreshMessageBadge(nil)
+                    }
                 }
             }
             
@@ -136,26 +140,28 @@ class PostsListViewController: UIViewController {
     func filterDuplicatePost() {
         var posts = [String]()
         var newConversations = [Conversation]()
-        let currentUserId = User.currentUser()!.objectId!
-        countMessages.removeAll()
-        for conversation in conversations.reverse() {
-            let id = conversation.post.objectId!
-            if countMessages[id] == nil {
-                countMessages[id] = (0,0)
-            }
-            if var tupleCount = countMessages[id] {
-                if !conversation.readUsers.contains(currentUserId) {
-                    tupleCount.unread += 1
+        if let currentUser = User.currentUser() {
+            let currentUserId = currentUser.objectId!
+            countMessages.removeAll()
+            for conversation in conversations.reverse() {
+                let id = conversation.post.objectId!
+                if countMessages[id] == nil {
+                    countMessages[id] = (0,0)
                 }
-                tupleCount.total += 1
-                countMessages[id] = tupleCount
+                if var tupleCount = countMessages[id] {
+                    if !conversation.readUsers.contains(currentUserId) {
+                        tupleCount.unread += 1
+                    }
+                    tupleCount.total += 1
+                    countMessages[id] = tupleCount
+                }
+                
+                if posts.contains(id) {
+                    continue
+                }
+                posts.append(conversation.post.objectId!)
+                newConversations.append(conversation)
             }
-            
-            if posts.contains(id) {
-                continue
-            }
-            posts.append(conversation.post.objectId!)
-            newConversations.append(conversation)
         }
         filteredConversationsByPost = newConversations.sort { (a, b) -> Bool in
             return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
@@ -171,7 +177,7 @@ class PostsListViewController: UIViewController {
     
     func refreshData() {
         let updatedAt = filteredConversationsByPost.count > 0 ? filteredConversationsByPost[0].updatedAt : nil
-        loadData(updatedAt)
+        loadData(true, lastUpdatedAt: updatedAt)
     }
 }
 
