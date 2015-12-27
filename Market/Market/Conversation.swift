@@ -161,15 +161,17 @@ class Conversation: PFObject, PFSubclassing {
     
     static func getConversations(lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
         if let query = Conversation.query(), currentUser = User.currentUser() {
-            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
             query.selectKeys(["post", "userIds", "readUsers", "lastMessage"])
             query.includeKey("lastMessage")
             query.includeKey("post")
             query.includeKey("post.user")
             query.whereKey("userIds", equalTo: currentUser.objectId!)
             query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
-//            query.whereKey("messageCount", greaterThan: 0)
             query.whereKeyExists("lastMessage")
+            if let lastUpdatedAt = lastUpdatedAt {
+                query.whereKey("updatedAt", greaterThan: lastUpdatedAt)
+            }
+            query.orderByDescending("updatedAt")
             query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
@@ -220,6 +222,61 @@ class Conversation: PFObject, PFSubclassing {
             query.whereKey("post", equalTo: post)
             query.whereKey("userIds", equalTo: currentUser.objectId!)
             query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
+            query.whereKeyExists("lastMessage")
+            query.cachePolicy = .NetworkElseCache
+            query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
+                guard error == nil else {
+                    callback(conversations: nil, error: error)
+                    return
+                }
+                if let conversations = pfObjs as? [Conversation] {
+                    
+                    var listUserIds = [String]()
+                    for conversation in conversations {
+                        for userId in conversation.userIds where userId != currentUser.objectId! {
+                            if !listUserIds.contains(userId) {
+                                listUserIds.append(userId)
+                            }
+                        }
+                    }
+                    
+                    if let userQuery = User.query() {
+                        userQuery.selectKeys(["fullName", "avatar"])
+                        userQuery.whereKey("objectId", containedIn: listUserIds)
+                        userQuery.cachePolicy = .NetworkElseCache
+                        userQuery.findObjectsInBackgroundWithBlock({ (users, error) -> Void in
+                            guard error == nil else {
+                                callback(conversations: nil, error: error)
+                                return
+                            }
+                            if let users = users as? [User] {
+                                for conversation in conversations {
+                                    for user in users where conversation.userIds.contains(user.objectId!) {
+                                        conversation.toUser = user
+                                    }
+                                }
+                            }
+                            
+                            callback(conversations: conversations, error: nil)
+                        })
+                    }
+                }
+            })
+        }
+    }
+    
+    static func getConversationsByPostForRefreshingData(post:Post, lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
+        if let query = Conversation.query(), currentUser = User.currentUser() {
+            query.selectKeys(["userIds", "readUsers", "lastMessage"])
+            query.includeKey("lastMessage")
+            query.whereKey("post", equalTo: post)
+            query.whereKey("userIds", equalTo: currentUser.objectId!)
+            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
+            query.whereKeyExists("lastMessage")
+            if let lastUpdatedAt = lastUpdatedAt {
+                query.whereKey("updatedAt", greaterThan: lastUpdatedAt)
+            }
+            query.orderByDescending("updatedAt")
             query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {

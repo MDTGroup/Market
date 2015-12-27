@@ -155,7 +155,9 @@ extension ParentChatViewController {
                                 hud.hide(true)
                                 if let navController = tabBarController.selectedViewController as? UINavigationController {
                                     navController.popToRootViewControllerAnimated(false)
-                                    navController.pushViewController(messageVC, animated: false)
+                                    if parentChatVC.conversation.post.user.objectId == User.currentUser()!.objectId {
+                                        navController.pushViewController(messageVC, animated: false)
+                                    }
                                     navController.pushViewController(parentChatVC, animated: false)
                                 }
                             })

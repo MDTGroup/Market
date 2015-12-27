@@ -19,7 +19,6 @@ class NotificationViewController: UIViewController {
     var noMoreResultLabel = UILabel()
     
     var notifications = [Notification]()
-    
     var timer = NSTimer()
     
     override func viewDidLoad() {
@@ -33,19 +32,20 @@ class NotificationViewController: UIViewController {
         let message = "Loading \(strToBold)..."
         refreshControl.attributedTitle = message.bold(strToBold)
         
-        loadNewestData()
+        loadData(nil)
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         timer.invalidate()
-        refreshControl.endRefreshing()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         timer = NSTimer.scheduledTimerWithTimeInterval(3.5, target: self, selector: "refreshData", userInfo: nil, repeats: true)
-        refreshData()
+        if notifications.count > 0 {
+            refreshData()
+        }
     }
     
     func initControls() {
@@ -53,7 +53,6 @@ class NotificationViewController: UIViewController {
         tableView.dataSource = self
         
         // Refresh control
-        refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
         tableView.insertSubview(refreshControl, atIndex: 0)
         
         // Add the activity Indicator for table footer for infinity load
@@ -71,11 +70,6 @@ class NotificationViewController: UIViewController {
         noMoreResultLabel.hidden = true
         tableFooterView.insertSubview(noMoreResultLabel, atIndex: 0)
         tableView.tableFooterView = tableFooterView
-    }
-    
-    func loadNewestData() {
-        notifications = []
-        loadData(nil)
     }
     
     func loadData(lastUpdatedAt: NSDate?) {
@@ -114,20 +108,19 @@ class NotificationViewController: UIViewController {
                     self.noMoreResultLabel.hidden = !self.isEndOfFeed
                     self.noMoreResultLabel.text = (self.isEndOfFeed && self.notifications.count > 0) ? "No more result" : "No notifications"
                     
-                    self.refreshControl.endRefreshing()
                     self.loadingView.stopAnimating()
                     self.isLoadingNextPage = false
                 }
+                self.refreshControl.endRefreshing()
+                self.refreshControl.removeFromSuperview()
             })
         }
     }
     
     func refreshData() {
-        if notifications.count == 0 {
-            return
-        }
         if let currentUser = User.currentUser() {
-            currentUser.getNotifications(nil, callback: { (notifications, error) -> Void in
+            let createdAt = notifications.count > 0 ? notifications[0].createdAt : nil
+            currentUser.getNotificationsForRefreshingData(createdAt, callback: { (notifications, error) -> Void in
                 guard error == nil else {
                     print(error)
                     return
@@ -140,13 +133,14 @@ class NotificationViewController: UIViewController {
                             var found = false
                             for (index, notification) in self.notifications.enumerate() {
                                 if newNotification.objectId == notification.objectId {
-                                    self.notifications[index] = newNotification
+                                    self.notifications.removeAtIndex(index)
+                                    self.notifications.insert(newNotification, atIndex: 0)
                                     found = true
                                     break
                                 }
                             }
                             if !found {
-                                self.notifications.append(newNotification)
+                                self.notifications.insert(newNotification, atIndex: 0)
                             }
                         }
                         

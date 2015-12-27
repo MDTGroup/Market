@@ -18,9 +18,10 @@ class User: PFUser {
     @NSManaged var role: PFRole
     @NSManaged var config: PFConfig
     @NSManaged var keywords: [String]
-    var savedPosts: PFRelation! {
-        return relationForKey("savedPosts")
-    }
+    @NSManaged var savedPosts: PFRelation
+//    var savedPosts: PFRelation {
+//        return relationForKey("savedPosts")
+//    }
     var votedPosts: PFRelation! {
         return relationForKey("votedPosts")
     }
@@ -200,10 +201,10 @@ class User: PFUser {
     }
     
     //MARK: Notifications
-    func getNotifications(lastUpdatedAt: NSDate?, callback: NotificationResultBlock) {
+    func getNotifications(lastCreatedAt: NSDate?, callback: NotificationResultBlock) {
         if let query = Notification.query() {
             query.selectKeys(["post", "fromUser", "type", "extraInfo"])
-            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt, maxResult: 12)
+            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastCreatedAt, maxResult: 12)
             query.includeKey("post")
             query.includeKey("fromUser")
             query.whereKey("toUsers", equalTo: self)
@@ -216,7 +217,53 @@ class User: PFUser {
                 if let notifications = pfObjs as? [Notification] {
                     
                     if let queryForUnread = Notification.query() {
-                        QueryUtils.bindQueryParamsForInfiniteLoading(queryForUnread, lastCreatedAt: lastUpdatedAt)
+                        QueryUtils.bindQueryParamsForInfiniteLoading(queryForUnread, lastCreatedAt: lastCreatedAt)
+                        queryForUnread.selectKeys([])
+                        queryForUnread.whereKey("toUsers", equalTo: self)
+                        queryForUnread.whereKey("readUsers", equalTo: self)
+                        queryForUnread.cachePolicy = .NetworkElseCache
+                        queryForUnread.findObjectsInBackgroundWithBlock({ (notificationsUnread, error) -> Void in
+                            guard error == nil else {
+                                callback(notifications: nil, error: error)
+                                return
+                            }
+                            if let notificationsUnread = notificationsUnread as? [Notification] {
+                                for notification in notifications {
+                                    for notificationUnread in notificationsUnread {
+                                        if notification.objectId == notificationUnread.objectId {
+                                            notification.isRead = true
+                                        }
+                                    }
+                                }
+                                callback(notifications: notifications, error: nil)
+                            }
+                        })
+                    }
+                    
+                }
+            })
+        }
+    }
+    
+    func getNotificationsForRefreshingData(lastCreatedAt: NSDate?, callback: NotificationResultBlock) {
+        if let query = Notification.query() {
+            query.selectKeys(["post", "fromUser", "type", "extraInfo"])
+            query.includeKey("post")
+            query.includeKey("fromUser")
+            query.whereKey("toUsers", equalTo: self)
+            if let lastCreatedAt = lastCreatedAt {
+                query.whereKey("createdAt", greaterThan: lastCreatedAt)
+            }
+            query.orderByDescending("createdAt")
+            query.cachePolicy = .NetworkElseCache
+            query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
+                guard error == nil else {
+                    callback(notifications: nil, error: error)
+                    return
+                }
+                if let notifications = pfObjs as? [Notification] {
+                    if let queryForUnread = Notification.query() {
+                        QueryUtils.bindQueryParamsForInfiniteLoading(queryForUnread, lastCreatedAt: lastCreatedAt)
                         queryForUnread.selectKeys([])
                         queryForUnread.whereKey("toUsers", equalTo: self)
                         queryForUnread.whereKey("readUsers", equalTo: self)

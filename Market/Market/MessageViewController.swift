@@ -9,10 +9,9 @@
 import UIKit
 
 class MessageViewController: UIViewController {
-
-    @IBOutlet weak var tableView: UITableView!
     
-    var refreshControl = UIRefreshControl()
+    @IBOutlet weak var tableView: UITableView!
+
     var loadingView: UIActivityIndicatorView!
     var isLoadingNextPage = false
     var isEndOfFeed = false
@@ -28,47 +27,32 @@ class MessageViewController: UIViewController {
         
         initControls()
         
-        refreshControl.hidden = false
-        refreshControl.beginRefreshing()
-        
-        let strToBold = "Messages"
-        let message = "Loading \(strToBold)..."
-        refreshControl.attributedTitle = message.bold(strToBold)
-        
         if conversations.count > 0 {
             isLoadingNextPage = true
             self.noMoreResultLabel.text = (self.conversations.count > 0) ? "No more result" : "No messages"
             self.noMoreResultLabel.hidden = conversations.count > 12
-            self.refreshControl.endRefreshing()
             self.loadingView.stopAnimating()
-        } else if PostsListViewController.needToRefresh == false {
+        } else {
             loadNewestData()
-        }   
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if PostsListViewController.needToRefresh {
-            loadNewestData()
-            PostsListViewController.needToRefresh = false
-        }
         timer = NSTimer.scheduledTimerWithTimeInterval(3.5, target: self, selector: "refreshData", userInfo: nil, repeats: true)
-        refreshData()
+        if conversations.count > 0 {
+            refreshData()
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         timer.invalidate()
-        refreshControl.endRefreshing()
     }
     
     func initControls() {
         tableView.dataSource = self
         tableView.delegate = self
-        
-        // Refresh control
-        refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
-        tableView.insertSubview(refreshControl, atIndex: 0)
         
         // Add the activity Indicator for table footer for infinity load
         let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
@@ -114,14 +98,18 @@ class MessageViewController: UIViewController {
                             var found = false
                             for (index, conversation) in self.conversations.enumerate() {
                                 if newConversation.objectId == conversation.objectId {
-                                    self.conversations[index] = newConversation
+                                    self.conversations.removeAtIndex(index)
+                                    self.conversations.insert(newConversation, atIndex: 0)
                                     found = true
                                     break
                                 }
                             }
                             if !found {
-                                self.conversations.append(newConversation)
+                                self.conversations.insert(newConversation, atIndex: 0)
                             }
+                        }
+                        self.conversations = self.conversations.sort { (a, b) -> Bool in
+                            return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
                         }
                     }
                     
@@ -132,17 +120,14 @@ class MessageViewController: UIViewController {
             self.noMoreResultLabel.hidden = !self.isEndOfFeed
             self.noMoreResultLabel.text = (self.isEndOfFeed && self.conversations.count > 0) ? "No more result" : "No messages"
             
-            self.refreshControl.endRefreshing()
             self.loadingView.stopAnimating()
             self.isLoadingNextPage = false
         }
     }
     
     func refreshData() {
-        if conversations.count == 0 {
-            return
-        }
-        Conversation.getConversationsByPost(post, lastUpdatedAt: nil) { (newConversations, error) -> Void in
+        let updatedAt = conversations.count > 0 ? conversations[0].updatedAt : nil
+        Conversation.getConversationsByPostForRefreshingData(post, lastUpdatedAt: updatedAt) { (newConversations, error) -> Void in
             guard error == nil else {
                 print(error)
                 return
@@ -155,16 +140,16 @@ class MessageViewController: UIViewController {
                         var found = false
                         for (index, conversation) in self.conversations.enumerate() {
                             if newConversation.objectId == conversation.objectId {
-                                self.conversations[index] = newConversation
+                                self.conversations.removeAtIndex(index)
+                                self.conversations.insert(newConversation, atIndex: 0)
                                 found = true
                                 break
                             }
                         }
                         if !found {
-                            self.conversations.append(newConversation)
+                            self.conversations.insert(newConversation, atIndex: 0)
                         }
                     }
-                    
                     self.conversations = self.conversations.sort { (a, b) -> Bool in
                         return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
                     }

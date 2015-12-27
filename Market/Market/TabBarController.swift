@@ -68,7 +68,6 @@ class TabBarController: NSObject {
             self.numUnreadMessage = Int(numUnread)
             if numUnread > 0 {
                 self.messageTab.badgeValue = "\(numUnread)"
-                PostsListViewController.needToRefresh = true
             } else {
                 self.messageTab.badgeValue = nil
             }

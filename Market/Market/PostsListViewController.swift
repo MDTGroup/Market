@@ -9,95 +9,71 @@
 import UIKit
 
 class PostsListViewController: UIViewController {
-    static var needToRefresh = false
+
     @IBOutlet weak var tableView: UITableView!
     
     var timer = NSTimer()
     var refreshControl = UIRefreshControl()
-    var loadingView: UIActivityIndicatorView!
-    var isLoadingNextPage = false
-    var isEndOfFeed = false
-    var noMoreResultLabel = UILabel()
     
     var filteredConversationsByPost = [Conversation]()
     var conversations = [Conversation]()
     var countMessages = [String : (unread: Int, total: Int)]()
-    
+    var sections = [(title: "Buying", conversation: [Conversation]()), (title: "Selling", conversation: [Conversation]())]
+    var tableFooterView = UIView()
     override func viewDidLoad() {
         super.viewDidLoad()
         
         initControls()
-
-        refreshControl.hidden = false
-        refreshControl.beginRefreshing()
         
         let strToBold = "Posts"
         let message = "Loading \(strToBold)..."
         refreshControl.attributedTitle = message.bold(strToBold)
         
-        if PostsListViewController.needToRefresh == false {
-            loadNewestData()
-        }
+        loadData(nil)
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        if PostsListViewController.needToRefresh {
-            loadNewestData()
-            PostsListViewController.needToRefresh = false
-        }
         timer = NSTimer.scheduledTimerWithTimeInterval(3.5, target: self, selector: "refreshData", userInfo: nil, repeats: true)
-        refreshData()
+        if filteredConversationsByPost.count > 0 {
+            refreshData()
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         timer.invalidate()
-        refreshControl.endRefreshing()
     }
     
     func initControls() {
         tableView.dataSource = self
         tableView.delegate = self
         
-        // Refresh control
-        refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.hidden = false
+        refreshControl.beginRefreshing()
         tableView.insertSubview(refreshControl, atIndex: 0)
         
-        // Add the activity Indicator for table footer for infinity load
-        let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
-        loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-        loadingView.center = tableFooterView.center
-        loadingView.hidesWhenStopped = true
-        tableFooterView.insertSubview(loadingView, atIndex: 0)
-        
-        
-        // Initialize the noMoreResult
-        noMoreResultLabel.font = UIFont.systemFontOfSize(12.0)
-        noMoreResultLabel.frame = tableFooterView.frame
-        noMoreResultLabel.textAlignment = NSTextAlignment.Center
-        noMoreResultLabel.textColor = UIColor.grayColor()
-        noMoreResultLabel.hidden = true
-        tableFooterView.insertSubview(noMoreResultLabel, atIndex: 0)
-        tableView.tableFooterView = tableFooterView
-    }
-    
-    func loadNewestData() {
-        conversations = []
-        loadData(nil)
+        tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
+        let noMessageLabel = UILabel()
+        noMessageLabel.frame = tableFooterView.frame
+        noMessageLabel.textAlignment = NSTextAlignment.Center
+        noMessageLabel.font = UIFont.systemFontOfSize(12.0)
+        noMessageLabel.textColor = UIColor.grayColor()
+        noMessageLabel.text = "No messages"
+        tableFooterView.insertSubview(noMessageLabel, atIndex: 0)
     }
     
     func loadData(lastUpdatedAt: NSDate?) {
         Conversation.getConversations(lastUpdatedAt) { (newConversations, error) -> Void in
             guard error == nil else {
                 print(error)
-                self.isEndOfFeed = true
                 return
             }
             if let newConversations = newConversations {
                 if newConversations.count == 0 {
-                    self.isEndOfFeed = true
+                    
                 } else {
+                    
                     if self.conversations.count == 0 {
                         self.conversations.appendContentsOf(newConversations)
                     } else {
@@ -105,13 +81,15 @@ class PostsListViewController: UIViewController {
                             var found = false
                             for (index, conversation) in self.conversations.enumerate() {
                                 if newConversation.objectId == conversation.objectId {
-                                    self.conversations[index] = newConversation
+                                    self.conversations.removeAtIndex(index)
+                                    self.conversations.insert(newConversation, atIndex: 0)
                                     found = true
                                     break
                                 }
                             }
+    
                             if !found {
-                                self.conversations.append(newConversation)
+                                self.conversations.insert(newConversation, atIndex: 0)
                             }
                         }
                     }
@@ -120,12 +98,14 @@ class PostsListViewController: UIViewController {
                 }
             }
             
-            self.noMoreResultLabel.hidden = !self.isEndOfFeed
-            self.noMoreResultLabel.text = (self.isEndOfFeed && self.conversations.count > 0) ? "No more result" : "No messages"
+            if self.filteredConversationsByPost.count == 0 {
+                self.tableView.tableFooterView = self.tableFooterView
+            } else {
+                self.tableView.tableFooterView = nil
+            }
 
             self.refreshControl.endRefreshing()
-            self.loadingView.stopAnimating()
-            self.isLoadingNextPage = false
+            self.refreshControl.removeFromSuperview()
         }
     }
     
@@ -133,15 +113,19 @@ class PostsListViewController: UIViewController {
         if let messageVC = segue.destinationViewController as? MessageViewController {
             if let cell = sender as? ItemListCell {
                 let post = cell.conversation.post
-                var conversationsByPost = [Conversation]()
-                for conversation in conversations {
-                    if conversation.post.objectId == post.objectId {
-                        conversationsByPost.append(conversation)
-                    }
+                var conversationsByPost = conversations.filter({ (conversation) -> Bool in
+                    return conversation.post.objectId == post.objectId
+                })
+                conversationsByPost = conversationsByPost.sort { (a, b) -> Bool in
+                    return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
                 }
                 messageVC.post = post
                 messageVC.title = post.title
                 messageVC.conversations = conversationsByPost
+            }
+        } else if let chatVC = segue.destinationViewController as? ParentChatViewController {
+            if let conversation = sender as?  Conversation {
+                chatVC.conversation = conversation
             }
         }
     }
@@ -173,69 +157,61 @@ class PostsListViewController: UIViewController {
         filteredConversationsByPost = newConversations.sort { (a, b) -> Bool in
             return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
         }
+        sections[0].conversation = filteredConversationsByPost.filter({ (conversation) -> Bool in
+            return conversation.post.user.objectId != User.currentUser()?.objectId
+        })
+        sections[1].conversation = filteredConversationsByPost.filter({ (conversation) -> Bool in
+            return conversation.post.user.objectId == User.currentUser()?.objectId
+        })
     }
     
     
     func refreshData() {
-        if filteredConversationsByPost.count == 0 {
-            return
-        }
-        Conversation.getConversations(nil) { (newConversations, error) -> Void in
-            guard error == nil else {
-                print(error)
-                return
-            }
-            if let newConversations = newConversations {
-                if newConversations.count == 0 {
-                    return
-                } else {
-                    for newConversation in newConversations {
-                        var found = false
-                        for (index, conversation) in self.conversations.enumerate() {
-                            if newConversation.objectId == conversation.objectId {
-                                self.conversations[index] = newConversation
-                                found = true
-                                break
-                            }
-                        }
-                        if !found {
-                            self.conversations.append(newConversation)
-                        }
-                    }
-                    self.filterDuplicatePost()
-                    self.tableView.reloadData()
-                }
-            }
-        }
+        let updatedAt = filteredConversationsByPost.count > 0 ? filteredConversationsByPost[0].updatedAt : nil
+        loadData(updatedAt)
     }
 }
 
 extension PostsListViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        if filteredConversationsByPost.count == 0 {
+            return 0
+        }
+        return sections.count
+    }
+    
+    func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if sections[section].conversation.count == 0 {
+            return ""
+        }
+        return sections[section].title
+    }
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filteredConversationsByPost.count
+        return sections[section].conversation.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("ItemListCell", forIndexPath: indexPath) as! ItemListCell
         
-        let conversation = filteredConversationsByPost[indexPath.row]
+        let conversation = sections[indexPath.section].conversation[indexPath.row]
         if let tupleCount = countMessages[conversation.post.objectId!] {
             cell.countMessages = tupleCount
         }
         cell.conversation = conversation
-        
-        if !isLoadingNextPage && !isEndOfFeed {
-            if indexPath.row == filteredConversationsByPost.count - 1 {
-                loadingView.startAnimating()
-                isLoadingNextPage = true
-                loadData(filteredConversationsByPost[indexPath.row].updatedAt!)
-            }
-        }
         
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
+        
+        let conversation = sections[indexPath.section].conversation[indexPath.row]
+        if  conversation.post.user.objectId != User.currentUser()!.objectId {
+            performSegueWithIdentifier("segueChat", sender: conversation)
+        } else {
+            performSegueWithIdentifier("segueMessage", sender: tableView.cellForRowAtIndexPath(indexPath))
+        }
     }
 }

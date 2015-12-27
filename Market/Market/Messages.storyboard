@@ -25,7 +25,7 @@
                                         <rect key="frame" x="0.0" y="28" width="320" height="57"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="i9E-Io-fng" id="vt6-1X-veM">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="56.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="56"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_blank" translatesAutoresizingMaskIntoConstraints="NO" id="krb-C0-1tS">
@@ -71,7 +71,7 @@
                                             <outlet property="timeElapedLabel" destination="Uzj-ip-RKt" id="TaJ-OZ-pf4"/>
                                             <outlet property="userFullname" destination="jus-pM-xNa" id="GfN-O9-0uw"/>
                                             <outlet property="userImage" destination="krb-C0-1tS" id="THW-Uu-oye"/>
-                                            <segue destination="vFC-Bh-0hw" kind="push" id="Vkd-46-jTy"/>
+                                            <segue destination="vFC-Bh-0hw" kind="push" identifier="" id="Vkd-46-jTy"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -92,7 +92,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="O0d-4X-ZWk" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="716" y="281"/>
+            <point key="canvasLocation" x="709" y="640"/>
         </scene>
         <!--Chat-->
         <scene sceneID="wNo-nL-UIW">
@@ -257,7 +257,7 @@
                                         <rect key="frame" x="0.0" y="28" width="320" height="57"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7hS-5U-9mK" id="sfj-HV-zAv">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="56.5"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="56"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="28E-gZ-iLu">
@@ -351,7 +351,6 @@
                                             <outlet property="priceLabel" destination="MUW-hP-5GD" id="4xF-0y-Rnm"/>
                                             <outlet property="sellerLabel" destination="TNv-Ff-aqB" id="gkt-hr-cFD"/>
                                             <outlet property="timeAgoLabel" destination="eu7-IS-YuN" id="m8e-iM-8EN"/>
-                                            <segue destination="uF3-Hn-VwR" kind="push" id="iLS-nn-FGL"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -368,6 +367,8 @@
                     <navigationItem key="navigationItem" title="Posts" id="2Ye-ah-l9Q"/>
                     <connections>
                         <outlet property="tableView" destination="oIm-ce-R0J" id="cbR-fV-aiS"/>
+                        <segue destination="vFC-Bh-0hw" kind="push" identifier="segueChat" id="5Uo-1h-HT7"/>
+                        <segue destination="uF3-Hn-VwR" kind="push" identifier="segueMessage" id="XrG-Mf-ZMQ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="P3h-Aq-5M1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -408,11 +409,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="K1T-6V-gGh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1452" y="281"/>
+            <point key="canvasLocation" x="1535" y="280.5"/>
         </scene>
     </scenes>
     <resources>
         <image name="new_tag" width="75" height="74"/>
         <image name="profile_blank" width="70" height="70"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="5Uo-1h-HT7"/>
+    </inferredMetricsTieBreakers>
 </document>

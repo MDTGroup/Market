@@ -42,7 +42,7 @@ class ItemListCell: UITableViewCell {
             }
             
             itemNameLabel.text = post.title
-            timeAgoLabel.text = Helper.timeSinceDateToNow(post.createdAt!)
+            timeAgoLabel.text = Helper.timeSinceDateToNow(conversation.updatedAt!)
             priceLabel.text = post.price.formatVND()
             newTagImageView.hidden = (post.condition > 0)
             
