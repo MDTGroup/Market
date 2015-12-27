@@ -150,7 +150,7 @@ class MessageViewController: UIViewController {
                         return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
                     }
                     
-                    if UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {
+                    if !UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {
                         TabBarController.instance.onRefreshMessageBadge(nil)
                     }
                     

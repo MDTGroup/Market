@@ -147,7 +147,7 @@ class NotificationViewController: UIViewController {
                         }
                         
                         
-                        if hasNewItem && UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {
+                        if hasNewItem && !UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {
                             TabBarController.instance.onRefreshNotificationBadge(nil)
                         }
                         

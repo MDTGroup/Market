@@ -96,7 +96,7 @@ class PostsListViewController: UIViewController {
                     self.filterDuplicatePost()
                     self.tableView.reloadData()
                     
-                    if forNetworkOnly && UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {
+                    if forNetworkOnly && !UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {
                         TabBarController.instance.onRefreshMessageBadge(nil)
                     }
                 }
