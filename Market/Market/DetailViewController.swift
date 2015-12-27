@@ -121,44 +121,45 @@ class DetailViewController: UIViewController {
         scrollCircle1.hidden = nImages < 2
         scrollCircle2.hidden = nImages < 2
         scrollCircle3.hidden = nImages < 3
+        
+        var url: String = post.medias[nImages].url!
         // Load the thumbnail first for user to see while waiting for loading the full image
         imageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-        imageView.setImageWithURL(NSURL(string: post.medias[nImages].url!)!)
+        imageView.setImageWithURL(NSURL(string: url)!)
         
         // Load images while user still reading 1st page
-        if nImages > 1 {
-            var iv: UIImageView!
-            var url: String!
-            tempImageViews = []
-            // Refresh the layout before assign anything
-            view.layoutIfNeeded()
-            for i in nImages...2*nImages-1 {
-                iv = UIImageView()
-                iv.frame = imageView.frame
-                // Add 20px for the status bar, if not show status bar, comment next 2 lines
-                iv.frame.origin.y += 20
-                iv.frame.size.height -= 20
-                
-                print(iv.frame)
-                iv.center.x -= imageView.frame.width
-                iv.contentMode = .ScaleAspectFit
-                iv.clipsToBounds = true
-                
-                tempImageViews.append(iv)
-                url = post.medias[i].url!
-                
-                if (url?.rangeOfString("video.mov") != nil) {
-                    tempImageViews[i-nImages].setImageWithURL(NSURL(string: post.medias[i-nImages].url!)!)
-                    videoPosition = i - nImages
-                    videoUrl = NSURL(string: url)
-                } else {
-                    tempImageViews[i-nImages].setImageWithURL(NSURL(string: post.medias[i].url!)!)
-                }
-                
-                print(i, post.medias[i].url!)
-                view.insertSubview(tempImageViews[i-nImages], aboveSubview: imageView)
+        //if nImages > 1 {
+        var iv: UIImageView!
+        tempImageViews = []
+        // Refresh the layout before assign anything
+        view.layoutIfNeeded()
+        for i in nImages...2*nImages-1 {
+            iv = UIImageView()
+            iv.frame = imageView.frame
+            // Add 20px for the status bar, if not show status bar, comment next 2 lines
+            iv.frame.origin.y += 20
+            iv.frame.size.height -= 20
+            
+            print(iv.frame)
+            iv.center.x -= imageView.frame.width
+            iv.contentMode = .ScaleAspectFit
+            iv.clipsToBounds = true
+            
+            tempImageViews.append(iv)
+            url = post.medias[i].url!
+            
+            if (url.rangeOfString("video.mov") != nil) {
+                tempImageViews[i-nImages].setImageWithURL(NSURL(string: post.medias[i-nImages].url!)!)
+                videoPosition = i - nImages
+                videoUrl = NSURL(string: url)
+            } else {
+                tempImageViews[i-nImages].setImageWithURL(NSURL(string: post.medias[i].url!)!)
             }
+            
+            print(i, post.medias[i].url!)
+            view.insertSubview(tempImageViews[i-nImages], aboveSubview: imageView)
         }
+        //}
         
         // Set the buttons width equally
         screenWidth = UIScreen.mainScreen().bounds.width
