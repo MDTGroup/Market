@@ -12,6 +12,7 @@ import SWTableViewCell
 
 class UserTimelineViewController: UIViewController {
     
+    let postLimit = 12
     var user: User!
     var posts = [Post]()
     var queryArray = [User]()
@@ -204,7 +205,7 @@ extension UserTimelineViewController {
         if dataToLoad == 0 {
             user.getPosts(byThisDate, callback: { (posts, error) -> Void in
                 if let posts = posts {
-                    if posts.count == 0 {
+                    if posts.count < self.postLimit {
                         self.isEndOfFeed = true
                     }
                     
@@ -229,7 +230,7 @@ extension UserTimelineViewController {
             print("loading user's saved posts")
             user.getSavedPosts(byThisDate, callback: { (posts, error) -> Void in
                 if let posts = posts {
-                    if posts.count == 0 {
+                    if posts.count < self.postLimit {
                         self.isEndOfFeed = true
                     }
                     
@@ -358,6 +359,9 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         view.endEditing(true)
+        
+        let cell = tableView.cellForRowAtIndexPath(indexPath) as! SimplifiedItemCell
+        cell.hideUtilityButtonsAnimated(true)
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -556,6 +560,7 @@ extension UserTimelineViewController: SWTableViewCellDelegate {
                 Post.sold(post.objectId!, isSold: true, completion: { (finished, error) -> Void in
                     if finished {
                         newCell.priceLabel.text = "SOLD"
+                        newCell.priceLabel.textColor = UIColor.whiteColor()
                         newCell.priceLabel.backgroundColor = MyColors.carrot
                         
                         // Change button to "AVAIL"
@@ -571,8 +576,9 @@ extension UserTimelineViewController: SWTableViewCellDelegate {
             } else {
                 Post.sold(post.objectId!, isSold: false, completion: { (finished, error) -> Void in
                     if finished {
-                        newCell.priceLabel.text = self.posts[id!.row].price.formatCurrency()
-                        newCell.priceLabel.backgroundColor = MyColors.bluesky
+                        newCell.priceLabel.text = self.posts[id!.row].price.formatVND()
+                        newCell.priceLabel.textColor = MyColors.green
+                        newCell.priceLabel.backgroundColor = UIColor.whiteColor()
                         
                         // Change button to "Sold"
                         let leftUtilityButtons = NSMutableArray()
