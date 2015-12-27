@@ -337,6 +337,7 @@ extension UserTimelineViewController {
     // Load list of people I'm following
     func loadFollowing() {
         User.currentUser()?.getFollowings({ (users, error) -> Void in
+            self.refreshControl.endRefreshing()
             MBProgressHUD.hideHUDForView(self.tableView, animated: true)
             guard error == nil else {
                 print(error)
@@ -352,11 +353,13 @@ extension UserTimelineViewController {
     
 }
 
-extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource, FollowingTableViewCellDelegate, KeywordsTableViewCellDelegate {
+extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource, KeywordsTableViewCellDelegate {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch dataToLoad {
-        case 0, 1: return posts.count
-        case 2: return queryArray.count
+        case 0, 1:
+            return posts.count
+        case 2:
+            return queryArray.count
         case 3:
             if let currentUser = User.currentUser() {
                 return currentUser.keywords.count
@@ -369,16 +372,21 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         view.endEditing(true)
         
-        let cell = tableView.cellForRowAtIndexPath(indexPath) as! SimplifiedItemCell
-        cell.hideUtilityButtonsAnimated(true)
+        if let cell = tableView.cellForRowAtIndexPath(indexPath) as? SimplifiedItemCell {
+            cell.hideUtilityButtonsAnimated(true)
+        }
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         switch dataToLoad {
-        case 0, 1: return 60
-        case 2: return 56
-        case 3: return 40
-        default: return 0
+        case 0, 1:
+            return 60
+        case 2:
+            return 56
+        case 3:
+            return 40
+        default:
+            return 0
         }
     }
     
@@ -461,7 +469,6 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
             }
             
             cell.targetUser = self.queryArray[indexPath.row]
-            cell.delegate = self
             
             // TODO: Infinite load if last cell
             // How to load next 20?
@@ -529,16 +536,6 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         return []
     }
     
-    func followingTableViewCell(followingTableViewCell: FollowingTableViewCell, didUnfollow value: Bool) {
-//        // Did unfollow this user, remove from the tableView
-//        if value {
-//            if let id = tableView.indexPathForCell(followingTableViewCell) {
-//                queryArray.removeAtIndex(id.row)
-//                tableView.deleteRowsAtIndexPaths([id], withRowAnimation: .Bottom)
-//            }
-//        }
-    }
-    
     func keywordsTableViewCell(keywordsTableViewCell: KeywordsTableViewCell, didDelete value: Bool) {
         if value {
             if let id = tableView.indexPathForCell(keywordsTableViewCell) {
@@ -561,13 +558,7 @@ extension UserTimelineViewController: PostViewControllerDelegate {
 
 // MARK: - SWTableView
 extension UserTimelineViewController: SWTableViewCellDelegate {
-    func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerLeftUtilityButtonWithIndex index: Int) {
-        // Update item as sold
-        //        let alertController = UIAlertController(title: "Market", message: "Ok, sold!", preferredStyle: .Alert)
-        //        let okAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
-        //        alertController.addAction(okAction)
-        //        self.presentViewController(alertController, animated: true, completion: nil)
-        
+    func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerLeftUtilityButtonWithIndex index: Int) {        
         let id = tableView.indexPathForCell(cell)
         let post = posts[id!.row]
         
