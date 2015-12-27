@@ -16,7 +16,6 @@ class UserTimelineViewController: UIViewController {
     var user: User!
     var posts = [Post]()
     var queryArray = [User]()
-    var keyWords = User.currentUser()?.keywords
     var isCurrentUser = false
     
     @IBOutlet weak var tableView: UITableView!
@@ -44,7 +43,15 @@ class UserTimelineViewController: UIViewController {
     var noMoreResultLabel = UILabel()
     var selectedPostIndex: Int!
     var iFollowThisUser = false
-    var dataToLoad = 0 // 0: user's posts, 1: user's saved posts, 2: following, 3: keywords
+    
+    enum DataToLoad: Int {
+        case UsersPosts = 0
+        case UsersSavedPosts = 1
+        case Following = 2
+        case Keywords = 3
+    }
+    
+    private var dataToLoad = DataToLoad.UsersPosts
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -131,9 +138,9 @@ class UserTimelineViewController: UIViewController {
     @IBAction func onCategoryChanged(sender: UISegmentedControl) {
         MBProgressHUD.hideHUDForView(self.tableView, animated: true)
         isEndOfFeed = false
-        dataToLoad = sender.selectedSegmentIndex
-        keywordView.hidden = (dataToLoad != 3)
-        keywordViewHeight.constant = dataToLoad != 3 ? 0 : 44
+        dataToLoad = DataToLoad(rawValue: sender.selectedSegmentIndex)!
+        keywordView.hidden = dataToLoad != DataToLoad.Keywords
+        keywordViewHeight.constant = keywordView.hidden ? 0 : 44
         UIView.animateWithDuration(0.3, animations: { () -> Void in
             self.view.layoutIfNeeded()
         })
@@ -184,20 +191,19 @@ extension UserTimelineViewController {
     
     func refreshData(isPullToRefresh: Bool) {
         switch dataToLoad {
-        case 0, 1:
+        case .UsersPosts, .UsersSavedPosts:
             if !isPullToRefresh {
                 MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
             }
             loadNewestData()
-        case 2:
+        case .Following:
             if !isPullToRefresh {
                 MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
             }
             loadFollowing()
-        case 3:
+        case .Keywords:
             refreshControl.endRefreshing()
             tableView.reloadData()
-        default: return
         }
     }
     
@@ -211,7 +217,7 @@ extension UserTimelineViewController {
     }
     
     func loadData(byThisDate: NSDate?) {
-        if dataToLoad == 0 {
+        if dataToLoad == .UsersPosts {
             user.getPosts(byThisDate, callback: { (posts, error) -> Void in
                 if let posts = posts {
                     if posts.count < self.postLimit {
@@ -356,16 +362,15 @@ extension UserTimelineViewController {
 extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch dataToLoad {
-        case 0, 1:
+        case .UsersPosts, .UsersSavedPosts:
             return posts.count
-        case 2:
+        case .Following:
             return queryArray.count
-        case 3:
+        case .Keywords:
             if let currentUser = User.currentUser() {
                 return currentUser.keywords.count
             }
             return 0
-        default: return 0
         }
     }
     
@@ -379,20 +384,18 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         switch dataToLoad {
-        case 0, 1:
+        case .UsersPosts, .UsersSavedPosts:
             return 60
-        case 2:
+        case .Following:
             return 56
-        case 3:
+        case .Keywords:
             return 40
-        default:
-            return 0
         }
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         switch dataToLoad {
-        case 0, 1:
+        case .UsersPosts, .UsersSavedPosts:
             let cell = tableView.dequeueReusableCellWithIdentifier("simplifiedItemCell", forIndexPath: indexPath) as! SimplifiedItemCell
             
             // Dont know why but sometime it jumps to here
@@ -401,14 +404,14 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 print("the myth")
                 return cell
             }
-            if let user = user where dataToLoad == 0 {
+            if let user = user where dataToLoad == .UsersPosts {
                 cell.profileId = user.objectId
             } else {
                 cell.profileId = nil
             }
             cell.item = posts[indexPath.row]
             
-            if dataToLoad == 0 {
+            if dataToLoad == .UsersPosts {
                 // Add utility buttons
                 let leftUtilityButtons = NSMutableArray()
                 //let rightUtilityButtons = NSMutableArray()
@@ -428,7 +431,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 cell.rightUtilityButtons = [] //rightUtilityButtons as [AnyObject]
                 cell.delegate = self
                 
-            } else if dataToLoad == 1 {
+            } else if dataToLoad == .UsersSavedPosts {
                 // Add utility buttons
                 let rightUtilityButtons = NSMutableArray()
                 
@@ -450,7 +453,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
             
             return cell
             
-        case 2:
+        case .Following:
             let cell = tableView.dequeueReusableCellWithIdentifier("FollowingCell", forIndexPath: indexPath) as! FollowingTableViewCell
             
             if posts.count == 0 {
@@ -475,7 +478,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
             
             return cell
             
-        case 3:
+        case .Keywords:
             let cell = tableView.dequeueReusableCellWithIdentifier("KeywordsCell", forIndexPath: indexPath) as! KeywordsTableViewCell
             cell.keywordLabel.text = User.currentUser()?.keywords[indexPath.row]
             cell.delegate = self
@@ -487,7 +490,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     }
     
     func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        if dataToLoad >= 1 {
+        if dataToLoad != .UsersPosts && dataToLoad != .UsersSavedPosts {
             return []
         }
         
