@@ -353,7 +353,7 @@ extension UserTimelineViewController {
     
 }
 
-extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource, KeywordsTableViewCellDelegate {
+extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch dataToLoad {
         case 0, 1:
@@ -536,6 +536,26 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         return []
     }
     
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+            if let followingCell = cell as? FollowingTableViewCell {
+                let userTimelineVC = UserTimelineViewController.instantiateViewController
+                userTimelineVC.user = followingCell.targetUser
+                presentViewController(userTimelineVC, animated: true, completion: { () -> Void in
+                    self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                    })
+            } else if let simplifiedCell = cell as? SimplifiedItemCell {
+                let detailVC = DetailViewController.instantiateViewController
+                detailVC.post = simplifiedCell.item
+                presentViewController(detailVC, animated: true, completion: { () -> Void in
+                    self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
+                })
+            }
+        }
+    }
+}
+
+extension UserTimelineViewController: KeywordsTableViewCellDelegate {
     func keywordsTableViewCell(keywordsTableViewCell: KeywordsTableViewCell, didDelete value: Bool) {
         if value {
             if let id = tableView.indexPathForCell(keywordsTableViewCell) {
@@ -558,7 +578,7 @@ extension UserTimelineViewController: PostViewControllerDelegate {
 
 // MARK: - SWTableView
 extension UserTimelineViewController: SWTableViewCellDelegate {
-    func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerLeftUtilityButtonWithIndex index: Int) {        
+    func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerLeftUtilityButtonWithIndex index: Int) {
         let id = tableView.indexPathForCell(cell)
         let post = posts[id!.row]
         

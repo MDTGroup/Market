@@ -14,7 +14,7 @@ class FollowingTableViewCell: UITableViewCell {
     @IBOutlet weak var fullnameLabel: UILabel!
     @IBOutlet weak var unfollowingButton: UIButton!
     var clickedButton: Bool = false
-    var targetUser =  User()
+    var targetUser: User!
     
     override func awakeFromNib() {
         imgField.layer.cornerRadius = imgField.frame.size.width/2
