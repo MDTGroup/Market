@@ -9,6 +9,12 @@
 import Foundation
 import Parse
 
+enum NotificationSetting: Int {
+    case SavedPosts = 1
+    case Following = 2
+    case Keywords = 3
+}
+
 class User: PFUser {
     @NSManaged var avatar: PFFile?
     @NSManaged var fullName: String
@@ -24,6 +30,10 @@ class User: PFUser {
     // Reset to nil to make it get data from server
     var numFollowing: Int32?
     var numFollower: Int32?
+    
+    var enableNotificationForSavedPosts: Bool = false
+    var enableNotificationForFollowing: Bool = false
+    var enableNotificationForKeywords: Bool = false
     
     func getPosts(lastUpdated:NSDate?, callback: PostResultBlock) {
         if let query = Post.query() {
@@ -286,5 +296,54 @@ class User: PFUser {
                 }
             })
         }
+    }
+    
+    func updateNotificationSettings() {
+        var needToSaveToCloud = false
+        let installation = PFInstallation.currentInstallation()
+        var enableNotificationForSavedPosts = installation.valueForKey("enableNotificationForSavedPosts") as? Bool
+        if enableNotificationForSavedPosts == nil {
+            enableNotificationForSavedPosts = true
+            needToSaveToCloud = true
+        }
+        self.enableNotificationForSavedPosts = enableNotificationForSavedPosts!
+        
+        var enableNotificationForFollowing = installation.valueForKey("enableNotificationForFollowing") as? Bool
+        if enableNotificationForFollowing == nil {
+            enableNotificationForFollowing = true
+            needToSaveToCloud = true
+        }
+        self.enableNotificationForFollowing = enableNotificationForFollowing!
+        
+        var enableNotificationForKeywords = installation.valueForKey("enableNotificationForKeywords") as? Bool
+        if enableNotificationForKeywords == nil {
+            enableNotificationForKeywords = true
+            needToSaveToCloud = true
+        }
+        self.enableNotificationForKeywords = enableNotificationForKeywords!
+        
+        if needToSaveToCloud {
+            let installation = PFInstallation.currentInstallation()
+            installation.setValue(enableNotificationForSavedPosts, forKey: "enableNotificationForSavedPosts")
+            installation.setValue(enableNotificationForFollowing, forKey: "enableNotificationForFollowing")
+            installation.setValue(enableNotificationForKeywords, forKey: "enableNotificationForKeywords")
+            installation.saveInBackground()
+        }
+    }
+    
+    func updateNotificationConfigForType(notificationSetting: NotificationSetting, enable: Bool) {
+        let installation = PFInstallation.currentInstallation()
+        switch notificationSetting {
+        case .SavedPosts:
+            self.enableNotificationForSavedPosts = enable
+            installation.setValue(enable, forKey: "enableNotificationForSavedPosts")
+        case .Keywords:
+            self.enableNotificationForKeywords = enable
+            installation.setValue(enable, forKey: "enableNotificationForKeywords")
+        case .Following:
+            self.enableNotificationForFollowing = enable
+            installation.setValue(enable, forKey: "enableNotificationForFollowing")
+        }
+        installation.saveInBackground()
     }
 }

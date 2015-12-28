@@ -30,11 +30,12 @@ class UserTimelineViewController: UIViewController {
     @IBOutlet weak var followButton: UIButton!
     @IBOutlet weak var keywordText: UITextField!
     
+    @IBOutlet weak var receiveNotificationView: UIView!
     @IBOutlet weak var keywordView: UIView!
     @IBOutlet weak var segmentControl: UISegmentedControl!
     @IBOutlet weak var segmentPreGap: NSLayoutConstraint!
     @IBOutlet weak var segmentHeight: NSLayoutConstraint!
-    @IBOutlet weak var keywordViewHeight: NSLayoutConstraint!
+    @IBOutlet weak var switchControl: UISwitch!
     
     var refreshControl = UIRefreshControl()
     var loadingView: UIActivityIndicatorView!
@@ -62,6 +63,9 @@ class UserTimelineViewController: UIViewController {
         tableView.delegate = self
         
         keywordText.delegate = self
+        
+        keywordView.hidden = true
+        receiveNotificationView.hidden = true
         
         // Refresh control
         refreshControl.addTarget(self, action: Selector("pullToRefresh"), forControlEvents: UIControlEvents.ValueChanged)
@@ -145,11 +149,26 @@ class UserTimelineViewController: UIViewController {
     
     @IBAction func onCategoryChanged(sender: UISegmentedControl) {
         view.endEditing(true)
+        
+        if let currentUser = User.currentUser() {
+            switch DataToLoad(rawValue: sender.selectedSegmentIndex)! {
+            case DataToLoad.UsersSavedPosts:
+                switchControl.on = currentUser.enableNotificationForSavedPosts
+            case DataToLoad.Following:
+                switchControl.on = currentUser.enableNotificationForFollowing
+            case DataToLoad.Keywords:
+                switchControl.on = currentUser.enableNotificationForKeywords
+            default:
+                return
+            }
+        }
+        
         MBProgressHUD.hideHUDForView(self.tableView, animated: true)
         isEndOfFeed = false
         dataToLoad = DataToLoad(rawValue: sender.selectedSegmentIndex)!
         keywordView.hidden = dataToLoad != DataToLoad.Keywords
-        keywordViewHeight.constant = keywordView.hidden ? 0 : 44
+        receiveNotificationView.hidden = !(dataToLoad == .Keywords || dataToLoad == .Following || dataToLoad == .UsersSavedPosts)
+
         UIView.animateWithDuration(0.3, animations: { () -> Void in
             self.view.layoutIfNeeded()
         })
@@ -279,8 +298,8 @@ extension UserTimelineViewController {
     }
     
     func refreshProfile() {
-        keywordView.hidden = true
-        keywordViewHeight.constant = 0
+        
+//        keywordViewHeight.constant = 0
         if user == nil {
             user = User.currentUser()
             isCurrentUser = true
@@ -319,6 +338,7 @@ extension UserTimelineViewController {
         
         // Load following (this user follows people)
         followingCountLabel.text = " "
+        
         user.getNumFollowings { (numFollowing, error) -> Void in
             guard error == nil else {
                 print(error)
@@ -671,5 +691,23 @@ extension UserTimelineViewController: UITextFieldDelegate {
 extension UserTimelineViewController {
     static var instantiateViewController: UserTimelineViewController {
         return HomeViewController.storyboard.instantiateViewControllerWithIdentifier(StoryboardID.userTimeline) as! UserTimelineViewController
+    }
+}
+
+// MARK: Update enable/disable notification settings
+extension UserTimelineViewController {
+    @IBAction func onChangeSwitchSaved(sender: UISwitch) {
+        if let currentUser = User.currentUser() {
+            switch dataToLoad {
+            case .UsersSavedPosts:
+                currentUser.updateNotificationConfigForType(NotificationSetting.SavedPosts, enable: sender.on)
+            case .Following:
+                currentUser.updateNotificationConfigForType(NotificationSetting.Following, enable: sender.on)
+            case .Keywords:
+                currentUser.updateNotificationConfigForType(NotificationSetting.Keywords, enable: sender.on)
+            default:
+                return
+            }
+        }
     }
 }

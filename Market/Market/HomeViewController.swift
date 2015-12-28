@@ -83,9 +83,12 @@ class HomeViewController: UIViewController {
     }
     
     func setupForInstallation() {
-        let installation = PFInstallation.currentInstallation()
-        installation["user"] = User.currentUser()
-        installation.saveInBackground()
+        if let currentUser = User.currentUser() {
+            let installation = PFInstallation.currentInstallation()
+            installation["user"] = currentUser
+            installation.saveInBackground()
+            currentUser.updateNotificationSettings()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
