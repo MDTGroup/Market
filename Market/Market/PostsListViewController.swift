@@ -104,8 +104,10 @@ class PostsListViewController: UIViewController {
             
             if self.filteredConversationsByPost.count == 0 {
                 self.tableView.tableFooterView = self.tableFooterView
+                self.tableView.tableFooterView?.hidden = true
             } else {
-                self.tableView.tableFooterView = nil
+                self.tableView.tableFooterView = UIView(frame: CGRect.zero)
+                self.tableView.tableFooterView?.hidden = true
             }
 
             self.refreshControl.endRefreshing()
