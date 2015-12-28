@@ -65,12 +65,15 @@ class ItemCell: UITableViewCell {
                     previousImageURL = urlString
                     itemImageView.image = nil
                     itemImageView.alpha = 0
-                    let url = NSURL(string: urlString!)!
                     
+                    newTagImageView.alpha = 0
+                    
+                    let url = NSURL(string: urlString!)!
                     itemImageView.setImageWithURLRequest(NSURLRequest(URL: url), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
                         self.itemImageView.image =  image
                         UIView.animateWithDuration(0.5, animations: { () -> Void in
                             self.itemImageView.alpha = 1
+                            self.newTagImageView.alpha = 1
                         })
                         }, failure: { (urlRequest, httpURLResponse, error) -> Void in
                             print(error)

@@ -73,10 +73,10 @@
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="new_tag" translatesAutoresizingMaskIntoConstraints="NO" id="RfB-6f-epf">
-                                                            <rect key="frame" x="1" y="1" width="30" height="30"/>
+                                                            <rect key="frame" x="-2" y="-2" width="60" height="60"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="width" constant="30" id="FCu-Jd-8M4"/>
-                                                                <constraint firstAttribute="height" constant="30" id="eJ9-tt-9F2"/>
+                                                                <constraint firstAttribute="width" constant="60" id="FCu-Jd-8M4"/>
+                                                                <constraint firstAttribute="height" constant="60" id="eJ9-tt-9F2"/>
                                                             </constraints>
                                                         </imageView>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="25.000.000" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ug2-qg-V7m">
@@ -116,13 +116,13 @@
                                                         <constraint firstItem="WtU-q5-gZe" firstAttribute="centerY" secondItem="dQa-lo-tuy" secondAttribute="centerY" id="Ef2-RI-XmW"/>
                                                         <constraint firstAttribute="trailing" secondItem="dQa-lo-tuy" secondAttribute="trailing" constant="8" id="Jqc-9a-Efd"/>
                                                         <constraint firstItem="pLu-ph-7rO" firstAttribute="centerX" secondItem="CZI-bH-SXH" secondAttribute="centerX" id="N0t-Ow-eOq"/>
-                                                        <constraint firstItem="RfB-6f-epf" firstAttribute="top" secondItem="EUp-Mp-kPS" secondAttribute="top" constant="1" id="Vox-Ag-89A"/>
+                                                        <constraint firstItem="RfB-6f-epf" firstAttribute="top" secondItem="EUp-Mp-kPS" secondAttribute="top" constant="-2" id="Vox-Ag-89A"/>
                                                         <constraint firstItem="pLu-ph-7rO" firstAttribute="centerY" secondItem="CZI-bH-SXH" secondAttribute="centerY" id="Xqv-po-ynn"/>
                                                         <constraint firstAttribute="trailing" secondItem="OIZ-L2-RFz" secondAttribute="trailing" id="Zca-hT-o8x"/>
                                                         <constraint firstAttribute="trailing" secondItem="CZI-bH-SXH" secondAttribute="trailing" constant="4" id="Zgm-87-riI"/>
                                                         <constraint firstItem="dQa-lo-tuy" firstAttribute="top" secondItem="9b7-hg-xAN" secondAttribute="bottom" constant="8" id="bzX-lu-lsB"/>
                                                         <constraint firstItem="CZI-bH-SXH" firstAttribute="leading" secondItem="EUp-Mp-kPS" secondAttribute="leading" constant="4" id="iSC-2v-TNl"/>
-                                                        <constraint firstItem="RfB-6f-epf" firstAttribute="leading" secondItem="EUp-Mp-kPS" secondAttribute="leading" constant="1" id="k5u-ES-Vom"/>
+                                                        <constraint firstItem="RfB-6f-epf" firstAttribute="leading" secondItem="EUp-Mp-kPS" secondAttribute="leading" constant="-2" id="k5u-ES-Vom"/>
                                                         <constraint firstAttribute="bottom" secondItem="OIZ-L2-RFz" secondAttribute="bottom" id="mBZ-6o-vz7"/>
                                                         <constraint firstItem="Dwz-yy-amA" firstAttribute="leading" secondItem="EUp-Mp-kPS" secondAttribute="leading" constant="8" id="oDk-MN-0ux"/>
                                                         <constraint firstItem="ug2-qg-V7m" firstAttribute="top" secondItem="Dwz-yy-amA" secondAttribute="bottom" constant="8" id="p5T-VJ-2n3"/>
