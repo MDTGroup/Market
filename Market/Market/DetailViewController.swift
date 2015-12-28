@@ -49,6 +49,7 @@ class DetailViewController: UIViewController {
     @IBOutlet var panGesture: UIPanGestureRecognizer!
     @IBOutlet var pinchGesture: UIPinchGestureRecognizer!
     @IBOutlet weak var titleView: UIView!
+    @IBOutlet weak var soldView: UIView!
     
     var post: Post!
     var isReadingFullDescription: Bool!
@@ -71,6 +72,10 @@ class DetailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        soldView.layer.cornerRadius = 5
+        soldView.clipsToBounds = true
+        soldView.hidden = !post.sold
         
         // Do any additional setup after loading the view.
         itemNameLabel.text = post.title

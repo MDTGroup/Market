@@ -762,6 +762,25 @@
                                         <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ie5-tw-uSe">
+                                        <rect key="frame" x="80" y="29" width="49" height="19"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="SOLD" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1up-xJ-8gO">
+                                                <rect key="frame" x="8" y="2" width="33" height="15"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                        </subviews>
+                                        <color key="backgroundColor" red="0.98039215690000003" green="0.2274509804" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstItem="1up-xJ-8gO" firstAttribute="top" secondItem="Ie5-tw-uSe" secondAttribute="top" constant="2" id="cKI-ty-vGD"/>
+                                            <constraint firstItem="1up-xJ-8gO" firstAttribute="centerY" secondItem="Ie5-tw-uSe" secondAttribute="centerY" id="gHD-tD-DxZ"/>
+                                            <constraint firstItem="1up-xJ-8gO" firstAttribute="leading" secondItem="Ie5-tw-uSe" secondAttribute="leading" constant="8" id="kv9-cA-kv2"/>
+                                            <constraint firstAttribute="trailing" secondItem="1up-xJ-8gO" secondAttribute="trailing" constant="8" id="nSM-10-AYs"/>
+                                            <constraint firstAttribute="bottom" secondItem="1up-xJ-8gO" secondAttribute="bottom" constant="2" id="tBj-iF-b4D"/>
+                                        </constraints>
+                                    </view>
                                 </subviews>
                                 <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -770,6 +789,7 @@
                                     <constraint firstItem="6ae-5J-66i" firstAttribute="centerY" secondItem="mif-h4-dFX" secondAttribute="centerY" id="7UV-fd-KRh"/>
                                     <constraint firstItem="Pwv-uA-s1q" firstAttribute="leading" secondItem="sK6-qR-HC8" secondAttribute="trailing" constant="10" id="C1Q-7u-xyU"/>
                                     <constraint firstAttribute="trailing" secondItem="mif-h4-dFX" secondAttribute="trailing" constant="8" id="CAh-u2-br5"/>
+                                    <constraint firstItem="Ie5-tw-uSe" firstAttribute="leading" secondItem="4PH-zu-OB4" secondAttribute="trailing" constant="8" id="O7N-aJ-vXP"/>
                                     <constraint firstItem="Pwv-uA-s1q" firstAttribute="top" secondItem="sK6-qR-HC8" secondAttribute="top" id="OBt-im-iYF"/>
                                     <constraint firstItem="88W-kR-OGU" firstAttribute="leading" secondItem="EeN-d5-mO7" secondAttribute="leading" constant="8" id="Un0-Eg-2bA"/>
                                     <constraint firstItem="88W-kR-OGU" firstAttribute="top" secondItem="4PH-zu-OB4" secondAttribute="bottom" constant="8" id="W0z-P3-SdQ"/>
@@ -781,6 +801,7 @@
                                     <constraint firstAttribute="trailing" secondItem="Tbf-DM-X01" secondAttribute="trailing" constant="5" id="ecO-11-lP3"/>
                                     <constraint firstAttribute="height" constant="75" id="ftB-cN-VCI"/>
                                     <constraint firstItem="sK6-qR-HC8" firstAttribute="centerX" secondItem="EeN-d5-mO7" secondAttribute="centerX" id="hmz-QE-0qA"/>
+                                    <constraint firstItem="Ie5-tw-uSe" firstAttribute="top" secondItem="4PH-zu-OB4" secondAttribute="bottom" constant="-17" id="nha-JB-Qfb"/>
                                     <constraint firstItem="War-Jk-Wxe" firstAttribute="top" secondItem="sK6-qR-HC8" secondAttribute="top" id="rcO-Sa-vkM"/>
                                     <constraint firstItem="88W-kR-OGU" firstAttribute="top" secondItem="4PH-zu-OB4" secondAttribute="bottom" constant="8" id="tm9-XO-HHA"/>
                                     <constraint firstItem="mif-h4-dFX" firstAttribute="top" secondItem="Tbf-DM-X01" secondAttribute="bottom" id="vBx-Z3-NQc"/>
@@ -902,6 +923,7 @@
                         <outlet property="scrollCircle2" destination="sK6-qR-HC8" id="NCa-M8-ssS"/>
                         <outlet property="scrollCircle3" destination="Pwv-uA-s1q" id="vXz-nm-8jy"/>
                         <outlet property="sellerLabel" destination="RXW-UG-ZPU" id="58C-48-O8i"/>
+                        <outlet property="soldView" destination="Ie5-tw-uSe" id="FHK-W2-Kg7"/>
                         <outlet property="textHeight" destination="vgU-Fi-8zT" id="P8n-bK-ZHU"/>
                         <outlet property="titleView" destination="EeN-d5-mO7" id="Flc-zS-59Y"/>
                         <outlet property="updatedAtLabel" destination="jMW-8p-qCt" id="HOB-fl-caI"/>
