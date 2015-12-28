@@ -90,7 +90,7 @@ class HomeViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         // Reload whatever the change from other pages
-        tableView.reloadData()
+//        tableView.reloadData()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -233,6 +233,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         selectedPostIndex = indexPath.row
         let item = posts[indexPath.row]
         performSegueWithIdentifier("detailSegue", sender: item)

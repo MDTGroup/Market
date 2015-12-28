@@ -43,7 +43,7 @@ class SearchTableViewCell: UITableViewCell {
             
             itemNameLabel.text = post.title
             timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
-            priceLabel.text = post.price.formatCurrency()
+            priceLabel.text = post.price.formatVND()
             newTagImageView.hidden = (post.condition > 0)
         }
     }

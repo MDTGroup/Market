@@ -42,7 +42,7 @@ class SimplifiedItemCell: SWTableViewCell {
             itemNameLabel.text = post.title
             postAtLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
             newTagImageView.hidden = (post.condition > 0)
-            
+            priceLabel.text = post.price.formatVND()
             soldView.hidden = !post.sold
             
             if let profileId = profileId where profileId == post.user.objectId {

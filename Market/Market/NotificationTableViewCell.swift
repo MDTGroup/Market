@@ -61,12 +61,10 @@ class NotificationTableViewCell: UITableViewCell {
             if notification.isRead {
                 itemNameLabel.font = UIFont.systemFontOfSize(14)
                 timeAgoLabel.font = UIFont.systemFontOfSize(12)
-                priceLabel.font = UIFont.systemFontOfSize(12)
                 backgroundColor = UIColor.whiteColor()
             } else {
                 itemNameLabel.font = UIFont.boldSystemFontOfSize(14)
                 timeAgoLabel.font = UIFont.boldSystemFontOfSize(12)
-                priceLabel.font = UIFont.boldSystemFontOfSize(12)
                 backgroundColor = MyColors.highlightForNotification
             }
         }

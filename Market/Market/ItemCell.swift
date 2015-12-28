@@ -30,22 +30,52 @@ class ItemCell: UITableViewCell {
     @IBOutlet weak var cardView: UIView!
     
     weak var delegate: ItemCellDelegate?
+    var previousAvatarURL: String?
+    var previousImageURL: String?
     
     var item: Post! {
         didSet {
             let post = item
             if let avatar = post.user.avatar {
-                // Set it nil first to prevent it reuses image from other cell when new post
-                avatarImageView.image = nil
-                avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+                let urlString = avatar.url
+                if previousAvatarURL != urlString {
+                    previousAvatarURL = urlString
+                    let url = NSURL(string: urlString!)!
+                    
+                    avatarImageView.image = nil
+                    avatarImageView.alpha = 0
+                    
+                    avatarImageView.setImageWithURLRequest(NSURLRequest(URL: url), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+                        self.avatarImageView.image =  image
+                        UIView.animateWithDuration(0.5, animations: { () -> Void in
+                            self.avatarImageView.alpha = 1
+                        })
+                        }, failure: { (urlRequest, httpURLResponse, error) -> Void in
+                            print(error)
+                    })
+                }
+                
             } else {
                 avatarImageView.image = UIImage(named: "profile_blank")
             }
             
-            // Set Item
             if post.medias.count > 0 {
-                itemImageView.image = nil
-                self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
+                let urlString = post.medias[0].url
+                if previousImageURL != urlString {
+                    previousImageURL = urlString
+                    itemImageView.image = nil
+                    itemImageView.alpha = 0
+                    let url = NSURL(string: urlString!)!
+                    
+                    itemImageView.setImageWithURLRequest(NSURLRequest(URL: url), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+                        self.itemImageView.image =  image
+                        UIView.animateWithDuration(0.5, animations: { () -> Void in
+                            self.itemImageView.alpha = 1
+                        })
+                        }, failure: { (urlRequest, httpURLResponse, error) -> Void in
+                            print(error)
+                    })
+                }
             }
             
             sellerLabel.text = post.user.fullName
@@ -65,6 +95,12 @@ class ItemCell: UITableViewCell {
         cardView.layer.shadowOffset = CGSizeMake(0.5, 0.5)
         cardView.layer.shadowOpacity = 1.0
         cardView.layer.shadowRadius = 2.0
+        
+//        priceLabel.layer.cornerRadius = 2
+//        priceLabel.layer.shadowColor = UIColor.lightGrayColor().CGColor
+//        priceLabel.layer.shadowOffset = CGSizeMake(0.5, 0.5)
+//        priceLabel.layer.shadowOpacity = 1.0
+//        priceLabel.layer.shadowRadius = 2.0
         
         avatarImageView.layer.cornerRadius = avatarImageView.bounds.width/2
         avatarImageView.clipsToBounds = true

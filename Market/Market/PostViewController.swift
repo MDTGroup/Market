@@ -374,7 +374,7 @@ class PostViewController: UIViewController {
             if i == videoPosition {
                 post.medias.append(videoPFFile!)
             } else {
-                image = Helper.resizeImage(images[i], newWidth: 750)
+                image = Helper.resizeImage(images[i], newWidth: 1600)
                 imageFile = PFFile(name: "img\(i+1).jpg", data: UIImageJPEGRepresentation(image, 0.4)!)
                 post.medias.append(imageFile!)
             }
@@ -571,14 +571,15 @@ class PostViewController: UIViewController {
     func sendNotificationForNewPost(post: Post) {
         var params = [String : AnyObject]()
         params["postId"] = post.objectId!
+        params["title"] = post.title
+        params["price"] =  post.price.formatVND()
         Notification.sendNotifications(NotificationType.Following, params: params, callback: { (success, error) -> Void in
             guard error == nil else {
                 print(error)
                 return
             }
         })
-        params["postId"] = post.objectId!
-        params["title"] = post.title
+
         params["description"] = post.descriptionText
         Notification.sendNotifications(NotificationType.Keywords, params: params) { (success, error) -> Void in
             guard error == nil else {
@@ -594,6 +595,8 @@ class PostViewController: UIViewController {
         }
         var params = [String : AnyObject]()
         params["postId"] = post.objectId!
+        params["title"] = post.title
+        params["price"] =  post.price.formatVND()
         params["extraInfo"] = changeDescription
         Notification.sendNotifications(NotificationType.SavedPost, params: params, callback: { (success, error) -> Void in
             guard error == nil else {

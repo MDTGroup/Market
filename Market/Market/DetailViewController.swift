@@ -306,7 +306,7 @@ class DetailViewController: UIViewController {
             imageView.transform = CGAffineTransformMakeRotation((direction * translation.x * CGFloat(M_PI)) / 180.0)
             
         } else if sender.state == .Ended {
-            if translation.y > 100 {
+            if translation.y > 100 || translation.y < -100 {
                 dismissViewControllerAnimated(true, completion: nil)
             } else {
                 // If only 1 image then return it to original position
