@@ -54,7 +54,7 @@ class User: PFUser {
             query.selectKeys(["to"])
             query.includeKey("to")
             query.whereKey("from", equalTo: self)
-            query.cachePolicy = .NetworkElseCache
+            query.cachePolicy = .CacheThenNetwork
             query.countObjectsInBackgroundWithBlock({ (num, error) -> Void in
                 self.numFollowing = num
                 callback(num, error)
@@ -71,7 +71,7 @@ class User: PFUser {
             query.selectKeys(["from"])
             query.includeKey("from")
             query.whereKey("to", equalTo: self)
-            query.cachePolicy = .NetworkElseCache
+            query.cachePolicy = .CacheThenNetwork
             query.countObjectsInBackgroundWithBlock({ (num, error) -> Void in
                 self.numFollower = num
                 callback(num, error)

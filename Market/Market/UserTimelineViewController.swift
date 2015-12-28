@@ -56,7 +56,6 @@ class UserTimelineViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Do any additional setup after loading the view.
         refreshProfile()
         
         tableView.dataSource = self
@@ -604,12 +603,10 @@ extension UserTimelineViewController: SWTableViewCellDelegate {
         let post = posts[id!.row]
         
         if let newCell = cell as? SimplifiedItemCell {
-            if newCell.priceLabel.text != "SOLD" {
+            if !newCell.item.sold {
                 Post.sold(post.objectId!, isSold: true, completion: { (finished, error) -> Void in
                     if finished {
-                        newCell.priceLabel.text = "SOLD"
-                        newCell.priceLabel.textColor = UIColor.whiteColor()
-                        newCell.priceLabel.backgroundColor = MyColors.carrot
+                        newCell.soldView.hidden = false
                         
                         // Change button to "AVAIL"
                         let leftUtilityButtons = NSMutableArray()
@@ -619,14 +616,13 @@ extension UserTimelineViewController: SWTableViewCellDelegate {
                     } else {
                         print("failed to sell post, error = \(error)")
                     }
+                    newCell.item.fetchInBackground()
                 })
                 
             } else {
                 Post.sold(post.objectId!, isSold: false, completion: { (finished, error) -> Void in
                     if finished {
-                        newCell.priceLabel.text = self.posts[id!.row].price.formatVND()
-                        newCell.priceLabel.textColor = MyColors.green
-                        newCell.priceLabel.backgroundColor = UIColor.whiteColor()
+                        newCell.soldView.hidden = true
                         
                         // Change button to "Sold"
                         let leftUtilityButtons = NSMutableArray()
@@ -635,6 +631,7 @@ extension UserTimelineViewController: SWTableViewCellDelegate {
                     } else {
                         print("failed to set post avail, error = \(error)")
                     }
+                    newCell.item.fetchInBackground()
                 })
             }
             

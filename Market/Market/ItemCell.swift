@@ -73,8 +73,6 @@ class ItemCell: UITableViewCell {
         
         let profileTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
         profileView.addGestureRecognizer(profileTapGesture)
-        
-        priceLabel.textColor = MyColors.green
     }
     
     func tapOnProfile(gesture: UITapGestureRecognizer) {
