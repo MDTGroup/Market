@@ -17,16 +17,24 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Icon-Original" translatesAutoresizingMaskIntoConstraints="NO" id="RSj-Bw-Fdt">
-                                <rect key="frame" x="56" y="184" width="208" height="200"/>
+                                <rect key="frame" x="90" y="173" width="140" height="140"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="200" id="TPx-wN-xY9"/>
-                                    <constraint firstAttribute="width" constant="208" id="tya-0C-Ruq"/>
+                                    <constraint firstAttribute="height" constant="140" id="TPx-wN-xY9"/>
+                                    <constraint firstAttribute="width" constant="140" id="tya-0C-Ruq"/>
                                 </constraints>
                             </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Shopping Made Easier" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gfg-4G-3Dt">
+                                <rect key="frame" x="79" y="321" width="163" height="20"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                                <color key="textColor" red="0.19215686269999999" green="0.64705882349999999" blue="0.52549019610000003" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="RSj-Bw-Fdt" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" id="Wue-pb-C7I"/>
+                            <constraint firstItem="gfg-4G-3Dt" firstAttribute="centerX" secondItem="RSj-Bw-Fdt" secondAttribute="centerX" id="RKF-q3-9Ud"/>
+                            <constraint firstItem="gfg-4G-3Dt" firstAttribute="top" secondItem="RSj-Bw-Fdt" secondAttribute="bottom" constant="8" id="W8R-MS-SFy"/>
+                            <constraint firstItem="RSj-Bw-Fdt" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-41" id="Wue-pb-C7I"/>
                             <constraint firstItem="RSj-Bw-Fdt" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="yRD-8y-lfY"/>
                         </constraints>
                     </view>
