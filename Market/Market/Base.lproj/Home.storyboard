@@ -1105,21 +1105,21 @@
                                     <action selector="onCategoryChanged:" destination="kZY-du-h5I" eventType="valueChanged" id="1Vv-v4-RYT"/>
                                 </connections>
                             </segmentedControl>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="UmN-b5-d3q">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="UmN-b5-d3q">
                                 <rect key="frame" x="0.0" y="164" width="375" height="503"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="252" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="SL1-GI-w32">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
                                         <subviews>
                                             <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pQJ-3B-NHi">
-                                                <rect key="frame" x="310" y="6" width="51" height="31"/>
+                                                <rect key="frame" x="310" y="4" width="51" height="31"/>
                                                 <connections>
                                                     <action selector="onChangeSwitchSaved:" destination="kZY-du-h5I" eventType="valueChanged" id="sXU-qJ-eJ8"/>
                                                 </connections>
                                             </switch>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receive notification" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HWs-QY-acS">
-                                                <rect key="frame" x="16" y="11" width="150" height="21"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receive notification?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HWs-QY-acS">
+                                                <rect key="frame" x="16" y="11" width="134" height="17"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
@@ -1127,14 +1127,14 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="pQJ-3B-NHi" secondAttribute="trailing" constant="16" id="bRj-fp-XRp"/>
-                                            <constraint firstAttribute="height" constant="44" id="jbf-dW-6N2"/>
-                                            <constraint firstItem="HWs-QY-acS" firstAttribute="leading" secondItem="SL1-GI-w32" secondAttribute="leading" constant="16" id="vNk-9h-Vjd"/>
+                                            <constraint firstAttribute="height" constant="40" id="jbf-dW-6N2"/>
+                                            <constraint firstItem="HWs-QY-acS" firstAttribute="leading" secondItem="SL1-GI-w32" secondAttribute="leading" constant="16" id="qoN-cn-9c9"/>
                                             <constraint firstItem="pQJ-3B-NHi" firstAttribute="centerY" secondItem="SL1-GI-w32" secondAttribute="centerY" id="wTv-7w-7j6"/>
                                             <constraint firstItem="HWs-QY-acS" firstAttribute="centerY" secondItem="pQJ-3B-NHi" secondAttribute="centerY" id="xul-Ms-EfS"/>
                                         </constraints>
                                     </view>
                                     <view contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="252" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="e5e-eU-eND">
-                                        <rect key="frame" x="0.0" y="52" width="375" height="44"/>
+                                        <rect key="frame" x="0.0" y="40" width="375" height="44"/>
                                         <subviews>
                                             <button opaque="NO" contentMode="scaleAspectFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="va6-X1-xP0">
                                                 <rect key="frame" x="327" y="2" width="40" height="40"/>
@@ -1164,7 +1164,7 @@
                                         </constraints>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="57" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="usf-Rc-hqR">
-                                        <rect key="frame" x="0.0" y="104" width="375" height="399"/>
+                                        <rect key="frame" x="0.0" y="84" width="375" height="419"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="simplifiedItemCell" rowHeight="57" id="Oay-19-G7w" customClass="SimplifiedItemCell" customModule="Market" customModuleProvider="target">
