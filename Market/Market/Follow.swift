@@ -27,13 +27,27 @@ extension Follow {
             return
         }
         
-        if let currentUser = User.currentUser() {
-            let follow = Follow()
-            follow.from = currentUser
-            follow.to = targetUser
-            follow.saveInBackgroundWithBlock(callback)
-            
-            currentUser.numFollowing = nil
+        if let query = Follow.query(), currentUser = User.currentUser() {
+            query.whereKey("from", equalTo: currentUser)
+            query.whereKey("to", equalTo: targetUser)
+            query.countObjectsInBackgroundWithBlock({ (num, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    return
+                }
+                
+                if num > 0 {
+                    print("Error! Already follow. Cannot follow again. Need to fix UI bug.")
+                    return
+                } else {
+                    let follow = Follow()
+                    follow.from = currentUser
+                    follow.to = targetUser
+                    follow.saveInBackgroundWithBlock(callback)
+                    
+                    currentUser.numFollowing = nil
+                }
+            })
         }
     }
     
@@ -50,7 +64,6 @@ extension Follow {
                     callback(false, error)
                     return
                 }
-                
                 PFObject.deleteAllInBackground(followings, block: callback)
             })
             currentUser.numFollowing = nil

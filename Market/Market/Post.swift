@@ -136,16 +136,116 @@ enum NewsfeedType {
 }
 
 extension Post {
-    static func getNewsfeed(type: NewsfeedType, params: [NSObject:AnyObject], callback: PostResultBlock) {
-        PFCloud.callFunctionInBackground(type.functionName, withParameters: params) { (responseData, error) -> Void in
-            guard error == nil else {
-                callback(posts: nil, error: error)
-                return
+    static func getNewsfeed(type: NewsfeedType, lastCreatedAt: NSDate?, callback: PostResultBlock) {
+//        PFCloud.callFunctionInBackground(type.functionName, withParameters: params) { (responseData, error) -> Void in
+//            guard error == nil else {
+//                callback(posts: nil, error: error)
+//                return
+//            }
+//            
+//            if let posts = responseData as? [Post] {
+//                callback(posts: posts, error: nil)
+//            }
+//        }
+        switch type {
+        case NewsfeedType.Newest:
+            queryForNewestPost(lastCreatedAt, callback: callback)
+        case NewsfeedType.Following:
+            queryForFollowing(lastCreatedAt, callback: callback)
+        case NewsfeedType.UsersVote:
+            queryForUsersVote(lastCreatedAt, callback: callback)
+        }
+    }
+    
+    static func queryForNewestPost(lastCreatedAt: NSDate?, callback: PostResultBlock) {
+        if let query = Post.query() {
+            if let lastCreatedAt = lastCreatedAt {
+                query.whereKey("createdAt", lessThan: lastCreatedAt)
             }
-            
-            if let posts = responseData as? [Post] {
-                callback(posts: posts, error: nil)
+            query.limit = 8
+            query.includeKey("user")
+            query.whereKey("sold", equalTo: false)
+            query.whereKey("isDeleted", equalTo: false)
+            query.orderByDescending("createdAt")
+            query.cachePolicy = .NetworkElseCache
+            query.findObjectsInBackgroundWithBlock({ (posts, error) -> Void in
+                guard error == nil else {
+                    callback(posts: nil, error: error)
+                    return
+                }
+    
+                if let posts = posts as? [Post] {
+                    callback(posts: posts, error: nil)
+                }
+            })
+        }
+    }
+    
+    static func queryForFollowing(lastCreatedAt: NSDate?, callback: PostResultBlock) {
+        if let followQuery = Follow.query(), currentUser = User.currentUser() {
+            let cachePolicy = PFCachePolicy.NetworkElseCache
+            followQuery.selectKeys(["to"])
+            followQuery.whereKey("from", equalTo: currentUser)
+            followQuery.cachePolicy = cachePolicy
+            followQuery.findObjectsInBackgroundWithBlock({ (followings, error) -> Void in
+                guard error == nil else {
+                    callback(posts: nil, error: error)
+                    return
+                }
+                if let followings = followings as? [Follow] {
+                    var users = [User]()
+                    for following in followings {
+                        users.append(following.to)
+                    }
+                    
+                    if let query = Post.query() {
+                        if let lastCreatedAt = lastCreatedAt {
+                            query.whereKey("createdAt", lessThan: lastCreatedAt)
+                        }
+                        query.limit = 8
+                        query.includeKey("user")
+                        query.whereKey("user", containedIn: users)
+                        query.whereKey("sold", equalTo: false)
+                        query.whereKey("isDeleted", equalTo: false)
+                        query.orderByDescending("createdAt")
+                        query.cachePolicy = cachePolicy
+                        query.findObjectsInBackgroundWithBlock({ (posts, error) -> Void in
+                            guard error == nil else {
+                                callback(posts: nil, error: error)
+                                return
+                            }
+                            
+                            if let posts = posts as? [Post] {
+                                callback(posts: posts, error: nil)
+                            }
+                        })
+                    }
+                }
+            })
+        }
+    }
+
+    static func queryForUsersVote(lastCreatedAt: NSDate?, callback: PostResultBlock) {
+        if let query = Post.query() {
+            if let lastCreatedAt = lastCreatedAt {
+                query.whereKey("createdAt", lessThan: lastCreatedAt)
             }
+            query.limit = 8
+            query.includeKey("user")
+            query.whereKey("sold", equalTo: false)
+            query.whereKey("isDeleted", equalTo: false)
+            query.orderByDescending("voteCounter")
+            query.cachePolicy = .NetworkElseCache
+            query.findObjectsInBackgroundWithBlock({ (posts, error) -> Void in
+                guard error == nil else {
+                    callback(posts: nil, error: error)
+                    return
+                }
+                
+                if let posts = posts as? [Post] {
+                    callback(posts: posts, error: nil)
+                }
+            })
         }
     }
 }

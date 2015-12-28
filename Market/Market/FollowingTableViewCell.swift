@@ -27,15 +27,6 @@ class FollowingTableViewCell: UITableViewCell {
     }
     
     @IBAction func onUnFollowingTap(sender: AnyObject) {
-//        Follow.unfollow(targetUser, callback: { (success, error: NSError?) -> Void in
-//            if error == nil {
-//                print("Unfollowing successfully", self.targetUser.fullName)
-//                self.delegate?.followingTableViewCell!(self, didUnfollow: true)
-//            } else {
-//                print("Can't unfollow \(self.targetUser.fullName)", error)
-//            }
-//        })
-        
         //Change title of button "unFollowing" <-> "Following"
         if clickedButton == false {
             self.unfollowingButton.setTitle("Follow", forState: .Normal)

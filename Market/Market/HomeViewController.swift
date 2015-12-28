@@ -92,6 +92,7 @@ class HomeViewController: UIViewController {
     }
     
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         // Reload whatever the change from other pages
 //        tableView.reloadData()
     }
@@ -105,15 +106,15 @@ class HomeViewController: UIViewController {
     
     func loadNewestData() {
         posts = []
-        loadData(["lastUpdatedAt": NSDate()])
+        loadData(nil)
     }
     
-    func loadDataSince(lastUpdatedAt: NSDate) {
-        loadData(["lastUpdatedAt": lastUpdatedAt])
+    func loadDataSince(lastCreatedAt: NSDate?) {
+        loadData(lastCreatedAt)
     }
     
-    func loadData(params: [String: NSDate]) {
-        Post.getNewsfeed(loadDataBy, params: params) { (posts, error) -> Void in
+    func loadData(lastCreatedAt: NSDate?) {
+        Post.getNewsfeed(loadDataBy, lastCreatedAt: lastCreatedAt) { (posts, error) -> Void in
             if let posts = posts {
                 if posts.count == 0 {
                     self.isEndOfFeed = true
@@ -205,7 +206,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
             if indexPath.row >= posts.count - 2 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadDataSince(posts[posts.count-1].updatedAt!)
+                loadDataSince(posts[posts.count-1].createdAt!)
             }
         }
         

@@ -45,7 +45,7 @@ class ItemCell: UITableViewCell {
                     avatarImageView.image = nil
                     avatarImageView.alpha = 0
                     
-                    avatarImageView.setImageWithURLRequest(NSURLRequest(URL: url), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+                    avatarImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
                         self.avatarImageView.image =  image
                         UIView.animateWithDuration(0.5, animations: { () -> Void in
                             self.avatarImageView.alpha = 1
@@ -69,7 +69,7 @@ class ItemCell: UITableViewCell {
                     newTagImageView.alpha = 0
                     
                     let url = NSURL(string: urlString!)!
-                    itemImageView.setImageWithURLRequest(NSURLRequest(URL: url), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+                    itemImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
                         self.itemImageView.image =  image
                         UIView.animateWithDuration(0.5, animations: { () -> Void in
                             self.itemImageView.alpha = 1
