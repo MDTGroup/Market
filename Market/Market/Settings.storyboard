@@ -46,7 +46,13 @@
                             <constraint firstItem="hDs-6V-l0b" firstAttribute="leading" secondItem="tIO-rr-zBX" secondAttribute="leadingMargin" id="yHh-7K-gyZ"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Change password" id="c4e-RJ-yz0"/>
+                    <navigationItem key="navigationItem" title="Change password" id="c4e-RJ-yz0">
+                        <barButtonItem key="rightBarButtonItem" title="Submit" id="Arb-mh-dff">
+                            <connections>
+                                <action selector="updatePasswordBtn:" destination="M1N-bK-DPy" id="7MA-CU-WOB"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="currentPassword" destination="IHe-rF-kRW" id="IZW-yL-oEc"/>
                         <outlet property="newPassword" destination="hDs-6V-l0b" id="8cr-A4-oF5"/>
@@ -120,6 +126,16 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
                             </textField>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="etO-bg-twb">
+                                <rect key="frame" x="16" y="319" width="53" height="29"/>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                <state key="normal" title="Log Out">
+                                    <color key="titleColor" red="0.98039215690000003" green="0.2274509804" blue="0.26274509800000001" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <connections>
+                                    <action selector="onLogOut:" destination="Isu-Xo-m5H" eventType="touchUpInside" id="qtJ-pN-BV4"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
@@ -128,10 +144,12 @@
                             <constraint firstItem="jvi-Vz-GjI" firstAttribute="trailing" secondItem="Ldx-Mc-oUR" secondAttribute="trailingMargin" id="DMN-Dd-8GE"/>
                             <constraint firstItem="AHw-wa-Ct5" firstAttribute="trailing" secondItem="Ldx-Mc-oUR" secondAttribute="trailingMargin" id="FzI-Xj-vCV"/>
                             <constraint firstItem="jvi-Vz-GjI" firstAttribute="leading" secondItem="Ldx-Mc-oUR" secondAttribute="leadingMargin" id="IEY-Zl-JWG"/>
+                            <constraint firstItem="etO-bg-twb" firstAttribute="top" secondItem="jvi-Vz-GjI" secondAttribute="bottom" constant="8" id="KIV-PM-IWz"/>
                             <constraint firstItem="M7S-5I-tJS" firstAttribute="trailing" secondItem="Ldx-Mc-oUR" secondAttribute="trailingMargin" id="KbC-Fs-R2o"/>
                             <constraint firstItem="JoJ-23-hRy" firstAttribute="leading" secondItem="Ldx-Mc-oUR" secondAttribute="leadingMargin" id="MB3-7D-jAK"/>
                             <constraint firstItem="jvi-Vz-GjI" firstAttribute="top" secondItem="AHw-wa-Ct5" secondAttribute="bottom" constant="8" id="Nzo-sP-Aw3"/>
                             <constraint firstItem="YD4-sh-jCk" firstAttribute="centerX" secondItem="Ldx-Mc-oUR" secondAttribute="centerX" id="OZa-SH-8DB"/>
+                            <constraint firstItem="etO-bg-twb" firstAttribute="leading" secondItem="jvi-Vz-GjI" secondAttribute="leading" id="Q04-bb-vQB"/>
                             <constraint firstItem="lSS-wc-AHG" firstAttribute="top" secondItem="YD4-sh-jCk" secondAttribute="bottom" constant="8" id="Uxi-ZF-e2I"/>
                             <constraint firstItem="dz0-dF-JnF" firstAttribute="top" secondItem="lSS-wc-AHG" secondAttribute="bottom" constant="8" id="XYs-SE-ZzV"/>
                             <constraint firstItem="M7S-5I-tJS" firstAttribute="top" secondItem="jvi-Vz-GjI" secondAttribute="bottom" constant="8" id="YIZ-re-SnT"/>
@@ -145,14 +163,14 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Profile" id="eQv-AB-sda">
-                        <barButtonItem key="leftBarButtonItem" title="Log Out" id="FPc-An-6wL">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="FPc-An-6wL">
                             <connections>
-                                <action selector="onLogOut:" destination="Isu-Xo-m5H" id="F3r-V0-ltt"/>
+                                <action selector="close:" destination="Isu-Xo-m5H" id="kws-Dm-I6I"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" title="Done" style="done" id="Biv-xx-FIQ">
+                        <barButtonItem key="rightBarButtonItem" title="Update" style="done" id="Biv-xx-FIQ">
                             <connections>
-                                <action selector="onDone:" destination="Isu-Xo-m5H" id="y6h-Vz-hz4"/>
+                                <action selector="onUpdate:" destination="Isu-Xo-m5H" id="agg-JE-L8Z"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>

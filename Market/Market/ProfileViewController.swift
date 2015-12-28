@@ -22,6 +22,7 @@ class ProfileViewController: UIViewController {
     @IBOutlet weak var addressField: UITextField!
     @IBOutlet weak var emailField: UITextField!
     
+    private var hasChangeAvatar = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,9 +47,12 @@ class ProfileViewController: UIViewController {
         fullnameField.delegate = self
         phoneField.delegate = self
         addressField.delegate = self
+        
+        imagePickerView.layer.cornerRadius = self.imagePickerView.frame.size.width / 2
+        imagePickerView.clipsToBounds = true
+        
+        hasChangeAvatar = false
     }
-    
-    
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
@@ -57,13 +61,6 @@ class ProfileViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        imagePickerView.layer.cornerRadius = self.imagePickerView.frame.size.width / 2
-        imagePickerView.clipsToBounds = true
-    }
-    
-    @IBAction func onDone(sender: AnyObject) {
-        view.endEditing(true)
-        dismissViewControllerAnimated(true, completion: nil)
     }
     
     @IBAction func onLogOut(sender: AnyObject) {
@@ -87,7 +84,13 @@ class ProfileViewController: UIViewController {
         })
     }
     
-    func onUpdate() {
+    @IBAction func onUpdate(sender: AnyObject?) {
+        
+        if !hasChangedValue() {
+            close(nil)
+            return
+        }
+        
         let fullName = self.fullnameField.text!
         let phone = self.phoneField.text!
         let address = self.addressField.text!
@@ -112,8 +115,11 @@ class ProfileViewController: UIViewController {
                 currentUser.username = email
                 currentUser.email = email
                 
+                let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+                hud.labelText = "Updating profile"
                 //call the method to save currentUser to database
                 currentUser.saveInBackgroundWithBlock ({ (succeed, error) -> Void in
+                    hud.hide(true)
                     guard error == nil else {
                         if let message = error?.userInfo["error"] as? String {
                             AlertControl.show(self, title: "Error", message: message, handler: nil)
@@ -123,12 +129,41 @@ class ProfileViewController: UIViewController {
                     }
                     dispatch_async(dispatch_get_main_queue(), { () -> Void in
                         self.view.endEditing(true)
-                        AlertControl.show(self, title: "Update profile", message: "Update profile successfully!", handler: nil)
+                        AlertControl.show(self, title: "Update profile", message: "Update profile successfully!", handler: { (okAction) -> Void in
+                            self.close(nil)
+                        })
                         currentUser.fetchIfNeededInBackground()
                     })
                 })
             }
         }
+    }
+    
+    @IBAction func close(sender: AnyObject?) {
+        view.endEditing(true)
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func hasChangedValue() -> Bool {
+        let fullName = self.fullnameField.text!
+        let phone = self.phoneField.text!
+        let address = self.addressField.text!
+        let email = self.emailField.text!
+        
+        if let currentUser = User.currentUser() {
+            if currentUser.fullName != fullName {
+                return true
+            } else if currentUser.phone != phone {
+                return true
+            } else if currentUser.address != address {
+                return true
+            } else if currentUser.email != email {
+                return true
+            } else if hasChangeAvatar {
+                return true
+            }
+        }
+        return false
     }
 }
 
@@ -138,6 +173,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         // User selected an image
         if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             self.imagePickerView.image = image
+            hasChangeAvatar = true
             
         }
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -147,33 +183,45 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
         // User cancel the image picker
         self.dismissViewControllerAnimated(true, completion: nil)
     }
-    @IBAction func pickAnImageFromAlbum(sender: AnyObject) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        self.presentViewController(imagePicker, animated: true, completion: nil)
-    }
-    
-    @IBAction func takePicFromCamera(sender: AnyObject) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
-        self.presentViewController(imagePicker, animated: true, completion: nil)
-    }
-    
     
     @IBAction func onUpload(sender: UIButton) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        self.presentViewController(imagePicker, animated: true, completion: nil)
+        showActionsheets()
     }
     
     @IBAction func tapAvatar(sender: AnyObject) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        self.presentViewController(imagePicker, animated: true, completion: nil)
+        showActionsheets()
+    }
+    
+    func showActionsheets() {
+        let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+        
+        // Pick photo from library
+        let pickPhotoAction = UIAlertAction(title: "Choose photo from library", style: .Default, handler: {
+            (alert: UIAlertAction!) -> Void in
+            let imagePicker = UIImagePickerController()
+            imagePicker.delegate = self
+            imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+            self.presentViewController(imagePicker, animated: true, completion: nil)
+        })
+        optionMenu.addAction(pickPhotoAction)
+        
+        // Take picture from camera if camera is avail
+        if UIImagePickerController.availableCaptureModesForCameraDevice(.Rear) != nil {
+            let takePhotoAction = UIAlertAction(title: "Take photo ", style: .Default, handler: {
+                (alert: UIAlertAction!) -> Void in
+                let imagePicker = UIImagePickerController()
+                imagePicker.delegate = self
+                imagePicker.sourceType = UIImagePickerControllerSourceType.Camera
+                self.presentViewController(imagePicker, animated: true, completion: nil)
+            })
+            optionMenu.addAction(takePhotoAction)
+        }
+        
+        // Cancel action
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        optionMenu.addAction(cancelAction)
+        
+        self.presentViewController(optionMenu, animated: true, completion: nil)
     }
 }
 
@@ -181,7 +229,7 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 extension ProfileViewController : UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         
-        onUpdate()
+        onUpdate(nil)
         
         return true
     }
