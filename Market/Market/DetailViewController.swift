@@ -129,7 +129,7 @@ class DetailViewController: UIViewController {
         let sellerTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")
         avatarImageView.addGestureRecognizer(avatarTapGesture)
         sellerLabel.addGestureRecognizer(sellerTapGesture)
-
+        
         
         // Exclude the thumbnail
         nImages = post.medias.count / 2
@@ -152,8 +152,8 @@ class DetailViewController: UIViewController {
             iv = UIImageView()
             iv.frame = imageView.frame
             // Add 20px for the status bar, if not show status bar, comment next 2 lines
-            iv.frame.origin.y += 20
-            iv.frame.size.height -= 20
+            //iv.frame.origin.y += 20
+            //iv.frame.size.height -= 20
             
             print(iv.frame)
             iv.center.x -= imageView.frame.width
@@ -405,7 +405,12 @@ class DetailViewController: UIViewController {
     }
     
     @IBAction func onDoubleTap(sender: UITapGestureRecognizer) {
-        performSegueWithIdentifier("fullImageSegue", sender: imageView.image)
+        if selectedImage == videoPosition + 1 {
+            performSegueWithIdentifier("videoSegue", sender: imageView.image)
+        } else {
+            performSegueWithIdentifier("fullImageSegue", sender: imageView.image)
+        }
+        
     }
     
     func showDescription(y: CGFloat, bgAlpha: CGFloat, showFull: Bool) {
