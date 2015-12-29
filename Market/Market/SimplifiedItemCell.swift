@@ -21,23 +21,47 @@ class SimplifiedItemCell: SWTableViewCell {
     @IBOutlet weak var soldView: UIView!
     
     var profileId: String?
+    var previousAvatarURL: String?
+    var previousPostImageURL: String?
     
     var item: Post! {
         didSet {
             let post = item
             sellerLabel.text = post.user.fullName
-            if let avatar = post.user.avatar {
-                avatarImageView.image = nil
-                avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+            if let avatar = post.user.avatar, urlString = avatar.url where urlString != previousAvatarURL {
+                previousAvatarURL = urlString
+                let url = NSURL(string: urlString)!
+                avatarImageView.alpha = 0
+                avatarImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+                    self.avatarImageView.image =  image
+                    UIView.animateWithDuration(0.5, animations: { () -> Void in
+                        self.avatarImageView.alpha = 1
+                    })
+                    }, failure: { (urlRequest, httpURLResponse, error) -> Void in
+                        print(error)
+                })
             } else {
                 avatarImageView.image = UIImage(named: "profile_blank")
             }
             if post.medias.count > 0 {
-                itemImageView.alpha = 0.0
-                UIView.animateWithDuration(0.3, animations: {
-                    self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-                    self.itemImageView.alpha = 1.0
-                    }, completion: nil)
+                let urlString = post.medias[0].url
+                if previousPostImageURL != urlString {
+                    previousPostImageURL = urlString
+                    
+                    itemImageView.alpha = 0
+                    newTagImageView.alpha = 0
+                    
+                    let url = NSURL(string: urlString!)!
+                    itemImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+                        self.itemImageView.image =  image
+                        UIView.animateWithDuration(0.5, animations: { () -> Void in
+                            self.itemImageView.alpha = 1
+                            self.newTagImageView.alpha = 1
+                        })
+                        }, failure: { (urlRequest, httpURLResponse, error) -> Void in
+                            print(error)
+                    })
+                }
             }
             itemNameLabel.text = post.title
             postAtLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)

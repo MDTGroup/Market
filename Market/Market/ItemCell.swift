@@ -31,41 +31,33 @@ class ItemCell: UITableViewCell {
     
     weak var delegate: ItemCellDelegate?
     var previousAvatarURL: String?
-    var previousImageURL: String?
+    var previousPostImageURL: String?
     
     var item: Post! {
         didSet {
             let post = item
-            if let avatar = post.user.avatar {
-                let urlString = avatar.url
-                if previousAvatarURL != urlString {
-                    previousAvatarURL = urlString
-                    let url = NSURL(string: urlString!)!
-                    
-                    avatarImageView.image = nil
-                    avatarImageView.alpha = 0
-                    
-                    avatarImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
-                        self.avatarImageView.image =  image
-                        UIView.animateWithDuration(0.5, animations: { () -> Void in
-                            self.avatarImageView.alpha = 1
-                        })
-                        }, failure: { (urlRequest, httpURLResponse, error) -> Void in
-                            print(error)
+            if let avatar = post.user.avatar, urlString = avatar.url where previousAvatarURL != urlString {
+                previousAvatarURL = urlString
+                let url = NSURL(string: urlString)!
+                avatarImageView.alpha = 0
+                avatarImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+                    self.avatarImageView.image =  image
+                    UIView.animateWithDuration(0.5, animations: { () -> Void in
+                        self.avatarImageView.alpha = 1
                     })
-                }
-                
+                    }, failure: { (urlRequest, httpURLResponse, error) -> Void in
+                        print(error)
+                })
             } else {
                 avatarImageView.image = UIImage(named: "profile_blank")
             }
             
             if post.medias.count > 0 {
                 let urlString = post.medias[0].url
-                if previousImageURL != urlString {
-                    previousImageURL = urlString
-                    itemImageView.image = nil
-                    itemImageView.alpha = 0
+                if previousPostImageURL != urlString {
+                    previousPostImageURL = urlString
                     
+                    itemImageView.alpha = 0
                     newTagImageView.alpha = 0
                     
                     let url = NSURL(string: urlString!)!

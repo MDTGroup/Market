@@ -44,7 +44,7 @@ extension Double {
         var remain = self
         var formattedMoney = formatter.stringFromNumber(Int(remain % 1000))!
         remain = floor(remain / 1000)
-        while remain > 1000 {
+        while remain >= 1000 {
             formattedMoney = formatter.stringFromNumber(Int(remain % 1000))! + "." + formattedMoney
             remain = floor(remain / 1000)
         }

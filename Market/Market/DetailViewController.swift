@@ -270,7 +270,7 @@ class DetailViewController: UIViewController {
             scrollCircle2.backgroundColor = UIColor.lightGrayColor()
             scrollCircle3.backgroundColor = MyColors.bluesky
         default:
-            return
+            break
         }
     }
     
@@ -464,7 +464,7 @@ class DetailViewController: UIViewController {
                 if successful {
                     print("saved")
                     self.post.iSaveIt = true
-                    self.delegate!.detailViewController!(self, newPost: self.post)
+                    self.delegate?.detailViewController!(self, newPost: self.post)
                 } else {
                     print("failed to save")
                     self.setSaveLabel(false)
@@ -497,7 +497,7 @@ class DetailViewController: UIViewController {
                 if successful {
                     print("voted")
                     self.post.iVoteIt = true
-                    self.delegate!.detailViewController!(self, newPost: self.post)
+                    self.delegate?.detailViewController!(self, newPost: self.post)
                 } else {
                     print("failed to vote")
                     self.setVoteCountLabel(count - 1, voted: false)

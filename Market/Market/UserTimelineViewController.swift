@@ -12,7 +12,7 @@ import SWTableViewCell
 
 class UserTimelineViewController: UIViewController {
     
-    let postLimit = 12
+    //    let postLimit = 12
     var user: User!
     var posts = [Post]()
     var followingUsers = [User]()
@@ -44,6 +44,7 @@ class UserTimelineViewController: UIViewController {
     var noMoreResultLabel = UILabel()
     var selectedPostIndex: Int!
     var iFollowThisUser = false
+    var previousAvatarURL: String?
     
     enum DataToLoad: Int {
         case UsersPosts = 0
@@ -56,6 +57,13 @@ class UserTimelineViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        backButton.layer.cornerRadius = 3
+        followButton.layer.cornerRadius = 3
+        editProfileButton.layer.cornerRadius = 3
+        
+        avatarImageView.layer.cornerRadius = 40
+        avatarImageView.clipsToBounds = true
         
         refreshProfile()
         
@@ -159,7 +167,7 @@ class UserTimelineViewController: UIViewController {
             case DataToLoad.Keywords:
                 switchControl.on = currentUser.enableNotificationForKeywords
             default:
-                return
+                break
             }
         }
         
@@ -168,7 +176,7 @@ class UserTimelineViewController: UIViewController {
         dataToLoad = DataToLoad(rawValue: sender.selectedSegmentIndex)!
         keywordView.hidden = dataToLoad != DataToLoad.Keywords
         receiveNotificationView.hidden = !(dataToLoad == .Keywords || dataToLoad == .Following || dataToLoad == .UsersSavedPosts)
-
+        
         UIView.animateWithDuration(0.3, animations: { () -> Void in
             self.view.layoutIfNeeded()
         })
@@ -241,17 +249,17 @@ extension UserTimelineViewController {
         loadData(nil)
     }
     
-    func loadDataSince(lastUpdatedAt: NSDate) {
-        loadData(lastUpdatedAt)
+    func loadDataSince(lastData: NSDate) {
+        loadData(lastData)
     }
     
     func loadData(byThisDate: NSDate?) {
         if dataToLoad == .UsersPosts {
             user.getPosts(byThisDate, callback: { (posts, error) -> Void in
-                if let posts = posts {
-                    if posts.count < self.postLimit {
-                        self.isEndOfFeed = true
-                    }
+                if let posts = posts where posts.count > 0 {
+                    //                    if posts.count < self.postLimit {
+                    //                        self.isEndOfFeed = true
+                    //                    }
                     
                     for p in posts {
                         self.posts.append(p)
@@ -273,10 +281,10 @@ extension UserTimelineViewController {
         } else {
             print("loading user's saved posts")
             user.getSavedPosts(byThisDate, callback: { (posts, error) -> Void in
-                if let posts = posts {
-                    if posts.count < self.postLimit {
-                        self.isEndOfFeed = true
-                    }
+                if let posts = posts where posts.count > 0 {
+                    //                    if posts.count < self.postLimit {
+                    //                        self.isEndOfFeed = true
+                    //                    }
                     
                     for p in posts {
                         self.posts.append(p)
@@ -298,8 +306,6 @@ extension UserTimelineViewController {
     }
     
     func refreshProfile() {
-        
-//        keywordViewHeight.constant = 0
         if user == nil {
             user = User.currentUser()
             isCurrentUser = true
@@ -332,10 +338,6 @@ extension UserTimelineViewController {
         backButton.hidden = isCurrentUser
         followButton.hidden = isCurrentUser
         
-        backButton.layer.cornerRadius = 3
-        followButton.layer.cornerRadius = 3
-        editProfileButton.layer.cornerRadius = 3
-        
         // Load following (this user follows people)
         followingCountLabel.text = " "
         
@@ -358,16 +360,38 @@ extension UserTimelineViewController {
         }
         
         userLabel.text = user.fullName
-        if let avatar = user.avatar {
-            avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
-            bigAvatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+        if let avatar = user.avatar, urlString = avatar.url {
+            if urlString == previousAvatarURL {
+                avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+                bigAvatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
+            } else {
+                previousAvatarURL = urlString
+                let url =  NSURL(string: urlString)!
+                avatarImageView.alpha = 0
+                bigAvatarImageView.alpha = 0
+                
+                avatarImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+                    self.avatarImageView.image =  image
+                    UIView.animateWithDuration(0.5, animations: { () -> Void in
+                        self.avatarImageView.alpha = 1
+                    })
+                    }, failure: { (urlRequest, httpURLResponse, error) -> Void in
+                        print(error)
+                })
+                
+                bigAvatarImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+                    self.bigAvatarImageView.image =  image
+                    UIView.animateWithDuration(0.5, animations: { () -> Void in
+                        self.bigAvatarImageView.alpha = 1
+                    })
+                    }, failure: { (urlRequest, httpURLResponse, error) -> Void in
+                        print(error)
+                })
+            }
         } else {
             avatarImageView.image = UIImage(named: "profile_blank")
             bigAvatarImageView.image = UIImage(named: "profile_blank")
         }
-        avatarImageView.layer.cornerRadius = 40
-        avatarImageView.clipsToBounds = true
-        bigAvatarImageView.clipsToBounds = true
     }
     
     // Load list of people I'm following
@@ -432,7 +456,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
             // before data is reloaded (posts.count = 0) but indexPath.section = 4
             if posts.count == 0 {
                 print("the myth")
-                return cell
+                return UITableViewCell()
             }
             if let user = user where dataToLoad == .UsersPosts {
                 cell.profileId = user.objectId
@@ -440,14 +464,10 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 cell.profileId = nil
             }
             cell.item = posts[indexPath.row]
-            
+            var useCreatedAt = true
             if dataToLoad == .UsersPosts {
                 // Add utility buttons
                 let leftUtilityButtons = NSMutableArray()
-                //let rightUtilityButtons = NSMutableArray()
-                
-                //rightUtilityButtons.sw_addUtilityButtonWithColor(MyColors.bluesky, icon: UIImage(named: "edit25"))
-                //rightUtilityButtons.sw_addUtilityButtonWithColor(MyColors.carrot, icon: UIImage(named: "trash25"))
                 
                 if user.objectId == User.currentUser()?.objectId {
                     if cell.item.sold {
@@ -458,8 +478,9 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 }
                 
                 cell.leftUtilityButtons = leftUtilityButtons as [AnyObject]
-                cell.rightUtilityButtons = [] //rightUtilityButtons as [AnyObject]
+                cell.rightUtilityButtons = []
                 cell.delegate = self
+                useCreatedAt = true
                 
             } else if dataToLoad == .UsersSavedPosts {
                 // Add utility buttons
@@ -470,6 +491,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 cell.leftUtilityButtons = []
                 cell.rightUtilityButtons = rightUtilityButtons as [AnyObject]
                 cell.delegate = self
+                useCreatedAt = false
             }
             
             // Infinite load if last cell
@@ -477,7 +499,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 if indexPath.row >= posts.count - 2 {
                     loadingView.startAnimating()
                     isLoadingNextPage = true
-                    loadDataSince(posts[posts.count-1].createdAt!)
+                    loadDataSince(useCreatedAt ? posts[posts.count-1].createdAt! : posts[posts.count-1].updatedAt!)
                 }
             }
             
@@ -577,7 +599,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 userTimelineVC.user = followingCell.targetUser
                 presentViewController(userTimelineVC, animated: true, completion: { () -> Void in
                     self.tableView.deselectRowAtIndexPath(indexPath, animated: true)
-                    })
+                })
             } else if let simplifiedCell = cell as? SimplifiedItemCell {
                 let detailVC = DetailViewController.instantiateViewController
                 detailVC.post = simplifiedCell.item
@@ -612,7 +634,6 @@ extension UserTimelineViewController: PostViewControllerDelegate {
         let rowToReload: NSIndexPath = NSIndexPath(forRow: selectedPostIndex, inSection: 0)
         
         tableView.reloadRowsAtIndexPaths([rowToReload], withRowAnimation: UITableViewRowAnimation.Automatic)
-        //tableView.reloadData()
     }
 }
 
@@ -706,7 +727,7 @@ extension UserTimelineViewController {
             case .Keywords:
                 currentUser.updateNotificationConfigForType(NotificationSetting.Keywords, enable: sender.on)
             default:
-                return
+                break
             }
         }
     }

@@ -73,7 +73,10 @@ class ChangePasswordViewController: UIViewController {
                                         
                                         dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                             self.view.endEditing(true)
-                                            self.navigationController?.popViewControllerAnimated(true)
+                                            
+                                            AlertControl.show(self, title: "Change password", message: "Change password successfully!", handler: { (alertAction) -> Void in
+                                                self.navigationController?.popViewControllerAnimated(true)
+                                            })
                                         })
                                     }
                                 })

@@ -35,13 +35,13 @@ class User: PFUser {
     var enableNotificationForFollowing: Bool = false
     var enableNotificationForKeywords: Bool = false
     
-    func getPosts(lastUpdated:NSDate?, callback: PostResultBlock) {
+    func getPosts(lastCreatedAt:NSDate?, callback: PostResultBlock) {
         if let query = Post.query() {
             query.selectKeys(["title", "descriptionText", "price", "user", "medias", "location", "condition", "sold", "voteCounter"])
             query.includeKey("user")
             query.whereKey("isDeleted", equalTo: false)
             query.whereKey("user", equalTo: self)
-            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdated)
+            QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastCreatedAt)
             query.cachePolicy = .NetworkElseCache
             query.findObjectsInBackgroundWithBlock({ (pfObj: [PFObject]?, error: NSError?) -> Void in
                 guard error == nil else {
@@ -158,7 +158,7 @@ class User: PFUser {
     func getSavedPosts(lastUpdatedAt:NSDate?, callback: PostResultBlock) {
         let query = savedPosts.query()
         query.includeKey("user")
-        QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastUpdatedAt)
+        QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
         query.cachePolicy = .NetworkElseCache
         query.findObjectsInBackgroundWithBlock { (pfObjs, error) -> Void in
             guard error == nil else {

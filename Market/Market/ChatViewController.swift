@@ -58,6 +58,8 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
         conversation.markRead { (success, error) -> Void in
             TabBarController.instance.onRefreshMessageBadge(nil)
         }
+        
+        inputToolbar?.contentView?.textView?.becomeFirstResponder()
     }
     
     override func viewWillDisappear(animated: Bool) {

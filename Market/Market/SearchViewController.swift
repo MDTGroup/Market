@@ -18,6 +18,8 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
 
         initControls()
+        
+        searchBar.tintColor = UIColor.darkGrayColor()
     }
     
     override func viewWillDisappear(animated: Bool) {
