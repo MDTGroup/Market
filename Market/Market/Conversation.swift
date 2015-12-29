@@ -24,19 +24,15 @@ class Conversation: PFObject, PFSubclassing {
     var toUser: User?
     
     func markRead(callback: PFBooleanResultBlock) {
-        if let currentUser = User.currentUser(), userObjectId = currentUser.objectId {
-            if !readUsers.contains(userObjectId) {
-                var params = [String : AnyObject]()
-                params["id"] = objectId!
-                PFCloud.callFunctionInBackground("conversation_markRead", withParameters: params) { (result, error) -> Void in
-                    guard error == nil else {
-                        print(error)
-                        callback(false, nil)
-                        return
-                    }
-                    callback(true, nil)
-                }
+        var params = [String : AnyObject]()
+        params["id"] = objectId!
+        PFCloud.callFunctionInBackground("conversation_markRead", withParameters: params) { (result, error) -> Void in
+            guard error == nil else {
+                print(error)
+                callback(false, nil)
+                return
             }
+            callback(true, nil)
         }
     }
     
