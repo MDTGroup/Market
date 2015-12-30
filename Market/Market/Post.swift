@@ -281,24 +281,10 @@ extension Post {
 
 // MARK: Delete
 extension Post {
-    static func deletePost(postId: String, completion: PFBooleanResultBlock) {
+    static func deletePost(postId: String, completion: PFBooleanResultBlock) {    
         let post = Post(withoutDataWithObjectId: postId)
-        post.fetchInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
-            print(fetchedPFObj)
-            if let postFetched = fetchedPFObj as? Post {
-                //print("post ", postFetched)
-                postFetched.isDeleted = true
-                
-                postFetched.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
-                    //print(post)
-                    completion(true, nil)
-                    }) { (post: Post, percent: Float) -> Void in
-                        print(percent)
-                }
-            } else {
-                completion(false, error)
-            }
-        }
+        post.isDeleted = true
+        post.saveInBackgroundWithBlock(completion)
     }
 }
 

@@ -1328,7 +1328,7 @@
                                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_blank" translatesAutoresizingMaskIntoConstraints="NO" id="1U4-4c-v5L">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="profile_blank" translatesAutoresizingMaskIntoConstraints="NO" id="1U4-4c-v5L">
                                                             <rect key="frame" x="8" y="8" width="40" height="40"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="40" id="ejL-VK-M6W"/>

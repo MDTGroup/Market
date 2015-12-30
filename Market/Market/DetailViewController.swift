@@ -160,7 +160,7 @@ class DetailViewController: UIViewController {
             //iv.frame.origin.y += 20
             //iv.frame.size.height -= 20
             
-            print(iv.frame)
+//            print(iv.frame)
             iv.center.x -= imageView.frame.width
             iv.contentMode = .ScaleAspectFit
             iv.clipsToBounds = true
@@ -176,7 +176,7 @@ class DetailViewController: UIViewController {
                 tempImageViews[i-nImages].setImageWithURL(NSURL(string: post.medias[i].url!)!)
             }
             
-            print(i, post.medias[i].url!)
+//            print(i, post.medias[i].url!)
             view.insertSubview(tempImageViews[i-nImages], aboveSubview: imageView)
         }
         //}
@@ -427,7 +427,7 @@ class DetailViewController: UIViewController {
         
         // The size of the textView to fit its content
         let newSize = descriptionText.sizeThatFits(CGSize(width: screenWidth - 20, height: CGFloat.max))
-        print(newSize)
+//        print(newSize)
         
         textHeight.constant = min(dimmingHeight - 8, newSize.height)
         descTextGap.constant = showFull ? 25 : 5
