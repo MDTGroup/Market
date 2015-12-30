@@ -370,7 +370,11 @@ extension Post {
 
 // MARK: Search
 extension Post {
-    static func search(params: [String:AnyObject], callback: PostResultBlock) {
+    static func search(text: String, condition: Int, lastCreatedAt: NSDate?, callback: PostResultBlock) {
+        var params = [String : AnyObject]()
+        params["text"] = text
+        params["condition"] = condition
+        params["lastCreatedAt"] = lastCreatedAt
         PFCloud.callFunctionInBackground("search", withParameters: params) { (response, error) -> Void in
             guard error == nil else {
                 callback(posts: nil, error: error)

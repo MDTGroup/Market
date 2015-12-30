@@ -617,7 +617,13 @@
                             <constraint firstItem="8uI-WE-nj1" firstAttribute="leading" secondItem="Whh-dh-11M" secondAttribute="leadingMargin" constant="-20" id="mb3-dd-C8O"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="Gol-Zy-iuk"/>
+                    <navigationItem key="navigationItem" id="Gol-Zy-iuk">
+                        <barButtonItem key="rightBarButtonItem" image="settings" id="ju9-9m-xbD">
+                            <connections>
+                                <action selector="onClickSettings:" destination="sCR-JQ-XfZ" id="mdq-vg-BCT"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="8uI-WE-nj1" id="tJQ-yp-FUm"/>
                     </connections>
@@ -1514,6 +1520,7 @@
         <image name="profile_blank" width="70" height="70"/>
         <image name="remove" width="32" height="32"/>
         <image name="save_white" width="13" height="13"/>
+        <image name="settings" width="20" height="17"/>
         <image name="thumb_white" width="12" height="12"/>
         <image name="video" width="25" height="25"/>
     </resources>

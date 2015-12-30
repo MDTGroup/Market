@@ -41,7 +41,7 @@ class ItemCell: UITableViewCell {
                 let url = NSURL(string: urlString)!
                 avatarImageView.alpha = 0
                 avatarImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
-                    self.avatarImageView.image =  image
+                    self.avatarImageView.image = image
                     UIView.animateWithDuration(0.5, animations: { () -> Void in
                         self.avatarImageView.alpha = 1
                     })
