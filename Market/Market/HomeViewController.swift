@@ -65,7 +65,8 @@ class HomeViewController: UIViewController {
         let navController = tabBarController?.viewControllers![2] as! UINavigationController
         let postVC: PostViewController = navController.topViewController as! PostViewController
         postVC.delegate = self
-        
+        let hud = MBProgressHUD.showHUDAddedTo(tableView, animated: true)
+        hud.labelText = "Loading \(loadDataBy.name)..."
         loadData(nil)
         
         initTabBar()
@@ -109,8 +110,6 @@ class HomeViewController: UIViewController {
     }
     
     func loadData(lastCreatedAt: NSDate?) {
-        let hud = MBProgressHUD.showHUDAddedTo(tableView, animated: true)
-        hud.labelText = "Loading \(loadDataBy.name)..."
         
         Post.getNewsfeed(loadDataBy, lastCreatedAt: lastCreatedAt) { (posts, error) -> Void in
             if let posts = posts {
@@ -143,7 +142,7 @@ class HomeViewController: UIViewController {
             self.refreshControl.endRefreshing()
             self.loadingView.stopAnimating()
             self.isLoadingNextPage = false
-            hud.hide(true)
+            MBProgressHUD.hideHUDForView(self.tableView, animated: true)
         }
     }
     
@@ -167,6 +166,8 @@ class HomeViewController: UIViewController {
             loadDataBy = NewsfeedType.Newest
         }
         updateRefreshControl()
+        let hud = MBProgressHUD.showHUDAddedTo(tableView, animated: true)
+        hud.labelText = "Loading \(loadDataBy.name)..."
         loadData(nil)
     }
     
