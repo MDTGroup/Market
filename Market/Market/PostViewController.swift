@@ -64,6 +64,9 @@ class PostViewController: UIViewController {
     var videoPosition: Int = -1 // 0 means yet to set
     var videoPFFile: PFFile?
     
+    let priceMaxLength = 13
+    let titleMaxLength = 140
+    
     weak var delegate: PostViewControllerDelegate?
     
     override func viewDidLoad() {
@@ -78,6 +81,9 @@ class PostViewController: UIViewController {
         initImageFrame(imageView1)
         initImageFrame(imageView2)
         initImageFrame(imageView3)
+        
+        priceLabel.delegate = self
+        titleLabel.delegate = self
         
         getCurrentLocation()
         
@@ -147,7 +153,7 @@ class PostViewController: UIViewController {
     //                self.imageView2.hidden = false
     //                self.imageView3.hidden = false
     //                self.conditionSegment.hidden = false
-    //                
+    //
     //                UIView.animateWithDuration(0.5, animations: { () -> Void in
     //                    self.instructionView.center.x += UIScreen.mainScreen().bounds.width
     //                    self.imageView2.alpha = 1
@@ -327,8 +333,14 @@ class PostViewController: UIViewController {
             return nil
         }
         
+        
         if priceLabel.text!.isEmpty {
             AlertControl.show(self, title: "Market", message: "Please enter the price", handler: { (alertAction) -> Void in
+                self.priceLabel.becomeFirstResponder()
+            })
+            return nil
+        } else if let price = Double(priceLabel.text!) where price <= 0 {
+            AlertControl.show(self, title: "Market", message: "Please input valid price. Must be greater than 0", handler: { (alertAction) -> Void in
                 self.priceLabel.becomeFirstResponder()
             })
             return nil
@@ -350,7 +362,7 @@ class PostViewController: UIViewController {
         
         post.title = titleLabel.text!
         post.price = Double(priceLabel.text!)!
-        post.condition = conditionSegment.selectedSegmentIndex // 0 = new
+        post.condition = conditionSegment.selectedSegmentIndex // 0 = new, 1 = used
         
         post.descriptionText = descriptionText.text
         post.location = currentGeoPoint
@@ -386,7 +398,7 @@ class PostViewController: UIViewController {
         //        let pathArray = [dirPath, recordingName]
         //        let filePath = NSURL.fileURLWithPathComponents(pathArray)
         //        print(filePath)
-        //        
+        //
         //        if videoPosition > 0 {
         //            Helper.compressVideo(videoURL!, outputURL: filePath!) { (session) -> Post in
         //                if session.status == .Completed {
@@ -435,7 +447,7 @@ class PostViewController: UIViewController {
                 UIView.animateWithDuration(0.3, animations: { () -> Void in
                     // MARK: Send Notifications
                     self.sendNotificationForNewPost(post)
-
+                    
                     self.okImageView.transform = CGAffineTransformMakeScale(1, 1)
                     self.okImageView.alpha = 1
                     }, completion: { (finished) -> Void in
@@ -579,7 +591,7 @@ class PostViewController: UIViewController {
                 return
             }
         })
-
+        
         params["description"] = post.descriptionText
         Notification.sendNotifications(NotificationType.Keywords, params: params) { (success, error) -> Void in
             guard error == nil else {
@@ -732,6 +744,29 @@ extension PostViewController: UITextViewDelegate {
         
         let textLength = newText.length
         descPlaceHolder.hidden = textLength > 0
+        
+        return true
+    }
+}
+
+extension PostViewController: UITextFieldDelegate {
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        let currentText = textField.text!
+        if textField == priceLabel {
+            
+            if currentText.characters.count + string.characters.count > priceMaxLength {
+                return false
+            }
+            
+            let aSet = NSCharacterSet(charactersInString:"0123456789").invertedSet
+            let compSepByCharInSet = string.componentsSeparatedByCharactersInSet(aSet)
+            let numberFiltered = compSepByCharInSet.joinWithSeparator("")
+            return string == numberFiltered
+        } else if textField == titleLabel {
+            if currentText.characters.count + string.characters.count > titleMaxLength {
+                return false
+            }
+        }
         
         return true
     }
