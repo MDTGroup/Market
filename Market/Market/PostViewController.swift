@@ -69,6 +69,8 @@ class PostViewController: UIViewController {
     
     weak var delegate: PostViewControllerDelegate?
     
+    var isSubmittingNewPost = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -432,6 +434,10 @@ class PostViewController: UIViewController {
     }
     
     func newPost() {
+        if isSubmittingNewPost {
+            AlertControl.show(self, title: "Submit post", message: "Your post is uploading, please wait!", handler: nil)
+            return
+        }
         if let post = preparePost() {
             showProgressBar()
             // Set these initial values only for new post
@@ -439,9 +445,10 @@ class PostViewController: UIViewController {
             post.isDeleted = false
             post.voteCounter = 0
             post.vote = Vote()
+            isSubmittingNewPost = true
             post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
                 print(post)
-                
+                self.isSubmittingNewPost = false
                 self.okImageView.transform = CGAffineTransformMakeScale(0.01, 0.01)
                 
                 UIView.animateWithDuration(0.3, animations: { () -> Void in
@@ -464,12 +471,18 @@ class PostViewController: UIViewController {
     }
     
     func updatePost() {
+        if isSubmittingNewPost {
+            AlertControl.show(self, title: "Submit post", message: "Your post is uploading, please wait!", handler: nil)
+            return
+        }
         print("updating post")
         if let newPost = preparePost() {
             showProgressBar()
             let post = Post(withoutDataWithObjectId: (editingPost?.objectId)!)
+            isSubmittingNewPost = true
             post.fetchInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
                 print(fetchedPFObj)
+                
                 if let fetchedPost = fetchedPFObj as? Post {
                     
                     var changeDescription = ""
@@ -509,7 +522,7 @@ class PostViewController: UIViewController {
                     }
                     
                     fetchedPost.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
-                        
+                        self.isSubmittingNewPost = false
                         // MARK: Send Notifications
                         self.sendNotificationForUpdatedPost(post, changeDescription: changeDescription)
                         
@@ -530,6 +543,7 @@ class PostViewController: UIViewController {
                     }
                 } else {
                     print("Not able to update post :(")
+                    self.isSubmittingNewPost = false
                 }
             }
             

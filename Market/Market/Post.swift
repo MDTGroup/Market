@@ -257,6 +257,8 @@ extension Post {
             }
             
             callback(true, error)
+            
+            self.fetchInBackground()
         }
     }
 }

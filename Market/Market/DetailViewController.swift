@@ -88,6 +88,9 @@ class DetailViewController: UIViewController {
         descriptionText.selectable = false
         priceLabel.text = post.price.formatVND()
         
+        voteCountLabel.hidden = true
+        voteLabel.hidden = true
+        
         let titleTapGesture = UITapGestureRecognizer(target: self, action: "onTapTitle:")
         titleView.addGestureRecognizer(titleTapGesture)
         
