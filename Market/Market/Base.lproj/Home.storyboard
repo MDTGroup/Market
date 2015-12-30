@@ -173,6 +173,7 @@
                     </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina47"/>
                     <connections>
+                        <outlet property="segmentControl" destination="1eR-qq-ZvR" id="NCY-Pl-Xpd"/>
                         <outlet property="tableView" destination="PlR-Ga-jEU" id="9zc-xk-Rcg"/>
                         <segue destination="nif-7J-xtZ" kind="modal" identifier="detailSegue" id="cpy-Qu-8X7"/>
                         <segue destination="kZY-du-h5I" kind="modal" identifier="userTimelineSegue" id="ld4-w7-eAL"/>

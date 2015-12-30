@@ -14,6 +14,7 @@ import Parse
 class HomeViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var segmentControl: UISegmentedControl!
     
     var refreshControl = UIRefreshControl()
     var loadingView: UIActivityIndicatorView!
@@ -23,7 +24,7 @@ class HomeViewController: UIViewController {
     var selectedPostIndex: Int!
     
     var posts = [Post]()
-    var loadDataBy = NewsfeedType.Following
+    var loadDataBy = NewsfeedType.Newest
     
     static let storyboard = UIStoryboard(name: "Home", bundle: nil)
     
@@ -41,7 +42,8 @@ class HomeViewController: UIViewController {
         tableView.delegate = self
         
         // Refresh control
-        refreshControl.addTarget(self, action: Selector("loadNewestData"), forControlEvents: UIControlEvents.ValueChanged)
+        refreshControl.addTarget(self, action: Selector("pullNewestData"), forControlEvents: UIControlEvents.ValueChanged)
+        updateRefreshControl()
         tableView.insertSubview(refreshControl, atIndex: 0)
         
         // Add the activity Indicator for table footer for infinity load
@@ -64,11 +66,13 @@ class HomeViewController: UIViewController {
         let postVC: PostViewController = navController.topViewController as! PostViewController
         postVC.delegate = self
         
-        loadDataBy = NewsfeedType.Newest
-        MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
-        loadNewestData()
+        loadData(nil)
         
         initTabBar()
+    }
+    
+    func pullNewestData() {
+        loadData(nil)
     }
     
     func initTabBar() {
@@ -94,7 +98,7 @@ class HomeViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         // Reload whatever the change from other pages
-//        tableView.reloadData()
+        //        tableView.reloadData()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -104,24 +108,27 @@ class HomeViewController: UIViewController {
         }
     }
     
-    func loadNewestData() {
-        posts = []
-        loadData(nil)
-    }
-    
-    func loadDataSince(lastCreatedAt: NSDate?) {
-        loadData(lastCreatedAt)
-    }
-    
     func loadData(lastCreatedAt: NSDate?) {
+        let hud = MBProgressHUD.showHUDAddedTo(tableView, animated: true)
+        hud.labelText = "Loading \(loadDataBy.name)..."
+        
         Post.getNewsfeed(loadDataBy, lastCreatedAt: lastCreatedAt) { (posts, error) -> Void in
             if let posts = posts {
                 if posts.count == 0 {
                     self.isEndOfFeed = true
                 }
-                
-                self.posts.appendContentsOf(posts)
+                if lastCreatedAt == nil {
+                    self.posts = posts
+                } else {
+                    self.posts.appendContentsOf(posts)
+                }
                 self.tableView.reloadData()
+                
+                if lastCreatedAt == nil {
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        self.scrollToTop()
+                    })
+                }
                 
             } else {
                 if error?.code == PFErrorCode.ErrorInvalidSessionToken.rawValue {
@@ -132,17 +139,22 @@ class HomeViewController: UIViewController {
                 print(error)
                 self.isEndOfFeed = true
             }
-            
             self.noMoreResultLabel.hidden = !self.isEndOfFeed
             self.refreshControl.endRefreshing()
             self.loadingView.stopAnimating()
             self.isLoadingNextPage = false
-            MBProgressHUD.hideHUDForView(self.tableView, animated: true)
+            hud.hide(true)
+        }
+    }
+    
+    func scrollToTop() {
+        if tableView.numberOfSections > 0 {
+            let top =  NSIndexPath(forItem: NSNotFound, inSection: 0)
+            tableView.scrollToRowAtIndexPath(top, atScrollPosition: UITableViewScrollPosition.Top, animated: true)
         }
     }
     
     @IBAction func onCategoryChanged(sender: UISegmentedControl) {
-        MBProgressHUD.hideHUDForView(self.tableView, animated: true)
         isEndOfFeed = false
         switch sender.selectedSegmentIndex {
         case 0:
@@ -154,7 +166,25 @@ class HomeViewController: UIViewController {
         default:
             loadDataBy = NewsfeedType.Newest
         }
-        loadNewestData()
+        updateRefreshControl()
+        loadData(nil)
+    }
+    
+    func updateRefreshControl() {
+        var strToBold = "Newest"
+        switch segmentControl.selectedSegmentIndex {
+        case 1:
+            loadDataBy = NewsfeedType.Following
+            strToBold = "Following"
+        case 2:
+            loadDataBy = NewsfeedType.UsersVote
+            strToBold = "Users' vote"
+        default:
+            break
+        }
+        
+        let message = "Loading \(strToBold)..."
+        refreshControl.attributedTitle = message.bold(strToBold)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -187,7 +217,7 @@ extension HomeViewController: DetailViewControllerDelegate {
 }
 
 extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCellDelegate {
-
+    
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return posts.count
     }
@@ -197,7 +227,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
             return UITableViewCell()
         }
         let cell = tableView.dequeueReusableCellWithIdentifier("itemCell") as! ItemCell
-
+        
         cell.item = posts[indexPath.row]
         cell.delegate = self
         
@@ -206,7 +236,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
             if indexPath.row >= posts.count - 2 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadDataSince(posts[posts.count-1].createdAt!)
+                loadData(posts[posts.count-1].createdAt!)
             }
         }
         

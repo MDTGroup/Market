@@ -249,25 +249,18 @@ extension UserTimelineViewController {
         loadData(nil)
     }
     
-    func loadDataSince(lastData: NSDate) {
-        loadData(lastData)
-    }
-    
     func loadData(byThisDate: NSDate?) {
         if dataToLoad == .UsersPosts {
             user.getPosts(byThisDate, callback: { (posts, error) -> Void in
-                if let posts = posts where posts.count > 0 {
-                    //                    if posts.count < self.postLimit {
-                    //                        self.isEndOfFeed = true
-                    //                    }
-                    
-                    for p in posts {
-                        self.posts.append(p)
+                if let posts = posts {
+                    if byThisDate != nil {
+                        self.posts.appendContentsOf(posts)
+                    } else {
+                        self.posts = posts
                     }
+                    self.isEndOfFeed = posts.count == 0
                     self.tableView.reloadData()
-                    
-                } else {
-                    print(error)
+                } else {                    print(error)
                     self.isEndOfFeed = true
                 }
                 
@@ -281,16 +274,14 @@ extension UserTimelineViewController {
         } else {
             print("loading user's saved posts")
             user.getSavedPosts(byThisDate, callback: { (posts, error) -> Void in
-                if let posts = posts where posts.count > 0 {
-                    //                    if posts.count < self.postLimit {
-                    //                        self.isEndOfFeed = true
-                    //                    }
-                    
-                    for p in posts {
-                        self.posts.append(p)
+                if let posts = posts {
+                    if byThisDate != nil {
+                        self.posts.appendContentsOf(posts)
+                    } else {
+                        self.posts = posts
                     }
+                    self.isEndOfFeed = posts.count == 0
                     self.tableView.reloadData()
-                    
                 } else {
                     print(error)
                     self.isEndOfFeed = true
@@ -499,7 +490,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 if indexPath.row >= posts.count - 2 {
                     loadingView.startAnimating()
                     isLoadingNextPage = true
-                    loadDataSince(useCreatedAt ? posts[posts.count-1].createdAt! : posts[posts.count-1].updatedAt!)
+                    loadData(useCreatedAt ? posts[posts.count-1].createdAt! : posts[posts.count-1].updatedAt!)
                 }
             }
             

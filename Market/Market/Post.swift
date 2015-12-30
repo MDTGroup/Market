@@ -123,30 +123,20 @@ enum NewsfeedType {
     case UsersVote
     case Newest
     
-    var functionName:String {
+    var name:String {
         switch self {
         case .Following:
-            return "nfFollowing"
+            return "Following"
         case .UsersVote:
-            return "nfUsersVote"
+            return "Users' vote"
         case .Newest:
-            return "nfNewest"
+            return "Newest"
         }
     }
 }
 
 extension Post {
     static func getNewsfeed(type: NewsfeedType, lastCreatedAt: NSDate?, callback: PostResultBlock) {
-//        PFCloud.callFunctionInBackground(type.functionName, withParameters: params) { (responseData, error) -> Void in
-//            guard error == nil else {
-//                callback(posts: nil, error: error)
-//                return
-//            }
-//            
-//            if let posts = responseData as? [Post] {
-//                callback(posts: posts, error: nil)
-//            }
-//        }
         switch type {
         case NewsfeedType.Newest:
             queryForNewestPost(lastCreatedAt, callback: callback)
