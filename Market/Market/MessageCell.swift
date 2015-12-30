@@ -25,22 +25,13 @@ class MessageCell: UITableViewCell {
             
             if let currentUser = User.currentUser(), userObjectId = currentUser.objectId {
                 if let user = conversation.toUser {
-                    if let avatar = user.avatar, urlString = avatar.url where previousAvatarURL != urlString {
-                        previousAvatarURL = urlString
-                        let url = NSURL(string: urlString)!
-                        
-                        userImage.alpha = 0
-                        
-                        self.userImage.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
-                            self.userImage.image = image
-                            UIView.animateWithDuration(0.5, animations: { () -> Void in
-                                self.userImage.alpha = 1
-                            })
-                            }, failure: { (urlRequest, httpURLResponse, error) -> Void in
-                                print(error)
-                        })
+                    if let avatar = user.avatar, urlString = avatar.url  {
+                        if previousAvatarURL != urlString {
+                            previousAvatarURL = urlString
+                            userImage.loadAndFadeInWith(urlString, imageViews: nil, duration: 0.5)
+                        }
                     } else {
-                        self.userImage.image = UIImage(named: "profile_blank")
+                        self.userImage.noAvatar()
                     }
                     self.userFullname.text = user.fullName
                     

@@ -28,6 +28,7 @@
 		4483EF741C1B41DF002C98DA /* SignUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF6F1C1B41DF002C98DA /* SignUpViewController.swift */; };
 		4483EF751C1B41DF002C98DA /* ResetPasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF701C1B41DF002C98DA /* ResetPasswordViewController.swift */; };
 		4483EF771C1B41DF002C98DA /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */; };
+		449ACA181C33B8FC00B7748D /* UIImageViewExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 449ACA171C33B8FC00B7748D /* UIImageViewExtension.swift */; };
 		44AEE36E1C2339C9004B5E2E /* SavedItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44AEE36D1C2339C9004B5E2E /* SavedItemCell.swift */; };
 		44AEE3731C2339DD004B5E2E /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44AEE36F1C2339DD004B5E2E /* MessageViewController.swift */; };
 		44AEE3741C2339DD004B5E2E /* Messages.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44AEE3701C2339DD004B5E2E /* Messages.storyboard */; };
@@ -91,6 +92,7 @@
 		4483EF6F1C1B41DF002C98DA /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignUpViewController.swift; sourceTree = "<group>"; };
 		4483EF701C1B41DF002C98DA /* ResetPasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResetPasswordViewController.swift; sourceTree = "<group>"; };
 		4483EF721C1B41DF002C98DA /* SettingsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		449ACA171C33B8FC00B7748D /* UIImageViewExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIImageViewExtension.swift; sourceTree = "<group>"; };
 		44AEE36D1C2339C9004B5E2E /* SavedItemCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedItemCell.swift; sourceTree = "<group>"; };
 		44AEE36F1C2339DD004B5E2E /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
 		44AEE3701C2339DD004B5E2E /* Messages.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Messages.storyboard; sourceTree = "<group>"; };
@@ -298,6 +300,7 @@
 				44EB6E1B1C25217D0044992A /* DoubleExtension.swift */,
 				44ECB2581C2D901D008291ED /* StringExtension.swift */,
 				4421ABC01C2F10390071E9A5 /* AlertControl.swift */,
+				449ACA171C33B8FC00B7748D /* UIImageViewExtension.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -499,6 +502,7 @@
 				18BBF2E81C2EFBF3004C6030 /* VideoViewController.swift in Sources */,
 				4401D0F41C21311C004A9BD9 /* SimplifiedItemCell.swift in Sources */,
 				44EB6E1C1C25217D0044992A /* DoubleExtension.swift in Sources */,
+				449ACA181C33B8FC00B7748D /* UIImageViewExtension.swift in Sources */,
 				443810361C206EEB00CCD266 /* Notification.swift in Sources */,
 				44FBCB071C1D365300722DE2 /* Conversation.swift in Sources */,
 				44F5BEBD1C1BD5A9006317E0 /* HomeViewController.swift in Sources */,

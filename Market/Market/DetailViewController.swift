@@ -120,7 +120,7 @@ class DetailViewController: UIViewController {
                 if let avatar = user.avatar {
                     self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
                 } else {
-                    self.avatarImageView.image = UIImage(named: "profile_blank")
+                    self.avatarImageView.noAvatar()
                 }
             }
         }

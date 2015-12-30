@@ -37,39 +37,17 @@ class ItemListCell: UITableViewCell {
             if let avatar = post.user.avatar, urlString = avatar.url {
                 if previousAvatarURL != urlString {
                     previousAvatarURL = urlString
-                    let url = NSURL(string: urlString)!
-                    
-                    avatarImageView.alpha = 0
-                    
-                    avatarImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
-                        self.avatarImageView.image = image
-                        UIView.animateWithDuration(0.5, animations: { () -> Void in
-                            self.avatarImageView.alpha = 1
-                        })
-                        }, failure: { (urlRequest, httpURLResponse, error) -> Void in
-                            print(error)
-                    })
+                    avatarImageView.loadAndFadeInWith(urlString, imageViews: nil, duration: 0.5)
                 }
             } else {
-                self.avatarImageView.image = UIImage(named: "profile_blank")
+                self.avatarImageView.noAvatar()
             }
             
             if post.medias.count > 0 {
-//                self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
                 if let urlString = post.medias[0].url where previousPostImageURL != urlString {
                     previousPostImageURL = urlString
-                    let url = NSURL(string: urlString)!
                     
-                    itemImageView.alpha = 0
-                    
-                    itemImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
-                        self.itemImageView.image = image
-                        UIView.animateWithDuration(0.5, animations: { () -> Void in
-                            self.itemImageView.alpha = 1
-                        })
-                        }, failure: { (urlRequest, httpURLResponse, error) -> Void in
-                            print(error)
-                    })
+                    itemImageView.loadAndFadeInWith(urlString, imageViews: [newTagImageView], duration: 0.5)
                 }
             }
             

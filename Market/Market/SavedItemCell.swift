@@ -33,33 +33,32 @@ class SavedItemCell: UITableViewCell {
     weak var delegate: SavedItemCellDelegate?
     
     var tapGesture: UITapGestureRecognizer!
+    var previousAvatarURL: String?
+    var previousPostImageURL: String?
 
     var item: Post! {
         didSet {
             let post = item
             // Set seller
             self.sellerLabel.text = ""
-            if let avatar = post.user.avatar {
-                self.avatarImageView.alpha = 0.0
-                UIView.animateWithDuration(0.3, animations: {
-                    self.avatarImageView.setImageWithURL(NSURL(string: avatar.url!)!)
-                    self.avatarImageView.alpha = 1.0
-                    }, completion: nil)
+            if let avatar = post.user.avatar, urlString = avatar.url {
+                if urlString != previousAvatarURL {
+                    previousAvatarURL = urlString
+                    avatarImageView.loadAndFadeInWith(urlString, imageViews: nil, duration: 0.5)
+                }
             } else {
-                // load no image
+               avatarImageView.noAvatar()
             }
             
             self.sellerLabel.text = post.user.fullName
             
             // Set Item
             if post.medias.count > 0 {
-                itemImageView.alpha = 0.0
-                UIView.animateWithDuration(0.3, animations: {
-                    self.itemImageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-                    self.itemImageView.alpha = 1.0
-                    }, completion: nil)
-            } else {
-                // Load no image
+                let urlString = post.medias[0].url!
+                if urlString != previousPostImageURL {
+                    previousPostImageURL = urlString
+                    itemImageView.loadAndFadeInWith(urlString, imageViews: [newTagImageView], duration: 0.5)
+                }
             }
             itemNameLabel.text = post.title
             descriptionLabel.text = post.descriptionText

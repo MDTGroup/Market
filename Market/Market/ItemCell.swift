@@ -19,7 +19,7 @@ class ItemCell: UITableViewCell {
     
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemNameLabel: UILabel!
-//    @IBOutlet weak var descriptionLabel: UILabel!
+    //    @IBOutlet weak var descriptionLabel: UILabel!
     @IBOutlet weak var timeAgoLabel: UILabel!
     @IBOutlet weak var priceLabel: UILabel!
     @IBOutlet weak var sellerLabel: UILabel!
@@ -36,46 +36,26 @@ class ItemCell: UITableViewCell {
     var item: Post! {
         didSet {
             let post = item
-            if let avatar = post.user.avatar, urlString = avatar.url where previousAvatarURL != urlString {
-                previousAvatarURL = urlString
-                let url = NSURL(string: urlString)!
-                avatarImageView.alpha = 0
-                avatarImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
-                    self.avatarImageView.image = image
-                    UIView.animateWithDuration(0.5, animations: { () -> Void in
-                        self.avatarImageView.alpha = 1
-                    })
-                    }, failure: { (urlRequest, httpURLResponse, error) -> Void in
-                        print(error)
-                })
+            if let avatar = post.user.avatar, urlString = avatar.url {
+                if previousAvatarURL != urlString {
+                    previousAvatarURL = urlString
+                    avatarImageView.loadAndFadeInWith(urlString, imageViews: nil, duration: 0.5)
+                }
             } else {
-                avatarImageView.image = UIImage(named: "profile_blank")
+                avatarImageView.noAvatar()
             }
             
             if post.medias.count > 0 {
-                let urlString = post.medias[0].url
+                let urlString = post.medias[0].url!
                 if previousPostImageURL != urlString {
                     previousPostImageURL = urlString
-                    
-                    itemImageView.alpha = 0
-                    newTagImageView.alpha = 0
-                    
-                    let url = NSURL(string: urlString!)!
-                    itemImageView.setImageWithURLRequest(NSURLRequest(URL: url, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
-                        self.itemImageView.image =  image
-                        UIView.animateWithDuration(0.5, animations: { () -> Void in
-                            self.itemImageView.alpha = 1
-                            self.newTagImageView.alpha = 1
-                        })
-                        }, failure: { (urlRequest, httpURLResponse, error) -> Void in
-                            print(error)
-                    })
+                    itemImageView.loadAndFadeInWith(urlString, imageViews: [newTagImageView], duration: 0.5)
                 }
             }
             
             sellerLabel.text = post.user.fullName
             itemNameLabel.text = post.title
-//            descriptionLabel.text = post.descriptionText
+            //            descriptionLabel.text = post.descriptionText
             timeAgoLabel.text = Helper.timeSinceDateToNow(post.createdAt!)
             priceLabel.text = post.price.formatVND()
             newTagImageView.hidden = (post.condition > 0)
@@ -91,15 +71,15 @@ class ItemCell: UITableViewCell {
         cardView.layer.shadowOpacity = 1.0
         cardView.layer.shadowRadius = 2.0
         
-//        priceLabel.layer.cornerRadius = 2
-//        priceLabel.layer.shadowColor = UIColor.lightGrayColor().CGColor
-//        priceLabel.layer.shadowOffset = CGSizeMake(0.5, 0.5)
-//        priceLabel.layer.shadowOpacity = 1.0
-//        priceLabel.layer.shadowRadius = 2.0
+        //        priceLabel.layer.cornerRadius = 2
+        //        priceLabel.layer.shadowColor = UIColor.lightGrayColor().CGColor
+        //        priceLabel.layer.shadowOffset = CGSizeMake(0.5, 0.5)
+        //        priceLabel.layer.shadowOpacity = 1.0
+        //        priceLabel.layer.shadowRadius = 2.0
         
         avatarImageView.layer.cornerRadius = avatarImageView.bounds.width/2
         avatarImageView.clipsToBounds = true
-//        itemImageView.layer.cornerRadius = 8
+        //        itemImageView.layer.cornerRadius = 8
         itemImageView.clipsToBounds = true
         
         let profileTapGesture = UITapGestureRecognizer(target: self, action: "tapOnProfile:")

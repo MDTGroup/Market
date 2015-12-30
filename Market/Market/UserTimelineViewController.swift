@@ -389,8 +389,8 @@ extension UserTimelineViewController {
                 })
             }
         } else {
-            avatarImageView.image = UIImage(named: "profile_blank")
-            bigAvatarImageView.image = UIImage(named: "profile_blank")
+            avatarImageView.noAvatar()
+            bigAvatarImageView.noAvatar()
         }
     }
     
@@ -524,7 +524,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                     cell.imgField.image = UIImage(data: data!)
                 }
             } else {
-                cell.imgField.image = UIImage(named: "profile_blank")
+                cell.imgField.noAvatar()
             }
             
             cell.targetUser = followingUsers[indexPath.row]
