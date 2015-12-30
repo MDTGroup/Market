@@ -17,13 +17,14 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.emailField.delegate = self
-        self.passwordField.delegate = self
+        emailField.delegate = self
+        passwordField.delegate = self
+        emailField.becomeFirstResponder()
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        emailField.becomeFirstResponder()
+        
     }
     
     override func viewWillDisappear(animated: Bool) {
