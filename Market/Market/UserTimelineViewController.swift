@@ -508,8 +508,8 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         case .Following:
             let cell = tableView.dequeueReusableCellWithIdentifier("FollowingCell", forIndexPath: indexPath) as! FollowingTableViewCell
             
-            if posts.count == 0 {
-                print("the myth")
+            if followingUsers.count == 0 {
+                print("followingUsers - the myth")
                 return cell
             }
             
