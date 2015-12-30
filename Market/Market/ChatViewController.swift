@@ -58,7 +58,10 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
         conversation.markRead { (success, error) -> Void in
             TabBarController.instance.onRefreshMessageBadge(nil)
         }
-        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         inputToolbar?.contentView?.textView?.becomeFirstResponder()
     }
     
@@ -437,13 +440,22 @@ extension ChatViewController {
 
 extension ChatViewController: UIImagePickerControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        let video = info[UIImagePickerControllerMediaURL] as? NSURL
         
+        let video = info[UIImagePickerControllerMediaURL] as? NSURL
         var photoAfterCompress: UIImage?
         if let photo = info[UIImagePickerControllerEditedImage] as? UIImage {
             let newWidth = photo.size.width > 400 ? 400 : photo.size.width
             photoAfterCompress = Helper.resizeImage(photo, newWidth: newWidth)
         }
+        else if let video = video {
+            let data = NSData(contentsOfURL: video)
+            if let data = data where data.length >= 10000 {
+                self.dismissViewControllerAnimated(true, completion: nil)
+                AlertControl.show(self, title: "File size", message: "You cannot upload video with file size >= 10 mb. Please choose a shorter video.", handler: nil)
+                return
+            }
+        }
+        
         self.sendMessage("", video: video, photo: photoAfterCompress, location: nil)
 
         picker.dismissViewControllerAnimated(true, completion: nil)

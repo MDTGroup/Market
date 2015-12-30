@@ -628,10 +628,18 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
             if videoPosition >= 0 {
                 AlertControl.show(self, title: "Market", message: "You can't post more than 1 video", handler: nil)
             } else {
+                videoURL = info[UIImagePickerControllerMediaURL] as? NSURL
+                let data = NSData(contentsOfURL: videoURL!)
+                if let data = data where data.length >= 10000 {
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                    AlertControl.show(self, title: "File size", message: "You cannot upload video with file size >= 10 mb. Please choose a shorter video.", handler: nil)
+                    return
+                }
+                
                 isMediaChanged = true
                 videoPosition = selectedImageIndex
                 // Get the thumbnail of video
-                videoURL = info[UIImagePickerControllerMediaURL] as? NSURL
+                
                 print(videoURL)
                 let asset = AVAsset(URL: videoURL!)
                 let assetImgGenerate = AVAssetImageGenerator(asset: asset)
@@ -641,8 +649,9 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
                     let image = UIImage(CGImage: cgImage)
                     setImageToSelectedImageView(image, isVideo: true)
                 }
-                let data = NSData(contentsOfURL: videoURL!)
+               
                 print("File size: \(Double(data!.length / 1024)) kb")
+                
                 videoPFFile = PFFile(name: "video.mov", data: NSData(data: data!))
             }
             
