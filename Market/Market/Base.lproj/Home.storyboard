@@ -1135,45 +1135,39 @@
                                 </constraints>
                                 <blurEffect style="dark"/>
                             </visualEffectView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="HZI-Oz-QMY">
-                                <rect key="frame" x="8" y="128" width="359" height="29"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="28" id="Tp1-dP-kVB"/>
-                                </constraints>
-                                <segments>
-                                    <segment title="Posts"/>
-                                    <segment title="Saved"/>
-                                    <segment title="Following"/>
-                                    <segment title="Keywords"/>
-                                </segments>
-                                <color key="tintColor" red="0.19215686274509802" green="0.6470588235294118" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
-                                <connections>
-                                    <action selector="onCategoryChanged:" destination="kZY-du-h5I" eventType="valueChanged" id="1Vv-v4-RYT"/>
-                                </connections>
-                            </segmentedControl>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="UmN-b5-d3q">
-                                <rect key="frame" x="0.0" y="164" width="375" height="503"/>
+                                <rect key="frame" x="0.0" y="156" width="375" height="511"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" horizontalHuggingPriority="252" verticalHuggingPriority="252" horizontalCompressionResistancePriority="752" verticalCompressionResistancePriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="SL1-GI-w32">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="40"/>
                                         <subviews>
-                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pQJ-3B-NHi">
-                                                <rect key="frame" x="318" y="4" width="51" height="31"/>
-                                                <connections>
-                                                    <action selector="onChangeSwitchSaved:" destination="kZY-du-h5I" eventType="valueChanged" id="sXU-qJ-eJ8"/>
-                                                </connections>
-                                            </switch>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Receive notification?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HWs-QY-acS">
                                                 <rect key="frame" x="8" y="11" width="134" height="17"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="H6K-pU-Biv">
+                                                <rect key="frame" x="16" y="38" width="359" height="2"/>
+                                                <color key="backgroundColor" red="0.93725490199999995" green="0.93725490199999995" blue="0.95686274510000002" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="2" id="ji1-a9-4E1"/>
+                                                </constraints>
+                                            </view>
+                                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="pQJ-3B-NHi">
+                                                <rect key="frame" x="318" y="4" width="51" height="31"/>
+                                                <connections>
+                                                    <action selector="onChangeSwitchSaved:" destination="kZY-du-h5I" eventType="valueChanged" id="sXU-qJ-eJ8"/>
+                                                </connections>
+                                            </switch>
                                         </subviews>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="pQJ-3B-NHi" secondAttribute="trailing" constant="8" id="bRj-fp-XRp"/>
+                                            <constraint firstItem="H6K-pU-Biv" firstAttribute="leading" secondItem="SL1-GI-w32" secondAttribute="leading" constant="16" id="jEA-ZC-ZZj"/>
                                             <constraint firstAttribute="height" constant="40" id="jbf-dW-6N2"/>
+                                            <constraint firstAttribute="trailing" secondItem="H6K-pU-Biv" secondAttribute="trailing" id="kOS-XS-x6O"/>
+                                            <constraint firstItem="H6K-pU-Biv" firstAttribute="top" secondItem="pQJ-3B-NHi" secondAttribute="bottom" constant="3" id="kbM-YG-a1D"/>
                                             <constraint firstItem="HWs-QY-acS" firstAttribute="leading" secondItem="SL1-GI-w32" secondAttribute="leading" constant="8" id="qoN-cn-9c9"/>
                                             <constraint firstItem="pQJ-3B-NHi" firstAttribute="centerY" secondItem="SL1-GI-w32" secondAttribute="centerY" id="wTv-7w-7j6"/>
                                             <constraint firstItem="HWs-QY-acS" firstAttribute="centerY" secondItem="pQJ-3B-NHi" secondAttribute="centerY" id="xul-Ms-EfS"/>
@@ -1210,7 +1204,7 @@
                                         </constraints>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" horizontalHuggingPriority="249" verticalHuggingPriority="249" horizontalCompressionResistancePriority="749" verticalCompressionResistancePriority="749" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="57" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="usf-Rc-hqR">
-                                        <rect key="frame" x="0.0" y="84" width="375" height="419"/>
+                                        <rect key="frame" x="0.0" y="84" width="375" height="427"/>
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <prototypes>
                                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="simplifiedItemCell" rowHeight="57" id="Oay-19-G7w" customClass="SimplifiedItemCell" customModule="Market" customModuleProvider="target">
@@ -1401,6 +1395,22 @@
                                     </tableView>
                                 </subviews>
                             </stackView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="HZI-Oz-QMY">
+                                <rect key="frame" x="8" y="128" width="359" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="28" id="Tp1-dP-kVB"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Posts"/>
+                                    <segment title="Saved"/>
+                                    <segment title="Following"/>
+                                    <segment title="Keywords"/>
+                                </segments>
+                                <color key="tintColor" red="0.19215686274509802" green="0.6470588235294118" blue="0.52549019607843139" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="onCategoryChanged:" destination="kZY-du-h5I" eventType="valueChanged" id="1Vv-v4-RYT"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
@@ -1408,7 +1418,7 @@
                             <constraint firstItem="Yl4-yy-IZu" firstAttribute="top" secondItem="UmN-b5-d3q" secondAttribute="bottom" id="C3z-ws-W4F"/>
                             <constraint firstItem="HZI-Oz-QMY" firstAttribute="top" secondItem="lNJ-hh-gzQ" secondAttribute="bottom" constant="8" id="DaO-9O-fOg"/>
                             <constraint firstAttribute="trailing" secondItem="HZI-Oz-QMY" secondAttribute="trailing" constant="8" id="MYI-ZL-Mvb"/>
-                            <constraint firstItem="UmN-b5-d3q" firstAttribute="top" secondItem="HZI-Oz-QMY" secondAttribute="bottom" constant="8" id="R4i-Sk-R7c"/>
+                            <constraint firstItem="UmN-b5-d3q" firstAttribute="top" secondItem="HZI-Oz-QMY" secondAttribute="bottom" id="R4i-Sk-R7c"/>
                             <constraint firstAttribute="trailing" secondItem="UmN-b5-d3q" secondAttribute="trailing" id="Rob-x1-qz2"/>
                             <constraint firstAttribute="trailing" secondItem="lNJ-hh-gzQ" secondAttribute="trailing" id="SIe-We-Ory"/>
                             <constraint firstAttribute="trailing" secondItem="B0S-51-qjp" secondAttribute="trailing" id="Tfi-91-igb"/>
