@@ -229,7 +229,11 @@ extension ProfileViewController: UIImagePickerControllerDelegate, UINavigationCo
 extension ProfileViewController : UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
         
-        onUpdate(nil)
+        if textField == fullnameField {
+            addressField.becomeFirstResponder()
+        } else if textField == addressField {
+            phoneField.becomeFirstResponder()
+        }
         
         return true
     }
