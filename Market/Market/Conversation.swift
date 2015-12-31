@@ -158,7 +158,7 @@ class Conversation: PFObject, PFSubclassing {
         if let query = Conversation.query(), currentUser = User.currentUser() {
             var cachePolicy = PFCachePolicy.CacheThenNetwork
             if forNetworkOnly {
-                cachePolicy = .NetworkOnly
+                cachePolicy = .NetworkElseCache
             }
             
             query.selectKeys(["post", "userIds", "readUsers", "lastMessage"])

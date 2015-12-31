@@ -11,7 +11,7 @@ import MBProgressHUD
 import Parse
 
 class ParentChatViewController: UIViewController {
-
+    
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemNameLabel: UILabel!
     @IBOutlet weak var timeAgoLabel: UILabel!
@@ -23,8 +23,9 @@ class ParentChatViewController: UIViewController {
     @IBOutlet weak var profileView: UIView!
     @IBOutlet weak var postContentView: UIView!
     
-    var tapGesture: UITapGestureRecognizer!
+    static var openDirectly = false
     
+    var tapGesture: UITapGestureRecognizer!
     var conversation: Conversation!
     
     func initControls() {
@@ -58,12 +59,17 @@ class ParentChatViewController: UIViewController {
         detailVC.post = conversation.post
         presentViewController(detailVC, animated: true, completion: nil)
     }
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         initControls()
         loadPost()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        ParentChatViewController.openDirectly = false
     }
     
     func loadPost() {
@@ -87,13 +93,13 @@ class ParentChatViewController: UIViewController {
                 self.timeAgoLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
                 self.priceLabel.text = post.price.formatVND()
                 self.newTagImageView.hidden = post.condition > 0
-                if let navController = self.navigationController, messageVC = navController.viewControllers[navController.viewControllers.count - 2] as? MessageViewController {
-                    messageVC.title = post.title
-                }
+//                if let navController = self.navigationController, messageVC = navController.viewControllers[navController.viewControllers.count - 2] as? MessageViewController {
+//                    messageVC.title = post.title
+//                }
             }
         }
     }
-
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let chatVC = segue.destinationViewController as? ChatViewController {
             chatVC.conversation = conversation
@@ -105,7 +111,7 @@ class ParentChatViewController: UIViewController {
             if let navController = navigationController {
                 for vc in navController.viewControllers {
                     if let messageVC = vc as? MessageViewController {
-                        messageVC.title = conversation.post.title
+//                        messageVC.title = conversation.post.title
                         messageVC.post = conversation.post
                         
                         break
@@ -124,50 +130,60 @@ extension ParentChatViewController {
         }
         
         if let tabBarController = UIApplication.sharedApplication().delegate?.window??.rootViewController as? UITabBarController {
-            let storyboard = UIStoryboard(name: "Messages", bundle: nil)
-            if let messageVC = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.messageViewController) as? MessageViewController,
-                parentChatVC = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.chatViewController) as? ParentChatViewController {
-
-                var view = tabBarController.view
-                if let navController = tabBarController.selectedViewController as? UINavigationController,
-                    visibleViewController = navController.visibleViewController {
+            
+            var visibleVC: UIViewController?
+            var view = tabBarController.view
+            if let navController = tabBarController.selectedViewController as? UINavigationController,
+                visibleViewController = navController.visibleViewController {
+                    visibleVC = visibleViewController
                     view = visibleViewController.view
-                }
-                
-                let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
-                hud.labelText = "Opening chat..."
-                Conversation.addConversation(fromUser, toUser: toUser, post: post, callback: { (conversation, error) -> Void in
-                    guard error == nil else {
-                        hud.hide(true)
-                        print(error)
-                        return
-                    }
-                    UIApplication.sharedApplication().delegate?.window!!.rootViewController?.dismissViewControllerAnimated(false, completion: nil)
-                    if let conversation = conversation {
-                        tabBarController.selectedIndex = 1
-                        messageVC.post = conversation.post
-                        parentChatVC.conversation = conversation
-                        PFObject.fetchAllIfNeededInBackground([fromUser, toUser, parentChatVC.conversation.post], block: { (users, error) -> Void in
-                            guard error == nil else {
-                                print(error)
-                                return
-                            }
-                            parentChatVC.title = toUser.fullName
-                            dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                                hud.hide(true)
-                                if let navController = tabBarController.selectedViewController as? UINavigationController {
-                                    navController.popToRootViewControllerAnimated(false)
-                                    if parentChatVC.conversation.post.user.objectId == User.currentUser()!.objectId {
-                                        navController.pushViewController(messageVC, animated: false)
-                                    }
-                                    navController.pushViewController(parentChatVC, animated: false)
+            }
+            // if is curr1ent Chat screen, no need to push
+            if let parentChatVC = visibleVC as? ParentChatViewController where parentChatVC.conversation.post.objectId == post.objectId &&
+                parentChatVC.conversation.userIds.contains(fromUser.objectId!) &&
+                parentChatVC.conversation.userIds.contains(toUser.objectId!) {
+                    return
+            }
+            
+            if let messageVC = StoryboardInstance.messages.instantiateViewControllerWithIdentifier(StoryboardID.messageViewController) as? MessageViewController,
+                parentChatVC = StoryboardInstance.messages.instantiateViewControllerWithIdentifier(StoryboardID.chatViewController) as? ParentChatViewController {
+                    
+                    let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+                    hud.labelText = "Opening chat..."
+                    Conversation.addConversation(fromUser, toUser: toUser, post: post, callback: { (conversation, error) -> Void in
+                        guard error == nil else {
+                            hud.hide(true)
+                            print(error)
+                            return
+                        }
+                        let rootVC = UIApplication.sharedApplication().delegate?.window!!.rootViewController
+                        rootVC?.dismissViewControllerAnimated(false, completion: nil)
+                        if let conversation = conversation {
+                            ParentChatViewController.openDirectly = true
+                            tabBarController.selectedIndex = 1
+                            messageVC.post = conversation.post
+                            parentChatVC.conversation = conversation
+                            PFObject.fetchAllIfNeededInBackground([fromUser, toUser, parentChatVC.conversation.post], block: { (users, error) -> Void in
+                                guard error == nil else {
+                                    print(error)
+                                    return
                                 }
+                                parentChatVC.title = toUser.fullName
+                                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                                    hud.hide(true)
+                                    if let navController = tabBarController.selectedViewController as? UINavigationController {
+                                        navController.popToRootViewControllerAnimated(false)
+                                        if parentChatVC.conversation.post.user.objectId == User.currentUser()!.objectId {
+                                            navController.pushViewController(messageVC, animated: false)
+                                        }
+                                        navController.pushViewController(parentChatVC, animated: false)
+                                    }
+                                })
                             })
-                        })
-                    } else {
-                        hud.hide(true)
-                    }
-                })
+                        } else {
+                            hud.hide(true)
+                        }
+                    })
             }
         }
     }

@@ -644,11 +644,11 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
             } else {
                 videoURL = info[UIImagePickerControllerMediaURL] as? NSURL
                 let data = NSData(contentsOfURL: videoURL!)
-                if let data = data where data.length >= 10000 {
-                    self.dismissViewControllerAnimated(true, completion: nil)
-                    AlertControl.show(self, title: "File size", message: "You cannot upload video with file size >= 10 mb. Please choose a shorter video.", handler: nil)
-                    return
-                }
+//                if let data = data where data.length >= 10000 {
+//                    self.dismissViewControllerAnimated(true, completion: nil)
+//                    AlertControl.show(self, title: "File size", message: "You cannot upload video with file size >= 10 mb. Please choose a shorter video.", handler: nil)
+//                    return
+//                }
                 
                 isMediaChanged = true
                 videoPosition = selectedImageIndex

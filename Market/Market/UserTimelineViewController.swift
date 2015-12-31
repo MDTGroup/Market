@@ -702,7 +702,7 @@ extension UserTimelineViewController: UITextFieldDelegate {
 // MARK: Show view from anywhere
 extension UserTimelineViewController {
     static var instantiateViewController: UserTimelineViewController {
-        return HomeViewController.storyboard.instantiateViewControllerWithIdentifier(StoryboardID.userTimeline) as! UserTimelineViewController
+        return StoryboardInstance.home.instantiateViewControllerWithIdentifier(StoryboardID.userTimeline) as! UserTimelineViewController
     }
 }
 

@@ -28,8 +28,6 @@ class PostsListViewController: UIViewController {
         let strToBold = "Posts"
         let message = "Loading \(strToBold)..."
         refreshControl.attributedTitle = message.bold(strToBold)
-        
-        loadData(false, lastUpdatedAt: nil)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -37,6 +35,13 @@ class PostsListViewController: UIViewController {
         timer = NSTimer.scheduledTimerWithTimeInterval(3.5, target: self, selector: "refreshData", userInfo: nil, repeats: true)
         if filteredConversationsByPost.count > 0 {
             refreshData()
+        } else {
+            if !ParentChatViewController.openDirectly {
+                refreshControl.beginRefreshing()
+                loadData(false, lastUpdatedAt: nil)
+            } else {
+                refreshControl.endRefreshing()
+            }
         }
     }
     
@@ -126,7 +131,6 @@ class PostsListViewController: UIViewController {
                     return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
                 }
                 messageVC.post = post
-                messageVC.title = post.title
                 messageVC.conversations = conversationsByPost
             }
         } else if let chatVC = segue.destinationViewController as? ParentChatViewController {
@@ -217,7 +221,6 @@ extension PostsListViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
         let conversation = sections[indexPath.section].conversation[indexPath.row]
         if  conversation.post.user.objectId != User.currentUser()!.objectId {
             performSegueWithIdentifier("segueChat", sender: conversation)

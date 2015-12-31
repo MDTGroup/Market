@@ -9,9 +9,10 @@
 import UIKit
 
 class ViewController: UIViewController {
+    
     static func gotoMain() {
         UIApplication.sharedApplication().applicationIconBadgeNumber = 0
-        let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewControllerWithIdentifier(StoryboardID.main)
+        let vc = StoryboardInstance.main.instantiateViewControllerWithIdentifier(StoryboardID.main)
         let window = UIApplication.sharedApplication().delegate!.window!!
         window.rootViewController = vc
     }

@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 struct StoryboardID {
     static let home:String = "home"
@@ -15,4 +16,10 @@ struct StoryboardID {
     static let main:String = "main"
     static let chatViewController:String = "chatViewController"
     static let messageViewController:String = "messageViewController"
+}
+
+class StoryboardInstance {
+    static let main = UIStoryboard(name: "Main", bundle: nil)
+    static let home = UIStoryboard(name: "Home", bundle: nil)
+    static let messages = UIStoryboard(name: "Messages", bundle: nil)
 }

@@ -26,10 +26,9 @@ class HomeViewController: UIViewController {
     var posts = [Post]()
     var loadDataBy = NewsfeedType.Newest
     
-    static let storyboard = UIStoryboard(name: "Home", bundle: nil)
     
     static func gotoHome() {
-        let vc = storyboard.instantiateViewControllerWithIdentifier(StoryboardID.home)
+        let vc = StoryboardInstance.home.instantiateViewControllerWithIdentifier(StoryboardID.home)
         UIApplication.sharedApplication().delegate!.window!!.rootViewController = vc
     }
     

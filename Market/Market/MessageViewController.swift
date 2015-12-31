@@ -26,23 +26,24 @@ class MessageViewController: UIViewController {
         super.viewDidLoad()
         
         initControls()
-        
-        if conversations.count > 0 {
-            isLoadingNextPage = true
-            self.noMoreResultLabel.text = (self.conversations.count > 0) ? "No more result" : "No messages"
-            self.noMoreResultLabel.hidden = conversations.count > 12
-            self.loadingView.stopAnimating()
-        } else {
-            conversations = []
-            loadData(nil)
-        }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        self.title = post.title
         timer = NSTimer.scheduledTimerWithTimeInterval(3.5, target: self, selector: "refreshData", userInfo: nil, repeats: true)
         if conversations.count > 0 {
             refreshData()
+        } else if !ParentChatViewController.openDirectly {
+            if conversations.count > 0 {
+                isLoadingNextPage = true
+                self.noMoreResultLabel.text = (self.conversations.count > 0) ? "No more result" : "No messages"
+                self.noMoreResultLabel.hidden = conversations.count > 12
+                self.loadingView.stopAnimating()
+            } else {
+                conversations = []
+                loadData(nil)
+            }
         }
     }
     
@@ -74,9 +75,6 @@ class MessageViewController: UIViewController {
     }
     
     func loadData(lastUpdatedAt: NSDate?) {
-        if post == nil {
-            return
-        }
         Conversation.getConversationsByPost(post, lastUpdatedAt: lastUpdatedAt) { (newConversations, error) -> Void in
             guard error == nil else {
                 print(error)
@@ -170,6 +168,7 @@ class MessageViewController: UIViewController {
                     if let toUser = conversation.toUser {
                         chatVC.title = toUser.fullName
                     }
+                    self.title = "Messages"
                 }
         }
     }

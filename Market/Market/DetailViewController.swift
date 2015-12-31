@@ -554,6 +554,6 @@ extension DetailViewController {
 // MARK: Show view from anywhere
 extension DetailViewController {
     static var instantiateViewController: DetailViewController {
-        return HomeViewController.storyboard.instantiateViewControllerWithIdentifier(StoryboardID.postDetail) as! DetailViewController
+        return StoryboardInstance.home.instantiateViewControllerWithIdentifier(StoryboardID.postDetail) as! DetailViewController
     }
 }

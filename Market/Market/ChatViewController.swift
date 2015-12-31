@@ -30,6 +30,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     var conversation: Conversation!
     let maxResultPerRequest = 5
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -52,6 +53,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+
         self.showLoadEarlierMessagesHeader = false
         
         timer = NSTimer.scheduledTimerWithTimeInterval(1.15, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
@@ -62,7 +64,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        inputToolbar?.contentView?.textView?.becomeFirstResponder()
+        self.automaticallyScrollsToMostRecentMessage = true
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -96,21 +98,22 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
             }
         }
 
-        let shareCurrentLocation = UIAlertAction(title: "Share current location", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
-            PFGeoPoint.geoPointForCurrentLocationInBackground({ (currentGeoPoint, error) -> Void in
-                guard error == nil else {
-                    if let message = error?.userInfo["error"] as? String {
-                        AlertControl.show(self, title: "Share current location", message: message, handler: nil)
-                    }
-                    print(error)
-                    return
-                }
-                if  let currentGeoPoint = currentGeoPoint {
-                    self.sendMessage("", video: nil, photo: nil, location: currentGeoPoint)
-                }
-            })
-        }
-        alertVC.addAction(shareCurrentLocation)
+        // MARK: temporarily disable this because the map is too slow to show
+//        let shareCurrentLocation = UIAlertAction(title: "Share current location", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
+//            PFGeoPoint.geoPointForCurrentLocationInBackground({ (currentGeoPoint, error) -> Void in
+//                guard error == nil else {
+//                    if let message = error?.userInfo["error"] as? String {
+//                        AlertControl.show(self, title: "Share current location", message: message, handler: nil)
+//                    }
+//                    print(error)
+//                    return
+//                }
+//                if  let currentGeoPoint = currentGeoPoint {
+//                    self.sendMessage("", video: nil, photo: nil, location: currentGeoPoint)
+//                }
+//            })
+//        }
+//        alertVC.addAction(shareCurrentLocation)
         
         let takePhotoAction = UIAlertAction(title: "Take photo", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
             Camera.shouldStartCamera(self, canEdit: true, frontFacing: false)
@@ -269,10 +272,12 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
                 }
             }
         }
+        view.endEditing(true)
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapCellAtIndexPath indexPath: NSIndexPath!, touchLocation: CGPoint) {
         print("didTapCellAtIndexPath")
+        view.endEditing(true)
     }
     
     
@@ -366,6 +371,7 @@ extension ChatViewController {
                     print(error)
                     return
                 }
+                
                 self.automaticallyScrollsToMostRecentMessage = true
                 
                 if let messages = messages where messages.count > 0 {
@@ -447,14 +453,14 @@ extension ChatViewController: UIImagePickerControllerDelegate {
             let newWidth = photo.size.width > 400 ? 400 : photo.size.width
             photoAfterCompress = Helper.resizeImage(photo, newWidth: newWidth)
         }
-        else if let video = video {
-            let data = NSData(contentsOfURL: video)
-            if let data = data where data.length >= 10000 {
-                self.dismissViewControllerAnimated(true, completion: nil)
-                AlertControl.show(self, title: "File size", message: "You cannot upload video with file size >= 10 mb. Please choose a shorter video.", handler: nil)
-                return
-            }
-        }
+//        else if let video = video {
+//            let data = NSData(contentsOfURL: video)
+//            if let data = data where data.length >= 10000 {
+//                self.dismissViewControllerAnimated(true, completion: nil)
+//                AlertControl.show(self, title: "File size", message: "You cannot upload video with file size >= 10 mb. Please choose a shorter video.", handler: nil)
+//                return
+//            }
+//        }
         
         self.sendMessage("", video: video, photo: photoAfterCompress, location: nil)
 
