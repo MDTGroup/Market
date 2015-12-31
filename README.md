@@ -15,7 +15,7 @@ An iOS Swift application for shopping. People can use this app for selling/buyin
 - [x] User can submit/edit/delete a post with images (from camera, taken photo), video, price, description, status, location...
 - [x] User can vote for posts have a good price/deal
 - [x] User can message with each other
-- [ ] User can search by hashtag, title, description, people/branches, price, location
+- [x] User can search by hashtag, title, description
 - [x] User can receive notifications for: 
     - [x] Messages
     - [x] Saved post content changes
@@ -46,4 +46,4 @@ Libraries we are using:
 - AFNetworking
 - MBProgressHUD
 - JSQMessagesViewController
-- HanekeSwift
+- SWTableViewCell
