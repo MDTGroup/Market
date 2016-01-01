@@ -16,4 +16,19 @@ class ViewController: UIViewController {
         let window = UIApplication.sharedApplication().delegate!.window!!
         window.rootViewController = vc
     }
+    
+    @IBOutlet weak var loginView: UIView!
+    @IBOutlet weak var createAccountView: UIView!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        loginView.layer.cornerRadius = 6
+        loginView.layer.borderWidth = 1
+        loginView.layer.borderColor = MyColors.themeColor.CGColor
+        loginView.layer.masksToBounds = true
+        
+        createAccountView.layer.cornerRadius = 6
+        createAccountView.layer.masksToBounds = true
+    }
 }

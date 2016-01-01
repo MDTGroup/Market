@@ -78,17 +78,17 @@ class SearchViewController: UIViewController {
     func showActionsheets() {
         let alertAS = UIAlertController(title: "Condition", message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
         
-        let allAction = UIAlertAction(title: "All", style: UIAlertActionStyle.Default, handler: { (alertAction) -> Void in
+        let allAction = UIAlertAction(title: "All", style: selectedCondition == .All ? .Destructive : .Default, handler: { (alertAction) -> Void in
             self.loadData(nil, condition: Condition.All)
         })
         alertAS.addAction(allAction)
         
-        let newAction = UIAlertAction(title: "New", style: UIAlertActionStyle.Default, handler: { (alertAction) -> Void in
+        let newAction = UIAlertAction(title: "New", style: selectedCondition == .New ? .Destructive : .Default, handler: { (alertAction) -> Void in
             self.loadData(nil, condition: Condition.New)
         })
         alertAS.addAction(newAction)
         
-        let usedAction = UIAlertAction(title: "Used", style: UIAlertActionStyle.Default, handler: { (alertAction) -> Void in
+        let usedAction = UIAlertAction(title: "Used", style: selectedCondition == .Used ? .Destructive : .Default, handler: { (alertAction) -> Void in
             self.loadData(nil, condition: Condition.Used)
         })
         alertAS.addAction(usedAction)
