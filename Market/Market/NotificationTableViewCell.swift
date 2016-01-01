@@ -55,13 +55,13 @@ class NotificationTableViewCell: UITableViewCell {
             typeBackgroundView.hidden = false
             switch notification.type {
             case 1:
-                typeBackgroundView.backgroundColor = MyColors.greenOfRetweetCount
+                typeBackgroundView.backgroundColor = MyColors.bluesky
                 typeLabel.text = "Updated"
             case 2:
-                typeBackgroundView.backgroundColor = MyColors.purple
+                typeBackgroundView.backgroundColor = MyColors.greenOfRetweetCount
                 typeLabel.text = "Following"
             case 3:
-                typeBackgroundView.backgroundColor = MyColors.bluesky
+                typeBackgroundView.backgroundColor = MyColors.lightOrange
                 typeLabel.text = "Keywords"
             default:
                 typeBackgroundView.hidden = true

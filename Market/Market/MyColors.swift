@@ -16,6 +16,7 @@ class MyColors {
     static let greenOfRetweetCount = UIColor(red: 19/255, green: 196/255, blue: 115/255, alpha: 1)
     static let redOfFavCount = UIColor(red: 226/255, green: 22/255, blue: 62/255, alpha: 1)
     static let purple = UIColor(red: 254/255, green: 46/255, blue: 126/255, alpha: 1)
+    static let lightOrange = UIColor(red: 230/255, green: 146/255, blue: 91/255, alpha: 1)
     
     static let navigationTintColor = UIColor(red: 33/255, green: 33/255, blue: 33/255, alpha: 1)
     static let selectedCellColor = UIColor(red: 1, green: 230/255, blue: 230/255, alpha: 1)
