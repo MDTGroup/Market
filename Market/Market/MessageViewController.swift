@@ -103,7 +103,7 @@ class MessageViewController: UIViewController {
                             }
                         }
                         self.conversations = self.conversations.sort { (a, b) -> Bool in
-                            return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
+                            return a.updatedAt!.compare(b.updatedAt!) == NSComparisonResult.OrderedDescending
                         }
                     }
                     
@@ -145,7 +145,7 @@ class MessageViewController: UIViewController {
                         }
                     }
                     self.conversations = self.conversations.sort { (a, b) -> Bool in
-                        return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
+                        return a.updatedAt!.compare(b.updatedAt!) == NSComparisonResult.OrderedDescending
                     }
                     
                     if !UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {

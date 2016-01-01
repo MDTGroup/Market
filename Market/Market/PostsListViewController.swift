@@ -128,7 +128,7 @@ class PostsListViewController: UIViewController {
                     return conversation.post.objectId == post.objectId
                 })
                 conversationsByPost = conversationsByPost.sort { (a, b) -> Bool in
-                    return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
+                    return a.updatedAt!.compare(b.updatedAt!) == NSComparisonResult.OrderedDescending
                 }
                 messageVC.post = post
                 messageVC.conversations = conversationsByPost
@@ -169,8 +169,9 @@ class PostsListViewController: UIViewController {
                 newConversations.append(conversation)
             }
         }
+        
         filteredConversationsByPost = newConversations.sort { (a, b) -> Bool in
-            return a.updatedAt!.compare(b.updatedAt!).rawValue > 0
+            return a.updatedAt!.compare(b.updatedAt!) == NSComparisonResult.OrderedDescending
         }
         sections[0].conversation = filteredConversationsByPost.filter({ (conversation) -> Bool in
             return conversation.post.user.objectId != User.currentUser()?.objectId

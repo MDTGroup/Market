@@ -152,7 +152,7 @@ class NotificationViewController: UIViewController {
                         }
                         
                         self.notifications = self.notifications.sort { (a, b) -> Bool in
-                            return a.createdAt!.compare(b.createdAt!).rawValue > 0
+                            return a.createdAt!.compare(b.createdAt!) == NSComparisonResult.OrderedDescending
                         }
                         self.tableView.reloadData()
                     }
