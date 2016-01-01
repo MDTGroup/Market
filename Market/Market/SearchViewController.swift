@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MBProgressHUD
 
 class SearchViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
@@ -104,22 +105,39 @@ class SearchViewController: UIViewController {
 extension SearchViewController {
     func loadData(lastCreatedAt: NSDate?, condition: Condition) {
         selectedCondition = condition
+        if lastCreatedAt == nil {
+            let hud = MBProgressHUD.showHUDAddedTo(tableView, animated: true)
+            hud.labelText = "Searching \"\(searchBar.text!)\""
+        }
         if let text = searchBar.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) where !text.isEmpty {
-            Post.search(text, condition: condition.rawValue, lastCreatedAt: lastCreatedAt) { (posts, error) -> Void in
+            Post.search(text, condition: condition.rawValue, lastCreatedAt: lastCreatedAt) { (newPosts, error) -> Void in
                 guard error == nil else {
                     print(error)
                     self.isEndOfFeed = true
                     return
                 }
-                if let posts = posts {
-                    if posts.count == 0 {
+                if let newPosts = newPosts {
+                    if newPosts.count == 0 {
                         self.isEndOfFeed = true
                     }
                     
                     if lastCreatedAt == nil {
-                        self.posts = posts
+                        self.posts = newPosts
                     } else {
-                        self.posts.appendContentsOf(posts)
+                        
+                        for newPost in newPosts {
+                            var found = false
+                            for post in self.posts {
+                                if newPost.objectId == post.objectId {
+                                    found = true
+                                    break
+                                }
+                            }
+                            if !found {
+                                self.posts.append(newPost)
+                            }
+                        }
+                        
                     }
                     self.tableView.reloadData()
                 }
@@ -127,6 +145,7 @@ extension SearchViewController {
                 self.noMoreResultLabel.hidden = !self.isEndOfFeed
                 self.loadingView.stopAnimating()
                 self.isLoadingNextPage = false
+                MBProgressHUD.hideHUDForView(self.tableView, animated: true)
             }
         }
     }
@@ -153,10 +172,19 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             if indexPath.row >= posts.count - 2 {
                 loadingView.startAnimating()
                 isLoadingNextPage = true
-                loadData(posts[posts.count-1].createdAt!, condition: selectedCondition)
+                
+                let oldestCreatedAt = getOldestTime(posts)
+                loadData(oldestCreatedAt, condition: selectedCondition)
             }
         }
         return cell
+    }
+    
+    func getOldestTime(posts: [Post]) -> NSDate? {
+        let sortedPosts = posts.sort { (firstPost, secondPost) -> Bool in
+            return firstPost.createdAt!.compare(secondPost.createdAt!) == NSComparisonResult.OrderedAscending
+        }
+        return sortedPosts.count > 0 ? sortedPosts.first!.createdAt : posts[posts.count - 1].createdAt
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
