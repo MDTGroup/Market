@@ -7,9 +7,9 @@
 //
 
 import UIKit
-import SWTableViewCell
+import MGSwipeTableCell
 
-class SimplifiedItemCell: SWTableViewCell {
+class SimplifiedItemCell: MGSwipeTableCell {
     
     @IBOutlet weak var itemImageView: UIImageView!
     @IBOutlet weak var itemNameLabel: UILabel!

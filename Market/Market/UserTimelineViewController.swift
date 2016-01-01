@@ -8,7 +8,7 @@
 
 import UIKit
 import MBProgressHUD
-import SWTableViewCell
+import MGSwipeTableCell
 
 class UserTimelineViewController: UIViewController {
     
@@ -421,10 +421,6 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
     
     func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         view.endEditing(true)
-        
-        if let cell = tableView.cellForRowAtIndexPath(indexPath) as? SimplifiedItemCell {
-            cell.hideUtilityButtonsAnimated(true)
-        }
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
@@ -457,31 +453,159 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
             cell.item = posts[indexPath.row]
             var useCreatedAt = true
             if dataToLoad == .UsersPosts {
-                // Add utility buttons
-                let leftUtilityButtons = NSMutableArray()
-                
-                if user.objectId == User.currentUser()?.objectId {
-                    if cell.item.sold {
-                        leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.green, title: "Avail")
-                    } else {
-                        leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.yellow, title: "Sold")
-                    }
-                }
-                
-                cell.leftUtilityButtons = leftUtilityButtons as [AnyObject]
-                cell.rightUtilityButtons = []
-                cell.delegate = self
                 useCreatedAt = true
                 
+                // If this is my post then allow these actions
+                if user.objectId == User.currentUser()?.objectId {
+                    // For left buttons
+                    var buttonTitle = ""
+                    var buttonColor = MyColors.green
+                    
+                    if cell.item.sold {
+                        buttonTitle = "Avail"
+                        buttonColor = MyColors.green
+                    } else {
+                        buttonTitle = "Sold"
+                        buttonColor = MyColors.yellow
+                    }
+                    
+                    let leftButton = MGSwipeButton(title: buttonTitle, backgroundColor: buttonColor
+                        , callback: { (sender: MGSwipeTableCell!) -> Bool in
+                            
+                            let post = cell.item
+                            let newCell = cell
+                            
+                            if !newCell.item.sold {
+                                Post.sold(post.objectId!, isSold: true, completion: { (finished, error) -> Void in
+                                    if finished {
+                                        newCell.soldView.hidden = false
+                                        
+                                        // Change button to "AVAIL"
+                                        if let lb = newCell.leftButtons[0] as? MGSwipeButton {
+                                            lb.backgroundColor = MyColors.green
+                                            lb.setTitle("Avail", forState: UIControlState.Normal)
+                                            
+                                            // Resize the width to fit new text
+                                            let newSize = lb.sizeThatFits(CGSize(width: CGFloat.max, height: cell.frame.height))
+                                            lb.frame.size.width = newSize.width
+                                        }
+                                        
+                                    } else {
+                                        print("failed to sell post, error = \(error)")
+                                    }
+                                    newCell.item.fetchInBackground()
+                                })
+                                
+                            } else {
+                                Post.sold(post.objectId!, isSold: false, completion: { (finished, error) -> Void in
+                                    if finished {
+                                        newCell.soldView.hidden = true
+                                        
+                                        // Change button to "Sold"
+                                        if let lb = newCell.leftButtons[0] as? MGSwipeButton {
+                                            lb.backgroundColor = MyColors.yellow
+                                            lb.setTitle("Sold", forState: UIControlState.Normal)
+                                            
+                                            // Resize the width to fit new text
+                                            let newSize = lb.sizeThatFits(CGSize(width: CGFloat.max, height: cell.frame.height))
+                                            lb.frame.size.width = newSize.width
+                                        }
+                                        
+                                    } else {
+                                        print("failed to set post avail, error = \(error)")
+                                    }
+                                    newCell.item.fetchInBackground()
+                                })
+                            }
+                            
+                            return true
+                    })
+                    
+                    // Enable expandable swipe
+                    cell.leftButtons = [leftButton]
+                    cell.leftSwipeSettings.transition = MGSwipeTransition.Border
+                    cell.leftExpansion.buttonIndex = 0
+                    cell.leftExpansion.threshold = 1.5
+                    
+                    // For right buttons
+                    let delButton = MGSwipeButton(title: "Delete", backgroundColor: MyColors.carrot, callback: { (sender: MGSwipeTableCell!) -> Bool in
+                        // Delete post
+                        let newCell = sender as? SimplifiedItemCell
+                        let post = newCell!.item
+                        let id = tableView.indexPathForCell(newCell!)
+                        
+                        let alertController = UIAlertController(title: "Market", message: "Are you sure to delete this post?", preferredStyle: .Alert)
+                        
+                        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
+                            print(action)
+                            tableView.setEditing(false, animated: true)
+                        }
+                        alertController.addAction(cancelAction)
+                        
+                        let destroyAction = UIAlertAction(title: "Delete", style: .Destructive) { (action) in
+                            Post.deletePost(post.objectId!, completion: { (finished, error) -> Void in
+                                if finished {
+                                    print("delete at index \(id!.row)")
+                                    self.posts.removeAtIndex(id!.row)
+                                    tableView.deleteRowsAtIndexPaths([id!], withRowAnimation: .Bottom)
+                                } else {
+                                    print("failed to delete post, error = \(error)")
+                                }
+                            })
+                        }
+                        alertController.addAction(destroyAction)
+                        
+                        self.presentViewController(alertController, animated: true, completion: nil)
+                        
+                        return true
+                    })
+                    
+                    let editButton = MGSwipeButton(title: "Edit", backgroundColor: MyColors.bluesky, callback: { (sender: MGSwipeTableCell!) -> Bool in
+                        let newCell = sender as? SimplifiedItemCell
+                        let post = newCell!.item
+                        let id = tableView.indexPathForCell(newCell!)
+                        
+                        self.selectedPostIndex = id!.row
+                        self.performSegueWithIdentifier("editSegue", sender: post)
+                        tableView.setEditing(false, animated: false)
+                        
+                        return true
+                    })
+                    
+                    // Enable expandable swipe
+                    cell.rightButtons = [delButton, editButton]
+                    cell.rightSwipeSettings.transition = MGSwipeTransition.Border
+                    cell.rightExpansion.buttonIndex = 0
+                    cell.rightExpansion.threshold = 1.5
+                }
+                
             } else if dataToLoad == .UsersSavedPosts {
-                // Add utility buttons
-                let rightUtilityButtons = NSMutableArray()
+                // Add utility button Unsave on the right
+                let unsaveButton = MGSwipeButton(title: "Unsave", backgroundColor: MyColors.bluesky, callback: { (sender: MGSwipeTableCell!) -> Bool in
+                    //
+                    let newCell = sender as? SimplifiedItemCell
+                    let post = newCell!.item
+                    let id = tableView.indexPathForCell(newCell!)
+                    post.save(false) { (successful: Bool, error: NSError?) -> Void in
+                        if successful {
+                            print("unsaved at \(id!.row)")
+                            self.posts.removeAtIndex(id!.row)
+                            self.tableView.deleteRowsAtIndexPaths([id!], withRowAnimation: .Bottom)
+                        } else {
+                            print("failed to unsave")
+                        }
+                    }
+                    
+                    return true
+                })
                 
-                rightUtilityButtons.sw_addUtilityButtonWithColor(MyColors.bluesky, title: "Unsave")
+                // Enable expandable swipe
+                cell.leftButtons = []
+                cell.rightButtons = [unsaveButton]
+                cell.rightSwipeSettings.transition = MGSwipeTransition.Border
+                cell.rightExpansion.buttonIndex = 0
+                cell.rightExpansion.threshold = 1.5
                 
-                cell.leftUtilityButtons = []
-                cell.rightUtilityButtons = rightUtilityButtons as [AnyObject]
-                cell.delegate = self
                 useCreatedAt = false
             }
             
@@ -533,56 +657,6 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
-    func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        if dataToLoad != .UsersPosts && dataToLoad != .UsersSavedPosts {
-            return []
-        }
-        
-        // If this is my post then allow these actions
-        if isCurrentUser {
-            let post = posts[indexPath.row]
-            
-            let deleteAction = UITableViewRowAction(style: .Normal, title: "Delete") { action, index in
-                // Delete post
-                
-                let alertController = UIAlertController(title: "Market", message: "Are you sure to delete this post?", preferredStyle: .Alert)
-                
-                let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) in
-                    print(action)
-                    tableView.setEditing(false, animated: true)
-                }
-                alertController.addAction(cancelAction)
-                
-                let destroyAction = UIAlertAction(title: "Delete", style: .Destructive) { (action) in
-                    Post.deletePost(post.objectId!, completion: { (finished, error) -> Void in
-                        if finished {
-                            self.posts.removeAtIndex(indexPath.row)
-                            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Bottom)
-                        } else {
-                            print("failed to delete post, error = \(error)")
-                        }
-                    })
-                }
-                alertController.addAction(destroyAction)
-                
-                self.presentViewController(alertController, animated: true, completion: nil)
-            }
-            deleteAction.backgroundColor = MyColors.carrot
-            
-            let editAction = UITableViewRowAction(style: .Normal, title: "Edit") { action, index in
-                // Edit post
-                self.selectedPostIndex = indexPath.row
-                let p = self.posts[self.selectedPostIndex]
-                self.performSegueWithIdentifier("editSegue", sender: p)
-                tableView.setEditing(false, animated: false)
-            }
-            editAction.backgroundColor = MyColors.bluesky
-            
-            return [deleteAction, editAction]
-        }
-        return []
-    }
-    
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             if let followingCell = cell as? FollowingTableViewCell {
@@ -625,65 +699,6 @@ extension UserTimelineViewController: PostViewControllerDelegate {
         let rowToReload: NSIndexPath = NSIndexPath(forRow: selectedPostIndex, inSection: 0)
         
         tableView.reloadRowsAtIndexPaths([rowToReload], withRowAnimation: UITableViewRowAnimation.Automatic)
-    }
-}
-
-// MARK: - SWTableView
-extension UserTimelineViewController: SWTableViewCellDelegate {
-    func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerLeftUtilityButtonWithIndex index: Int) {
-        let id = tableView.indexPathForCell(cell)
-        let post = posts[id!.row]
-        
-        if let newCell = cell as? SimplifiedItemCell {
-            if !newCell.item.sold {
-                Post.sold(post.objectId!, isSold: true, completion: { (finished, error) -> Void in
-                    if finished {
-                        newCell.soldView.hidden = false
-                        
-                        // Change button to "AVAIL"
-                        let leftUtilityButtons = NSMutableArray()
-                        leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.green, title: "Avail")
-                        
-                        newCell.leftUtilityButtons = leftUtilityButtons as [AnyObject]
-                    } else {
-                        print("failed to sell post, error = \(error)")
-                    }
-                    newCell.item.fetchInBackground()
-                })
-                
-            } else {
-                Post.sold(post.objectId!, isSold: false, completion: { (finished, error) -> Void in
-                    if finished {
-                        newCell.soldView.hidden = true
-                        
-                        // Change button to "Sold"
-                        let leftUtilityButtons = NSMutableArray()
-                        leftUtilityButtons.sw_addUtilityButtonWithColor(MyColors.yellow, title: "Sold")
-                        newCell.leftUtilityButtons = leftUtilityButtons as [AnyObject]
-                    } else {
-                        print("failed to set post avail, error = \(error)")
-                    }
-                    newCell.item.fetchInBackground()
-                })
-            }
-            
-        }
-        cell.hideUtilityButtonsAnimated(true)
-    }
-    
-    func swipeableTableViewCell(cell: SWTableViewCell!, didTriggerRightUtilityButtonWithIndex index: Int) {
-        // Unsave item
-        let id = tableView.indexPathForCell(cell)
-        let post = posts[id!.row]
-        post.save(false) { (successful: Bool, error: NSError?) -> Void in
-            if successful {
-                print("unsaved")
-                self.posts.removeAtIndex(id!.row)
-                self.tableView.deleteRowsAtIndexPaths([id!], withRowAnimation: .Bottom)
-            } else {
-                print("failed to unsave")
-            }
-        }
     }
 }
 
