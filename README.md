@@ -46,4 +46,4 @@ Libraries we are using:
 - AFNetworking
 - MBProgressHUD
 - JSQMessagesViewController
-- SWTableViewCell
+- MGSwipeTableCell
