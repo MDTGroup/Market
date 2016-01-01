@@ -79,8 +79,8 @@ class UserTimelineViewController: UIViewController {
         refreshControl.addTarget(self, action: Selector("pullToRefresh"), forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshControl)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: "tapOnView:")
-        view.addGestureRecognizer(tapGesture)
+        //        let tapGesture = UITapGestureRecognizer(target: self, action: "tapOnView:")
+        //        view.addGestureRecognizer(tapGesture)
         
         // Add the activity Indicator for table footer for infinity load
         let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
@@ -102,9 +102,9 @@ class UserTimelineViewController: UIViewController {
         loadNewestData()
     }
     
-    func tapOnView(gesture: UITapGestureRecognizer) {
-        view.endEditing(true)
-    }
+    //    func tapOnView(gesture: UITapGestureRecognizer) {
+    //        view.endEditing(true)
+    //    }
     
     override func viewWillAppear(animated: Bool) {
         refreshProfile()
@@ -419,9 +419,9 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
         }
     }
     
-    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        view.endEditing(true)
-    }
+    //    func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+    //        view.endEditing(true)
+    //    }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         switch dataToLoad {
@@ -525,7 +525,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                     cell.leftButtons = [leftButton]
                     cell.leftSwipeSettings.transition = MGSwipeTransition.Border
                     cell.leftExpansion.buttonIndex = 0
-                    cell.leftExpansion.threshold = 1.5
+                    cell.leftExpansion.threshold = 2.0
                     
                     // For right buttons
                     let delButton = MGSwipeButton(title: "Delete", backgroundColor: MyColors.carrot, callback: { (sender: MGSwipeTableCell!) -> Bool in
@@ -580,6 +580,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 }
                 
             } else if dataToLoad == .UsersSavedPosts {
+                
                 // Add utility button Unsave on the right
                 let unsaveButton = MGSwipeButton(title: "Unsave", backgroundColor: MyColors.bluesky, callback: { (sender: MGSwipeTableCell!) -> Bool in
                     //
@@ -604,9 +605,10 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 cell.rightButtons = [unsaveButton]
                 cell.rightSwipeSettings.transition = MGSwipeTransition.Border
                 cell.rightExpansion.buttonIndex = 0
-                cell.rightExpansion.threshold = 1.5
+                cell.rightExpansion.threshold = 2.0
                 
                 useCreatedAt = false
+                
             }
             
             // Infinite load if last cell
