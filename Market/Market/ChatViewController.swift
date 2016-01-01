@@ -213,6 +213,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
             cell.textView?.textColor = UIColor.whiteColor()
         } else {
             cell.textView?.textColor = UIColor.blackColor()
+            cell.textView?.linkTextAttributes = ["NSColor" : UIColor.blackColor(), "NSUnderline" : 1]
         }
         
         cell.avatarImageView?.contentMode = .ScaleAspectFill
