@@ -8,6 +8,6 @@ target 'Market' do
     pod 'AFNetworking'
     pod 'MBProgressHUD', '~> 0.9.1'
     pod 'JSQMessagesViewController'
-    pod 'SWTableViewCell', '~> 0.3.7'
+    pod 'MGSwipeTableCell'
 end
 

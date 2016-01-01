@@ -42,15 +42,19 @@ extension Double {
         
         // For iP5 and before (32bit) use Int will crash
         var remain = self
-        var formattedMoney = formatter.stringFromNumber(Int(remain % 1000))!
-        remain = floor(remain / 1000)
-        while remain >= 1000 {
-            formattedMoney = formatter.stringFromNumber(Int(remain % 1000))! + "." + formattedMoney
+        if remain < 1000 {
+            return "\(Int(remain)) VND"
+        } else {
+            var formattedMoney = formatter.stringFromNumber(Int(remain % 1000))!
             remain = floor(remain / 1000)
+            while remain >= 1000 {
+                formattedMoney = formatter.stringFromNumber(Int(remain % 1000))! + "." + formattedMoney
+                remain = floor(remain / 1000)
+            }
+            if remain > 0 {
+                formattedMoney = "\(Int(remain))." + formattedMoney
+            }
+            return formattedMoney + " VND"
         }
-        if remain > 0 {
-            formattedMoney = "\(Int(remain))." + formattedMoney
-        }
-        return formattedMoney + " VND"
     }
 }
