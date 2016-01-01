@@ -66,6 +66,9 @@ class ProfileViewController: UIViewController {
     @IBAction func onLogOut(sender: AnyObject) {
         let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
         hud.labelText = "Logging out..."
+        let installation = PFInstallation.currentInstallation()
+        installation["loggedOut"] = true
+        installation.saveInBackground()
         User.logOutInBackgroundWithBlock({ (error) -> Void in
             guard error == nil else {
                 print(error)

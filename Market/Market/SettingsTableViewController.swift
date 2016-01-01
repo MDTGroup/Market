@@ -101,16 +101,30 @@ class SettingsTableViewController: UITableViewController {
     @IBAction func onLogout(sender: AnyObject) {
         let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
         hud.labelText = "Logging out..."
-        User.logOutInBackgroundWithBlock({ (error) -> Void in
+        
+        let installation = PFInstallation.currentInstallation()
+        installation["loggedOut"] = true
+        installation.saveInBackgroundWithBlock { (success, error) -> Void in
+            
             guard error == nil else {
                 print(error)
+                hud.hide(true)
                 return
             }
-            hud.hide(true)
-            ViewController.gotoMain()
             
-            PFInstallation.currentInstallation().deleteInBackground()
-        })
+            User.logOutInBackgroundWithBlock({ (error) -> Void in
+                hud.hide(true)
+                
+                guard error == nil else {
+                    print(error)
+                    return
+                }
+                
+                ViewController.gotoMain()
+                
+                
+            })
+        }
     }
     
     @IBAction func onChangePwd(sender: AnyObject) {

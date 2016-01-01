@@ -90,6 +90,7 @@ class HomeViewController: UIViewController {
         if let currentUser = User.currentUser() {
             let installation = PFInstallation.currentInstallation()
             installation["user"] = currentUser
+            installation["loggedOut"] = false
             installation.saveInBackground()
             currentUser.updateNotificationSettings()
         }
