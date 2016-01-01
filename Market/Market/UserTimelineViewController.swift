@@ -79,8 +79,9 @@ class UserTimelineViewController: UIViewController {
         refreshControl.addTarget(self, action: Selector("pullToRefresh"), forControlEvents: UIControlEvents.ValueChanged)
         tableView.addSubview(refreshControl)
         
-        //        let tapGesture = UITapGestureRecognizer(target: self, action: "tapOnView:")
-        //        view.addGestureRecognizer(tapGesture)
+        let tapGesture = UITapGestureRecognizer(target: self, action: "tapOnView:")
+        view.addGestureRecognizer(tapGesture)
+        tapGesture.cancelsTouchesInView = false
         
         // Add the activity Indicator for table footer for infinity load
         let tableFooterView = UIView(frame: CGRectMake(0, 0, UIScreen.mainScreen().bounds.size.width, 50))
@@ -102,9 +103,9 @@ class UserTimelineViewController: UIViewController {
         loadNewestData()
     }
     
-    //    func tapOnView(gesture: UITapGestureRecognizer) {
-    //        view.endEditing(true)
-    //    }
+        func tapOnView(gesture: UITapGestureRecognizer) {
+            view.endEditing(true)
+        }
     
     override func viewWillAppear(animated: Bool) {
         refreshProfile()
