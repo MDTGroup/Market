@@ -49,6 +49,7 @@ extension FollowingViewController: UITableViewDataSource, UITableViewDelegate {
  
         let fullname = self.queryArray[indexPath.row].fullName
         cell.fullnameLabel.text = fullname
+        cell.activityIndicator.hidden = true
         if let avatarFile = self.queryArray[indexPath.row].avatar {
             avatarFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
                 cell.imgField.image = UIImage(data: data!)

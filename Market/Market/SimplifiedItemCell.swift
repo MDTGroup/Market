@@ -45,7 +45,7 @@ class SimplifiedItemCell: MGSwipeTableCell {
                 }
             }
             itemNameLabel.text = post.title
-            postAtLabel.text = Helper.timeSinceDateToNow(post.updatedAt!)
+            postAtLabel.text = Helper.timeSinceDateToNow(post.createdAt!)
             newTagImageView.hidden = (post.condition > 0)
             priceLabel.text = post.price.formatVND()
             soldView.hidden = !post.sold

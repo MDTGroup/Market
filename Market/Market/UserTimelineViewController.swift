@@ -28,6 +28,7 @@ class UserTimelineViewController: UIViewController {
     @IBOutlet weak var editProfileButton: UIButton!
     @IBOutlet weak var backButton: UIButton!
     @IBOutlet weak var followButton: UIButton!
+    @IBOutlet weak var followButtonView: UIView!
     @IBOutlet weak var keywordText: UITextField!
     
     @IBOutlet weak var receiveNotificationView: UIView!
@@ -36,6 +37,7 @@ class UserTimelineViewController: UIViewController {
     @IBOutlet weak var segmentPreGap: NSLayoutConstraint!
     @IBOutlet weak var segmentHeight: NSLayoutConstraint!
     @IBOutlet weak var switchControl: UISwitch!
+    @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     
     var refreshControl = UIRefreshControl()
     var loadingView: UIActivityIndicatorView!
@@ -58,14 +60,20 @@ class UserTimelineViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        initControls()
+        refreshProfile()
+        
+        MBProgressHUD.showHUDAddedTo(tableView, animated: true)
+        loadNewestData()
+    }
+    
+    func initControls() {
         backButton.layer.cornerRadius = 3
         followButton.layer.cornerRadius = 3
         editProfileButton.layer.cornerRadius = 3
         
         avatarImageView.layer.cornerRadius = 40
         avatarImageView.clipsToBounds = true
-        
-        refreshProfile()
         
         tableView.dataSource = self
         tableView.delegate = self
@@ -75,9 +83,11 @@ class UserTimelineViewController: UIViewController {
         keywordView.hidden = true
         receiveNotificationView.hidden = true
         
+        activityIndicator.stopAnimating()
+        
         // Refresh control
         refreshControl.addTarget(self, action: Selector("pullToRefresh"), forControlEvents: UIControlEvents.ValueChanged)
-        tableView.addSubview(refreshControl)
+        tableView.insertSubview(refreshControl, atIndex: 0)
         
         let tapGesture = UITapGestureRecognizer(target: self, action: "tapOnView:")
         view.addGestureRecognizer(tapGesture)
@@ -88,7 +98,7 @@ class UserTimelineViewController: UIViewController {
         loadingView = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         loadingView.center = tableFooterView.center
         loadingView.hidesWhenStopped = true
-        tableFooterView.addSubview(loadingView)
+        tableFooterView.insertSubview(loadingView, atIndex: 0)
         // Initialize the noMoreResult
         noMoreResultLabel.frame = tableFooterView.frame
         noMoreResultLabel.text = "No more result"
@@ -96,16 +106,13 @@ class UserTimelineViewController: UIViewController {
         noMoreResultLabel.font = UIFont(name: noMoreResultLabel.font.fontName, size: 15)
         noMoreResultLabel.textColor = UIColor.grayColor()
         noMoreResultLabel.hidden = true
-        tableFooterView.addSubview(noMoreResultLabel)
+        tableFooterView.insertSubview(noMoreResultLabel, atIndex: 0)
         tableView.tableFooterView = tableFooterView
-        
-        MBProgressHUD.showHUDAddedTo(tableView, animated: true)
-        loadNewestData()
     }
     
-        func tapOnView(gesture: UITapGestureRecognizer) {
-            view.endEditing(true)
-        }
+    func tapOnView(gesture: UITapGestureRecognizer) {
+        view.endEditing(true)
+    }
     
     override func viewWillAppear(animated: Bool) {
         refreshProfile()
@@ -115,43 +122,40 @@ class UserTimelineViewController: UIViewController {
         dismissViewControllerAnimated(true, completion: nil)
     }
     
-    func setFollowersCounter(count: Int, followed: Bool) {
-        followerCountLabel.text = "\(count)"
-        if followed {
-            followButton.setTitle("Unfollow", forState: .Normal)
-        } else {
-            followButton.setTitle("Follow", forState: .Normal)
-        }
-    }
-    
     @IBAction func onFollow(sender: UIButton) {
+        followButton.enabled = false
+        followButton.setTitle("", forState: .Normal)
+        activityIndicator.startAnimating()
         if iFollowThisUser {
-            let count = Int(followerCountLabel.text!)! - 1
-            setFollowersCounter(count, followed: false)
-            
             Follow.unfollow(user, callback: { (success, error: NSError?) -> Void in
+                self.followButton.enabled = true
+                self.activityIndicator.stopAnimating()
                 if success {
                     print("UnFollowing successfully \(self.user.fullName)")
                     self.iFollowThisUser = false
+                    let count = Int(self.followerCountLabel.text!)! - 1
+                    self.followerCountLabel.text = "\(count)"
+                    self.followButton.setTitle("Follow", forState: .Normal)
                 } else {
                     print("Can not unfollow \(self.user.fullName)", error)
-                    self.setFollowersCounter(count + 1, followed: false)
+                    self.followButton.setTitle("Unfollow", forState: .Normal)
                 }
             })
-            
         } else {
-            let count = Int(followerCountLabel.text!)! + 1
-            setFollowersCounter(count, followed: true)
-            
             Follow.follow(user, callback: { (success, error: NSError?) -> Void in
+                self.followButton.enabled = true
+                self.activityIndicator.stopAnimating()
                 if success {
                     print("Follow successfully \(self.user.fullName)")
                     self.iFollowThisUser = true
+                    let count = Int(self.followerCountLabel.text!)! + 1
+                    self.followerCountLabel.text = "\(count)"
+                    self.followButton.setTitle("Unfollow", forState: .Normal)
                 } else {
                     print("Can't follow \(self.user.fullName)", error)
                     self.followButton.setTitle("Follow", forState: .Normal)
-                    self.setFollowersCounter(count - 1, followed: true)
                 }
+                
             })
         }
     }
@@ -300,35 +304,38 @@ extension UserTimelineViewController {
     func refreshProfile() {
         if user == nil {
             user = User.currentUser()
+        }
+        
+        if user.objectId == User.currentUser()?.objectId {
             isCurrentUser = true
             segmentPreGap.constant = 10
             segmentHeight.constant = 28
+            // Reload if any change in current user's profile
+            user = User.currentUser()
         } else {
-            if user.objectId == User.currentUser()?.objectId {
-                isCurrentUser = true
-                segmentPreGap.constant = 10
-                segmentHeight.constant = 28
-                // Reload if any change in current user's profile
-                user = User.currentUser()
-            } else {
-                // Dont show the segment
-                segmentPreGap.constant = 0
-                segmentHeight.constant = 0
-                user.didIFollowTheUser({ (followed, error) -> Void in
-                    self.iFollowThisUser = followed
-                    if followed {
-                        self.followButton.setTitle("Unfollow", forState: .Normal)
-                    } else {
-                        self.followButton.setTitle("Follow", forState: .Normal)
-                    }
-                })
-            }
+            isCurrentUser = false
+            // Dont show the segment
+            segmentPreGap.constant = 0
+            segmentHeight.constant = 0
         }
         
         segmentControl.hidden = !isCurrentUser
         editProfileButton.hidden = !isCurrentUser
         backButton.hidden = isCurrentUser
-        followButton.hidden = isCurrentUser
+        followButtonView.hidden = isCurrentUser
+        
+        if !isCurrentUser {
+            followButton.setTitle("", forState: .Normal)
+            followButton.enabled = false
+            
+            activityIndicator.startAnimating()
+            user.didIFollowTheUser({ (followed, error) -> Void in
+                self.iFollowThisUser = followed
+                self.followButton.setTitle(followed ? "Unfollow" : "Follow", forState: .Normal)
+                self.followButton.enabled = true
+                self.activityIndicator.stopAnimating()
+            })
+        }
         
         // Load following (this user follows people)
         followingCountLabel.text = " "
@@ -637,6 +644,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
             
             let fullname = followingUsers[indexPath.row].fullName
             cell.fullnameLabel.text = fullname
+            cell.activityIndicator.stopAnimating()
             if let avatarFile = followingUsers[indexPath.row].avatar {
                 avatarFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
                     cell.imgField.image = UIImage(data: data!)

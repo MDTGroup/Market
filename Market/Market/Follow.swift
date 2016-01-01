@@ -33,11 +33,13 @@ extension Follow {
             query.countObjectsInBackgroundWithBlock({ (num, error) -> Void in
                 guard error == nil else {
                     print(error)
+                    callback(false, error)
                     return
                 }
                 
                 if num > 0 {
                     print("Error! Already follow. Cannot follow again. Need to fix UI bug.")
+                    callback(false, NSError(domain: "Error! Already follow. Cannot follow again. Need to fix UI bug.", code: 0, userInfo: nil))
                     return
                 } else {
                     let follow = Follow()

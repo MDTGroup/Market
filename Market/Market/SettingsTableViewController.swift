@@ -108,6 +108,8 @@ class SettingsTableViewController: UITableViewController {
             }
             hud.hide(true)
             ViewController.gotoMain()
+            
+            PFInstallation.currentInstallation().deleteInBackground()
         })
     }
     
