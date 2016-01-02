@@ -215,6 +215,12 @@ class User: PFUser {
             query.includeKey("post")
             query.includeKey("fromUser")
             query.whereKey("toUsers", equalTo: self)
+            
+            if let postQuery = Post.query() {
+                postQuery.whereKey("isDeleted", equalTo: false)
+                query.whereKey("post", matchesQuery: postQuery)
+            }
+            
             query.cachePolicy = cachePolicy
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
                 guard error == nil else {
@@ -258,6 +264,12 @@ class User: PFUser {
             query.includeKey("post")
             query.includeKey("fromUser")
             query.whereKey("toUsers", equalTo: self)
+            
+            if let postQuery = Post.query() {
+                postQuery.whereKey("isDeleted", equalTo: false)
+                query.whereKey("post", matchesQuery: postQuery)
+            }
+            
             if let lastCreatedAt = lastCreatedAt {
                 query.whereKey("createdAt", greaterThan: lastCreatedAt)
             }
