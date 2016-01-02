@@ -29,6 +29,6 @@ class ViewController: UIViewController {
         loginView.layer.masksToBounds = true
         
         createAccountView.layer.cornerRadius = 6
-        createAccountView.layer.masksToBounds = true
+        createAccountView.layer.masksToBounds = true   
     }
 }
