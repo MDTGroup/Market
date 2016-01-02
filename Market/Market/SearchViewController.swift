@@ -31,6 +31,12 @@ class SearchViewController: UIViewController {
         super.viewDidLoad()
 
         initControls()
+        
+        searchBar.becomeFirstResponder()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
     }
     
     override func viewWillDisappear(animated: Bool) {

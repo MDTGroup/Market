@@ -22,14 +22,6 @@ class FollowingTableViewCell: UITableViewCell {
             activityIndicator.stopAnimating()
             isFollowing = true
             unfollowingButton.setTitle("Unfollow", forState: .Normal)
-            //            cell.unfollowingButton.enabled = false
-            //            cell.unfollowingButton.setTitle("", forState: .Normal)
-            //            user.didIFollowTheUser { (followed, error) -> Void in
-            //                cell.unfollowingButton.enabled = true
-            //                cell.activityIndicator.stopAnimating()
-            //                cell.unfollowingButton.setTitle(followed ? "Unfollow" : "Follow", forState: .Normal)
-            //                cell.isFollowing = followed
-            //            }
             
             if let avatarFile = targetUser.avatar {
                 avatarFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in

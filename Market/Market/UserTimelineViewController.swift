@@ -646,9 +646,9 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
             }
             
             let user = followingUsers[indexPath.row]
-                       
+            
             cell.targetUser = user
-
+            
             return cell
             
         case .Keywords:
@@ -706,11 +706,20 @@ extension UserTimelineViewController: PostViewControllerDelegate {
 
 extension UserTimelineViewController: UITextFieldDelegate {
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        if textField == keywordText {
-            if textField.text!.isEmpty {
+        if let text = textField.text where textField == keywordText {
+            if text.isEmpty {
                 return false
             }
             onKeywordAdd(nil)
+        }
+        return true
+    }
+    
+    func textField(textField: UITextField, shouldChangeCharactersInRange range: NSRange, replacementString string: String) -> Bool {
+        if textField == keywordText && string.characters.count > 0 {
+            if string.containsString(" ") {
+                return false
+            }
         }
         return true
     }
