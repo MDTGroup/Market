@@ -1093,7 +1093,7 @@
                                                                 <action selector="onFollow:" destination="kZY-du-h5I" eventType="touchUpInside" id="0u2-HE-pPe"/>
                                                             </connections>
                                                         </button>
-                                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="ooy-Jy-Xjq">
+                                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="ooy-Jy-Xjq">
                                                             <rect key="frame" x="35" y="3" width="20" height="20"/>
                                                         </activityIndicatorView>
                                                     </subviews>
@@ -1367,7 +1367,7 @@
                                                                 <action selector="onUnFollowingTap:" destination="BtC-2Z-w5E" eventType="touchUpInside" id="vNb-qB-I4f"/>
                                                             </connections>
                                                         </button>
-                                                        <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="0CN-G5-LdS">
+                                                        <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="white" translatesAutoresizingMaskIntoConstraints="NO" id="0CN-G5-LdS">
                                                             <rect key="frame" x="312" y="19" width="20" height="20"/>
                                                         </activityIndicatorView>
                                                     </subviews>
@@ -1377,6 +1377,8 @@
                                                         <constraint firstItem="8zT-WQ-8FW" firstAttribute="leading" secondItem="1U4-4c-v5L" secondAttribute="trailing" constant="8" id="Brv-9p-A57"/>
                                                         <constraint firstAttribute="trailing" secondItem="Zb3-iJ-LcO" secondAttribute="trailing" constant="8" id="aAN-iZ-eFI"/>
                                                         <constraint firstItem="8zT-WQ-8FW" firstAttribute="centerY" secondItem="1U4-4c-v5L" secondAttribute="centerY" id="ab3-KB-afq"/>
+                                                        <constraint firstItem="0CN-G5-LdS" firstAttribute="centerY" secondItem="Zb3-iJ-LcO" secondAttribute="centerY" id="dSn-dw-sMy"/>
+                                                        <constraint firstItem="0CN-G5-LdS" firstAttribute="centerX" secondItem="Zb3-iJ-LcO" secondAttribute="centerX" id="gT8-Dg-b0i"/>
                                                         <constraint firstItem="1U4-4c-v5L" firstAttribute="centerY" secondItem="8Rm-Ne-Be5" secondAttribute="centerY" id="n0H-NG-KUV"/>
                                                     </constraints>
                                                 </tableViewCellContentView>

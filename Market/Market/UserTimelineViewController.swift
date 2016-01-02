@@ -116,6 +116,9 @@ class UserTimelineViewController: UIViewController {
     
     override func viewWillAppear(animated: Bool) {
         refreshProfile()
+        if dataToLoad == .Following {
+            refreshData(true)
+        }
     }
     
     @IBAction func onBack(sender: UIButton) {
@@ -642,22 +645,10 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 return UITableViewCell()
             }
             
-            let fullname = followingUsers[indexPath.row].fullName
-            cell.fullnameLabel.text = fullname
-            cell.activityIndicator.stopAnimating()
-            if let avatarFile = followingUsers[indexPath.row].avatar {
-                avatarFile.getDataInBackgroundWithBlock{ (data: NSData?, error: NSError?) -> Void in
-                    cell.imgField.image = UIImage(data: data!)
-                }
-            } else {
-                cell.imgField.noAvatar()
-            }
-            
-            cell.targetUser = followingUsers[indexPath.row]
-            
-            // TODO: Infinite load if last cell
-            // How to load next 20?
-            
+            let user = followingUsers[indexPath.row]
+                       
+            cell.targetUser = user
+
             return cell
             
         case .Keywords:
