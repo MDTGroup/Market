@@ -113,7 +113,7 @@ extension SearchViewController {
         selectedCondition = condition
         if lastCreatedAt == nil {
             let hud = MBProgressHUD.showHUDAddedTo(tableView, animated: true)
-            hud.labelText = "Searching \"\(searchBar.text!)\""
+            hud.applyCustomTheme("Searching \"\(searchBar.text!)\"")
         }
         if let text = searchBar.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) where !text.isEmpty {
             Post.search(text, condition: condition.rawValue, lastCreatedAt: lastCreatedAt) { (newPosts, error) -> Void in

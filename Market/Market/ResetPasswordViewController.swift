@@ -27,7 +27,7 @@ class ResetPasswordViewController: UIViewController {
         if let email = self.emailField.text {
             
             let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
-            hud.labelText = "Sending request..."
+            hud.applyCustomTheme("Sending request...")
             view.endEditing(true)
             PFUser.requestPasswordResetForEmailInBackground(email) { (success, error) -> Void in
                 hud.hide(true)

@@ -53,7 +53,7 @@ class SavedPostsViewController: UIViewController {
 //        let postVC: PostViewController = tabBarController?.viewControllers![1] as! PostViewController
 //        postVC.delegate = self
         
-        MBProgressHUD.showHUDAddedTo(self.view, animated: true)
+        MBProgressHUD.showHUDAddedTo(self.view, animated: true).applyCustomTheme(nil)
         loadNewestData()
     }
     

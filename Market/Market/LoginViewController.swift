@@ -40,7 +40,7 @@ class LoginViewController: UIViewController {
             return
         } else {
             let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
-            hud.labelText = "Logging in..."
+            hud.applyCustomTheme("Logging in...")
             view.endEditing(true)
             PFUser.logInWithUsernameInBackground(username, password: password, block: { (user, error) -> Void in
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in

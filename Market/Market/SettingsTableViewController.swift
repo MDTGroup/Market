@@ -100,7 +100,7 @@ class SettingsTableViewController: UITableViewController {
     
     @IBAction func onLogout(sender: AnyObject) {
         let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
-        hud.labelText = "Logging out..."
+        hud.applyCustomTheme("Logging out...")
         
         let installation = PFInstallation.currentInstallation()
         installation["loggedOut"] = true

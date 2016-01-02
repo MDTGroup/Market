@@ -15,7 +15,7 @@ class PushNotification {
             if application.applicationState == .Inactive {
                 let rootViewController = application.delegate?.window??.rootViewController
                 let hud = MBProgressHUD.showHUDAddedTo(rootViewController?.view, animated: true)
-                hud.labelText = "Loading post..."
+                hud.applyCustomTheme("Loading post...")
                 let post = Post(withoutDataWithObjectId: postId)
                 post.fetchInBackgroundWithBlock({ (result, error) -> Void in
                     guard error == nil else {

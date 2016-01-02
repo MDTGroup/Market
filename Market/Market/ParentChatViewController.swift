@@ -149,7 +149,7 @@ extension ParentChatViewController {
                 parentChatVC = StoryboardInstance.messages.instantiateViewControllerWithIdentifier(StoryboardID.chatViewController) as? ParentChatViewController {
                     
                     let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
-                    hud.labelText = "Opening chat..."
+                    hud.applyCustomTheme("Opening chat...")
                     Conversation.addConversation(fromUser, toUser: toUser, post: post, callback: { (conversation, error) -> Void in
                         guard error == nil else {
                             hud.hide(true)

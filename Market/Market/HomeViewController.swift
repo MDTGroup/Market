@@ -65,7 +65,8 @@ class HomeViewController: UIViewController {
         let postVC: PostViewController = navController.topViewController as! PostViewController
         postVC.delegate = self
         let hud = MBProgressHUD.showHUDAddedTo(tableView, animated: true)
-        hud.labelText = "Loading \(loadDataBy.name)..."
+        hud.applyCustomTheme("Loading \(loadDataBy.name)...")
+        
         loadData(nil)
         
         initTabBar()
@@ -167,7 +168,7 @@ class HomeViewController: UIViewController {
         }
         updateRefreshControl()
         let hud = MBProgressHUD.showHUDAddedTo(tableView, animated: true)
-        hud.labelText = "Loading \(loadDataBy.name)..."
+        hud.applyCustomTheme("Loading \(loadDataBy.name)...")
         loadData(nil)
     }
     

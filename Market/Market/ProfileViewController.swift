@@ -65,7 +65,7 @@ class ProfileViewController: UIViewController {
     
     @IBAction func onLogOut(sender: AnyObject) {
         let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
-        hud.labelText = "Logging out..."
+        hud.applyCustomTheme("Logging out...")
         let installation = PFInstallation.currentInstallation()
         installation["loggedOut"] = true
         installation.saveInBackground()
@@ -119,7 +119,7 @@ class ProfileViewController: UIViewController {
                 currentUser.email = email
                 
                 let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
-                hud.labelText = "Updating profile"
+                hud.applyCustomTheme("Updating profile")
                 //call the method to save currentUser to database
                 currentUser.saveInBackgroundWithBlock ({ (succeed, error) -> Void in
                     hud.hide(true)

@@ -63,7 +63,7 @@ class UserTimelineViewController: UIViewController {
         initControls()
         refreshProfile()
         
-        MBProgressHUD.showHUDAddedTo(tableView, animated: true)
+        MBProgressHUD.showHUDAddedTo(tableView, animated: true).applyCustomTheme(nil)
         loadNewestData()
     }
     
@@ -238,12 +238,12 @@ extension UserTimelineViewController {
         switch dataToLoad {
         case .UsersPosts, .UsersSavedPosts:
             if !isPullToRefresh {
-                MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
+                MBProgressHUD.showHUDAddedTo(self.tableView, animated: true).applyCustomTheme(nil)
             }
             loadNewestData()
         case .Following:
             if !isPullToRefresh {
-                MBProgressHUD.showHUDAddedTo(self.tableView, animated: true)
+                MBProgressHUD.showHUDAddedTo(self.tableView, animated: true).applyCustomTheme(nil)
             }
             loadFollowing()
         case .Keywords:
@@ -268,7 +268,15 @@ extension UserTimelineViewController {
                     }
                     self.isEndOfFeed = posts.count == 0
                     self.tableView.reloadData()
-                } else {                    print(error)
+                    
+                    if byThisDate == nil {
+                        dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                            self.scrollToTop()
+                        })
+                    }
+                    
+                } else {
+                    print(error)
                     self.isEndOfFeed = true
                 }
                 
@@ -280,7 +288,6 @@ extension UserTimelineViewController {
             })
             
         } else {
-            print("loading user's saved posts")
             user.getSavedPosts(byThisDate, callback: { (posts, error) -> Void in
                 if let posts = posts {
                     if byThisDate != nil {
@@ -411,6 +418,13 @@ extension UserTimelineViewController {
             }
             self.noMoreResultLabel.hidden = false
         })
+    }
+    
+    func scrollToTop() {
+        if tableView.numberOfSections > 0 {
+            let top =  NSIndexPath(forItem: NSNotFound, inSection: 0)
+            tableView.scrollToRowAtIndexPath(top, atScrollPosition: UITableViewScrollPosition.Top, animated: true)
+        }
     }
     
 }

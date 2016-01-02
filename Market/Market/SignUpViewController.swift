@@ -49,7 +49,7 @@ class SignUpViewController: UIViewController {
         } else {
             
             let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
-            hud.labelText = "Signing up..."
+            hud.applyCustomTheme("Signing up...")
             let newUser = User()
             newUser.fullName = fullName
             newUser.username = email
