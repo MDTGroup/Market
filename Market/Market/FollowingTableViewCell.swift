@@ -61,4 +61,16 @@ class FollowingTableViewCell: UITableViewCell {
             })
         }
     }
+    
+    override func setHighlighted(highlighted: Bool, animated: Bool) {
+        let buttonBGColor = unfollowingButton.backgroundColor
+        super.setHighlighted(highlighted, animated: animated)
+        unfollowingButton.backgroundColor = buttonBGColor
+    }
+    
+    override func setSelected(selected: Bool, animated: Bool) {
+        let buttonBGColor = unfollowingButton.backgroundColor
+        super.setSelected(selected, animated: animated)
+        unfollowingButton.backgroundColor = buttonBGColor
+    }
 }

@@ -70,4 +70,16 @@ class SimplifiedItemCell: MGSwipeTableCell {
         avatarImageView.layer.cornerRadius = 10
         avatarImageView.clipsToBounds = true
     }
+    
+    override func setHighlighted(highlighted: Bool, animated: Bool) {
+        let soldViewBGColor = soldView.backgroundColor
+        super.setHighlighted(highlighted, animated: animated)
+        soldView.backgroundColor = soldViewBGColor
+    }
+    
+    override func setSelected(selected: Bool, animated: Bool) {
+        let soldViewBGColor = soldView.backgroundColor
+        super.setSelected(selected, animated: animated)
+        soldView.backgroundColor = soldViewBGColor
+    }
 }

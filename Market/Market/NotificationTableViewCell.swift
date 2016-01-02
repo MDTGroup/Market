@@ -90,4 +90,16 @@ class NotificationTableViewCell: UITableViewCell {
         typeBackgroundView.layer.cornerRadius = 5
         typeBackgroundView.clipsToBounds = true
     }
+    
+    override func setHighlighted(highlighted: Bool, animated: Bool) {
+        let typeBGColor = typeBackgroundView.backgroundColor
+        super.setHighlighted(highlighted, animated: animated)
+        typeBackgroundView.backgroundColor = typeBGColor
+    }
+    
+    override func setSelected(selected: Bool, animated: Bool) {
+        let typeBGColor = typeBackgroundView.backgroundColor
+        super.setSelected(selected, animated: animated)
+        typeBackgroundView.backgroundColor = typeBGColor
+    }
 }
