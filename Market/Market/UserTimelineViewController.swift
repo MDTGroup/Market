@@ -501,7 +501,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                             let newCell = cell
                             
                             if !newCell.item.sold {
-                                Post.sold(post.objectId!, isSold: true, completion: { (finished, error) -> Void in
+                                Post.sold(post, isSold: true, completion: { (finished, error) -> Void in
                                     if finished {
                                         newCell.soldView.hidden = false
                                         
@@ -522,7 +522,7 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                                 })
                                 
                             } else {
-                                Post.sold(post.objectId!, isSold: false, completion: { (finished, error) -> Void in
+                                Post.sold(post, isSold: false, completion: { (finished, error) -> Void in
                                     if finished {
                                         newCell.soldView.hidden = true
                                         

@@ -61,4 +61,42 @@ class Notification: PFObject, PFSubclassing {
             }
         }
     }
+    
+    static func sendNotificationForNewPost(post: Post) {
+        var params = [String : AnyObject]()
+        params["postId"] = post.objectId!
+        params["title"] = post.title
+        params["price"] =  post.price.formatVND()
+        Notification.sendNotifications(NotificationType.Following, params: params, callback: { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        })
+        
+        params["description"] = post.descriptionText
+        Notification.sendNotifications(NotificationType.Keywords, params: params) { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        }
+    }
+    
+    static func sendNotificationForUpdatedPost(post: Post, changeDescription: String) {
+        if changeDescription.isEmpty {
+            return
+        }
+        var params = [String : AnyObject]()
+        params["postId"] = post.objectId!
+        params["title"] = post.title
+        params["price"] =  post.price.formatVND()
+        params["extraInfo"] = changeDescription
+        Notification.sendNotifications(NotificationType.SavedPost, params: params, callback: { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        })
+    }
 }

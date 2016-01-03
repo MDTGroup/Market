@@ -311,7 +311,7 @@ class PostViewController: UIViewController {
                 
                 UIView.animateWithDuration(0.3, animations: { () -> Void in
                     // MARK: Send Notifications
-                    self.sendNotificationForNewPost(post)
+                    Notification.sendNotificationForNewPost(post)
                     
                     self.okImageView.transform = CGAffineTransformMakeScale(1, 1)
                     self.okImageView.alpha = 1
@@ -364,26 +364,28 @@ class PostViewController: UIViewController {
                         changeDescription += "condition"
                     }
                     
-                    if fetchedPost.sold != newPost.sold {
-                        fetchedPost.sold = newPost.sold
-                        changeDescription += "sold"
-                    }
-                    
                     if fetchedPost.location != newPost.location {
                         fetchedPost.location = newPost.location
                         changeDescription += "location"
                     }
                     
+                    
+                    if fetchedPost.medias.count != newPost.medias.count {
+                        changeDescription += "media"
+                    } else {
+                        for media in newPost.medias {
+                            if media.url == nil {
+                                changeDescription += "media"
+                                break
+                            }
+                        }
+                    }
                     fetchedPost.medias = newPost.medias
-                    //                    if self.isMediaChanged {
-                    //                        fetchedPost.medias = newPost.medias
-                    //                        changeDescription += "media"
-                    //                    }
                     
                     fetchedPost.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
                         self.isSubmittingNewPost = false
                         // MARK: Send Notifications
-                        self.sendNotificationForUpdatedPost(post, changeDescription: changeDescription)
+                        Notification.sendNotificationForUpdatedPost(post, changeDescription: changeDescription)
                         
                         self.okImageView.transform = CGAffineTransformMakeScale(0.01, 0.01)
                         
@@ -587,47 +589,6 @@ extension PostViewController: UITextFieldDelegate {
         }
         
         return true
-    }
-}
-
-// MARK: Send notifications
-extension PostViewController {
-    func sendNotificationForNewPost(post: Post) {
-        var params = [String : AnyObject]()
-        params["postId"] = post.objectId!
-        params["title"] = post.title
-        params["price"] =  post.price.formatVND()
-        Notification.sendNotifications(NotificationType.Following, params: params, callback: { (success, error) -> Void in
-            guard error == nil else {
-                print(error)
-                return
-            }
-        })
-        
-        params["description"] = post.descriptionText
-        Notification.sendNotifications(NotificationType.Keywords, params: params) { (success, error) -> Void in
-            guard error == nil else {
-                print(error)
-                return
-            }
-        }
-    }
-    
-    func sendNotificationForUpdatedPost(post: Post, changeDescription: String) {
-        if changeDescription.isEmpty {
-            return
-        }
-        var params = [String : AnyObject]()
-        params["postId"] = post.objectId!
-        params["title"] = post.title
-        params["price"] =  post.price.formatVND()
-        params["extraInfo"] = changeDescription
-        Notification.sendNotifications(NotificationType.SavedPost, params: params, callback: { (success, error) -> Void in
-            guard error == nil else {
-                print(error)
-                return
-            }
-        })
     }
 }
 

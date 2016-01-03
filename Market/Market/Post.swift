@@ -297,10 +297,10 @@ extension Post {
 
 // MARK: Sold
 extension Post {
-    static func sold(postId: String, isSold: Bool, completion: PFBooleanResultBlock) {
-        let post = Post(withoutDataWithObjectId: postId)
+    static func sold(post: Post, isSold: Bool, completion: PFBooleanResultBlock) {
         post.sold = isSold
         post.saveInBackgroundWithBlock(completion)
+        Notification.sendNotificationForUpdatedPost(post, changeDescription: "sold")
     }
 }
 
