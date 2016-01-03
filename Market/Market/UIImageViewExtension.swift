@@ -37,4 +37,13 @@ extension UIImageView {
     func noAvatar() {
         self.image = UIImage(named: "profile_blank")
     }
+    
+    func loadThumbnailThenOriginal(thumbnailURL: String, originalURL: String) {
+        self.setImageWithURLRequest(NSURLRequest(URL: NSURL(string: thumbnailURL)!, cachePolicy: NSURLRequestCachePolicy.ReturnCacheDataElseLoad, timeoutInterval: 86400), placeholderImage: nil, success: { (urlRequest, httpURLResponse, image) -> Void in
+            self.image = image
+            self.setImageWithURL(NSURL(string: originalURL)!)
+            }, failure: { (urlRequest, httpURLResponse, error) -> Void in
+                print(error)
+        })
+    }
 }

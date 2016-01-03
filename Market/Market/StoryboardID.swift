@@ -16,6 +16,7 @@ struct StoryboardID {
     static let main:String = "main"
     static let chatViewController:String = "chatViewController"
     static let messageViewController:String = "messageViewController"
+    static let fullImageViewController: String = "fullImageViewController"
 }
 
 class StoryboardInstance {

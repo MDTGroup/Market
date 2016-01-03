@@ -53,7 +53,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-
+        
         self.showLoadEarlierMessagesHeader = false
         
         timer = NSTimer.scheduledTimerWithTimeInterval(1.15, target: self, selector: "loadMessages", userInfo: nil, repeats: true)
@@ -97,38 +97,52 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
                 alertVC.addAction(shareAddressAction)
             }
         }
-
+        
         // MARK: temporarily disable this because the map is too slow to show
-//        let shareCurrentLocation = UIAlertAction(title: "Share current location", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
-//            PFGeoPoint.geoPointForCurrentLocationInBackground({ (currentGeoPoint, error) -> Void in
-//                guard error == nil else {
-//                    if let message = error?.userInfo["error"] as? String {
-//                        AlertControl.show(self, title: "Share current location", message: message, handler: nil)
-//                    }
-//                    print(error)
-//                    return
-//                }
-//                if  let currentGeoPoint = currentGeoPoint {
-//                    self.sendMessage("", video: nil, photo: nil, location: currentGeoPoint)
-//                }
-//            })
-//        }
-//        alertVC.addAction(shareCurrentLocation)
+        //        let shareCurrentLocation = UIAlertAction(title: "Share current location", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
+        //            PFGeoPoint.geoPointForCurrentLocationInBackground({ (currentGeoPoint, error) -> Void in
+        //                guard error == nil else {
+        //                    if let message = error?.userInfo["error"] as? String {
+        //                        AlertControl.show(self, title: "Share current location", message: message, handler: nil)
+        //                    }
+        //                    print(error)
+        //                    return
+        //                }
+        //                if  let currentGeoPoint = currentGeoPoint {
+        //                    self.sendMessage("", video: nil, photo: nil, location: currentGeoPoint)
+        //                }
+        //            })
+        //        }
+        //        alertVC.addAction(shareCurrentLocation)
         
-        let takePhotoAction = UIAlertAction(title: "Take photo", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
-            Camera.shouldStartCamera(self, canEdit: true, frontFacing: false)
-        }
-        alertVC.addAction(takePhotoAction)
+        // Pick photo from library
+        let pickPhotoAction = UIAlertAction(title: "Choose photo from library", style: .Default, handler: {
+            (alert: UIAlertAction!) -> Void in
+            Camera.loadMediaFrom(self, sourceType: UIImagePickerControllerSourceType.PhotoLibrary, mediaType: .PickPhoto)
+        })
+        alertVC.addAction(pickPhotoAction)
         
-        let choosePhotoAction = UIAlertAction(title: "Choose photo", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
-            Camera.shouldStartPhotoLibrary(self, canEdit: true)
-        }
-        alertVC.addAction(choosePhotoAction)
+        let pickVideoAction = UIAlertAction(title: "Choose video from library", style: .Default, handler: {
+            (alert: UIAlertAction!) -> Void in
+            Camera.loadMediaFrom(self, sourceType: UIImagePickerControllerSourceType.PhotoLibrary, mediaType: .PickVideo)
+        })
+        alertVC.addAction(pickVideoAction)
         
-        let chooseVideoAction = UIAlertAction(title: "Choose video", style: UIAlertActionStyle.Default) { (alertAction) -> Void in
-            Camera.shouldStartVideoLibrary(self, canEdit: true)
+        // Take photo/video from camera if camera is avail
+        if UIImagePickerController.availableCaptureModesForCameraDevice(.Rear) != nil {
+            let takePhotoAction = UIAlertAction(title: "Take photo", style: .Default, handler: {
+                (alert: UIAlertAction!) -> Void in
+                Camera.loadMediaFrom(self, sourceType: UIImagePickerControllerSourceType.Camera, mediaType: .TakePhoto)
+            })
+            alertVC.addAction(takePhotoAction)
+            
+            let pickVideoAction = UIAlertAction(title: "Record a 30s video", style: .Default, handler: {
+                (alert: UIAlertAction!) -> Void in
+                Camera.loadMediaFrom(self, sourceType: UIImagePickerControllerSourceType.Camera, mediaType: .Record30sVideo)
+            })
+            alertVC.addAction(pickVideoAction)
         }
-        alertVC.addAction(chooseVideoAction)
+        
         
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel) { (alertAction) -> Void in
             alertVC.dismissViewControllerAnimated(true, completion: nil)
@@ -264,13 +278,17 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapMessageBubbleAtIndexPath indexPath: NSIndexPath!) {
         let message = messages[indexPath.item]
         if message.isMediaMessage {
-            if let mediaItem = message.media as? JSQVideoMediaItem {
+            if let mediaItem = message.media as? JSQCustomVideoMediaItem {
                 let player = AVPlayer(URL: mediaItem.fileURL)
                 let playerController = AVPlayerViewController()
                 playerController.player = player
                 self.presentViewController(playerController, animated: true) {
                     player.play()
                 }
+            } else if let mediaItem = message.media as? JSQPhotoMediaItem {
+                let fullImageVC = FullImageViewController.instantiateViewController
+                fullImageVC.image = mediaItem.image
+                self.presentViewController(fullImageVC, animated: true, completion: nil)
             }
         }
         view.endEditing(true)
@@ -286,8 +304,8 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
         let collectionReusableView = super.collectionView(collectionView, viewForSupplementaryElementOfKind: kind, atIndexPath: indexPath)
         if let collectionReusableView = collectionReusableView as? JSQMessagesLoadEarlierHeaderView,
             button = collectionReusableView.loadButton {
-            button.tintColor = MyColors.green
-            button.titleLabel?.textColor = MyColors.green
+                button.tintColor = MyColors.green
+                button.titleLabel?.textColor = MyColors.green
         }
         return collectionReusableView
     }
@@ -333,7 +351,8 @@ extension ChatViewController {
     func prepareJSQMessage(message: Message) -> JSQMessage {
         let jsqMessage: JSQMessage!
         if let video = message.video {
-            let videoItem = JSQVideoMediaItem(fileURL: NSURL(string: video.url!)!, isReadyToPlay: true)
+            let videoItem = JSQCustomVideoMediaItem(fileURL: NSURL(string: video.url!)!, isReadyToPlay: true)
+            videoItem.thumbnailURL = message.photo?.url
             videoItem.appliesMediaViewMaskAsOutgoing = message.user.objectId! == self.senderId
             jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, media: videoItem)
         } else if let photo = message.photo {
@@ -361,7 +380,7 @@ extension ChatViewController {
         }
         return jsqMessage
     }
-
+    
     func loadMessages() {
         if !isLoading {
             isLoading = true
@@ -412,21 +431,13 @@ extension ChatViewController {
         if let video = video {
             message = "sent a video."
             videoFile = PFFile(name: "video.mp4", data: NSFileManager.defaultManager().contentsAtPath(video.path!)!)
-//            videoFile?.saveInBackgroundWithBlock({ (success, error) -> Void in
-//                if error != nil {
-//                    print(error)
-//                }
-//            })
         }
         
         if let photo = photo {
-            message = "sent a photo."
+            if message.isEmpty {
+                message = "sent a photo."
+            }
             photoFile = PFFile(name: "picture.jpg", data: UIImageJPEGRepresentation(photo, 0.4)!)
-//            photoFile?.saveInBackgroundWithBlock({ (success, error) -> Void in
-//                if error != nil {
-//                    print(error)
-//                }
-//            })
         }
         
         if location != nil {
@@ -447,24 +458,35 @@ extension ChatViewController {
 
 extension ChatViewController: UIImagePickerControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        
-        let video = info[UIImagePickerControllerMediaURL] as? NSURL
-        var photoAfterCompress: UIImage?
-        if let photo = info[UIImagePickerControllerEditedImage] as? UIImage {
+        if let photo = info[UIImagePickerControllerOriginalImage] as? UIImage {
             let newWidth = photo.size.width > 400 ? 400 : photo.size.width
-            photoAfterCompress = Helper.resizeImage(photo, newWidth: newWidth)
+            let photoAfterResize = Helper.resizeImage(photo, newWidth: newWidth)
+            let photoAfterCompressData = UIImageJPEGRepresentation(photoAfterResize, 0.4)!
+            self.sendMessage("", video: nil, photo: UIImage(data: photoAfterCompressData), location: nil)
+            picker.dismissViewControllerAnimated(true, completion: nil)
         }
-//        else if let video = video {
-//            let data = NSData(contentsOfURL: video)
-//            if let data = data where data.length >= 10000 {
-//                self.dismissViewControllerAnimated(true, completion: nil)
-//                AlertControl.show(self, title: "File size", message: "You cannot upload video with file size >= 10 mb. Please choose a shorter video.", handler: nil)
-//                return
-//            }
-//        }
-        
-        self.sendMessage("", video: video, photo: photoAfterCompress, location: nil)
-
-        picker.dismissViewControllerAnimated(true, completion: nil)
+        else if let videoURL = info[UIImagePickerControllerMediaURL] as? NSURL {
+            let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+            hud.applyCustomTheme("Compressing video...")
+            picker.dismissViewControllerAnimated(true, completion: nil)
+            let compressedVideoOutputUrl = NSURL(fileURLWithPath: NSTemporaryDirectory()).URLByAppendingPathComponent("\(NSDate()).mov")
+            Helper.compressVideo(videoURL, outputURL: compressedVideoOutputUrl, handler: { (session) -> Void in
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    hud.hide(true)
+                    if session.status == AVAssetExportSessionStatus.Completed {
+                        let data = NSData(contentsOfURL: compressedVideoOutputUrl)
+                        if let data = data where data.toMB() >= 10 {
+                            self.dismissViewControllerAnimated(true, completion: nil)
+                            AlertControl.show(self, title: "File size", message: "You cannot upload video with file size >= 10 mb. Please choose a shorter video.", handler: nil)
+                            return
+                        }
+                        print("File size: \(Double(data!.length / 1024)) kb")
+                        self.sendMessage("", video: compressedVideoOutputUrl, photo: compressedVideoOutputUrl.getThumbnailOfVideoURL(), location: nil)
+                    } else if session.status == AVAssetExportSessionStatus.Failed {
+                        AlertControl.show(self, title: "Compress video", message: "There was a problem compressing the video maybe you can try again later. Error: \(session.error?.localizedDescription)", handler: nil)
+                    }
+                })
+            })
+        }
     }
 }

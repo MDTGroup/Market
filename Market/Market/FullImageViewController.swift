@@ -10,6 +10,7 @@ import UIKit
 
 class FullImageViewController: UIViewController, UIScrollViewDelegate {
     
+    @IBOutlet weak var closeButton: UIButton!
     var scrollView: UIScrollView!
     var imageView: UIImageView!
     var image: UIImage!
@@ -28,6 +29,8 @@ class FullImageViewController: UIViewController, UIScrollViewDelegate {
         
         scrollView.addSubview(imageView)
         view.addSubview(scrollView)
+        
+        view.addSubview(closeButton)
         
         scrollView.delegate = self
         
@@ -71,6 +74,9 @@ class FullImageViewController: UIViewController, UIScrollViewDelegate {
         let doubleTap = UITapGestureRecognizer(target: self, action: "handleDoubleTap:")
         doubleTap.numberOfTapsRequired = 2
         scrollView.addGestureRecognizer(doubleTap)
+        
+        let panGesture = UIPanGestureRecognizer(target: self, action: "onPanImage:")
+        scrollView.addGestureRecognizer(panGesture)
     }
     
     func handleDoubleTap(recognizer: UITapGestureRecognizer) {
@@ -84,4 +90,20 @@ class FullImageViewController: UIViewController, UIScrollViewDelegate {
         //        }
     }
     
+    func onPanImage(sender: UIPanGestureRecognizer) {
+        let translation = sender.translationInView(view)
+        if sender.state == .Ended && (translation.y > 100 || translation.y < -100) {
+            dismissViewControllerAnimated(true, completion: nil)
+        }
+    }
+    
+    @IBAction func onClose(sender: UIButton) {
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+}
+
+extension FullImageViewController {
+    static var instantiateViewController: FullImageViewController {
+        return StoryboardInstance.home.instantiateViewControllerWithIdentifier(StoryboardID.fullImageViewController) as! FullImageViewController
+    }
 }

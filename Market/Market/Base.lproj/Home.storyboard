@@ -46,7 +46,7 @@
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EUp-Mp-kPS">
                                                     <rect key="frame" x="8" y="4" width="359" height="240"/>
                                                     <subviews>
-                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="More-100" translatesAutoresizingMaskIntoConstraints="NO" id="pLu-ph-7rO">
+                                                        <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="loading" translatesAutoresizingMaskIntoConstraints="NO" id="pLu-ph-7rO">
                                                             <rect key="frame" x="129" y="74" width="100" height="41"/>
                                                             <constraints>
                                                                 <constraint firstAttribute="height" constant="41" id="2hx-lZ-OnT"/>
@@ -986,7 +986,7 @@
         <!--Full Image View Controller-->
         <scene sceneID="opO-im-zaL">
             <objects>
-                <viewController id="KhQ-33-yfa" customClass="FullImageViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="fullImageViewController" id="KhQ-33-yfa" customClass="FullImageViewController" customModule="Market" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="cZ6-Td-0eO"/>
                         <viewControllerLayoutGuide type="bottom" id="V3Z-Tr-foG"/>
@@ -994,16 +994,32 @@
                     <view key="view" contentMode="scaleToFill" id="IRc-fU-4vc">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jql-sA-BZB">
+                                <rect key="frame" x="285" y="24" width="30" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="30" id="Asa-1M-oue"/>
+                                    <constraint firstAttribute="width" constant="30" id="IyK-Dg-Zc0"/>
+                                </constraints>
+                                <state key="normal" image="cancel"/>
+                                <connections>
+                                    <action selector="onCancel:" destination="nif-7J-xtZ" eventType="touchUpInside" id="uho-Se-gdn"/>
+                                    <action selector="onClose:" destination="KhQ-33-yfa" eventType="touchUpInside" id="V3v-sK-ZJU"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="jql-sA-BZB" firstAttribute="top" secondItem="IRc-fU-4vc" secondAttribute="top" constant="24" id="5cM-2O-rC2"/>
+                            <constraint firstAttribute="trailing" secondItem="jql-sA-BZB" secondAttribute="trailing" constant="5" id="fse-Ux-Gm8"/>
+                        </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <outlet property="closeButton" destination="jql-sA-BZB" id="Tx0-CP-lKr"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ftt-MG-gdd" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer numberOfTapsRequired="2" id="ki6-YY-Utb">
-                    <connections>
-                        <action selector="onDoubleTap:" destination="KhQ-33-yfa" id="Tw9-Mj-pUZ"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1428.5" y="-661.5"/>
         </scene>
@@ -1534,11 +1550,11 @@
         </scene>
     </scenes>
     <resources>
-        <image name="More-100" width="100" height="100"/>
         <image name="bag@50w" width="22" height="27"/>
         <image name="camera" width="50" height="50"/>
         <image name="cancel" width="25" height="25"/>
         <image name="chat_white" width="12" height="12"/>
+        <image name="loading" width="100" height="100"/>
         <image name="marker" width="24" height="24"/>
         <image name="me" width="25" height="25"/>
         <image name="message" width="25" height="25"/>

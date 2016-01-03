@@ -10,6 +10,7 @@ import UIKit
 import Parse
 import MobileCoreServices
 import AVFoundation
+import MBProgressHUD
 
 @objc protocol PostViewControllerDelegate {
     optional func postViewController(postViewController: PostViewController, didUploadNewPost post: Post)
@@ -53,16 +54,14 @@ class PostViewController: UIViewController {
     @IBOutlet var iv2SingleTap: UITapGestureRecognizer!
     @IBOutlet var iv3SingleTap: UITapGestureRecognizer!
     
-    var currentGeoPoint: PFGeoPoint?
+    var imageViews = [UIImageView]()
+    var videoIconImages = [UIImageView]()
+    var removeButtons = [UIButton]()
+    var medias: [PFFile?] = [nil, nil, nil, nil, nil, nil]
+    
     var selectedImageIndex: Int = 0
     var imagesAvail = [Bool](count: 3, repeatedValue: false)
     var editingPost: Post?
-    var isUpdating = false
-    var isMediaChanged = false
-    var tapGestureOnInstruction: UIGestureRecognizer!
-    var videoURL: NSURL?
-    var videoPosition: Int = -1 // 0 means yet to set
-    var videoPFFile: PFFile?
     
     let priceMaxLength = 13
     let titleMaxLength = 140
@@ -73,35 +72,33 @@ class PostViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Do any additional setup after loading the view.
         // Determine screen size
         let screenWidth = UIScreen.mainScreen().bounds.width
         imageWidth.constant = screenWidth > 350 ? 100: 90
         imageHeight.constant = imageWidth.constant
         
-        initImageFrame(imageView1)
-        initImageFrame(imageView2)
-        initImageFrame(imageView3)
+        imageViews = [imageView1, imageView2, imageView3]
+        videoIconImages = [videoImage1, videoImage2, videoImage3]
+        removeButtons = [removeButton1, removeButton2, removeButton3]
         
-        priceLabel.delegate = self
-        titleLabel.delegate = self
-        
-        getCurrentLocation()
+        initControls()
+        priceLabel.becomeFirstResponder()
         
         if editingPost != nil {
             title = "Update the item"
-            isUpdating = true
             loadPostToUpdate()
             navBar.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "check"), style: .Plain, target: self, action: "updatePost")
         } else {
             title = "Post new item"
-            isUpdating = false
             navBar.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "check"), style: .Plain, target: self, action: "newPost")
         }
-        //discardButton.hidden = isUpdating
-        //draftButton.hidden = isUpdating
-        //postButton.hidden = isUpdating
+    }
+    
+    func initControls() {
+        resetPostPage()
+        
+        priceLabel.delegate = self
+        titleLabel.delegate = self
         
         descriptionText.layer.cornerRadius = 5
         descriptionText.layer.borderWidth = 1
@@ -115,126 +112,60 @@ class PostViewController: UIViewController {
         progressBar.clipsToBounds = true
         progressBar.alpha = 0
         okImageView.alpha = 0
-        
-        // Add observer to detect when the keyboard will be shown/hide
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "keyboardShown:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "keyboardHide:", name: UIKeyboardWillHideNotification, object: nil)
-        priceLabel.becomeFirstResponder()
     }
     
-    func keyboardShown(notification: NSNotification) {
-        let info = notification.userInfo!
-        let value: AnyObject = info[UIKeyboardFrameEndUserInfoKey]!
-        
-        let rawFrame = value.CGRectValue
-        let keyboardFrame = view.convertRect(rawFrame, fromView: nil)
-        
-        print("keyboardFrame: \(keyboardFrame)")
-        descTextHeight.constant = (UIScreen.mainScreen().bounds.height - descriptionText.frame.origin.y) - keyboardFrame.height - 10
-        UIView.animateWithDuration(0.3) { () -> Void in
-            self.view.layoutIfNeeded()
-        }
+    func hideInstruction() {
+        //        UIView.animateWithDuration(0.1, animations: { () -> Void in
+        //            self.instructionView.center.x -= 5
+        //            }) { (finished) -> Void in
+        //                self.imageView2.alpha = 0
+        //                self.imageView3.alpha = 0
+        //                self.conditionSegment.alpha = 0
+        //                self.imageView2.hidden = false
+        //                self.imageView3.hidden = false
+        //                self.conditionSegment.hidden = false
+        //
+        //                UIView.animateWithDuration(0.5, animations: { () -> Void in
+        //                    self.instructionView.center.x += UIScreen.mainScreen().bounds.width
+        //                    self.imageView2.alpha = 1
+        //                    self.imageView3.alpha = 1
+        //                    self.conditionSegment.alpha = 1
+        //                    }, completion: { (finished) -> Void in
+        //                        self.instructionView.hidden = true
+        //                })
+        //        }
     }
-    
-    func keyboardHide(notification: NSNotification) {
-        descTextHeight.constant = okImageView.frame.origin.y - descriptionText.frame.origin.y - 10
-        UIView.animateWithDuration(0.3) { () -> Void in
-            self.view.layoutIfNeeded()
-        }
-    }
-    
-    //    func hideInstruction() {
-    //        UIView.animateWithDuration(0.1, animations: { () -> Void in
-    //            self.instructionView.center.x -= 5
-    //            }) { (finished) -> Void in
-    //                self.imageView2.alpha = 0
-    //                self.imageView3.alpha = 0
-    //                self.conditionSegment.alpha = 0
-    //                self.imageView2.hidden = false
-    //                self.imageView3.hidden = false
-    //                self.conditionSegment.hidden = false
-    //
-    //                UIView.animateWithDuration(0.5, animations: { () -> Void in
-    //                    self.instructionView.center.x += UIScreen.mainScreen().bounds.width
-    //                    self.imageView2.alpha = 1
-    //                    self.imageView3.alpha = 1
-    //                    self.conditionSegment.alpha = 1
-    //                    }, completion: { (finished) -> Void in
-    //                        self.instructionView.hidden = true
-    //                })
-    //        }
-    //    }
     
     override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         view.endEditing(true)
     }
     
     func loadPostToUpdate() {
-        priceLabel.text = "\(Int((editingPost?.price)!))"
-        titleLabel.text = editingPost?.title
-        descriptionText.text = editingPost?.descriptionText
-        descPlaceHolder.hidden = true
-        conditionSegment.selectedSegmentIndex = (editingPost?.condition)!
-        
-        let nImages = (editingPost?.medias.count)! / 2
-        var url = editingPost?.medias[nImages].url!
-        
-        imageView1.image = UIImage(named: "loading")
-        if (url?.rangeOfString("video.mov") != nil) {
-            // If this is video then use the thumbnail
-            url = editingPost?.medias[0].url!
-            imageView1.setImageWithURL(NSURL(string: url!)!)
-            videoPosition = 0
-            videoPFFile = editingPost?.medias[nImages]
-            videoImage1.hidden = false
-            print("video at 0")
-        } else {
-            imageView1.setImageWithURL(NSURL(string: url!)!)
-        }
-        imageView1.contentMode = .ScaleAspectFill
-        removeButton1.hidden = false
-        imagesAvail[0] = true
-        
-        // Check 2nd image
-        if nImages > 1 {
-            imageView2.image = UIImage(named: "loading")
-            url = editingPost?.medias[nImages+1].url!
-            if (url?.rangeOfString("video.mov") != nil) {
-                // If this is video then use the thumbnail
-                url = editingPost?.medias[1].url!
-                imageView2.setImageWithURL(NSURL(string: url!)!)
-                videoPosition = 1
-                videoPFFile = editingPost?.medias[nImages+1]
-                videoImage2.hidden = false
-                print("video at 1")
-            } else {
-                imageView2.setImageWithURL(NSURL(string: url!)!)
+        if let editingPost = editingPost {
+            priceLabel.text = "\(Int(editingPost.price))"
+            titleLabel.text = editingPost.title
+            descriptionText.text = editingPost.descriptionText
+            descPlaceHolder.hidden = true
+            conditionSegment.selectedSegmentIndex = editingPost.condition
+            
+            let numImages = editingPost.medias.count / 2
+            for i in 0..<numImages {
+                let thumbnailMedia = editingPost.medias[i * 2]
+                if let thumbnailURL = thumbnailMedia.url {
+                    let imageView = imageViews[i]
+                    imageView.image = UIImage(named: "loading")
+                    imageView.setImageWithURL(NSURL(string: thumbnailURL)!)
+                    imageView.contentMode = .ScaleAspectFill
+                    medias[i * 2] = thumbnailMedia
+                    let originalMedia = editingPost.medias[(i * 2) + 1]
+                    medias[(i * 2) + 1] = originalMedia
+                    if let originalURL = originalMedia.url {
+                        videoIconImages[i].hidden = originalURL.rangeOfString("video.mov") == nil
+                    }
+                    imagesAvail[i] = true
+                    removeButtons[i].hidden = false
+                }
             }
-            imageView2.contentMode = .ScaleAspectFill
-            removeButton2.hidden = false
-            imagesAvail[1] = true
-        }
-        
-        // Check 3rd image
-        if nImages > 2 {
-            imageView3.image = UIImage(named: "loading")
-            url = editingPost?.medias[nImages+2].url!
-            if (url?.rangeOfString("video.mov") != nil) {
-                // If this is video then use the thumbnail
-                url = editingPost?.medias[2].url!
-                imageView3.setImageWithURL(NSURL(string: url!)!)
-                videoPosition = 2
-                videoPFFile = editingPost?.medias[nImages+2]
-                videoImage3.hidden = false
-                print("video at 2")
-            } else {
-                imageView3.setImageWithURL(NSURL(string: url!)!)
-            }
-            imageView3.contentMode = .ScaleAspectFill
-            removeButton3.hidden = false
-            imagesAvail[2] = true
         }
     }
     
@@ -260,58 +191,28 @@ class PostViewController: UIViewController {
         }
     }
     
-    func setImageToSelectedImageView(image: UIImage, isVideo: Bool) {
-        switch selectedImageIndex {
-        case 0:
-            imageView1.image = image
-            imageView1.contentMode = .ScaleAspectFill
-            removeButton1.hidden = false
-            videoImage1.hidden = !isVideo
-        case 1:
-            imageView2.image = image
-            imageView2.contentMode = .ScaleAspectFill
-            removeButton2.hidden = false
-            videoImage3.hidden = !isVideo
-        case 2:
-            imageView3.image = image
-            imageView3.contentMode = .ScaleAspectFill
-            removeButton3.hidden = false
-            videoImage3.hidden = !isVideo
-        default: break
-        }
-        imagesAvail[selectedImageIndex] = true
-    }
-    
-    func tapOnImage(gesture: UITapGestureRecognizer) {
-        if let iv = gesture.view as? UIImageView {
-            switch iv {
-            case imageView1: selectedImageIndex = 0
-            case imageView2: selectedImageIndex = 1
-            case imageView3: selectedImageIndex = 2
-            default: break
-            }
+    func setImageToSelectedImageView(image: UIImage, videoFile: PFFile?) {
+        
+        let thumbnailImage = Helper.resizeImage(image, newWidth: 750)
+        let thumbnailImageCompressed = UIImageJPEGRepresentation(thumbnailImage, 0.2)!
+        let thumbnailFile = PFFile(name: "thumb\(selectedImageIndex + 1).jpg", data: thumbnailImageCompressed)
+        medias[selectedImageIndex * 2] = thumbnailFile
+        
+        if let videoFile = videoFile {
+            medias[(selectedImageIndex * 2) + 1] = videoFile
+        } else {
+            let resizedImage = Helper.resizeImage(image, newWidth: 1600)
+            let imageCompressed = UIImageJPEGRepresentation(resizedImage, 0.4)!
+            medias[(selectedImageIndex * 2) + 1] = PFFile(name: "img\(selectedImageIndex + 1).jpg", data: imageCompressed)
         }
         
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
-        self.presentViewController(imagePicker, animated: true, completion: nil)
-    }
-    
-    // Disable landscape mode in this view
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.Portrait
-    }
-    
-    // MARK: Get current location
-    func getCurrentLocation() {
-        PFGeoPoint.geoPointForCurrentLocationInBackground({ (geoPoint, error) -> Void in
-            guard error == nil else {
-                print(error)
-                return
-            }
-            self.currentGeoPoint = geoPoint
-        })
+        
+        let imageView = imageViews[selectedImageIndex]
+        imageView.image = UIImage(data: thumbnailImageCompressed)
+        imageView.contentMode = .ScaleAspectFill
+        removeButtons[selectedImageIndex].hidden = false
+        videoIconImages[selectedImageIndex].hidden = videoFile == nil
+        imagesAvail[selectedImageIndex] = true
     }
     
     func preparePost() -> Post? {
@@ -330,11 +231,9 @@ class PostViewController: UIViewController {
         
         // Input validation
         if images.count == 0 {
-            // Allow post without image?
-            AlertControl.show(self, title: "Market", message: "Please add image", handler: nil)
+            AlertControl.show(self, title: "Market", message: "Please add at least 1 image/video", handler: nil)
             return nil
         }
-        
         
         if priceLabel.text!.isEmpty {
             AlertControl.show(self, title: "Market", message: "Please enter the price", handler: { (alertAction) -> Void in
@@ -365,72 +264,31 @@ class PostViewController: UIViewController {
         post.title = titleLabel.text!
         post.price = Double(priceLabel.text!)!
         post.condition = conditionSegment.selectedSegmentIndex // 0 = new, 1 = used
-        
         post.descriptionText = descriptionText.text
-        post.location = currentGeoPoint
         
-        post.vote = Vote()
         
-        // Media:
-        // 0..nImages-1: thumbnails
-        // nImage..2*nImages-1: images
-        var image: UIImage!
-        var imageFile: PFFile!
         
-        // Attach thumbnails
-        for i in 0...images.count-1 {
-            image = Helper.resizeImage(images[i], newWidth: 750)
-            imageFile = PFFile(name: "thumb\(i+1).jpg", data: UIImageJPEGRepresentation(image, 0.2)!)
-            post.medias.append(imageFile!)
-        }
         // Attach image/video
-        for i in 0...images.count-1 {
-            if i == videoPosition {
-                post.medias.append(videoPFFile!)
-            } else {
-                image = Helper.resizeImage(images[i], newWidth: 1600)
-                imageFile = PFFile(name: "img\(i+1).jpg", data: UIImageJPEGRepresentation(image, 0.4)!)
-                post.medias.append(imageFile!)
+        for i in 0..<medias.count {
+            if let media = medias[i] {
+                post.medias.append(media)
             }
         }
-        
-        // TODO: Compress video
-        //        let dirPath = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as String
-        //        let recordingName = "drm.mov"
-        //        let pathArray = [dirPath, recordingName]
-        //        let filePath = NSURL.fileURLWithPathComponents(pathArray)
-        //        print(filePath)
-        //
-        //        if videoPosition > 0 {
-        //            Helper.compressVideo(videoURL!, outputURL: filePath!) { (session) -> Post in
-        //                if session.status == .Completed {
-        //                    let data = NSData(contentsOfURL: filePath!)
-        //                    print("File size after compression: \(Double(data!.length / 1024)) kb")
-        //                    let videoFile = PFFile(name: "video.mov", data: NSData(data: data!))
-        //                    post.medias.append(videoFile!)
-        //                    return post
-        //                } else if session.status == .Failed {
-        //                    print("failed to compress video")
-        //                }
-        //                return post
-        //            }
-        //        } else {
-        //            return post
-        //        }
         
         return post
     }
     
     func resetPostPage() {
-        initImageFrame(imageView1)
-        initImageFrame(imageView2)
-        initImageFrame(imageView3)
+        for imageView in imageViews {
+            initImageFrame(imageView)
+        }
         priceLabel.text = ""
         descriptionText.text = ""
         titleLabel.text = ""
         progressBar.setProgress(0, animated: false)
         progressBar.alpha = 0
         okImageView.alpha = 0
+        medias = [nil, nil, nil, nil, nil, nil]
     }
     
     func newPost() {
@@ -516,10 +374,11 @@ class PostViewController: UIViewController {
                         changeDescription += "location"
                     }
                     
-                    if self.isMediaChanged {
-                        fetchedPost.medias = newPost.medias
-                        changeDescription += "media"
-                    }
+                    fetchedPost.medias = newPost.medias
+                    //                    if self.isMediaChanged {
+                    //                        fetchedPost.medias = newPost.medias
+                    //                        changeDescription += "media"
+                    //                    }
                     
                     fetchedPost.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
                         self.isSubmittingNewPost = false
@@ -560,146 +419,77 @@ class PostViewController: UIViewController {
     }
     
     @IBAction func onRemoveImage1(sender: UIButton) {
-        isMediaChanged = true
+        medias[0] = nil
+        medias[1] = nil
         initImageFrame(imageView1)
         imagesAvail[0] = false
-        if videoPosition == 0 {
-            videoPosition = -1
-        }
     }
     
     @IBAction func onRemoveImage2(sender: UIButton) {
-        isMediaChanged = true
+        medias[2] = nil
+        medias[3] = nil
         initImageFrame(imageView2)
         imagesAvail[1] = false
-        if videoPosition == 1 {
-            videoPosition = -1
-        }
     }
     
     @IBAction func onRemoveImage3(sender: UIButton) {
-        isMediaChanged = true
+        medias[4] = nil
+        medias[5] = nil
         initImageFrame(imageView3)
         imagesAvail[2] = false
-        if videoPosition == 2 {
-            videoPosition = -1
-        }
     }
     
     @IBAction func onDismiss(sender: UIBarButtonItem) {
-        if isUpdating {
+        if editingPost != nil {
             dismissViewControllerAnimated(true, completion: nil)
         } else {
             self.tabBarController!.selectedIndex = 0
         }
-    }
-    
-    func sendNotificationForNewPost(post: Post) {
-        var params = [String : AnyObject]()
-        params["postId"] = post.objectId!
-        params["title"] = post.title
-        params["price"] =  post.price.formatVND()
-        Notification.sendNotifications(NotificationType.Following, params: params, callback: { (success, error) -> Void in
-            guard error == nil else {
-                print(error)
-                return
-            }
-        })
-        
-        params["description"] = post.descriptionText
-        Notification.sendNotifications(NotificationType.Keywords, params: params) { (success, error) -> Void in
-            guard error == nil else {
-                print(error)
-                return
-            }
-        }
-    }
-    
-    func sendNotificationForUpdatedPost(post: Post, changeDescription: String) {
-        if changeDescription.isEmpty {
-            return
-        }
-        var params = [String : AnyObject]()
-        params["postId"] = post.objectId!
-        params["title"] = post.title
-        params["price"] =  post.price.formatVND()
-        params["extraInfo"] = changeDescription
-        Notification.sendNotifications(NotificationType.SavedPost, params: params, callback: { (success, error) -> Void in
-            guard error == nil else {
-                print(error)
-                return
-            }
-        })
     }
 }
 
 // MARK: - Image Picker
 extension PostViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
-        let mediaType = info[UIImagePickerControllerMediaType] as! NSString
-        
-        if mediaType == kUTTypeMovie {
-            if videoPosition >= 0 {
-                AlertControl.show(self, title: "Market", message: "You can't post more than 1 video", handler: nil)
-            } else {
-                videoURL = info[UIImagePickerControllerMediaURL] as? NSURL
-                let data = NSData(contentsOfURL: videoURL!)
-//                if let data = data where data.length >= 10000 {
-//                    self.dismissViewControllerAnimated(true, completion: nil)
-//                    AlertControl.show(self, title: "File size", message: "You cannot upload video with file size >= 10 mb. Please choose a shorter video.", handler: nil)
-//                    return
-//                }
-                
-                isMediaChanged = true
-                videoPosition = selectedImageIndex
-                // Get the thumbnail of video
-                
-                print(videoURL)
-                let asset = AVAsset(URL: videoURL!)
-                let assetImgGenerate = AVAssetImageGenerator(asset: asset)
-                assetImgGenerate.appliesPreferredTrackTransform = true
-                let time = CMTimeMake(asset.duration.value / 3, asset.duration.timescale)
-                if let cgImage = try? assetImgGenerate.copyCGImageAtTime(time, actualTime: nil) {
-                    let image = UIImage(CGImage: cgImage)
-                    setImageToSelectedImageView(image, isVideo: true)
-                }
-               
-                print("File size: \(Double(data!.length / 1024)) kb")
-                
-                videoPFFile = PFFile(name: "video.mov", data: NSData(data: data!))
-            }
+        if let mediaType = info[UIImagePickerControllerMediaType] as? NSString where mediaType == kUTTypeMovie {
+            let videoURL = info[UIImagePickerControllerMediaURL] as? NSURL
             
+            if let videoURL = videoURL {
+                picker.dismissViewControllerAnimated(true, completion: nil)
+                let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+                hud.applyCustomTheme("Compressing video...")
+                let compressedVideoOutputUrl = NSURL(fileURLWithPath: NSTemporaryDirectory()).URLByAppendingPathComponent("\(NSDate()).mov")
+                Helper.compressVideo(videoURL, outputURL: compressedVideoOutputUrl, handler: { (session) -> Void in
+                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                        hud.hide(true)
+                        if session.status == AVAssetExportSessionStatus.Completed {
+                            let data = NSData(contentsOfURL: compressedVideoOutputUrl)
+                            if let data = data where data.toMB() >= 10 {
+                                AlertControl.show(self, title: "File size", message: "You cannot upload video with file size >= 10 mb. Please choose a shorter video.", handler: nil)
+                                return
+                            }
+                            let videoPFFile = PFFile(name: "video.mov", data: NSData(data: data!))
+                            print("File size: \(Double(data!.length / 1024)) kb")
+                            // Get the thumbnail of video
+                            if let image = videoURL.getThumbnailOfVideoURL() {
+                                self.setImageToSelectedImageView(image, videoFile: videoPFFile)
+                            }
+                        } else if session.status == AVAssetExportSessionStatus.Failed {
+                            AlertControl.show(self, title: "Compress video", message: "There was a problem compressing the video maybe you can try again later. Error: \(session.error?.localizedDescription)", handler: nil)
+                        }
+                    })
+                })
+            }
         } else {
-            // User selected an image
             if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-                isMediaChanged = true
-                setImageToSelectedImageView(image, isVideo: false)
-                if selectedImageIndex == videoPosition {
-                    // User select another image to replace the video
-                    videoPosition = -1
-                }
+                setImageToSelectedImageView(image, videoFile: nil)
+                picker.dismissViewControllerAnimated(true, completion: nil)
             }
         }
-        self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
-        // User cancel the image picker
         self.dismissViewControllerAnimated(true, completion: nil)
-    }
-    
-    func loadImageFrom(source: UIImagePickerControllerSourceType, pickVideo: Bool) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = source
-        //imagePicker.allowsEditing = true
-        if pickVideo {
-            imagePicker.mediaTypes = [kUTTypeMovie as String]
-        } else {
-            imagePicker.mediaTypes = [kUTTypeImage as String]
-        }
-        
-        self.presentViewController(imagePicker, animated: true, completion: nil)
     }
     
     @IBAction func onImageTapped(sender: UITapGestureRecognizer) {
@@ -712,46 +502,51 @@ extension PostViewController: UIImagePickerControllerDelegate, UINavigationContr
             }
         }
         
+        if !imagesAvail[selectedImageIndex] {
+            for (index, avail) in imagesAvail.enumerate() {
+                if !avail {
+                    selectedImageIndex = index
+                    break
+                }
+            }
+        }
+        
         showActionSheets()
     }
     
     func showActionSheets() {
-        
         let optionMenu = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
         
         // Pick photo from library
         let pickPhotoAction = UIAlertAction(title: "Choose photo from library", style: .Default, handler: {
             (alert: UIAlertAction!) -> Void in
-            self.loadImageFrom(UIImagePickerControllerSourceType.PhotoLibrary, pickVideo: false)
-            print("Select photo")
+            Camera.loadMediaFrom(self, sourceType: UIImagePickerControllerSourceType.PhotoLibrary, mediaType: .PickPhoto)
         })
         optionMenu.addAction(pickPhotoAction)
         
-        // Pick video from library if hasn't picked any, or user want to modify this video
-        if (videoPosition < 0) || (videoPosition == selectedImageIndex) {
-            let pickVideoAction = UIAlertAction(title: "Choose video from library", style: .Default, handler: {
+        let pickVideoAction = UIAlertAction(title: "Choose video from library", style: .Default, handler: {
+            (alert: UIAlertAction!) -> Void in
+            Camera.loadMediaFrom(self, sourceType: UIImagePickerControllerSourceType.PhotoLibrary, mediaType: .PickVideo)
+        })
+        optionMenu.addAction(pickVideoAction)
+        
+        // Take photo/video from camera if camera is avail
+        if UIImagePickerController.availableCaptureModesForCameraDevice(.Rear) != nil {
+            let takePhotoAction = UIAlertAction(title: "Take photo", style: .Default, handler: {
                 (alert: UIAlertAction!) -> Void in
-                self.loadImageFrom(UIImagePickerControllerSourceType.PhotoLibrary, pickVideo: true)
-                print("Select video")
+                Camera.loadMediaFrom(self, sourceType: UIImagePickerControllerSourceType.Camera, mediaType: .TakePhoto)
+            })
+            optionMenu.addAction(takePhotoAction)
+            
+            let pickVideoAction = UIAlertAction(title: "Record a 30s video", style: .Default, handler: {
+                (alert: UIAlertAction!) -> Void in
+                Camera.loadMediaFrom(self, sourceType: UIImagePickerControllerSourceType.Camera, mediaType: .Record30sVideo)
             })
             optionMenu.addAction(pickVideoAction)
         }
         
-        // Take picture from camera if camera is avail
-        if UIImagePickerController.availableCaptureModesForCameraDevice(.Rear) != nil {
-            let takePhotoAction = UIAlertAction(title: "Take photo from camera", style: .Default, handler: {
-                (alert: UIAlertAction!) -> Void in
-                print("Take pic")
-                self.loadImageFrom(UIImagePickerControllerSourceType.Camera, pickVideo: false)
-            })
-            optionMenu.addAction(takePhotoAction)
-        }
-        
         // Cancel action
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: {
-            (alert: UIAlertAction!) -> Void in
-            print("Cancelled")
-        })
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
         optionMenu.addAction(cancelAction)
         
         self.presentViewController(optionMenu, animated: true, completion: nil)
@@ -792,5 +587,83 @@ extension PostViewController: UITextFieldDelegate {
         }
         
         return true
+    }
+}
+
+// MARK: Send notifications
+extension PostViewController {
+    func sendNotificationForNewPost(post: Post) {
+        var params = [String : AnyObject]()
+        params["postId"] = post.objectId!
+        params["title"] = post.title
+        params["price"] =  post.price.formatVND()
+        Notification.sendNotifications(NotificationType.Following, params: params, callback: { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        })
+        
+        params["description"] = post.descriptionText
+        Notification.sendNotifications(NotificationType.Keywords, params: params) { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        }
+    }
+    
+    func sendNotificationForUpdatedPost(post: Post, changeDescription: String) {
+        if changeDescription.isEmpty {
+            return
+        }
+        var params = [String : AnyObject]()
+        params["postId"] = post.objectId!
+        params["title"] = post.title
+        params["price"] =  post.price.formatVND()
+        params["extraInfo"] = changeDescription
+        Notification.sendNotifications(NotificationType.SavedPost, params: params, callback: { (success, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        })
+    }
+}
+
+// MARK: Handle UI with Keyboard show/hide
+extension PostViewController {
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "keyboardShown:", name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self,
+            selector: "keyboardHide:", name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    func keyboardShown(notification: NSNotification) {
+        let info = notification.userInfo!
+        let value: AnyObject = info[UIKeyboardFrameEndUserInfoKey]!
+        
+        let rawFrame = value.CGRectValue
+        let keyboardFrame = view.convertRect(rawFrame, fromView: nil)
+        
+        descTextHeight.constant = (UIScreen.mainScreen().bounds.height - descriptionText.frame.origin.y) - keyboardFrame.height - 10
+        UIView.animateWithDuration(0.3) { () -> Void in
+            self.view.layoutIfNeeded()
+        }
+    }
+    
+    func keyboardHide(notification: NSNotification) {
+        descTextHeight.constant = okImageView.frame.origin.y - descriptionText.frame.origin.y - 10
+        UIView.animateWithDuration(0.3) { () -> Void in
+            self.view.layoutIfNeeded()
+        }
     }
 }

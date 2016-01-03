@@ -42,16 +42,16 @@ class Helper {
         return newImage
     }
     
-    static func compressVideo(inputURL: NSURL, outputURL: NSURL, handler:(session: AVAssetExportSession)-> Post)
+    static func compressVideo(inputURL: NSURL, outputURL: NSURL, handler:(session: AVAssetExportSession) -> Void)
     {
         let urlAsset = AVURLAsset(URL: inputURL, options: nil)
-        let exportSession = AVAssetExportSession(asset: urlAsset, presetName: AVAssetExportPresetMediumQuality)
-        
-        exportSession!.outputURL = outputURL
-        exportSession!.outputFileType = AVFileTypeQuickTimeMovie
-        exportSession!.shouldOptimizeForNetworkUse = true
-        exportSession!.exportAsynchronouslyWithCompletionHandler { () -> Void in
-            handler(session: exportSession!)
+        if let exportSession = AVAssetExportSession(asset: urlAsset, presetName: AVAssetExportPresetMediumQuality) {
+            exportSession.outputURL = outputURL
+            exportSession.outputFileType = AVFileTypeQuickTimeMovie
+            exportSession.shouldOptimizeForNetworkUse = true
+            exportSession.exportAsynchronouslyWithCompletionHandler { () -> Void in
+                handler(session: exportSession)
+            }
         }
     }
 }

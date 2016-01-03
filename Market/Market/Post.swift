@@ -36,7 +36,7 @@ class Post: PFObject, PFSubclassing {
     var iSaveIt: Bool?
     var iVoteIt: Bool?
     
-    var totalProgress: Int = 1
+    var totalProgress: Int = 100
     var currentTotalProgress: Int = 0
     var finishCallback: ((post: Post) -> Void)?
     var progressCallback: ((post: Post, percent: Float) -> Void)?
@@ -70,16 +70,21 @@ extension Post {
     func handleSaveMedias() {
         if medias.count > 0 {
             for fileToSave in medias {
-                fileToSave.saveInBackgroundWithBlock({ (success, error) -> Void in
-                    guard error == nil else {
-                        print(error)
-                        return
-                    }
+                if let _ = fileToSave.url {
+                    self.checkProgress(fileToSave, percent: 100)
                     self.checkUploading(fileToSave)
-                    }) { (percent) -> Void in
-                        
-                        self.checkProgress(fileToSave, percent: Int(percent))
-                        
+                } else {
+                    fileToSave.saveInBackgroundWithBlock({ (success, error) -> Void in
+                        guard error == nil else {
+                            print(error)
+                            return
+                        }
+                        self.checkUploading(fileToSave)
+                        }) { (percent) -> Void in
+                            
+                            self.checkProgress(fileToSave, percent: Int(percent))
+                            
+                    }
                 }
             }
         } else {
@@ -163,7 +168,7 @@ extension Post {
                     callback(posts: nil, error: error)
                     return
                 }
-    
+                
                 if let posts = posts as? [Post] {
                     callback(posts: posts, error: nil)
                 }
@@ -214,7 +219,7 @@ extension Post {
             })
         }
     }
-
+    
     static func queryForUsersVote(lastCreatedAt: NSDate?, callback: PostResultBlock) {
         if let query = Post.query() {
             if let lastCreatedAt = lastCreatedAt {
@@ -283,7 +288,7 @@ extension Post {
 
 // MARK: Delete
 extension Post {
-    static func deletePost(postId: String, completion: PFBooleanResultBlock) {    
+    static func deletePost(postId: String, completion: PFBooleanResultBlock) {
         let post = Post(withoutDataWithObjectId: postId)
         post.isDeleted = true
         post.saveInBackgroundWithBlock(completion)
@@ -294,22 +299,8 @@ extension Post {
 extension Post {
     static func sold(postId: String, isSold: Bool, completion: PFBooleanResultBlock) {
         let post = Post(withoutDataWithObjectId: postId)
-        post.fetchInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
-            print(fetchedPFObj)
-            if let postFetched = fetchedPFObj as? Post {
-                //print("post ", postFetched)
-                postFetched.sold = isSold
-                
-                postFetched.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
-                    //print(post)
-                    completion(true, nil)
-                    }) { (post: Post, percent: Float) -> Void in
-                        print(percent)
-                }
-            } else {
-                completion(false, error)
-            }
-        }
+        post.sold = isSold
+        post.saveInBackgroundWithBlock(completion)
     }
 }
 

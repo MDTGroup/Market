@@ -57,11 +57,8 @@ class DetailViewController: UIViewController {
     var tapGesture: UITapGestureRecognizer!
     var selectedImage = 1
     var nImages: Int = 1
-    var tempImageViews = [UIImageView]()
-    var videoPosition: Int = -1
-    var player: AVPlayer?
-    var playerController: AVPlayerViewController?
-    var videoUrl: NSURL?
+    var tempImageViews: [UIImageView]!
+    var videoUrls = [NSURL?]()
     var playButton: UIButton!
     
     var imageOriginalCenter: CGPoint!
@@ -145,44 +142,43 @@ class DetailViewController: UIViewController {
         scrollCircle2.hidden = nImages < 2
         scrollCircle3.hidden = nImages < 3
         
-        var url: String = post.medias[nImages].url!
+        videoUrls = []
+        for _ in 0..<nImages {
+            videoUrls.append(nil)
+        }
+        
         // Load the thumbnail first for user to see while waiting for loading the full image
-        imageView.setImageWithURL(NSURL(string: post.medias[0].url!)!)
-        imageView.setImageWithURL(NSURL(string: url)!)
+        imageView.loadThumbnailThenOriginal(post.medias[0].url!, originalURL: post.medias[1].url!)
         
         // Load images while user still reading 1st page
-        //if nImages > 1 {
-        var iv: UIImageView!
         tempImageViews = []
         // Refresh the layout before assign anything
         view.layoutIfNeeded()
-        for i in nImages...2*nImages-1 {
-            iv = UIImageView()
+        
+        for i in 0..<nImages {
+            let originalURL = post.medias[(i * 2) + 1].url!
+            let thumbnailURL = post.medias[i * 2].url!
+            let iv = UIImageView()
             iv.frame = imageView.frame
             // Add 20px for the status bar, if not show status bar, comment next 2 lines
             //iv.frame.origin.y += 20
             //iv.frame.size.height -= 20
-            
-//            print(iv.frame)
+
             iv.center.x -= imageView.frame.width
             iv.contentMode = .ScaleAspectFit
             iv.clipsToBounds = true
-            
+
             tempImageViews.append(iv)
-            url = post.medias[i].url!
-            
-            if (url.rangeOfString("video.mov") != nil) {
-                tempImageViews[i-nImages].setImageWithURL(NSURL(string: post.medias[i-nImages].url!)!)
-                videoPosition = i - nImages
-                videoUrl = NSURL(string: url)
+
+            if (originalURL.rangeOfString("video.mov") != nil) {
+                tempImageViews[i].setImageWithURL(NSURL(string: thumbnailURL)!)
+                videoUrls[i] = NSURL(string: originalURL)
             } else {
-                tempImageViews[i-nImages].setImageWithURL(NSURL(string: post.medias[i].url!)!)
+                tempImageViews[i].loadThumbnailThenOriginal(thumbnailURL, originalURL: originalURL)
             }
             
-//            print(i, post.medias[i].url!)
-            view.insertSubview(tempImageViews[i-nImages], aboveSubview: imageView)
+            view.insertSubview(tempImageViews[i], aboveSubview: imageView)
         }
-        //}
         
         // Set the buttons width equally
         screenWidth = UIScreen.mainScreen().bounds.width
@@ -217,16 +213,9 @@ class DetailViewController: UIViewController {
             setVoteCountLabel(post.voteCounter, voted: post.iVoteIt!)
         }
         // If this is my post then not allow to vote/chat/save
-        //buttonsViewHeight.constant = (post.user.objectId == User.currentUser()?.objectId) ? 0 : 40
         buttonsView.hidden = post.user.objectId == User.currentUser()?.objectId
         
         addPlayButton()
-        // Indicate network status
-        //    if Helper.hasConnectivity() {
-        //      showNoNetwork(invisiblePosition)
-        //    } else {
-        //      showNoNetwork(visiblePosition)
-        //    }
     }
     
     func onTapTitle(gesture: UITapGestureRecognizer) {
@@ -248,7 +237,7 @@ class DetailViewController: UIViewController {
         playButton.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
         playButton.addTarget(self, action: "showVideoPlayer", forControlEvents: UIControlEvents.TouchUpInside)
         // If video is at first, show the playButton immediatelly
-        playButton.hidden = videoPosition != 0
+        playButton.hidden = videoUrls[0] == nil
         imageView.addSubview(playButton)
     }
     
@@ -300,10 +289,6 @@ class DetailViewController: UIViewController {
         }
     }
     
-    override func prefersStatusBarHidden() -> Bool {
-        return true
-    }
-    
     @IBAction func onPanImage(sender: UIPanGestureRecognizer) {
         let translation = sender.translationInView(view)
         let point = sender.locationInView(imageView)
@@ -312,7 +297,7 @@ class DetailViewController: UIViewController {
             imageOriginalCenter = imageView.center
             imageOriginalFrame = imageView.frame
             direction = point.y > imageView.frame.height/2 ? -0.15 : 0.15
-            print("image view frame", imageView.frame)
+//            print("image view frame", imageView.frame)
             
         } else if sender.state == .Changed {
             imageView.center = CGPoint(x: imageOriginalCenter.x + translation.x, y: imageOriginalCenter.y + translation.y)
@@ -351,7 +336,7 @@ class DetailViewController: UIViewController {
                                 self.imageView.image = self.tempImageViews[self.selectedImage-1].image
                                 self.tempImageViews[self.selectedImage-1].center.x = -self.imageOriginalCenter.x
                                 
-                                self.playButton.hidden = (self.selectedImage - 1 != self.videoPosition)
+                                self.playButton.hidden = self.videoUrls[self.selectedImage - 1] == nil
                         })
                         
                     } else if translation.x < -80 {
@@ -376,7 +361,7 @@ class DetailViewController: UIViewController {
                                 self.imageView.image = self.tempImageViews[self.selectedImage-1].image
                                 self.tempImageViews[self.selectedImage-1].center.x = self.imageView.frame.width + self.imageOriginalCenter.x
                                 
-                                self.playButton.hidden = (self.selectedImage - 1 != self.videoPosition)
+                                self.playButton.hidden = self.videoUrls[self.selectedImage - 1] == nil
                         })
                         
                     } else {
@@ -393,7 +378,7 @@ class DetailViewController: UIViewController {
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "videoSegue" {
             let nextVC = segue.destinationViewController as! VideoViewController
-            nextVC.videoUrl = videoUrl
+            nextVC.videoUrl = videoUrls[selectedImage - 1]
             
         } else if segue.identifier == "fullImageSegue" {
             let nextVC = segue.destinationViewController as! FullImageViewController
@@ -413,8 +398,8 @@ class DetailViewController: UIViewController {
     }
     
     @IBAction func onDoubleTap(sender: UITapGestureRecognizer) {
-        if selectedImage == videoPosition + 1 {
-            performSegueWithIdentifier("videoSegue", sender: imageView.image)
+        if let videoURL = videoUrls[selectedImage - 1] {
+            performSegueWithIdentifier("videoSegue", sender: videoURL)
         } else {
             performSegueWithIdentifier("fullImageSegue", sender: imageView.image)
         }
