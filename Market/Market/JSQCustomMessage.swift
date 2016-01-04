@@ -11,4 +11,5 @@ import JSQMessagesViewController
 
 class JSQCustomMessage: JSQMessage {
     var message: Message!
+    var createdAt: NSDate!
 }

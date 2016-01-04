@@ -316,7 +316,7 @@ extension ChatViewController {
         if !isLoadingEarlierMessages {
             isLoadingEarlierMessages = true
             let firstMessage = messages.first
-            conversation.getEarlierMessages(firstMessage?.date, callback: { (messages, error) -> Void in
+            conversation.getEarlierMessages(firstMessage?.createdAt, callback: { (messages, error) -> Void in
                 guard error == nil else {
                     print(error)
                     return
@@ -380,6 +380,7 @@ extension ChatViewController {
         } else {
             jsqMessage = JSQCustomMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt ?? NSDate(), text: message.text)
         }
+        jsqMessage.createdAt = message.createdAt ?? NSDate()
         jsqMessage.message = message
         return jsqMessage
     }
@@ -389,7 +390,7 @@ extension ChatViewController {
             isLoading = true
             let lastMessage = messages.last
             
-            conversation.getMessages(lastMessage?.date, maxResultPerRequest: maxResultPerRequest, callback: { (messages, error) -> Void in
+            conversation.getMessages(lastMessage?.createdAt, maxResultPerRequest: maxResultPerRequest, callback: { (messages, error) -> Void in
                 guard error == nil else {
                     print(error)
                     return
@@ -426,7 +427,7 @@ extension ChatViewController {
                     return jsqCustomMessage.message.uniqueBasedUserId == message.uniqueBasedUserId
                 }) {
                     let jsqCustomMessage = prepareJSQMessage(message)
-                    self.messages[index] = jsqCustomMessage
+                    self.messages[index].createdAt = jsqCustomMessage.createdAt
                     continue;
                 }
             }
