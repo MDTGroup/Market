@@ -19,6 +19,9 @@ class Message: PFObject, PFSubclassing {
     @NSManaged var video: PFFile?
     @NSManaged var photo: PFFile?
     @NSManaged var location: PFGeoPoint?
+    @NSManaged var uniqueBasedUserId: String
+    
+    var localVideoPath: String?
     
     func sendPushNotification(targetUserId: String, postId: String, text: String, video: PFFile?, photo: PFFile?, location: PFGeoPoint?) {
         var params = [String : AnyObject]()

@@ -27,7 +27,7 @@ class JSQCustomVideoMediaItem: JSQVideoMediaItem {
             }
             if let cachedVideoImageView = cachedVideoImageView {
                 cachedVideoImageView.frame = CGRect(x: 0.0, y: 0.0, width: size.width, height: size.height)
-                cachedVideoImageView.contentMode = .Center
+                cachedVideoImageView.contentMode = .ScaleAspectFill
                 cachedVideoImageView.clipsToBounds = true
                 JSQMessagesMediaViewBubbleImageMasker.applyBubbleImageMaskToMediaView(cachedVideoImageView, isOutgoing: self.appliesMediaViewMaskAsOutgoing)
                 

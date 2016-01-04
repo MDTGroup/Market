@@ -38,7 +38,7 @@ class Conversation: PFObject, PFSubclassing {
     
     func getMessages(lastCreatedAt: NSDate?, maxResultPerRequest: Int, callback: MessageResultBlock) {
         let query = messages.query()
-        query.selectKeys(["user", "text", "photo", "video", "location"])
+        query.selectKeys(["user", "text", "photo", "video", "location", "uniqueBasedUserId"])
         query.includeKey("user")
         query.limit = maxResultPerRequest
         
@@ -60,7 +60,7 @@ class Conversation: PFObject, PFSubclassing {
     
     func getEarlierMessages(createdAt: NSDate?, callback: MessageResultBlock) {
         let query = messages.query()
-        query.selectKeys(["user", "text", "photo", "video", "location"])
+        query.selectKeys(["user", "text", "photo", "video", "location", "uniqueBasedUserId"])
         query.includeKey("user")
         query.limit = 5
         if let createdAt = createdAt {
@@ -79,9 +79,9 @@ class Conversation: PFObject, PFSubclassing {
         }
     }
     
-    func addMessage(currentUser: User, text: String, videoFile: PFFile?, photoFile: PFFile?, location: PFGeoPoint?, callback: PFBooleanResultBlock) {
+    func addMessage(currentUser: User, text: String, videoFile: PFFile?, photoFile: PFFile?, location: PFGeoPoint?, callback: PFBooleanResultBlock) -> Message? {
         if text.isEmpty {
-            return
+            return nil
         }
         let message = Message()
         message.user = currentUser
@@ -90,6 +90,7 @@ class Conversation: PFObject, PFSubclassing {
         message.photo = photoFile
         message.location = location
         message.conversation = self
+        message.uniqueBasedUserId = "\(currentUser.objectId!)_\(NSDate().timeIntervalSince1970)"
         message.saveInBackgroundWithBlock { (success, error) -> Void in
             guard error == nil else {
                 print(error)
@@ -105,6 +106,7 @@ class Conversation: PFObject, PFSubclassing {
                 self.saveInBackgroundWithBlock(callback)
             }
         }
+        return message
     }
     
     static func addConversation(fromUser: User, toUser: User, post: Post, callback: ConversationResultBlock) {

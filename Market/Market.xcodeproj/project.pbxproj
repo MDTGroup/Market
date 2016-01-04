@@ -23,6 +23,7 @@
 		443810361C206EEB00CCD266 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 443810351C206EEB00CCD266 /* Notification.swift */; };
 		4453CA031C399388003F87A0 /* NSURLExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4453CA021C399388003F87A0 /* NSURLExtension.swift */; };
 		4453CA051C399522003F87A0 /* JSQCustomVideoMediaItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4453CA041C399522003F87A0 /* JSQCustomVideoMediaItem.swift */; };
+		4453CA071C39B7D2003F87A0 /* JSQCustomMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4453CA061C39B7D2003F87A0 /* JSQCustomMessage.swift */; };
 		446121CB1C3913DB007DF9C2 /* NSDataExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 446121CA1C3913DB007DF9C2 /* NSDataExtension.swift */; };
 		4483EF671C1B370B002C98DA /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF641C1B370B002C98DA /* Post.swift */; };
 		4483EF681C1B370B002C98DA /* Follow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4483EF651C1B370B002C98DA /* Follow.swift */; };
@@ -94,6 +95,7 @@
 		443810351C206EEB00CCD266 /* Notification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		4453CA021C399388003F87A0 /* NSURLExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSURLExtension.swift; sourceTree = "<group>"; };
 		4453CA041C399522003F87A0 /* JSQCustomVideoMediaItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSQCustomVideoMediaItem.swift; sourceTree = "<group>"; };
+		4453CA061C39B7D2003F87A0 /* JSQCustomMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSQCustomMessage.swift; sourceTree = "<group>"; };
 		446121CA1C3913DB007DF9C2 /* NSDataExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDataExtension.swift; sourceTree = "<group>"; };
 		4483EF641C1B370B002C98DA /* Post.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		4483EF651C1B370B002C98DA /* Follow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Follow.swift; sourceTree = "<group>"; };
@@ -171,6 +173,7 @@
 				4483EF651C1B370B002C98DA /* Follow.swift */,
 				4483EF661C1B370B002C98DA /* User.swift */,
 				44F5BEC51C1C13FA006317E0 /* Vote.swift */,
+				4453CA061C39B7D2003F87A0 /* JSQCustomMessage.swift */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -492,6 +495,7 @@
 				44AEE3751C2339DD004B5E2E /* MessageCell.swift in Sources */,
 				44EB1A291C246E3500905312 /* PostsListViewController.swift in Sources */,
 				BA5062B11C1E850500E67EE7 /* FollowingViewController.swift in Sources */,
+				4453CA071C39B7D2003F87A0 /* JSQCustomMessage.swift in Sources */,
 				44F667A61C37034E00DB49DD /* MainContentViewController.swift in Sources */,
 				18E098AA1C1C112700A1F217 /* ProfileViewController.swift in Sources */,
 				44EEF4E61C29EAE700F457C6 /* TabBarController.swift in Sources */,

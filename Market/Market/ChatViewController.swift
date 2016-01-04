@@ -18,9 +18,8 @@ import AVFoundation
 class ChatViewController: JSQMessagesViewController, UINavigationControllerDelegate {
     
     var timer = NSTimer()
-    var messages = [JSQMessage]()
+    var messages = [JSQCustomMessage]()
     var avatars = Dictionary<String, JSQMessagesAvatarImage>()
-    var users = [User]()
     
     var outgoingBubbleImage = JSQMessagesBubbleImageFactory().outgoingMessagesBubbleImageWithColor(MyColors.green)
     var incomingBubbleImage = JSQMessagesBubbleImageFactory().incomingMessagesBubbleImageWithColor(UIColor.jsq_messageBubbleLightGrayColor())
@@ -166,7 +165,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, avatarImageDataForItemAtIndexPath indexPath: NSIndexPath!) -> JSQMessageAvatarImageDataSource! {
-        let user = users[indexPath.item]
+        let user = messages[indexPath.item].message.user
         if avatars[user.objectId!] == nil {
             user.avatar?.getDataInBackgroundWithBlock({ (imageData, error) -> Void in
                 guard error == nil else {
@@ -267,7 +266,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     }
     
     override func collectionView(collectionView: JSQMessagesCollectionView!, didTapAvatarImageView avatarImageView: UIImageView!, atIndexPath indexPath: NSIndexPath!) {
-        let tapUser = users[indexPath.row]
+        let tapUser = messages[indexPath.row].message.user
         if tapUser.objectId != User.currentUser()?.objectId {
             let userTimelineVC = UserTimelineViewController.instantiateViewController
             userTimelineVC.user = tapUser
@@ -337,28 +336,31 @@ extension ChatViewController {
     }
     
     func addEarlierMessages(messages: [Message]) {
-        var jsqMessages = [JSQMessage]()
-        var users = [User]()
+        var jsqMessages = [JSQCustomMessage]()
         for message in messages {
             jsqMessages.append(prepareJSQMessage(message))
-            users.append(message.user)
         }
         
-        self.users.insertContentsOf(users, at: 0)
         self.messages.insertContentsOf(jsqMessages, at: 0)
     }
     
-    func prepareJSQMessage(message: Message) -> JSQMessage {
-        let jsqMessage: JSQMessage!
+    func prepareJSQMessage(message: Message) -> JSQCustomMessage {
+        let jsqMessage: JSQCustomMessage!
         if let video = message.video {
-            let videoItem = JSQCustomVideoMediaItem(fileURL: NSURL(string: video.url!)!, isReadyToPlay: true)
+            var url: NSURL?
+            if let localVideoPath = message.localVideoPath {
+                url = NSURL(fileURLWithPath: localVideoPath)
+            } else {
+                url = NSURL(string: video.url!)
+            }
+            let videoItem = JSQCustomVideoMediaItem(fileURL: url!, isReadyToPlay: true)
             videoItem.thumbnailURL = message.photo?.url
             videoItem.appliesMediaViewMaskAsOutgoing = message.user.objectId! == self.senderId
-            jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, media: videoItem)
+            jsqMessage = JSQCustomMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt ?? NSDate(), media: videoItem)
         } else if let photo = message.photo {
             let photoItem = JSQPhotoMediaItem(image: nil)
             photoItem.appliesMediaViewMaskAsOutgoing = message.user.objectId! == self.senderId
-            jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, media: photoItem)
+            jsqMessage = JSQCustomMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt ?? NSDate(), media: photoItem)
             photo.getDataInBackgroundWithBlock({ (imageData, error) -> Void in
                 guard error == nil else {
                     print(error)
@@ -374,10 +376,11 @@ extension ChatViewController {
         } else if let location = message.location {
             let locationItem = JSQLocationMediaItem(location: CLLocation(latitude: location.latitude, longitude: location.longitude))
             locationItem.appliesMediaViewMaskAsOutgoing = message.user.objectId! == self.senderId
-            jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, media: locationItem)
+            jsqMessage = JSQCustomMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt ?? NSDate(), media: locationItem)
         } else {
-            jsqMessage = JSQMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt!, text: message.text)
+            jsqMessage = JSQCustomMessage(senderId: message.user.objectId!, senderDisplayName: message.user.fullName, date: message.createdAt ?? NSDate(), text: message.text)
         }
+        jsqMessage.message = message
         return jsqMessage
     }
     
@@ -398,7 +401,10 @@ extension ChatViewController {
                     self.addMessages(messages)
                     self.finishReceivingMessage()
                     self.scrollToBottomAnimated(false)
-                    self.showLoadEarlierMessagesHeader = messages.count >= self.maxResultPerRequest
+                    if lastMessage == nil {
+                        self.showLoadEarlierMessagesHeader = messages.count >= self.maxResultPerRequest
+                        self.collectionView!.reloadData()
+                    }
                     if lastMessage != nil {
                         self.conversation.markRead {
                             (success, error) -> Void in
@@ -412,14 +418,22 @@ extension ChatViewController {
     }
     
     func addMessages(messages: [Message]) {
-        var jsqMessages = [JSQMessage]()
-        var users = [User]()
+        var jsqMessages = [JSQCustomMessage]()
         for message in messages {
+            
+            if message.uniqueBasedUserId.characters.count > 0 {
+                if let index = self.messages.indexOf({ (jsqCustomMessage) -> Bool in
+                    return jsqCustomMessage.message.uniqueBasedUserId == message.uniqueBasedUserId
+                }) {
+                    let jsqCustomMessage = prepareJSQMessage(message)
+                    self.messages[index] = jsqCustomMessage
+                    continue;
+                }
+            }
+            
             jsqMessages.append(prepareJSQMessage(message))
-            users.append(message.user)
         }
         
-        self.users.appendContentsOf(users)
         self.messages.appendContentsOf(jsqMessages)
     }
     
@@ -444,14 +458,20 @@ extension ChatViewController {
             message = "send their location."
         }
         
-        conversation.addMessage(User.currentUser()!, text: message, videoFile: videoFile, photoFile: photoFile, location: location) { (success, error) -> Void in
+        let newMessage = conversation.addMessage(User.currentUser()!, text: message, videoFile: videoFile, photoFile: photoFile, location: location) { (success, error) -> Void in
             guard error == nil else {
                 print(error)
                 return
             }
             self.loadMessages()
+        }
+        
+        if let newMessage = newMessage {
+            newMessage.localVideoPath = video?.path
+            self.addMessages([newMessage])
             JSQSystemSoundPlayer.jsq_playMessageSentSound()
         }
+        
         self.finishSendingMessage()
     }
 }
