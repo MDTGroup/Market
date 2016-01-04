@@ -51,6 +51,7 @@
 		44EB6E201C2538E50044992A /* Notification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 44EB6E1F1C2538E50044992A /* Notification.storyboard */; };
 		44ECB2591C2D901D008291ED /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ECB2581C2D901D008291ED /* StringExtension.swift */; };
 		44ECB25B1C2DCD53008291ED /* ChangePasswordViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44ECB25A1C2DCD53008291ED /* ChangePasswordViewController.swift */; };
+		44EECAE31C3A4B2E008F5D30 /* PFGeoPointExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EECAE21C3A4B2E008F5D30 /* PFGeoPointExtension.swift */; };
 		44EEF4E21C29D26000F457C6 /* PushNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EEF4E11C29D26000F457C6 /* PushNotification.swift */; };
 		44EEF4E61C29EAE700F457C6 /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44EEF4E51C29EAE700F457C6 /* TabBarController.swift */; };
 		44F328571C0F815C00BF1CDF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44F328561C0F815C00BF1CDF /* AppDelegate.swift */; };
@@ -123,6 +124,7 @@
 		44EB6E1F1C2538E50044992A /* Notification.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Notification.storyboard; sourceTree = "<group>"; };
 		44ECB2581C2D901D008291ED /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		44ECB25A1C2DCD53008291ED /* ChangePasswordViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChangePasswordViewController.swift; sourceTree = "<group>"; };
+		44EECAE21C3A4B2E008F5D30 /* PFGeoPointExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PFGeoPointExtension.swift; sourceTree = "<group>"; };
 		44EEF4E11C29D26000F457C6 /* PushNotification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PushNotification.swift; sourceTree = "<group>"; };
 		44EEF4E51C29EAE700F457C6 /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		44F328531C0F815C00BF1CDF /* Market.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Market.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -325,6 +327,7 @@
 				4433BB231C37B3B3007E485A /* MBProgressHUDExtension.swift */,
 				446121CA1C3913DB007DF9C2 /* NSDataExtension.swift */,
 				4453CA021C399388003F87A0 /* NSURLExtension.swift */,
+				44EECAE21C3A4B2E008F5D30 /* PFGeoPointExtension.swift */,
 			);
 			name = Utils;
 			sourceTree = "<group>";
@@ -491,6 +494,7 @@
 				4483EF751C1B41DF002C98DA /* ResetPasswordViewController.swift in Sources */,
 				44EEF4E21C29D26000F457C6 /* PushNotification.swift in Sources */,
 				44ECB25B1C2DCD53008291ED /* ChangePasswordViewController.swift in Sources */,
+				44EECAE31C3A4B2E008F5D30 /* PFGeoPointExtension.swift in Sources */,
 				1866EBF81C26865B0009A1C0 /* Helper.swift in Sources */,
 				44AEE3751C2339DD004B5E2E /* MessageCell.swift in Sources */,
 				44EB1A291C246E3500905312 /* PostsListViewController.swift in Sources */,

@@ -405,8 +405,7 @@ extension ChatViewController {
                     if lastMessage == nil {
                         self.showLoadEarlierMessagesHeader = messages.count >= self.maxResultPerRequest
                         self.collectionView!.reloadData()
-                    }
-                    if lastMessage != nil {
+                    } else {
                         self.conversation.markRead {
                             (success, error) -> Void in
                         }

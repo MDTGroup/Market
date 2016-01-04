@@ -37,7 +37,7 @@ class User: PFUser {
     
     func getPosts(lastCreatedAt:NSDate?, callback: PostResultBlock) {
         if let query = Post.query() {
-            query.selectKeys(["title", "descriptionText", "price", "user", "medias", "location", "condition", "sold", "voteCounter"])
+            query.selectKeys(["title", "descriptionText", "price", "user", "medias", "location", "locationName", "condition", "sold", "voteCounter"])
             query.includeKey("user")
             query.whereKey("isDeleted", equalTo: false)
             query.whereKey("user", equalTo: self)

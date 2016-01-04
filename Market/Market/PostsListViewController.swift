@@ -149,7 +149,7 @@ class PostsListViewController: UIViewController {
         if let currentUser = User.currentUser() {
             let currentUserId = currentUser.objectId!
             countMessages.removeAll()
-            for conversation in conversations.reverse() {
+            for conversation in conversations {
                 let id = conversation.post.objectId!
                 if countMessages[id] == nil {
                     countMessages[id] = (0,0)

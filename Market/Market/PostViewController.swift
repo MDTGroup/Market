@@ -54,6 +54,9 @@ class PostViewController: UIViewController {
     @IBOutlet var iv2SingleTap: UITapGestureRecognizer!
     @IBOutlet var iv3SingleTap: UITapGestureRecognizer!
     
+    @IBOutlet weak var switchControlLocation: UISwitch!
+    @IBOutlet weak var locationLabel: UILabel!
+    
     var imageViews = [UIImageView]()
     var videoIconImages = [UIImageView]()
     var removeButtons = [UIButton]()
@@ -65,6 +68,9 @@ class PostViewController: UIViewController {
     
     let priceMaxLength = 13
     let titleMaxLength = 140
+    
+    var locationName: String?
+    var geoPoint: PFGeoPoint?
     
     weak var delegate: PostViewControllerDelegate?
     
@@ -147,6 +153,14 @@ class PostViewController: UIViewController {
             descriptionText.text = editingPost.descriptionText
             descPlaceHolder.hidden = true
             conditionSegment.selectedSegmentIndex = editingPost.condition
+            locationName = editingPost.locationName
+            geoPoint = editingPost.location
+            switchControlLocation.on = geoPoint != nil && locationName != nil
+            if switchControlLocation.on {
+                locationLabel.text = locationName!
+            } else {
+                turnOffLocationControls()
+            }
             
             let numImages = editingPost.medias.count / 2
             for i in 0..<numImages {
@@ -265,8 +279,8 @@ class PostViewController: UIViewController {
         post.price = Double(priceLabel.text!)!
         post.condition = conditionSegment.selectedSegmentIndex // 0 = new, 1 = used
         post.descriptionText = descriptionText.text
-        
-        
+        post.locationName = locationName
+        post.location = geoPoint
         
         // Attach image/video
         for i in 0..<medias.count {
@@ -289,6 +303,52 @@ class PostViewController: UIViewController {
         progressBar.alpha = 0
         okImageView.alpha = 0
         medias = [nil, nil, nil, nil, nil, nil]
+        turnOffLocationControls()
+    }
+    
+    func turnOffLocationControls() {
+        switchControlLocation.on = false
+        locationLabel.text = "Please switch ON to share current location"
+        locationName = nil
+        geoPoint = nil
+    }
+    
+    @IBAction func onSwitchLocationControl(sender: UISwitch) {
+        if sender.on {
+            PFGeoPoint.geoPointForCurrentLocationInBackground({ (geoPoint, error) -> Void in
+                guard error == nil else {
+                    print(error)
+                    if let errorMessage = error?.domain {
+                        AlertControl.show(self, title: "Location", message: errorMessage, handler: { (alertControl) -> Void in
+                            self.turnOffLocationControls()
+                        })
+                    } else {
+                        self.turnOffLocationControls()
+                    }
+                    return
+                }
+                if let geoPoint = geoPoint {
+                    geoPoint.getArea({ (location, error) -> Void in
+                        guard error == nil else {
+                            print(error)
+                            if let errorMessage = error?.domain {
+                                AlertControl.show(self, title: "Location", message: errorMessage, handler: { (alertControl) -> Void in
+                                self.turnOffLocationControls()
+                                })
+                            } else {
+                                self.turnOffLocationControls()
+                            }
+                            return
+                        }
+                        self.geoPoint = geoPoint
+                        self.locationName = location
+                        self.locationLabel.text = location
+                    })
+                }
+            })
+        } else {
+            turnOffLocationControls()
+        }
     }
     
     func newPost() {

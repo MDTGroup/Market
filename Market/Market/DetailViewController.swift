@@ -38,6 +38,8 @@ class DetailViewController: UIViewController {
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var locationLabel: UILabel!
+    @IBOutlet weak var markerIcon: UIImageView!
     
     @IBOutlet weak var scrollCircle1: UIImageView!
     @IBOutlet weak var scrollCircle2: UIImageView!
@@ -84,6 +86,14 @@ class DetailViewController: UIViewController {
         descriptionText.text = post.descriptionText
         descriptionText.selectable = false
         priceLabel.text = post.price.formatVND()
+        
+        if let locationName = post.locationName {
+            locationLabel.text = locationName
+            markerIcon.hidden = false
+        } else {
+            locationLabel.text = ""
+            markerIcon.hidden = true
+        }
         
         voteCountLabel.hidden = true
         voteLabel.hidden = true
