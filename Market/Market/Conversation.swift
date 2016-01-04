@@ -158,7 +158,7 @@ class Conversation: PFObject, PFSubclassing {
     
     static func getConversations(forNetworkOnly: Bool, lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
         if let query = Conversation.query(), currentUser = User.currentUser() {
-            var cachePolicy = PFCachePolicy.CacheThenNetwork
+            var cachePolicy = PFCachePolicy.NetworkElseCache
             if forNetworkOnly {
                 cachePolicy = .NetworkElseCache
             }
@@ -218,7 +218,7 @@ class Conversation: PFObject, PFSubclassing {
     
     static func getConversationsByPost(post:Post, lastUpdatedAt: NSDate?, callback: ConversationsResultBlock) {
         if let query = Conversation.query(), currentUser = User.currentUser() {
-            let cachePolicy = PFCachePolicy.CacheThenNetwork
+            let cachePolicy = PFCachePolicy.NetworkElseCache
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastUpdatedAt: lastUpdatedAt)
             query.selectKeys(["userIds", "readUsers", "lastMessage"])
             query.includeKey("lastMessage")

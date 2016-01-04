@@ -209,7 +209,7 @@ class User: PFUser {
     //MARK: Notifications
     func getNotifications(lastCreatedAt: NSDate?, callback: NotificationResultBlock) {
         if let query = Notification.query() {
-            let cachePolicy = PFCachePolicy.CacheThenNetwork
+            let cachePolicy = PFCachePolicy.NetworkElseCache
             query.selectKeys(["post", "fromUser", "type", "extraInfo"])
             QueryUtils.bindQueryParamsForInfiniteLoading(query, lastCreatedAt: lastCreatedAt, maxResult: 12)
             query.includeKey("post")

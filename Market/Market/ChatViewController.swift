@@ -64,6 +64,7 @@ class ChatViewController: JSQMessagesViewController, UINavigationControllerDeleg
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.automaticallyScrollsToMostRecentMessage = true
+        self.inputToolbar?.contentView?.textView?.becomeFirstResponder()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -388,9 +389,16 @@ extension ChatViewController {
     func loadMessages() {
         if !isLoading {
             isLoading = true
-            let lastMessage = messages.last
+            var lastMessage: JSQCustomMessage?
+            for message in self.messages.reverse() {
+                if message.message.objectId != nil {
+                    lastMessage = message
+                    break
+                }
+            }
             
             conversation.getMessages(lastMessage?.createdAt, maxResultPerRequest: maxResultPerRequest, callback: { (messages, error) -> Void in
+                self.isLoading = false
                 guard error == nil else {
                     print(error)
                     return
@@ -404,15 +412,12 @@ extension ChatViewController {
                     self.scrollToBottomAnimated(false)
                     if lastMessage == nil {
                         self.showLoadEarlierMessagesHeader = messages.count >= self.maxResultPerRequest
-                        self.collectionView!.reloadData()
                     } else {
                         self.conversation.markRead {
                             (success, error) -> Void in
                         }
                     }
                 }
-                
-                self.isLoading = false
             })
         }
     }
@@ -435,6 +440,10 @@ extension ChatViewController {
         }
         
         self.messages.appendContentsOf(jsqMessages)
+        
+        self.messages = self.messages.sort({ (messageA, messageB) -> Bool in
+            return messageA.createdAt.compare(messageB.createdAt) == NSComparisonResult.OrderedAscending
+        })
     }
     
     func sendMessage(text: String, video: NSURL?, photo: UIImage?, location: PFGeoPoint?) {
