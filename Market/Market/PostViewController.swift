@@ -318,13 +318,9 @@ class PostViewController: UIViewController {
             PFGeoPoint.geoPointForCurrentLocationInBackground({ (geoPoint, error) -> Void in
                 guard error == nil else {
                     print(error)
-                    if let errorMessage = error?.domain {
-                        AlertControl.show(self, title: "Location", message: errorMessage, handler: { (alertControl) -> Void in
-                            self.turnOffLocationControls()
-                        })
-                    } else {
+                    AlertControl.show(self, title: "Location", message: "Can't get location. Please try again!", handler: { (alertControl) -> Void in
                         self.turnOffLocationControls()
-                    }
+                    })
                     return
                 }
                 if let geoPoint = geoPoint {
