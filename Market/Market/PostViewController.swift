@@ -364,8 +364,12 @@ class PostViewController: UIViewController {
             post.voteCounter = 0
             post.vote = Vote()
             isSubmittingNewPost = true
+            
+            let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+            hud.applyCustomTheme("Posting...")
             post.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
                 print(post)
+                hud.hide(true)
                 self.isSubmittingNewPost = false
                 self.okImageView.transform = CGAffineTransformMakeScale(0.01, 0.01)
                 
@@ -398,9 +402,10 @@ class PostViewController: UIViewController {
             showProgressBar()
             let post = Post(withoutDataWithObjectId: (editingPost?.objectId)!)
             isSubmittingNewPost = true
+            let hud = MBProgressHUD.showHUDAddedTo(view, animated: true)
+            hud.applyCustomTheme("Updating post...")
             post.fetchInBackgroundWithBlock { (fetchedPFObj, error) -> Void in
                 print(fetchedPFObj)
-                
                 if let fetchedPost = fetchedPFObj as? Post {
                     
                     var changeDescription = ""
@@ -444,6 +449,7 @@ class PostViewController: UIViewController {
                     fetchedPost.medias = newPost.medias
                     
                     fetchedPost.saveWithCallbackProgressAndFinish({ (post: Post) -> Void in
+                        hud.hide(true)
                         self.isSubmittingNewPost = false
                         // MARK: Send Notifications
                         Notification.sendNotificationForUpdatedPost(post, changeDescription: changeDescription)
