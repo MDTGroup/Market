@@ -234,6 +234,12 @@ class User: PFUser {
                         queryForUnread.selectKeys([])
                         queryForUnread.whereKey("toUsers", equalTo: self)
                         queryForUnread.whereKey("readUsers", equalTo: self)
+                        
+                        if let postQuery = Post.query() {
+                            postQuery.whereKey("isDeleted", equalTo: false)
+                            queryForUnread.whereKey("post", matchesQuery: postQuery)
+                        }
+                        
                         queryForUnread.cachePolicy = cachePolicy
                         queryForUnread.findObjectsInBackgroundWithBlock({ (notificationsUnread, error) -> Void in
                             guard error == nil else {
@@ -286,6 +292,12 @@ class User: PFUser {
                         queryForUnread.selectKeys([])
                         queryForUnread.whereKey("toUsers", equalTo: self)
                         queryForUnread.whereKey("readUsers", equalTo: self)
+                        
+                        if let postQuery = Post.query() {
+                            postQuery.whereKey("isDeleted", equalTo: false)
+                            queryForUnread.whereKey("post", matchesQuery: postQuery)
+                        }
+                        
                         queryForUnread.cachePolicy = .NetworkOnly
                         queryForUnread.findObjectsInBackgroundWithBlock({ (notificationsUnread, error) -> Void in
                             guard error == nil else {
