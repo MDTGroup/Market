@@ -11,10 +11,6 @@ import AFNetworking
 import AVKit
 import AVFoundation
 
-@objc protocol DetailViewControllerDelegate {
-    optional func detailViewController(detailViewController: DetailViewController, newPost: Post)
-}
-
 class DetailViewController: UIViewController {
     
     @IBOutlet weak var buttonsView: UIView!
@@ -67,8 +63,6 @@ class DetailViewController: UIViewController {
     var imageOriginalFrame: CGRect!
     var direction: CGFloat = 1.0
     var screenWidth: CGFloat!
-    
-    weak var delegate: DetailViewControllerDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -173,13 +167,13 @@ class DetailViewController: UIViewController {
             // Add 20px for the status bar, if not show status bar, comment next 2 lines
             //iv.frame.origin.y += 20
             //iv.frame.size.height -= 20
-
+            
             iv.center.x -= imageView.frame.width
             iv.contentMode = .ScaleAspectFit
             iv.clipsToBounds = true
-
+            
             tempImageViews.append(iv)
-
+            
             if (originalURL.rangeOfString("video.mov") != nil) {
                 tempImageViews[i].setImageWithURL(NSURL(string: thumbnailURL)!)
                 videoUrls[i] = NSURL(string: originalURL)
@@ -307,7 +301,7 @@ class DetailViewController: UIViewController {
             imageOriginalCenter = imageView.center
             imageOriginalFrame = imageView.frame
             direction = point.y > imageView.frame.height/2 ? -0.15 : 0.15
-//            print("image view frame", imageView.frame)
+            //            print("image view frame", imageView.frame)
             
         } else if sender.state == .Changed {
             imageView.center = CGPoint(x: imageOriginalCenter.x + translation.x, y: imageOriginalCenter.y + translation.y)
@@ -386,12 +380,10 @@ class DetailViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if segue.identifier == "videoSegue" {
-            let nextVC = segue.destinationViewController as! VideoViewController
+        
+        if let nextVC = segue.destinationViewController as? VideoViewController {
             nextVC.videoUrl = videoUrls[selectedImage - 1]
-            
-        } else if segue.identifier == "fullImageSegue" {
-            let nextVC = segue.destinationViewController as! FullImageViewController
+        } else if let nextVC = segue.destinationViewController as? FullImageViewController {
             let data = sender as! UIImage
             nextVC.image = data
         }
@@ -425,7 +417,7 @@ class DetailViewController: UIViewController {
         
         // The size of the textView to fit its content
         let newSize = descriptionText.sizeThatFits(CGSize(width: screenWidth - 20, height: CGFloat.max))
-//        print(newSize)
+        //        print(newSize)
         
         textHeight.constant = min(dimmingHeight - 8, newSize.height)
         descTextGap.constant = showFull ? 25 : 5
@@ -458,7 +450,6 @@ class DetailViewController: UIViewController {
                 if successful {
                     print("unsaved")
                     self.post.iSaveIt = false
-                    self.delegate!.detailViewController!(self, newPost: self.post)
                 } else {
                     print("failed to unsave")
                     self.setSaveLabel(true)
@@ -472,7 +463,6 @@ class DetailViewController: UIViewController {
                 if successful {
                     print("saved")
                     self.post.iSaveIt = true
-                    self.delegate?.detailViewController!(self, newPost: self.post)
                 } else {
                     print("failed to save")
                     self.setSaveLabel(false)
@@ -490,7 +480,6 @@ class DetailViewController: UIViewController {
                 if successful {
                     print("unvoted")
                     self.post.iVoteIt = false
-                    self.delegate!.detailViewController!(self, newPost: self.post)
                 } else {
                     print("failed to unvote")
                     self.setVoteCountLabel(count + 1, voted: true)
@@ -505,7 +494,6 @@ class DetailViewController: UIViewController {
                 if successful {
                     print("voted")
                     self.post.iVoteIt = true
-                    self.delegate?.detailViewController!(self, newPost: self.post)
                 } else {
                     print("failed to vote")
                     self.setVoteCountLabel(count - 1, voted: false)

@@ -21,7 +21,6 @@ class HomeViewController: UIViewController {
     var isLoadingNextPage = false
     var isEndOfFeed = false
     var noMoreResultLabel = UILabel()
-    var selectedPostIndex: Int!
     
     var posts = [Post]()
     var loadDataBy = NewsfeedType.Newest
@@ -94,19 +93,6 @@ class HomeViewController: UIViewController {
             installation["loggedOut"] = false
             installation.saveInBackground()
             currentUser.updateNotificationSettings()
-        }
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        // Reload whatever the change from other pages
-        //        tableView.reloadData()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        // Clear the selection of tableView
-        if selectedPostIndex != nil {
-            tableView.deselectRowAtIndexPath(NSIndexPath(forRow: 0, inSection: selectedPostIndex), animated: true)
         }
     }
     
@@ -190,31 +176,16 @@ class HomeViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        if (segue.identifier == "detailSegue") {
-            if let detailVC = segue.destinationViewController as? DetailViewController {
-                if let data = sender as? Post {
-                    detailVC.post = data
-                    detailVC.delegate = self
-                }
-            }
-        } else if (segue.identifier == "userTimelineSegue") {
-            if let userTimelineVC = segue.destinationViewController as? UserTimelineViewController {
-                if let data = sender as? User {
-                    userTimelineVC.user = data
-                }
+        if let detailVC = segue.destinationViewController as? DetailViewController {
+            if let data = sender as? Post {
+                detailVC.post = data
             }
         }
-    }
-    
-}
-
-extension HomeViewController: DetailViewControllerDelegate {
-    func detailViewController(detailViewController: DetailViewController, newPost: Post) {
-        print("Newfeeds got signal from detail page")
-        posts[selectedPostIndex] = newPost
-        
-        let rowToReload: NSIndexPath = NSIndexPath(forRow: selectedPostIndex, inSection: 0)
-        tableView.reloadRowsAtIndexPaths([rowToReload], withRowAnimation: .Automatic)
+        else if let userTimelineVC = segue.destinationViewController as? UserTimelineViewController {
+            if let data = sender as? User {
+                userTimelineVC.user = data
+            }
+        }
     }
 }
 
@@ -270,7 +241,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource, ItemCe
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        selectedPostIndex = indexPath.row
         let item = posts[indexPath.row]
         performSegueWithIdentifier("detailSegue", sender: item)
     }

@@ -21,8 +21,23 @@ extension PFGeoPoint {
                 let placeMark = placeMarks[0]
                 if let addressDic = placeMark.addressDictionary {
                     
-                    if let addressLines = addressDic["FormattedAddressLines"] as? [String] {
-                        callback(location: addressLines.joinWithSeparator(", "), error: nil)
+                    var address = [String]()
+                    if let district = addressDic["SubAdministrativeArea"] as? String {
+                        address.append(district)
+                    }
+                    if let city = addressDic["City"] as? String {
+                        address.append(city)
+                    } else if let state = addressDic["State"] as? String {
+                        address.append(state)
+                    }
+                    
+                    if let country = addressDic["Country"] as? String {
+                        address.append(country)
+                    }
+                    
+                    let finalAddress = address.joinWithSeparator(", ")
+                    if !finalAddress.isEmpty {
+                        callback(location: finalAddress, error: nil)
                     }
                 }
             }
