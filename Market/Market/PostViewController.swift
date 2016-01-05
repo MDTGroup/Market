@@ -426,6 +426,7 @@ class PostViewController: UIViewController {
                     
                     if fetchedPost.location != newPost.location {
                         fetchedPost.location = newPost.location
+                        fetchedPost.locationName = newPost.locationName
                         changeDescription += "location"
                     }
                     
@@ -660,6 +661,8 @@ extension PostViewController {
             selector: "keyboardShown:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self,
             selector: "keyboardHide:", name: UIKeyboardWillHideNotification, object: nil)
+
+        descPlaceHolder.hidden = descriptionText.text.characters.count > 0
     }
     
     override func viewWillDisappear(animated: Bool) {
