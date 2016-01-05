@@ -120,7 +120,7 @@ class SettingsTableViewController: UITableViewController {
                     return
                 }
                 
-                ViewController.gotoMain()
+                ViewController.gotoMain(true)
                 
                 
             })

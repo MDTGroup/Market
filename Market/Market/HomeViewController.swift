@@ -26,9 +26,18 @@ class HomeViewController: UIViewController {
     var loadDataBy = NewsfeedType.Newest
     
     
-    static func gotoHome() {
+    static func gotoHome(animated: Bool) {
         let vc = StoryboardInstance.home.instantiateViewControllerWithIdentifier(StoryboardID.home)
-        UIApplication.sharedApplication().delegate!.window!!.rootViewController = vc
+        let window = UIApplication.sharedApplication().delegate!.window!!
+        if animated {
+            if let rootVC = window.rootViewController {
+                UIView.transitionFromView(rootVC.view, toView: vc.view, duration: 0.5, options: UIViewAnimationOptions.TransitionFlipFromLeft, completion: { (finished) -> Void in
+                    window.rootViewController = vc
+                })
+            }
+        } else {
+            window.rootViewController = vc
+        }
     }
     
     override func viewDidLoad() {
@@ -119,7 +128,7 @@ class HomeViewController: UIViewController {
             } else {
                 if error?.code == PFErrorCode.ErrorInvalidSessionToken.rawValue {
                     User.logOut()
-                    ViewController.gotoMain()
+                    ViewController.gotoMain(true)
                     return
                 }
                 print(error)

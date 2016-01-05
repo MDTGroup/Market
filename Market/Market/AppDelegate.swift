@@ -31,7 +31,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         if let currentUser = User.currentUser() {
             currentUser.fetchInBackground()
-            HomeViewController.gotoHome()
+            HomeViewController.gotoHome(false)
         }
         return true
     }

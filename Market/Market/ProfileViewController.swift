@@ -73,16 +73,16 @@ class ProfileViewController: UIViewController {
             guard error == nil else {
                 print(error)
                 if error?.code == PFErrorCode.ErrorInvalidSessionToken.rawValue {
-                    self.dismissViewControllerAnimated(false, completion: { () -> Void in
-                        ViewController.gotoMain()
+                    self.dismissViewControllerAnimated(true, completion: { () -> Void in
+                        ViewController.gotoMain(true)
                     })
                     return
                 }
                 return
             }
             hud.hide(true)
-            self.dismissViewControllerAnimated(false, completion: { () -> Void in
-                ViewController.gotoMain()
+            self.dismissViewControllerAnimated(true, completion: { () -> Void in
+                ViewController.gotoMain(true)
             })
         })
     }

@@ -47,8 +47,8 @@ class LoginViewController: UIViewController {
                     hud.hide(true)
                     if  user != nil {
                         self.view.endEditing(true)
-                        self.dismissViewControllerAnimated(false, completion: { () -> Void in
-                            HomeViewController.gotoHome()
+                        self.dismissViewControllerAnimated(true, completion: { () -> Void in
+                            HomeViewController.gotoHome(true)
                         })
                     } else {
                         AlertControl.show(self, title: "Login error!", message: "Login failed! Please try again!", handler: { (alertVC) -> Void in

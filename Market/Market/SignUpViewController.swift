@@ -66,7 +66,7 @@ class SignUpViewController: UIViewController {
                     }
                     self.view.endEditing(true)
                     self.dismissViewControllerAnimated(false, completion: { () -> Void in
-                        HomeViewController.gotoHome()
+                        HomeViewController.gotoHome(true)
                     })
                 })
             })
