@@ -117,6 +117,7 @@ extension SearchViewController {
         }
         if let text = searchBar.text?.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()) where !text.isEmpty {
             Post.search(text, condition: condition.rawValue, lastCreatedAt: lastCreatedAt) { (newPosts, error) -> Void in
+                MBProgressHUD.hideHUDForView(self.tableView, animated: true)
                 guard error == nil else {
                     print(error)
                     self.isEndOfFeed = true
@@ -151,7 +152,6 @@ extension SearchViewController {
                 self.noMoreResultLabel.hidden = !self.isEndOfFeed
                 self.loadingView.stopAnimating()
                 self.isLoadingNextPage = false
-                MBProgressHUD.hideHUDForView(self.tableView, animated: true)
             }
         }
     }

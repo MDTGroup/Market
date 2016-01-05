@@ -125,7 +125,7 @@ class Conversation: PFObject, PFSubclassing {
                         let conversation = Conversation()
                         conversation.userIds = userIds
                         conversation.readUsers = [fromUser.objectId!]
-                        conversation.usersChooseHideConversation = []
+//                        conversation.usersChooseHideConversation = []
                         conversation.post = post
                         let acl = PFACL()
                         acl.setWriteAccess(true, forUser: fromUser)
@@ -146,7 +146,7 @@ class Conversation: PFObject, PFSubclassing {
                         })
                     } else if conversations.count == 1 {
                         let conversation = conversations[0]
-                        conversation.usersChooseHideConversation = []
+//                        conversation.usersChooseHideConversation = []
                         callback(conversation: conversation, error: nil)
                     } else {
                         print("Something wrong! A conversation for a post should only have 2 users")
@@ -168,7 +168,7 @@ class Conversation: PFObject, PFSubclassing {
             query.includeKey("post")
             query.includeKey("post.user")
             query.whereKey("userIds", equalTo: currentUser.objectId!)
-            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
+//            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
             query.whereKeyExists("lastMessage")
             if let lastUpdatedAt = lastUpdatedAt {
                 query.whereKey("updatedAt", greaterThan: lastUpdatedAt)
@@ -224,7 +224,7 @@ class Conversation: PFObject, PFSubclassing {
             query.includeKey("lastMessage")
             query.whereKey("post", equalTo: post)
             query.whereKey("userIds", equalTo: currentUser.objectId!)
-            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
+//            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
             query.whereKeyExists("lastMessage")
             query.cachePolicy = cachePolicy
             query.findObjectsInBackgroundWithBlock({ (pfObjs, error) -> Void in
@@ -274,7 +274,7 @@ class Conversation: PFObject, PFSubclassing {
             query.includeKey("lastMessage")
             query.whereKey("post", equalTo: post)
             query.whereKey("userIds", equalTo: currentUser.objectId!)
-            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
+//            query.whereKey("usersChooseHideConversation", notEqualTo: currentUser.objectId!)
             query.whereKeyExists("lastMessage")
             if let lastUpdatedAt = lastUpdatedAt {
                 query.whereKey("updatedAt", greaterThan: lastUpdatedAt)
