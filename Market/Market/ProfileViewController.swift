@@ -149,9 +149,12 @@ class ProfileViewController: UIViewController {
     
     func hasChangedValue() -> Bool {
         let fullName = self.fullnameField.text!
-        let phone = self.phoneField.text!
-        let address = self.addressField.text!
+        var phone = self.phoneField.text!
+        var address = self.addressField.text!
         let email = self.emailField.text!
+        
+        address = address.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        phone = address.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
         
         if let currentUser = User.currentUser() {
             if currentUser.fullName != fullName {
