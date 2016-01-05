@@ -44,6 +44,10 @@ class Notification: PFObject, PFSubclassing {
         if let query = Notification.query(), currentUser = User.currentUser() {
             query.whereKey("toUsers", equalTo: currentUser)
             query.whereKey("readUsers", notEqualTo: currentUser)
+            if let postQuery = Post.query() {
+                postQuery.whereKey("isDeleted", equalTo: false)
+                query.whereKey("post", matchesQuery: postQuery)
+            }
             query.countObjectsInBackgroundWithBlock(callback)
         }
     }
