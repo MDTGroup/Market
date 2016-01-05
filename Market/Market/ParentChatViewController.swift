@@ -168,7 +168,14 @@ extension ParentChatViewController {
                                     print(error)
                                     return
                                 }
-                                parentChatVC.title = toUser.fullName
+                                
+                                if let currentUser = User.currentUser() where currentUser.objectId == toUser.objectId {
+                                    parentChatVC.title = fromUser.fullName
+                                }
+                                else {
+                                    parentChatVC.title = toUser.fullName
+                                }
+                                
                                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                                     hud.hide(true)
                                     if let navController = tabBarController.selectedViewController as? UINavigationController {

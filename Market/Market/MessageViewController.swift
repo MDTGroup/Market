@@ -11,7 +11,7 @@ import UIKit
 class MessageViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
-
+    
     var loadingView: UIActivityIndicatorView!
     var isLoadingNextPage = false
     var isEndOfFeed = false
@@ -126,34 +126,30 @@ class MessageViewController: UIViewController {
                 print(error)
                 return
             }
-            if let newConversations = newConversations {
-                if newConversations.count == 0 {
-                    return
-                } else {
-                    for newConversation in newConversations {
-                        var found = false
-                        for (index, conversation) in self.conversations.enumerate() {
-                            if newConversation.objectId == conversation.objectId {
-                                self.conversations.removeAtIndex(index)
-                                self.conversations.insert(newConversation, atIndex: 0)
-                                found = true
-                                break
-                            }
-                        }
-                        if !found {
+            if let newConversations = newConversations where newConversations.count > 0 {
+                for newConversation in newConversations {
+                    var found = false
+                    for (index, conversation) in self.conversations.enumerate() {
+                        if newConversation.objectId == conversation.objectId {
+                            self.conversations.removeAtIndex(index)
                             self.conversations.insert(newConversation, atIndex: 0)
+                            found = true
+                            break
                         }
                     }
-                    self.conversations = self.conversations.sort { (a, b) -> Bool in
-                        return a.updatedAt!.compare(b.updatedAt!) == NSComparisonResult.OrderedDescending
+                    if !found {
+                        self.conversations.insert(newConversation, atIndex: 0)
                     }
-                    
-                    if !UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {
-                        TabBarController.instance.onRefreshMessageBadge(nil)
-                    }
-                    
-                    self.tableView.reloadData()
                 }
+                self.conversations = self.conversations.sort { (a, b) -> Bool in
+                    return a.updatedAt!.compare(b.updatedAt!) == NSComparisonResult.OrderedDescending
+                }
+                
+                if !UIApplication.sharedApplication().isRegisteredForRemoteNotifications() {
+                    TabBarController.instance.onRefreshMessageBadge(nil)
+                }
+                
+                self.tableView.reloadData()
             }
         }
     }

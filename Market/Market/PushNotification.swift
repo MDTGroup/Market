@@ -11,14 +11,16 @@ import MBProgressHUD
 
 class PushNotification {
     static func handlePayload(application: UIApplication, userInfo: [NSObject : AnyObject]) {
+        // Notifications
+        let rootViewController = application.delegate?.window??.rootViewController
         if let postId = userInfo["postId"] as? String {
             if application.applicationState == .Inactive {
-                let rootViewController = application.delegate?.window??.rootViewController
                 let hud = MBProgressHUD.showHUDAddedTo(rootViewController?.view, animated: true)
                 hud.applyCustomTheme("Loading post...")
                 let post = Post(withoutDataWithObjectId: postId)
                 
                 post.fetchInBackgroundWithBlock({ (result, error) -> Void in
+                    hud.hide(true)
                     guard error == nil else {
                         print(error)
                         return
@@ -26,7 +28,6 @@ class PushNotification {
                     if let result = result as? Post {
                         let vc = DetailViewController.instantiateViewController
                         vc.post = result
-                        hud.hide(true)
                         rootViewController?.presentViewController(vc, animated: true, completion: nil)
                         
                         if let notificationId = userInfo["notificationId"] as? String {
@@ -37,13 +38,18 @@ class PushNotification {
             } else {
                 NSNotificationCenter.defaultCenter().postNotificationName(TabBarController.newNotification, object: nil)
             }
+        // Messages
         } else if let messageInfo = userInfo["message"] as? NSDictionary,
             postId = messageInfo["postId"] as? String,
             fromUserId = messageInfo["fromUserId"] as? String,
             toUserId = messageInfo["toUserId"] as? String {
             if application.applicationState == .Inactive {
+                let hud = MBProgressHUD.showHUDAddedTo(rootViewController?.view, animated: true)
+                hud.applyCustomTheme("Opening chat...")
+                
                 let post = Post(withoutDataWithObjectId: postId)
                 post.fetchInBackgroundWithBlock({ (post, error) -> Void in
+                    hud.hide(true)
                     guard error == nil else {
                         print(error)
                         return
