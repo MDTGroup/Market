@@ -331,13 +331,9 @@ class PostViewController: UIViewController {
                     geoPoint.getArea({ (location, error) -> Void in
                         guard error == nil else {
                             print(error)
-                            if let errorMessage = error?.domain {
-                                AlertControl.show(self, title: "Location", message: errorMessage, handler: { (alertControl) -> Void in
+                            AlertControl.show(self, title: "Location", message: "Can't get location. Please try again!", handler: { (alertControl) -> Void in
                                 self.turnOffLocationControls()
-                                })
-                            } else {
-                                self.turnOffLocationControls()
-                            }
+                            })
                             return
                         }
                         self.geoPoint = geoPoint
@@ -667,7 +663,7 @@ extension PostViewController {
             selector: "keyboardShown:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self,
             selector: "keyboardHide:", name: UIKeyboardWillHideNotification, object: nil)
-
+        
         descPlaceHolder.hidden = descriptionText.text.characters.count > 0
     }
     

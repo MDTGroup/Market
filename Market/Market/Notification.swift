@@ -62,6 +62,17 @@ class Notification: PFObject, PFSubclassing {
         }
     }
     
+    static func markRead(id: String) {
+        var params = [String : AnyObject]()
+        params["id"] = id
+        PFCloud.callFunctionInBackground("notification_markRead", withParameters: params) { (result, error) -> Void in
+            guard error == nil else {
+                print(error)
+                return
+            }
+        }
+    }
+    
     static func sendNotificationForNewPost(post: Post) {
         var params = [String : AnyObject]()
         params["postId"] = post.objectId!

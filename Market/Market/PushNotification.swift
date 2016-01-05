@@ -17,6 +17,7 @@ class PushNotification {
                 let hud = MBProgressHUD.showHUDAddedTo(rootViewController?.view, animated: true)
                 hud.applyCustomTheme("Loading post...")
                 let post = Post(withoutDataWithObjectId: postId)
+                
                 post.fetchInBackgroundWithBlock({ (result, error) -> Void in
                     guard error == nil else {
                         print(error)
@@ -27,6 +28,10 @@ class PushNotification {
                         vc.post = result
                         hud.hide(true)
                         rootViewController?.presentViewController(vc, animated: true, completion: nil)
+                        
+                        if let notificationId = userInfo["notificationId"] as? String {
+                            Notification.markRead(notificationId)
+                        }
                     }
                 })
             } else {
