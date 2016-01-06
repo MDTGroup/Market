@@ -275,14 +275,14 @@ extension Post {
             print("Current user is nil")
             return
         }
-        let currentUser = User.currentUser()!
-        if enable {
-            currentUser.savedPosts.addObject(self)
-        } else {
-            currentUser.savedPosts.removeObject(self)
+        if let currentUser = User.currentUser() {
+            if enable {
+                currentUser.savedPosts.addObject(self)
+            } else {
+                currentUser.savedPosts.removeObject(self)
+            }
+            currentUser.saveInBackgroundWithBlock(callback)
         }
-        
-        currentUser.saveInBackgroundWithBlock(callback)
     }
 }
 

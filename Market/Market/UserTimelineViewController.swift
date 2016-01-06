@@ -215,9 +215,9 @@ class UserTimelineViewController: UIViewController {
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let navController = segue.destinationViewController as? UINavigationController {
-            if let postVC = navController.topViewController as? PostViewController {
+            if let postVC = navController.topViewController as? PostViewController, post = sender as? Post {
                 postVC.delegate = self
-                postVC.editingPost = (sender as! Post)
+                postVC.editingPost = post
             }
         }
     }
@@ -609,16 +609,15 @@ extension UserTimelineViewController: UITableViewDelegate, UITableViewDataSource
                 // Add utility button Unsave on the right
                 let unsaveButton = MGSwipeButton(title: "Unsave", backgroundColor: MyColors.bluesky, callback: { (sender: MGSwipeTableCell!) -> Bool in
                     //
-                    let newCell = sender as? SimplifiedItemCell
-                    let post = newCell!.item
-                    let id = tableView.indexPathForCell(newCell!)
-                    post.save(false) { (successful: Bool, error: NSError?) -> Void in
-                        if successful {
-                            print("unsaved at \(id!.row)")
-                            self.posts.removeAtIndex(id!.row)
-                            self.tableView.deleteRowsAtIndexPaths([id!], withRowAnimation: .Bottom)
-                        } else {
-                            print("failed to unsave")
+                    if let newCell = sender as? SimplifiedItemCell, post = newCell.item, indexPath = tableView.indexPathForCell(newCell) {
+                        post.save(false) { (successful: Bool, error: NSError?) -> Void in
+                            if successful {
+                                print("unsaved at \(indexPath.row)")
+                                self.posts.removeAtIndex(indexPath.row)
+                                self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Bottom)
+                            } else {
+                                print("failed to unsave")
+                            }
                         }
                     }
                     
